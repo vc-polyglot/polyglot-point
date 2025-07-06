@@ -301,7 +301,7 @@ export default function Conversation() {
       </div>
 
       {/* Header */}
-      <header className="bg-card/80 backdrop-blur-md border-b border-border sticky top-0 z-40 mt-24">
+      <header className="bg-card/80 backdrop-blur-md border-b border-gray-300 sticky top-0 z-40 mt-24">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -432,7 +432,7 @@ export default function Conversation() {
 
           {/* Text Input Alternative */}
           {showTextInput && (
-            <div className="mt-6 p-4 bg-muted border border-border rounded-xl w-full max-w-md">
+            <div className="mt-6 p-4 bg-muted border border-gray-300 rounded-xl w-full max-w-md">
               <div className="flex items-center space-x-2 mb-3">
                 <Type className="w-4 h-4 text-foreground" />
                 <span className="text-sm font-medium">Text Input Alternative</span>
@@ -473,7 +473,7 @@ export default function Conversation() {
 
         {/* Statistics Panel */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-          <div className="bg-card rounded-xl p-4 border border-border">
+          <div className="bg-card rounded-xl p-4 border border-gray-300">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
                 <Clock className="w-5 h-5 text-green-600 dark:text-green-400" />
@@ -487,7 +487,7 @@ export default function Conversation() {
             </div>
           </div>
           
-          <div className="bg-card rounded-xl p-4 border border-border">
+          <div className="bg-card rounded-xl p-4 border border-gray-300">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
                 <MessageCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />
@@ -499,7 +499,7 @@ export default function Conversation() {
             </div>
           </div>
           
-          <div className="bg-card rounded-xl p-4 border border-border">
+          <div className="bg-card rounded-xl p-4 border border-gray-300">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
                 <Mic className="w-5 h-5 text-purple-600 dark:text-purple-400" />
