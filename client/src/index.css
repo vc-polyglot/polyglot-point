@@ -1,0 +1,419 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 210 11% 98%; /* #F5F7FA - Light blue-gray background */
+  --foreground: 210 11% 15%; /* #1F2937 - Dark blue-gray text */
+  --muted: 210 11% 96%; /* #F1F5F9 - Very light blue-gray for muted elements */
+  --muted-foreground: 210 6% 46%; /* #64748B - Medium blue-gray for muted text */
+  --popover: 0 0% 100%; /* #FFFFFF - Pure white for popovers */
+  --popover-foreground: 210 11% 15%; /* #1F2937 - Dark blue-gray text */
+  --card: 0 0% 100%; /* #FFFFFF - Pure white for cards */
+  --card-foreground: 210 11% 15%; /* #1F2937 - Dark blue-gray text */
+  --border: 220 13% 91%; /* #E2E8F0 - Light blue-gray borders */
+  --input: 220 13% 91%; /* #E2E8F0 - Light blue-gray input backgrounds */
+  --primary: 239 84% 67%; /* #6366F1 - Indigo primary color */
+  --primary-foreground: 210 20% 98%; /* #F8FAFC - Very light blue for primary text */
+  --secondary: 210 11% 96%; /* #F1F5F9 - Light blue-gray secondary */
+  --secondary-foreground: 210 11% 15%; /* #1F2937 - Dark blue-gray text */
+  --accent: 210 11% 96%; /* #F1F5F9 - Light blue-gray accent */
+  --accent-foreground: 210 11% 15%; /* #1F2937 - Dark blue-gray text */
+  --destructive: 0 84% 60%; /* #EF4444 - Red for destructive actions */
+  --destructive-foreground: 0 0% 98%; /* #FEFEFE - White text for destructive */
+  --ring: 239 84% 67%; /* #6366F1 - Indigo ring color */
+  --radius: 0.5rem;
+  
+  /* Additional variables for voice app */
+  --success: 142 76% 36%; /* #059669 - Green for success states */
+  --warning: 38 92% 50%; /* #F59E0B - Amber for warnings */
+  --info: 217 91% 60%; /* #3B82F6 - Blue for info */
+  
+  /* Polyglot Point brand colors */
+  --color-escuchando: #4A90E2; /* Deep blue for listening */
+  --color-hablando: #E94E77; /* Pink-red for speaking */
+  --color-silencio: #999999; /* Gray for inactive */
+  --color-fondo: #121212; /* Dark background */
+  
+  /* Chart colors */
+  --chart-1: 239 84% 67%; /* #6366F1 - Indigo */
+  --chart-2: 142 76% 36%; /* #059669 - Green */
+  --chart-3: 38 92% 50%; /* #F59E0B - Amber */
+  --chart-4: 346 77% 49%; /* #DC2626 - Red */
+  --chart-5: 262 83% 58%; /* #9333EA - Purple */
+}
+
+/* Recording button state transitions - smooth color changes */
+.recording-button {
+  transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* State-specific animations for recording button */
+@keyframes recording-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(196, 65, 102, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 20px rgba(196, 65, 102, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(196, 65, 102, 0);
+  }
+}
+
+@keyframes ai-response-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(74, 144, 226, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 20px rgba(74, 144, 226, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(74, 144, 226, 0);
+  }
+}
+
+/* Apply animations based on state */
+.recording-button[data-state="recording"] {
+  animation: recording-pulse 2s infinite;
+}
+
+.recording-button[data-state="ai-responding"] {
+  animation: ai-response-pulse 2s infinite;
+}
+
+/* Polyglot Point System Status Circle Animations */
+@keyframes ripple-listening {
+  0% {
+    box-shadow: 0 0 0 0 rgba(74, 144, 226, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(74, 144, 226, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(74, 144, 226, 0);
+  }
+}
+
+@keyframes ripple-speaking {
+  0% {
+    box-shadow: 0 0 0 0 rgba(233, 78, 119, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(233, 78, 119, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(233, 78, 119, 0);
+  }
+}
+
+@keyframes pulse-speaking {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.status-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.status-circle.listening {
+  background: radial-gradient(circle, #4A90E2 0%, #2E5BBA 100%);
+  box-shadow: 
+    0 0 40px rgba(74, 144, 226, 0.6),
+    0 0 80px rgba(74, 144, 226, 0.4),
+    inset 0 0 60px rgba(255, 255, 255, 0.1);
+  animation: pulse-blue 2s infinite;
+}
+
+.status-circle.speaking {
+  background: radial-gradient(circle, #E94E77 0%, #C73650 100%);
+  box-shadow: 
+    0 0 40px rgba(233, 78, 119, 0.6),
+    0 0 80px rgba(233, 78, 119, 0.4),
+    inset 0 0 60px rgba(255, 255, 255, 0.1);
+  animation: pulse-red 1.5s infinite;
+}
+
+.status-circle.inactive {
+  background: radial-gradient(circle, #6366F1 0%, #4F46E5 100%);
+  box-shadow: 
+    0 0 60px rgba(99, 102, 241, 0.8),
+    0 0 120px rgba(99, 102, 241, 0.6),
+    0 0 180px rgba(99, 102, 241, 0.4),
+    inset 0 0 80px rgba(255, 255, 255, 0.1);
+  animation: glow-blue 3s infinite ease-in-out;
+}
+
+@keyframes pulse-blue {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 
+      0 0 40px rgba(74, 144, 226, 0.6),
+      0 0 80px rgba(74, 144, 226, 0.4);
+  }
+  50% { 
+    transform: scale(1.05);
+    box-shadow: 
+      0 0 50px rgba(74, 144, 226, 0.8),
+      0 0 100px rgba(74, 144, 226, 0.6);
+  }
+}
+
+@keyframes pulse-red {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 
+      0 0 40px rgba(233, 78, 119, 0.6),
+      0 0 80px rgba(233, 78, 119, 0.4);
+  }
+  50% { 
+    transform: scale(1.05);
+    box-shadow: 
+      0 0 50px rgba(233, 78, 119, 0.8),
+      0 0 100px rgba(233, 78, 119, 0.6);
+  }
+}
+
+@keyframes glow-blue {
+  0%, 100% { 
+    box-shadow: 
+      0 0 60px rgba(99, 102, 241, 0.8),
+      0 0 120px rgba(99, 102, 241, 0.6),
+      0 0 180px rgba(99, 102, 241, 0.4);
+  }
+  50% { 
+    box-shadow: 
+      0 0 80px rgba(99, 102, 241, 1),
+      0 0 160px rgba(99, 102, 241, 0.8),
+      0 0 240px rgba(99, 102, 241, 0.6);
+  }
+}
+
+/* Recording Button - Red circular like in image */
+.record-button {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #DC2626 0%, #991B1B 100%);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  position: relative;
+  box-shadow: 
+    0 8px 32px rgba(220, 38, 38, 0.4),
+    inset 0 0 40px rgba(255, 255, 255, 0.1);
+}
+
+.record-button:hover {
+  transform: scale(1.05);
+  box-shadow: 
+    0 12px 48px rgba(220, 38, 38, 0.6),
+    inset 0 0 40px rgba(255, 255, 255, 0.2);
+}
+
+.record-button:active {
+  transform: scale(0.95);
+}
+
+.record-button.recording {
+  animation: recording-pulse 1s infinite;
+}
+
+@keyframes recording-pulse {
+  0%, 100% { 
+    box-shadow: 
+      0 8px 32px rgba(220, 38, 38, 0.4),
+      0 0 0 0 rgba(220, 38, 38, 0.7);
+  }
+  50% { 
+    box-shadow: 
+      0 8px 32px rgba(220, 38, 38, 0.4),
+      0 0 0 20px rgba(220, 38, 38, 0);
+  }
+}
+
+.dark {
+  --background: 0 0% 7%; /* #121212 - Polyglot Point dark background */
+  --foreground: 213 31% 91%; /* #E2E8F0 - Light blue-gray text */
+  --muted: 223 47% 11%; /* #1E293B - Dark blue-gray for muted elements */
+  --muted-foreground: 215 20% 65%; /* #94A3B8 - Medium blue-gray for muted text */
+  --popover: 0 0% 7%; /* #121212 - Polyglot Point dark background for popovers */
+  --popover-foreground: 213 31% 91%; /* #E2E8F0 - Light blue-gray text */
+  --card: 0 0% 7%; /* #121212 - Polyglot Point dark background for cards */
+  --card-foreground: 213 31% 91%; /* #E2E8F0 - Light blue-gray text */
+  --border: 216 34% 17%; /* #334155 - Dark blue-gray borders */
+  --input: 216 34% 17%; /* #334155 - Dark blue-gray input backgrounds */
+  --primary: 239 84% 67%; /* #6366F1 - Indigo primary color (same in dark) */
+  --primary-foreground: 210 20% 98%; /* #F8FAFC - Very light blue for primary text */
+  --secondary: 223 47% 11%; /* #1E293B - Dark blue-gray secondary */
+  --secondary-foreground: 213 31% 91%; /* #E2E8F0 - Light blue-gray text */
+  --accent: 223 47% 11%; /* #1E293B - Dark blue-gray accent */
+  --accent-foreground: 213 31% 91%; /* #E2E8F0 - Light blue-gray text */
+  --destructive: 0 63% 31%; /* #B91C1C - Darker red for destructive actions */
+  --destructive-foreground: 213 31% 91%; /* #E2E8F0 - Light text for destructive */
+  --ring: 239 84% 67%; /* #6366F1 - Indigo ring color (same in dark) */
+  
+  /* Dark mode chart colors */
+  --chart-1: 239 84% 67%; /* #6366F1 - Indigo */
+  --chart-2: 142 69% 58%; /* #10B981 - Lighter green for dark mode */
+  --chart-3: 38 92% 50%; /* #F59E0B - Amber (same) */
+  --chart-4: 346 77% 49%; /* #DC2626 - Red (same) */
+  --chart-5: 262 83% 58%; /* #9333EA - Purple (same) */
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  }
+
+  /* Voice app specific styles */
+  .voice-recording {
+    @apply animate-pulse;
+  }
+
+  .audio-wave {
+    @apply transition-all duration-100 ease-out;
+  }
+
+  /* Gradient backgrounds for branding */
+  .gradient-primary {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(262 83% 58%) 100%);
+  }
+
+  .gradient-success {
+    background: linear-gradient(135deg, hsl(var(--success)) 0%, hsl(142 69% 58%) 100%);
+  }
+
+  /* Custom scrollbar for conversation area */
+  .conversation-scroll::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .conversation-scroll::-webkit-scrollbar-track {
+    @apply bg-slate-100 rounded-full;
+  }
+
+  .conversation-scroll::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 rounded-full hover:bg-slate-400;
+  }
+
+  /* Animation for typing indicator */
+  @keyframes typing-bounce {
+    0%, 60%, 100% {
+      transform: translateY(0);
+    }
+    30% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .typing-dot {
+    animation: typing-bounce 1.4s infinite ease-in-out;
+  }
+
+  .typing-dot:nth-child(1) {
+    animation-delay: -0.32s;
+  }
+
+  .typing-dot:nth-child(2) {
+    animation-delay: -0.16s;
+  }
+
+  /* Pulse animation for recording indicator */
+  @keyframes pulse-recording {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(1.05);
+    }
+  }
+
+  .pulse-recording {
+    animation: pulse-recording 1s infinite;
+  }
+
+  /* Voice level indicator gradient */
+  .voice-level-gradient {
+    background: linear-gradient(90deg, 
+      hsl(var(--success)) 0%,
+      hsl(38 92% 50%) 50%,
+      hsl(346 77% 49%) 100%
+    );
+  }
+}
+
+/* Font Awesome icons fallback */
+.fas {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+}
+
+/* Ensure proper mobile touch handling */
+@media (max-width: 768px) {
+  .touch-action-manipulation {
+    touch-action: manipulation;
+  }
+  
+  button {
+    touch-action: manipulation;
+  }
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+}
+
+/* Loading state animations */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 2s linear infinite;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border: 0 0% 0%;
+    --primary: 239 84% 50%;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
