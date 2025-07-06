@@ -80,3 +80,7 @@ polyglot-point-vercel-complete.tar.gz
 
 # Attached assets (development files)
 attached_assets/
+
+# Final fixes for Railway build
+client/dist/
+dist/public/
