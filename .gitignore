@@ -5,8 +5,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # Production builds
-/dist
-/build
+#/dist
+#/build
 .next/
 
 # Environment variables
@@ -82,5 +82,5 @@ polyglot-point-vercel-complete.tar.gz
 attached_assets/
 
 # Final fixes for Railway build
-client/dist/
-dist/public/
+#client/dist/
+#dist/public/
