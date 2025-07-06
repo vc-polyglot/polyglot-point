@@ -11,7 +11,7 @@ Una aplicación de aprendizaje de idiomas que permite practicar conversaciones c
 - **Memoria conversacional**: Mantiene contexto de 30 turnos
 - **Interfaz responsive**: Diseño moderno tipo WhatsApp
 
-## 🚀 Instalación y Configuración
+## 🚀 Instalación y Configuración pa que jale chido
 
 ### Prerrequisitos
 - Node.js 18 o superior
