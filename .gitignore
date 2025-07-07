@@ -82,5 +82,3 @@ polyglot-point-vercel-complete.tar.gz
 attached_assets/
 
 # Final fixes for Railway build
-#client/dist/
-#dist/public/
