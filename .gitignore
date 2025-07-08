@@ -1,84 +1,27 @@
-# Dependencies
+﻿# Dependencies
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Production builds
-#/dist
-#/build
-.next/
-
-# Environment variables
-.env
+# Environment variables (solo desarrollo)
 .env.local
 .env.development.local
 .env.test.local
-.env.production.local
 
 # Logs
-logs
 *.log
-
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# Coverage directory
-coverage/
-
-# TypeScript cache
-*.tsbuildinfo
-
-# Optional npm cache directory
-.npm
-
-# Yarn Integrity file
-.yarn-integrity
-
-# Parcel cache
-.cache
-.parcel-cache
-
-# Temporary folders
-tmp/
-temp/
-audio/
 
 # IDE
 .vscode/
 .idea/
-*.swp
-*.swo
 
-# OS
+# OS files
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 
-# Database
-*.db
-*.sqlite
-
-# Vercel
-.vercel
-
-# Replit specific
-.replit
-.replit.nix
-.upm/
-
-# Migration package
-MIGRATION_PACKAGE/
-polyglot-point-vercel-complete.tar.gz
-
-# Attached assets (development files)
-attached_assets/
-
-# Final fixes for Railway build
+# Otros
+coverage/
+*.tsbuildinfo
+.parcel-cache
+tmp/

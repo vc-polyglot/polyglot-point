@@ -2,18 +2,11 @@
   "name": "polyglot-point-railway",
   "version": "1.0.0",
   "type": "module",
-  "description": "AI-powered multilingual conversation platform for language learning",
-  "main": "dist/index.js",
-  "license": "MIT",
-  "engines": {
-    "node": ">=18.0.0"
-  },
   "scripts": {
-    "dev": "NODE_ENV=development tsx server/index.ts",
-    "build": "cd client && npm install && npm run build && cd .. && npm install --legacy-peer-deps && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist && cp -r client/dist dist/public",
-    "start": "NODE_ENV=production node dist/index.js",
-    "check": "tsc",
-    "db:push": "drizzle-kit push"
+    "build-client": "cd client && npm install && npm run build",
+    "build-server": "npm install --legacy-peer-deps && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist && cp -r client/dist dist/public",
+    "build": "npm run build-client && npm run build-server",
+    "start": "NODE_ENV=production node dist/index.js"
   },
   "dependencies": {
     "@google-cloud/text-to-speech": "^6.1.0",
@@ -100,7 +93,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
     "drizzle-kit": "^0.29.0",
-    "esbuild": "^0.24.2",
+    "esbuild": "^0.25.5",
     "postcss": "^8.4.31",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",

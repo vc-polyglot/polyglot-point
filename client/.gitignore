@@ -1,0 +1,21 @@
+﻿# Dependencias
+node_modules/
+.npm
+.yarn
+
+# Builds
+dist/
+.next/
+out/
+
+# Variables de entorno
+.env*
+.env.local
+
+# Cache y logs
+.cache
+*.log
+
+# IDE/Editor
+.vscode/
+.idea/
