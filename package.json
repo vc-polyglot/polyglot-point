@@ -5,8 +5,11 @@
   "scripts": {
     "build-client": "cd client && npm install && npm run build",
     "build-server": "npm install --legacy-peer-deps && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
-    "build": "npm run build-client && npm run build-server && xcopy /E /I /Y client\\dist dist\\public",
+    "build": "npm run build-client && npm run build-server && cpx -r client/dist/** dist/public",
     "start": "node dist/index.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   },
   "dependencies": {
     "@google-cloud/text-to-speech": "^6.1.0",
@@ -27,6 +30,7 @@
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.0.0",
     "autoprefixer": "^10.4.0",
+    "cpx": "^1.5.0",
     "esbuild": "^0.25.5",
     "postcss": "^8.4.0",
     "vite": "^4.0.0"
