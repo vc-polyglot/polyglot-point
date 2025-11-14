@@ -4,9 +4,9 @@
   "type": "module",
   "scripts": {
     "build-client": "cd client && npm install && npm run build",
-    "build-server": "npm install --legacy-peer-deps && esbuild server/index.ts --platform=node --bundle --format=esm --outdir=dist",
+    "build-server": "esbuild server/index.ts --platform=node --bundle --format=esm --outfile=dist/server.js",
     "build": "npm run build-client && npm run build-server && shx mkdir -p dist/public && shx cp -r client/dist/* dist/public/",
-    "start": "node dist/index.js"
+    "start": "node dist/server.js"
   },
   "engines": {
     "node": ">=20.0.0"
