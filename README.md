@@ -38,7 +38,8 @@ Crea un archivo `.env` con:
 DATABASE_URL=postgresql://username:password@host:port/database
 
 # OpenAI
-OPENAI_API_KEY=sk-your-openai-api-key
+POLYGLOT_OPENAI_KEY
+=sk-your-openai-api-key
 
 # Google Cloud TTS
 GOOGLE_APPLICATION_CREDENTIALS=base64-encoded-service-account-json
@@ -72,7 +73,8 @@ La aplicación estará disponible en `http://localhost:5000`
 
 ### Obligatorias
 - `DATABASE_URL` - Conexión a PostgreSQL
-- `OPENAI_API_KEY` - Clave de OpenAI para Clara
+- `POLYGLOT_OPENAI_KEY
+` - Clave de OpenAI para Clara
 - `GOOGLE_APPLICATION_CREDENTIALS` - Credenciales de Google Cloud (base64)
 - `GOOGLE_CLOUD_PROJECT_ID` - ID del proyecto de Google Cloud
 

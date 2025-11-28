@@ -1070,13 +1070,17 @@ var OpenAIService = class {
   openai;
   universalDetector;
   constructor() {
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error("OPENAI_API_KEY environment variable is required");
+    if (!process.env.POLYGLOT_OPENAI_KEY
+) {
+      throw new Error("POLYGLOT_OPENAI_KEY
+ environment variable is required");
     }
     this.openai = new OpenAI2({
-      apiKey: process.env.OPENAI_API_KEY
+      apiKey: process.env.POLYGLOT_OPENAI_KEY
+
     });
-    this.universalDetector = new UniversalErrorDetector(process.env.OPENAI_API_KEY);
+    this.universalDetector = new UniversalErrorDetector(process.env.POLYGLOT_OPENAI_KEY
+);
   }
   async transcribeAudio(audioBuffer, sessionId, targetLanguage) {
     console.log(`\u{1F3A4} WHISPER TRANSCRIPTION: Starting for session ${sessionId}`);

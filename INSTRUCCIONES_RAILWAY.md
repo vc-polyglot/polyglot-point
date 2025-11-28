@@ -33,7 +33,8 @@ git push -u origin main
 En Railway → Variables:
 ```
 DATABASE_URL=(se crea automáticamente con PostgreSQL)
-OPENAI_API_KEY=sk-tu-clave-openai
+POLYGLOT_OPENAI_KEY
+=sk-tu-clave-openai
 GOOGLE_APPLICATION_CREDENTIALS=tu-google-credentials-base64
 GOOGLE_CLOUD_PROJECT_ID=tu-project-id
 ```

@@ -104,7 +104,8 @@ Railway configurará automáticamente:
 
 ```env
 DATABASE_URL=postgresql://usuario:password@host:puerto/database
-OPENAI_API_KEY=sk-tu-clave-openai-aqui
+POLYGLOT_OPENAI_KEY
+=sk-tu-clave-openai-aqui
 GOOGLE_APPLICATION_CREDENTIALS=tu-google-credentials-base64
 GOOGLE_CLOUD_PROJECT_ID=tu-google-project-id
 NODE_ENV=production
@@ -112,7 +113,8 @@ NODE_ENV=production
 
 ### 6.2 ¿Dónde conseguir las claves?
 
-**OPENAI_API_KEY:**
+**POLYGLOT_OPENAI_KEY
+:**
 1. Ve a [platform.openai.com](https://platform.openai.com)
 2. API Keys → Create new secret key
 3. Copia la clave que empiece con `sk-`

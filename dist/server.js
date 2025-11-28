@@ -145174,7 +145174,8 @@ var OpenAI = class {
   /**
    * API Client for interfacing with the OpenAI API.
    *
-   * @param {string | undefined} [opts.apiKey=process.env['OPENAI_API_KEY'] ?? undefined]
+   * @param {string | undefined} [opts.apiKey=process.env['POLYGLOT_OPENAI_KEY
+'] ?? undefined]
    * @param {string | null | undefined} [opts.organization=process.env['OPENAI_ORG_ID'] ?? null]
    * @param {string | null | undefined} [opts.project=process.env['OPENAI_PROJECT_ID'] ?? null]
    * @param {string | null | undefined} [opts.webhookSecret=process.env['OPENAI_WEBHOOK_SECRET'] ?? null]
@@ -145187,7 +145188,8 @@ var OpenAI = class {
    * @param {Record<string, string | undefined>} opts.defaultQuery - Default query parameters to include with every request to the API.
    * @param {boolean} [opts.dangerouslyAllowBrowser=false] - By default, client-side use of this library is not allowed, as it risks exposing your secret API credentials to attackers.
    */
-  constructor({ baseURL = readEnv("OPENAI_BASE_URL"), apiKey = readEnv("OPENAI_API_KEY"), organization = readEnv("OPENAI_ORG_ID") ?? null, project = readEnv("OPENAI_PROJECT_ID") ?? null, webhookSecret = readEnv("OPENAI_WEBHOOK_SECRET") ?? null, ...opts } = {}) {
+  constructor({ baseURL = readEnv("OPENAI_BASE_URL"), apiKey = readEnv("POLYGLOT_OPENAI_KEY
+"), organization = readEnv("OPENAI_ORG_ID") ?? null, project = readEnv("OPENAI_PROJECT_ID") ?? null, webhookSecret = readEnv("OPENAI_WEBHOOK_SECRET") ?? null, ...opts } = {}) {
     _OpenAI_instances.add(this);
     _OpenAI_encoder.set(this, void 0);
     this.completions = new Completions2(this);
@@ -145211,7 +145213,8 @@ var OpenAI = class {
     this.evals = new Evals(this);
     this.containers = new Containers(this);
     if (apiKey === void 0) {
-      throw new OpenAIError("Missing credentials. Please pass an `apiKey`, or set the `OPENAI_API_KEY` environment variable.");
+      throw new OpenAIError("Missing credentials. Please pass an `apiKey`, or set the `POLYGLOT_OPENAI_KEY
+` environment variable.");
     }
     const options = {
       apiKey,
@@ -145843,13 +145846,17 @@ var OpenAIService = class {
   openai;
   universalDetector;
   constructor() {
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error("OPENAI_API_KEY environment variable is required");
+    if (!process.env.POLYGLOT_OPENAI_KEY
+) {
+      throw new Error("POLYGLOT_OPENAI_KEY
+ environment variable is required");
     }
     this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY
+      apiKey: process.env.POLYGLOT_OPENAI_KEY
+
     });
-    this.universalDetector = new UniversalErrorDetector(process.env.OPENAI_API_KEY);
+    this.universalDetector = new UniversalErrorDetector(process.env.POLYGLOT_OPENAI_KEY
+);
   }
   async transcribeAudio(audioBuffer, sessionId, targetLanguage) {
     console.log(`\u{1F3A4} WHISPER TRANSCRIPTION: Starting for session ${sessionId}`);
