@@ -1,20 +1,20 @@
 // server/vite.ts
 import path from "path";
-import { fileURLToPath } from "url";
-import express from "express";
-import { Request, Response } from "express";
+import express, { Request, Response } from "express";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Usamos la carpeta raíz del proyecto en vez de import.meta.url
+const ROOT_DIR = process.cwd();
 
 // Solo activa en desarrollo si usas Vite en modo dev
 export function setupVite(app: express.Express) {
   console.log("✅ setupVite ejecutado");
 }
 
-// Este es el fix clave: sirve desde dist/public, que sí sube a Railway
+// Sirve los archivos estáticos desde dist/public (que es lo que sube Railway)
 export function serveStatic(app: express.Express) {
-  const publicPath = path.resolve(__dirname, "./public");
+  const publicPath = path.resolve(ROOT_DIR, "dist/public");
+  console.log("📦 Sirviendo estáticos desde:", publicPath);
+
   app.use(express.static(publicPath));
 
   app.get("*", (req: Request, res: Response) => {
