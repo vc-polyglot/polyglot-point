@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build-client": "cd client && npm install && npm run build",
-    "build-server": "esbuild server/index.ts --platform=node --bundle --format=esm --external:ws --external:multer --outfile=dist/server.js",
+    "build-server": "esbuild server/index.ts --platform=node --bundle --format=esm --alias:@shared=./shared --external:ws --external:multer --outfile=dist/server.js",
     "build": "npm run build-client && npm run build-server && shx mkdir -p dist/public && shx cp -r client/dist/* dist/public/",
     "start": "node dist/server.js"
   },
