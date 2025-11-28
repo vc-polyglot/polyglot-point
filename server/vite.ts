@@ -1,19 +1,22 @@
 // server/vite.ts
 import path from "path";
-import express, { Request, Response } from "express";
+import express from "express";
+import { Request, Response } from "express";
 
-// Usamos la carpeta raíz del proyecto en vez de import.meta.url
-const ROOT_DIR = process.cwd();
+// En Railway (y en producción en general), el proceso se ejecuta
+// desde la raíz del proyecto (/app). Nuestro build pone los archivos
+// estáticos en dist/public, así que usamos process.cwd() como base.
 
-// Solo activa en desarrollo si usas Vite en modo dev
 export function setupVite(app: express.Express) {
-  console.log("✅ setupVite ejecutado");
+  // En producción (Railway) no usamos Vite en modo dev,
+  // así que aquí no hacemos nada de momento.
+  console.log("✅ setupVite ejecutado (modo producción)");
 }
 
-// Sirve los archivos estáticos desde dist/public (que es lo que sube Railway)
+// Sirve archivos estáticos desde dist/public
 export function serveStatic(app: express.Express) {
-  const publicPath = path.resolve(ROOT_DIR, "dist/public");
-  console.log("📦 Sirviendo estáticos desde:", publicPath);
+  const publicPath = path.resolve(process.cwd(), "dist/public");
+  console.log("🛣️  Sirviendo estáticos desde:", publicPath);
 
   app.use(express.static(publicPath));
 
