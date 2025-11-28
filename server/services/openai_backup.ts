@@ -22,19 +22,17 @@ class OpenAIService {
   private openai: OpenAI;
 
   constructor() {
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error("OPENAI_API_KEY environment variable is required");
+    if (!process.env.POLYGLOT_OPENAI_KEY) {
+      throw new Error("POLYGLOT_OPENAI_KEY environment variable is required");
     }
-    this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    this.openai = new OpenAI({ apiKey: process.env.POLYGLOT_OPENAI_KEY });
   }
 
   async transcribeAudio(audioBuffer: Buffer, language?: string): Promise<TranscriptionResult> {
-    // CRITICAL: Check if language change is in progress
     if (languageManager.isLanguageChanging()) {
       throw new Error('LANGUAGE_CHANGE_IN_PROGRESS');
     }
     
-    // Use current language from manager if not specified
     const targetLanguage = language || languageManager.getCurrentLanguage();
     const audioSizeKB = audioBuffer.length / 1024;
     const MAX_RETRIES = 2;
@@ -54,14 +52,11 @@ class OpenAIService {
           }, timeoutMs);
         });
 
-        // CRITICAL: Force literal transcription preserving original language
         const whisperConfig: any = {
           file: file,
           model: "whisper-1", 
           response_format: "json",
           temperature: 0.0
-          // NO language parameter - let Whisper detect naturally without bias
-          // NO prompt - let Whisper work cleanly without interference
         };
 
         const transcription = await Promise.race([
@@ -71,7 +66,6 @@ class OpenAIService {
 
         if (timeoutHandler) clearTimeout(timeoutHandler);
         
-        // Handle JSON format to get transcription text
         const rawText = typeof transcription === 'string' ? transcription : (transcription as any).text;
         const detectedLanguage = 'auto';
         
@@ -81,13 +75,11 @@ class OpenAIService {
         console.log(`🎯 CRITICAL: RAW WHISPER OUTPUT: "${rawText}"`);
         console.log(`🎯 CRITICAL: INPUT LENGTH: ${rawText.length} characters`);
         
-        // CRITICAL: Filter out empty/invalid transcriptions that shouldn't trigger responses
         if (!rawText || rawText.length === 0) {
           console.log(`🚨 EMPTY TRANSCRIPTION: No speech detected`);
           throw new Error('NO_SPEECH_DETECTED');
         }
         
-        // Filter out Whisper hallucinations and prompt echoes
         const whisperHallucinations = [
           /^Transcribe word-by-word/i,
           /EXACTLY as spoken/i,
@@ -109,7 +101,6 @@ class OpenAIService {
           throw new Error('WHISPER_HALLUCINATION');
         }
         
-        // Filter out single emoji or very short nonsense that indicates no real speech
         const isEmoji = rawText === '😋' || rawText.length === 2 && rawText.charCodeAt(0) >= 0xD800;
         const isSingleCharNonsense = rawText.length === 1 && !/[a-zA-Z0-9]/.test(rawText);
         
@@ -118,53 +109,42 @@ class OpenAIService {
           throw new Error('NO_SPEECH_DETECTED');
         }
         
-        // CRITICAL: Preserve original transcription without auto-correction
         let correctedText = rawText;
         console.log(`🔍 PRESERVING ORIGINAL WHISPER TRANSCRIPTION: "${rawText}"`);
         
         console.log(`🎯 CRITICAL: CONTAINS MULTIPLE LANGUAGES: ${mixedLanguagePreserver.detectAutoTranslation(correctedText)}`);
         
-        // CRITICAL: Conservative detection for input quality assessment
         console.log(`🔍 CHECKING INPUT QUALITY AND WHISPER AUTO-TRANSLATION...`);
         
         let patternMatched = false;
         let lowQualityInput = false;
         
-        // VERY CONSERVATIVE detection for low-quality chaotic input
-        // Only trigger if ALL conditions are met to avoid false positives
         const words = correctedText.split(' ');
         const shortWords = words.filter((word: string) => word.length < 2);
         const hasFragmentedSyntax = (
-          shortWords.length > 3 && // Many single-letter fragments
-          !/\b(soy|estoy|tengo|quiero|puedo|voy|suis|sono|bin|ich)\b/i.test(correctedText) // No clear verbs
+          shortWords.length > 3 &&
+          !/\b(soy|estoy|tengo|quiero|puedo|voy|suis|sono|bin|ich)\b/i.test(correctedText)
         );
         
         const hasIncoherentMixing = (
-          /\b(le casa|la house|il maison|der casa)\b/i.test(correctedText) || // Article-noun language mismatch
-          /\b(est muy|is molto|ist très)\b/i.test(correctedText) // Verb-adjective language mismatch
+          /\b(le casa|la house|il maison|der casa)\b/i.test(correctedText) ||
+          /\b(est muy|is molto|ist très)\b/i.test(correctedText)
         );
         
         const hasExcessiveRepetition = (
-          /\b(\w+)-\1-\1\b/g.test(correctedText) || // Triple repetition pattern
-          /\b(\w{1,3})\s+\1\s+\1\s+\1/g.test(correctedText) // Repeated short words 4+ times
+          /\b(\w+)-\1-\1\b/g.test(correctedText) ||
+          /\b(\w{1,3})\s+\1\s+\1\s+\1/g.test(correctedText)
         );
         
-        // Mark as low quality ONLY if multiple severe indicators present
         lowQualityInput = hasFragmentedSyntax && (hasIncoherentMixing || hasExcessiveRepetition);
         
-        // Enhanced detection for Whisper auto-translation (existing logic)
         const isAutoTranslatedText = (
-          // Spanish-only output from likely mixed input
           (/^[A-Za-z\s,¿¡\?\.\-']+$/.test(correctedText) && 
            correctedText.length > 50 && 
            /^(Hola|Hello|Ciao|Bonjour|Hallo)\s+Clara/i.test(correctedText) &&
            (/\b(apreciar|hablar|contigo|estresada|querías)\b/i.test(correctedText))) ||
-          
-          // French-only output from likely Italian-French mix
           (/\b(adesso|je suis|affamé|parce que|décidé)\b/g.test(correctedText) &&
            !(/\badesso\b/.test(correctedText) && /\bje suis\b/.test(correctedText))) ||
-           
-          // Detection of language boundary corruption
           (correctedText.length > 80 && 
            /\b(wake up|petit déjeuner|travailler|affamé)\b/i.test(correctedText) &&
            !/\b(adesso|ora|stamattina)\b/i.test(correctedText))
@@ -176,21 +156,17 @@ class OpenAIService {
           console.log(`🚨 SUSPECTED WHISPER AUTO-TRANSLATION: Long Spanish-only text from likely mixed input`);
           console.log(`🔄 RECONSTRUCTING MIXED LANGUAGE CONTENT...`);
           
-          // Reconstruct likely mixed language patterns based on common user mixing
           let reconstructed = correctedText;
           
-          // Common patterns: English greeting + mixed content
           if (/^Hola Clara/.test(reconstructed)) {
             reconstructed = reconstructed.replace(/^Hola Clara/, "Hello Clara");
           }
           
-          // Italian expressions commonly mixed in
           reconstructed = reconstructed.replace(/\bapreciaría\b/g, "would appreciate");
           reconstructed = reconstructed.replace(/\bmuy contento\b/g, "molto contento");
           reconstructed = reconstructed.replace(/\bhablar contigo\b/g, "parlare con te");
           reconstructed = reconstructed.replace(/\bestuve muy estresada\b/g, "j'étais très stressée");
           
-          // Advanced 4+ language reconstruction patterns
           reconstructed = reconstructed.replace(/\bdesperté tarde\b/g, "wake up late");
           reconstructed = reconstructed.replace(/\bni siquiera desayuné\b/g, "n'ai même pas pris le petit déjeuner");
           reconstructed = reconstructed.replace(/\bera demasiado tarde\b/g, "c'était trop tard");
@@ -207,17 +183,14 @@ class OpenAIService {
           console.log(`✅ No auto-translation detected - preserving original: "${correctedText}"`);
         }
         
-        // Mark if this was an STT auto-translation correction for Clara's context
         const wasSTTCorrected = patternMatched;
         
-        // Pass quality indicators to conversation service for appropriate messaging
         const qualityContext = {
           lowQualityInput,
           wasAutoTranslated: isAutoTranslatedText,
           wasSTTCorrected
         };
         
-        // Process transcription to preserve mixed languages
         const preservationResult = mixedLanguagePreserver.processTranscription(correctedText);
         
         if (preservationResult.wasAutoTranslated) {
@@ -227,7 +200,6 @@ class OpenAIService {
         
         const finalText = preservationResult.text;
         
-        // Detect false content generation from silence
         const falsePhrases = [
           "thank you",
           "thanks",
@@ -254,12 +226,12 @@ class OpenAIService {
 
         return {
           text: finalText,
-          language: 'mixed', // Don't force language detection
-          duration: 0, // Simple format doesn't provide duration
+          language: 'mixed',
+          duration: 0,
           languageSegments: [],
           detectedLanguages: ['mixed'],
-          wasSTTCorrected: wasSTTCorrected, // Pass this info to Clara
-          qualityContext // Pass input quality assessment to Clara
+          wasSTTCorrected: wasSTTCorrected,
+          qualityContext
         };
         
       } catch (error: any) {
@@ -334,8 +306,6 @@ class OpenAIService {
     return languageCount > 1;
   }
 
-
-
   private async executeOpenAICall(
     userMessage: string,
     language: string,
@@ -387,27 +357,12 @@ FOR CLEAR INPUT:
 - Ask relevant follow-up questions
 - Show progression in the dialogue
 
-EXAMPLES:
-
-User says something unclear:
-You: "Esa frase me confunde un poco. ¿Podrías decirme qué querías expresar con eso?"
-
-User continues a topic:
-You: "Interesante lo que dices. Me hace pensar que..."
-
-User asks about something new:
-You: "Esa es una buena pregunta. En mi experiencia..."
-
 ABSOLUTELY FORBIDDEN:
-- Repeating "¡Hola! Estoy muy bien, gracias" when already established
-- Generic responses that ignore the user's actual input
-- Treating each message as the first interaction
-- Giving the same answer to different questions
-- Ignoring context from previous messages
+- Repeating phrases already used in the conversation
+- Ignoring user input
+- Responding in the wrong language
 
-Your goal is to maintain a natural, flowing conversation where each response is unique and builds on what came before, always in ${languageNames[language as keyof typeof languageNames]}.
-
-If the input is unclear, ask for clarification in ${languageNames[language as keyof typeof languageNames]}. Never assume what the user meant to say.`;
+If the input is unclear, ask for clarification in ${languageNames[language as keyof typeof languageNames]}.`;
 
     const messages = [
       { role: "system", content: finalSystemPrompt },
@@ -425,21 +380,17 @@ If the input is unclear, ask for clarification in ${languageNames[language as ke
     const responseContent = completion.choices[0].message.content || "";
     const sanitizedContent = responseContent
       .replace(/\*\*([^*]+)\*\*/g, '$1')
-      .replace(/\*([^*]+)\*/g, '$1')
       .replace(/```[^`]*```/g, '')
       .replace(/`([^`]+)`/g, '$1')
       .trim();
 
-    // CRITICAL: Validate response language and enforce user selection
     const responseLanguage = this.detectResponseLanguage(sanitizedContent);
     console.log(`🚨 CRITICAL VALIDATION: Response language detected: ${responseLanguage}, Required: ${language}`);
     
-    // STRICT language validation - Clara MUST respond in the active language
     if (responseLanguage !== language && responseLanguage !== 'unknown') {
       console.error(`🚨 CRITICAL LANGUAGE VIOLATION: Clara responded in ${responseLanguage}, required ${language}`);
       console.error(`🚨 REGENERATING RESPONSE IN CORRECT LANGUAGE...`);
       
-      // Force regeneration with stricter prompt
       const strictPrompt = `CRITICAL OVERRIDE: You MUST respond ONLY in ${languageNames[language as keyof typeof languageNames]}. The user said: "${userMessage}". Respond naturally but EXCLUSIVELY in ${languageNames[language as keyof typeof languageNames]}. Do not use any other language.`;
       
       const strictCompletion = await this.openai.chat.completions.create({
@@ -455,130 +406,105 @@ If the input is unclear, ask for clarification in ${languageNames[language as ke
       const correctedContent = strictCompletion.choices[0].message.content || "";
       const correctedSanitized = correctedContent
         .replace(/\*\*([^*]+)\*\*/g, '$1')
-        .replace(/\*([^*]+)\*/g, '$1')
         .trim();
       
       console.log(`✅ CORRECTED RESPONSE: "${correctedSanitized}"`);
       return {
         content: correctedSanitized,
-        detectedLanguage: language
+        corrections: [],
+        suggestions: []
       };
     }
 
     return {
       content: sanitizedContent,
-      detectedLanguage: responseLanguage
+      corrections: [],
+      suggestions: []
     };
   }
-
-
-
-
 
   private detectResponseLanguage(text: string): string {
     console.log(`🔍 LANGUAGE DETECTION: Analyzing text "${text}"`);
     
-    // More precise language patterns to avoid cross-language false positives
     const patterns = {
-      es: /\b(disculpa|perdón|sigamos|practicando|español|puedes|repetir|dijiste|estoy|tratando|aprender|pero|tengo|nadie|quien|practicar|gustaria|soy|muy|bien|mal|si|gracias|hola|como|estas|continuemos)\b/i,
-      en: /\b(sorry|let's|continue|practicing|english|can|you|repeat|what|said|hi|how|are|you|today|know|trying|learn|but|don't|have|anyone|practice|with|like|understand|hello|good|bad|yes|thank|we)\b/i,
-      fr: /\b(désolé|continuons|pratiquer|français|peux|tu|répéter|ce|que|as|dit|salut|bonjour|comment|allez|vous|parce|comprends|pas|avec|pour|mon|amour|bien|oui|merci|parle)\b/i,
-      it: /\b(scusa|continuiamo|praticare|italiano|puoi|ripetere|quello|che|hai|detto|ciao|come|stai|bene|molto|con|per|non|posso|capisco|parlare|grazie|prego|essere|fare|dire|ho|notato|era|inglese|andrebbe|ripeterlo|così|posso|seguirti|meglio)\b/i,
-      de: /\b(entschuldigung|lass|uns|weiter|auf|deutsch|üben|kannst|du|wiederholen|was|gesagt|hast|hallo|wie|geht|es|ihnen|ich|bin|sehr|gut|schlecht|ja|danke|sprechen|lernen|verstehen|können|sein|haben)\b/i,
-      pt: /\b(desculpa|vamos|continuar|praticando|português|podes|repetir|que|disseste|olá|como|está|você|estou|tentando|aprender|mas|não|tenho|ninguém|praticar|comigo|gostaria|obrigado|sim|por|favor)\b/i
+      es: /\b(disculpa|perdón|sigamos|practicando|español|puedes|repetir|dijiste|estoy|tratando|aprender|pero|tengo|nadie|quien|practicar|gustaria|muy|bien|si|gracias|hola|como|estas|continuemos)\b/i,
+      en: /\b(sorry|continue|practicing|english|repeat|hi|how|you|today|trying|learn|anyone|practice|hello|thank)\b/i,
+      fr: /\b(désolé|continuons|pratiquer|français|répéter|salut|bonjour|comment|allez|bien|oui|merci)\b/i,
+      it: /\b(scusa|continuiamo|praticare|italiano|ripetere|ciao|come|stai|bene|grazie)\b/i,
+      de: /\b(entschuldigung|weiter|deutsch|wiederholen|hallo|wie|geht|ihnen|gut|danke)\b/i,
+      pt: /\b(desculpa|continuar|praticando|português|repetir|olá|como|está|bem|obrigado)\b/i
     };
 
-    // Count matches for each language and log details  
     const scores: { [key: string]: number } = {};
     for (const [lang, pattern] of Object.entries(patterns)) {
       const matches = text.match(pattern) || [];
       scores[lang] = matches.length;
       if (matches.length > 0) {
-        console.log(`🔍 ${lang.toUpperCase()}: ${matches.length} matches [${matches.join(', ')}]`);
+        console.log(`🔍 ${lang.toUpperCase()}: ${matches.length} matches`);
       }
     }
 
     const maxScore = Math.max(...Object.values(scores));
     if (maxScore === 0) {
-      console.log(`🔍 DETECTION RESULT: unknown (no patterns matched)`);
+      console.log(`🔍 DETECTION RESULT: unknown`);
       return 'unknown';
     }
     
     const detectedLang = Object.entries(scores).find(([_, score]) => score === maxScore)?.[0] || 'unknown';
-    console.log(`🔍 DETECTION RESULT: ${detectedLang} (score: ${maxScore})`);
+    console.log(`🔍 DETECTION RESULT: ${detectedLang}`);
     return detectedLang;
   }
 
-  /**
-   * Systemic auto-translation detection and correction for all language pairs
-   */
   private detectAndFixAutoTranslation(text: string, detectedLanguage: string): string {
     console.log(`🔍 AUTO-TRANSLATION CHECK: Detected="${detectedLanguage}", Text="${text}"`);
     
-    // Portuguese-to-Spanish auto-translation patterns
     if (text.includes('hola') && text.includes('quiero') && text.includes('cocina')) {
       console.log(`🚨 PORTUGUESE-TO-SPANISH AUTO-TRANSLATION DETECTED`);
-      console.log(`❌ Whisper output: "${text}"`);
-      
       const corrected = text
         .replace(/hola/gi, 'Oi')
-        .replace(/¿?todo bien\??/gi, 'tudo bem?')
+        .replace(/todo bien/gi, 'tudo bem')
         .replace(/quiero/gi, 'Eu quero')
         .replace(/aprender como se dicen/gi, 'aprender como se dizem')
         .replace(/que hay en la cocina/gi, 'que há na cozinha')
-        .replace(/¿?puedes ayudarme\??/gi, 'Pode me ajudar?')
-        .replace(/¿/g, '');
-        
+        .replace(/puedes ayudarme/gi, 'Pode me ajudar?');
       console.log(`✅ Reconstructed Portuguese: "${corrected}"`);
       return corrected;
     }
-    
-    // Italian-to-Spanish auto-translation patterns
+
     if (text.includes('hola') && text.includes('como estas') && text.includes('italiano')) {
       console.log(`🚨 ITALIAN-TO-SPANISH AUTO-TRANSLATION DETECTED`);
-      
       const corrected = text
         .replace(/hola/gi, 'Ciao')
         .replace(/como estas/gi, 'come stai')
-        .replace(/quiero practicar/gi, 'vorrei praticare')
-        .replace(/¿/g, '');
-        
+        .replace(/quiero practicar/gi, 'vorrei praticare');
       console.log(`✅ Reconstructed Italian: "${corrected}"`);
       return corrected;
     }
-    
-    // French-to-English auto-translation patterns
+
     if (text.includes('hello') && text.includes('how are you') && text.includes('french')) {
       console.log(`🚨 FRENCH-TO-ENGLISH AUTO-TRANSLATION DETECTED`);
-      
       const corrected = text
         .replace(/hello|hi/gi, 'Bonjour')
         .replace(/how are you/gi, 'comment allez-vous')
         .replace(/want to practice/gi, 'voudrais pratiquer')
         .replace(/french/gi, 'français');
-        
       console.log(`✅ Reconstructed French: "${corrected}"`);
       return corrected;
     }
-    
-    // German-to-English auto-translation patterns
+
     if (text.includes('hello') && text.includes('how are you') && text.includes('german')) {
       console.log(`🚨 GERMAN-TO-ENGLISH AUTO-TRANSLATION DETECTED`);
-      
       const corrected = text
         .replace(/hello|hi/gi, 'Hallo')
         .replace(/how are you/gi, 'wie geht es Ihnen')
         .replace(/want to practice/gi, 'möchte üben')
         .replace(/german/gi, 'Deutsch');
-        
       console.log(`✅ Reconstructed German: "${corrected}"`);
       return corrected;
     }
-    
-    // No auto-translation detected, return original
+
     return text;
   }
 }
 
-// Export singleton instance
 export const openaiService = new OpenAIService();

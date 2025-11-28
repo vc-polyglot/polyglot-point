@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = new OpenAI({ apiKey: process.env.POLYGLOT_OPENAI_KEY });
 
 interface PronunciationIssue {
   detected: boolean;
@@ -61,16 +61,12 @@ export class PronunciationAnalyzer {
     ]
   };
 
-  /**
-   * Analyze potential pronunciation issues by comparing transcription with expected content
-   */
   async analyzePronunciation(
     transcribedText: string,
     conversationContext: string[],
     language: string
   ): Promise<PronunciationAnalysisResult> {
     try {
-      // Step 1: Check for common mispronunciations
       const commonIssue = this.checkCommonMispronunciations(transcribedText, language);
       if (commonIssue.detected) {
         return {
@@ -80,7 +76,6 @@ export class PronunciationAnalyzer {
         };
       }
 
-      // Step 2: Use GPT-4o to analyze contextual pronunciation issues
       const contextualIssue = await this.analyzeContextualPronunciation(
         transcribedText,
         conversationContext,
@@ -94,17 +89,12 @@ export class PronunciationAnalyzer {
     }
   }
 
-  /**
-   * Check against known common mispronunciations
-   */
   private checkCommonMispronunciations(text: string, language: string): PronunciationIssue {
     const commonErrors = this.commonMispronunciations[language] || [];
     const lowerText = text.toLowerCase();
 
     for (const error of commonErrors) {
-      // Check if the heard word appears in the text
       if (lowerText.includes(error.heard.toLowerCase())) {
-        // Simple heuristic: if context suggests they meant the intended word
         return {
           detected: true,
           originalWord: error.heard,
@@ -117,9 +107,6 @@ export class PronunciationAnalyzer {
     return { detected: false };
   }
 
-  /**
-   * Use GPT-4o to analyze pronunciation based on conversation context
-   */
   private async analyzeContextualPronunciation(
     transcribedText: string,
     conversationContext: string[],
@@ -178,9 +165,6 @@ Respond with JSON:
     }
   }
 
-  /**
-   * Generate feedback message for pronunciation issues
-   */
   private generatePronunciationFeedback(issue: PronunciationIssue, language: string): string {
     const templates = {
       en: `I heard "${issue.originalWord}", but I think you meant "${issue.intendedWord}". ${issue.suggestion} Would you like to try saying it again?`,

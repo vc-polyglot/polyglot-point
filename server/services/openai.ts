@@ -18,15 +18,15 @@ class OpenAIService {
   private universalDetector: UniversalErrorDetector;
 
   constructor() {
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error('OPENAI_API_KEY environment variable is required');
+    if (!process.env.POLYGLOT_OPENAI_KEY) {
+      throw new Error('POLYGLOT_OPENAI_KEY environment variable is required');
     }
     
     this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: process.env.POLYGLOT_OPENAI_KEY,
     });
     
-    this.universalDetector = new UniversalErrorDetector(process.env.OPENAI_API_KEY);
+    this.universalDetector = new UniversalErrorDetector(process.env.POLYGLOT_OPENAI_KEY);
   }
 
   async transcribeAudio(audioBuffer: Buffer, sessionId: string, targetLanguage?: string): Promise<string> {
@@ -45,9 +45,6 @@ class OpenAIService {
           }, timeoutMs);
         });
 
-        // Create a Blob-like object for Node.js OpenAI client
-        
-        // Write buffer to temporary file
         const tempDir = path.join(process.cwd(), 'temp');
         if (!fs.existsSync(tempDir)) {
           fs.mkdirSync(tempDir, { recursive: true });
@@ -70,7 +67,6 @@ class OpenAIService {
           timeoutHandler = null;
         }
 
-        // Clean up temp file
         try {
           if (tempFilePath && fs.existsSync(tempFilePath)) {
             fs.unlinkSync(tempFilePath);
@@ -89,7 +85,6 @@ class OpenAIService {
           timeoutHandler = null;
         }
         
-        // Clean up temp file on error
         try {
           if (tempFilePath && fs.existsSync(tempFilePath)) {
             fs.unlinkSync(tempFilePath);
@@ -121,7 +116,6 @@ class OpenAIService {
     console.log(`Generating AI response for: "${userMessage}"`);
     console.log(`🎯 CLARA LANGUAGE: ${language}`);
 
-    // Critical language enforcement based on selected tab
     const languageNames = {
       'en': 'English',
       'es': 'Spanish', 
@@ -155,7 +149,6 @@ You need "are" instead of "you are" in questions. Good job practicing! Want to t
       }
     ];
 
-    // Add conversation history
     if (conversationHistory && conversationHistory.length > 0) {
       conversationHistory.forEach(msg => {
         if (msg.role === "user" || msg.role === "assistant") {
@@ -167,7 +160,6 @@ You need "are" instead of "you are" in questions. Good job practicing! Want to t
       });
     }
 
-    // Add current user message
     messages.push({
       role: "user",
       content: userMessage
@@ -176,7 +168,7 @@ You need "are" instead of "you are" in questions. Good job practicing! Want to t
     console.log(`🔥 SENDING TO OPENAI:`, JSON.stringify(messages, null, 2));
 
     const response = await this.openai.chat.completions.create({
-      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      model: "gpt-4o",
       messages: messages,
       max_tokens: 150,
       temperature: 0.7,
@@ -189,7 +181,6 @@ You need "are" instead of "you are" in questions. Good job practicing! Want to t
     };
   }
 
-  // Simplified error detection methods
   async detectBasicErrors(userInput: string, language: string): Promise<Array<{wrong: string, correct: string}>> {
     return [];
   }
