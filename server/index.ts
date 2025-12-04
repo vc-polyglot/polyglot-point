@@ -1,8 +1,17 @@
-import express, { type Request, Response, NextFunction } from "express";
+﻿import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://polyglot-point.vercel.app",
+    "https://polyglot-point-production.up.railway.app"
+  ],
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "x-user-id"]
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -26,7 +35,7 @@ app.use((req, res, next) => {
       }
 
       if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
+        logLine = logLine.slice(0, 79) + "â€¦";
       }
 
       log(logLine);

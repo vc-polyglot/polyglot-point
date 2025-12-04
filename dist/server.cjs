@@ -145168,8 +145168,7 @@ var OpenAI = class {
   /**
    * API Client for interfacing with the OpenAI API.
    *
-   * @param {string | undefined} [opts.apiKey=process.env['POLYGLOT_OPENAI_KEY
-'] ?? undefined]
+   * @param {string | undefined} [opts.apiKey=process.env['OPENAI_API_KEY'] ?? undefined]
    * @param {string | null | undefined} [opts.organization=process.env['OPENAI_ORG_ID'] ?? null]
    * @param {string | null | undefined} [opts.project=process.env['OPENAI_PROJECT_ID'] ?? null]
    * @param {string | null | undefined} [opts.webhookSecret=process.env['OPENAI_WEBHOOK_SECRET'] ?? null]
@@ -145182,8 +145181,7 @@ var OpenAI = class {
    * @param {Record<string, string | undefined>} opts.defaultQuery - Default query parameters to include with every request to the API.
    * @param {boolean} [opts.dangerouslyAllowBrowser=false] - By default, client-side use of this library is not allowed, as it risks exposing your secret API credentials to attackers.
    */
-  constructor({ baseURL = readEnv("OPENAI_BASE_URL"), apiKey = readEnv("POLYGLOT_OPENAI_KEY
-"), organization = readEnv("OPENAI_ORG_ID") ?? null, project = readEnv("OPENAI_PROJECT_ID") ?? null, webhookSecret = readEnv("OPENAI_WEBHOOK_SECRET") ?? null, ...opts } = {}) {
+  constructor({ baseURL = readEnv("OPENAI_BASE_URL"), apiKey = readEnv("OPENAI_API_KEY"), organization = readEnv("OPENAI_ORG_ID") ?? null, project = readEnv("OPENAI_PROJECT_ID") ?? null, webhookSecret = readEnv("OPENAI_WEBHOOK_SECRET") ?? null, ...opts } = {}) {
     _OpenAI_instances.add(this);
     _OpenAI_encoder.set(this, void 0);
     this.completions = new Completions2(this);
@@ -145207,8 +145205,7 @@ var OpenAI = class {
     this.evals = new Evals(this);
     this.containers = new Containers(this);
     if (apiKey === void 0) {
-      throw new OpenAIError("Missing credentials. Please pass an `apiKey`, or set the `POLYGLOT_OPENAI_KEY
-` environment variable.");
+      throw new OpenAIError("Missing credentials. Please pass an `apiKey`, or set the `OPENAI_API_KEY` environment variable.");
     }
     const options = {
       apiKey,
@@ -145840,17 +145837,13 @@ var OpenAIService = class {
   openai;
   universalDetector;
   constructor() {
-    if (!process.env.POLYGLOT_OPENAI_KEY
-) {
-      throw new Error("POLYGLOT_OPENAI_KEY
- environment variable is required");
+    if (!process.env.POLYGLOT_OPENAI_KEY) {
+      throw new Error("POLYGLOT_OPENAI_KEY environment variable is required");
     }
     this.openai = new OpenAI({
       apiKey: process.env.POLYGLOT_OPENAI_KEY
-
     });
-    this.universalDetector = new UniversalErrorDetector(process.env.POLYGLOT_OPENAI_KEY
-);
+    this.universalDetector = new UniversalErrorDetector(process.env.POLYGLOT_OPENAI_KEY);
   }
   async transcribeAudio(audioBuffer, sessionId, targetLanguage) {
     console.log(`\u{1F3A4} WHISPER TRANSCRIPTION: Starting for session ${sessionId}`);
@@ -145961,7 +145954,6 @@ You need "are" instead of "you are" in questions. Good job practicing! Want to t
     console.log(`\u{1F525} SENDING TO OPENAI:`, JSON.stringify(messages2, null, 2));
     const response = await this.openai.chat.completions.create({
       model: "gpt-4o",
-      // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
       messages: messages2,
       max_tokens: 150,
       temperature: 0.7
@@ -145971,7 +145963,6 @@ You need "are" instead of "you are" in questions. Good job practicing! Want to t
       content: responseContent
     };
   }
-  // Simplified error detection methods
   async detectBasicErrors(userInput, language) {
     return [];
   }
@@ -148306,16 +148297,13 @@ async function registerRoutes(app2) {
 
 // server/vite.ts
 var import_path31 = __toESM(require("path"), 1);
-var import_url = require("url");
 var import_express2 = __toESM(require_express2(), 1);
-var import_meta = {};
-var __filename = (0, import_url.fileURLToPath)(import_meta.url);
-var __dirname2 = import_path31.default.dirname(__filename);
 function setupVite(app2) {
-  console.log("\u2705 setupVite ejecutado");
+  console.log("\u2705 setupVite ejecutado (modo producci\xF3n)");
 }
 function serveStatic(app2) {
-  const publicPath = import_path31.default.resolve(__dirname2, "./public");
+  const publicPath = import_path31.default.resolve(process.cwd(), "dist/public");
+  console.log("\u{1F6E3}\uFE0F  Sirviendo est\xE1ticos desde:", publicPath);
   app2.use(import_express2.default.static(publicPath));
   app2.get("*", (req, res) => {
     res.sendFile(import_path31.default.join(publicPath, "index.html"));
