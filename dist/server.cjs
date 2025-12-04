@@ -148606,6 +148606,43 @@ app.use(
   })
 );
 app.use(import_express3.default.json());
+app.post("/chat", async (req, res) => {
+  try {
+    console.log("\u{1F4E8} Chat request received");
+    const { message, text: text2, userId } = req.body;
+    const input = message ?? text2 ?? null;
+    if (!input) {
+      return res.status(400).json({
+        error: "Missing message text",
+        received: req.body
+      });
+    }
+    console.log(`\u2705 Message received: ${input.substring(0, 50)}...`);
+    res.json({
+      corrected: `\u2705 Recibido: ${input}`,
+      explanations: [
+        "Conexi\xF3n backend-frontend establecida exitosamente"
+      ],
+      tips: [
+        "El sistema est\xE1 funcionando correctamente",
+        "Ahora puedes integrar OpenAI para correcciones reales"
+      ],
+      language: "es",
+      timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+      debug: {
+        backend: "polyglot-point-production",
+        status: "connected",
+        inputLength: input.length
+      }
+    });
+  } catch (error40) {
+    console.error("\u274C Error in /chat:", error40);
+    res.status(500).json({
+      error: "Internal server error",
+      message: error40 instanceof Error ? error40.message : String(error40)
+    });
+  }
+});
 app.use(import_express3.default.urlencoded({ extended: false }));
 app.use((req, res, next) => {
   const start = Date.now();

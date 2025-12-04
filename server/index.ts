@@ -18,6 +18,51 @@ app.use(
 );
 
 app.use(express.json());
+// ========== RUTA CHAT PARA POLYGLOT POINT ==========
+app.post("/chat", async (req: Request, res: Response) => {
+  try {
+    console.log("📨 Chat request received");
+    
+    const { message, text, userId } = req.body;
+    const input = message ?? text ?? null;
+    
+    if (!input) {
+      return res.status(400).json({ 
+        error: "Missing message text",
+        received: req.body
+      });
+    }
+    
+    console.log(`✅ Message received: ${input.substring(0, 50)}...`);
+    
+    // Respuesta que espera el frontend de Polyglot Point
+    res.json({
+      corrected: `✅ Recibido: ${input}`,
+      explanations: [
+        "Conexión backend-frontend establecida exitosamente"
+      ],
+      tips: [
+        "El sistema está funcionando correctamente",
+        "Ahora puedes integrar OpenAI para correcciones reales"
+      ],
+      language: "es",
+      timestamp: new Date().toISOString(),
+      debug: {
+        backend: "polyglot-point-production",
+        status: "connected",
+        inputLength: input.length
+      }
+    });
+    
+  } catch (error) {
+    console.error("❌ Error in /chat:", error);
+    res.status(500).json({
+      error: "Internal server error",
+      message: error instanceof Error ? error.message : String(error)
+    });
+  }
+});
+
 app.use(express.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {
