@@ -20,8 +20,8 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// ========== RUTA CHAT PARA POLYGLOT POINT ==========
-app.post("/chat", async (req: Request, res: Response) => {
+// ========== HANDLER ÚNICO PARA CHAT ==========
+async function chatHandler(req: Request, res: Response) {
   try {
     console.log("📨 Chat request received");
 
@@ -37,7 +37,7 @@ app.post("/chat", async (req: Request, res: Response) => {
 
     console.log(`✅ Message received: ${input.substring(0, 50)}...`);
 
-    // Respuesta que entiende el frontend de Polyglot Point: Write
+    // Respuesta de prueba que entiende el frontend
     res.json({
       corrected: input,
       explanations: [
@@ -59,8 +59,14 @@ app.post("/chat", async (req: Request, res: Response) => {
       message: error instanceof Error ? error.message : String(error),
     });
   }
-});
+}
 
+// ========== RUTAS CHAT (AMBAS) ==========
+// Lo que sea que use el frontend, cae aquí:
+app.post("/chat", chatHandler);
+app.post("/api/chat", chatHandler);
+
+// ========== LOG MIDDLEWARE ==========
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -74,7 +80,7 @@ app.use((req, res, next) => {
 
   res.on("finish", () => {
     const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
+    if (path.startsWith("/api") || path === "/chat") {
       let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
@@ -108,7 +114,7 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  const port = 5000;
+  const port = Number(process.env.PORT) || 5000;
   server.listen(port, "0.0.0.0", () => {
     log(`serving on port ${port}`);
   });

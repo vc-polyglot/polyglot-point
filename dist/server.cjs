@@ -148607,7 +148607,7 @@ app.use(
 );
 app.use(import_express3.default.json());
 app.use(import_express3.default.urlencoded({ extended: false }));
-app.post("/chat", async (req, res) => {
+async function chatHandler(req, res) {
   try {
     console.log("\u{1F4E8} Chat request received");
     const { message, text: text2, userId } = req.body;
@@ -148640,7 +148640,9 @@ app.post("/chat", async (req, res) => {
       message: error40 instanceof Error ? error40.message : String(error40)
     });
   }
-});
+}
+app.post("/chat", chatHandler);
+app.post("/api/chat", chatHandler);
 app.use((req, res, next) => {
   const start = Date.now();
   const path7 = req.path;
@@ -148652,7 +148654,7 @@ app.use((req, res, next) => {
   };
   res.on("finish", () => {
     const duration3 = Date.now() - start;
-    if (path7.startsWith("/api")) {
+    if (path7.startsWith("/api") || path7 === "/chat") {
       let logLine = `${req.method} ${path7} ${res.statusCode} in ${duration3}ms`;
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
@@ -148678,7 +148680,7 @@ app.use((req, res, next) => {
   } else {
     serveStatic(app);
   }
-  const port = 5e3;
+  const port = Number(process.env.PORT) || 5e3;
   server.listen(port, "0.0.0.0", () => {
     log(`serving on port ${port}`);
   });
