@@ -1,4 +1,4 @@
-import express, { type Request, type Response, type NextFunction } from "express";
+﻿import express, { type Request, type Response, type NextFunction } from "express";
 import cors from "cors";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
@@ -20,10 +20,10 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// ========== HANDLER ÚNICO PARA CHAT ==========
+// ========== HANDLER ÃšNICO PARA CHAT ==========
 async function chatHandler(req: Request, res: Response) {
   try {
-    console.log("📨 Chat request received");
+    console.log("ðŸ“¨ Chat request received");
 
     const { message, text, userId } = req.body;
     const input = message ?? text ?? null;
@@ -35,25 +35,25 @@ async function chatHandler(req: Request, res: Response) {
       });
     }
 
-    console.log(`✅ Message received: ${input.substring(0, 50)}...`);
+    console.log(`âœ… Message received: ${input.substring(0, 50)}...`);
 
     // Respuesta de prueba que entiende el frontend
     res.json({
       corrected: input,
       explanations: [
-        "✅ Conexión establecida con el backend",
-        "📨 Formato de respuesta 100% compatible con el frontend",
+        "âœ… ConexiÃ³n establecida con el backend",
+        "ðŸ“¨ Formato de respuesta 100% compatible con el frontend",
       ],
       tips: [
-        "🔧 Listo para conectar OpenAI/GPT/Claude",
-        "🎯 Cambia esta respuesta por la corrección gramatical real",
+        "ðŸ”§ Listo para conectar OpenAI/GPT/Claude",
+        "ðŸŽ¯ Cambia esta respuesta por la correcciÃ³n gramatical real",
       ],
       language: "es",
       timestamp: new Date().toISOString(),
       status: "operational",
     });
   } catch (error) {
-    console.error("❌ Error in /chat:", error);
+    console.error("âŒ Error in /chat:", error);
     res.status(500).json({
       error: "Internal server error",
       message: error instanceof Error ? error.message : String(error),
@@ -62,7 +62,7 @@ async function chatHandler(req: Request, res: Response) {
 }
 
 // ========== RUTAS CHAT (AMBAS) ==========
-// Lo que sea que use el frontend, cae aquí:
+// Lo que sea que use el frontend, cae aquÃ­:
 app.post("/chat", chatHandler);
 app.post("/api/chat", chatHandler);
 
@@ -87,7 +87,7 @@ app.use((req, res, next) => {
       }
 
       if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
+        logLine = logLine.slice(0, 79) + "â€¦";
       }
 
       log(logLine);
@@ -119,3 +119,4 @@ app.use((req, res, next) => {
     log(`serving on port ${port}`);
   });
 })();
+

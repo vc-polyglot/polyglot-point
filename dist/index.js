@@ -1,4 +1,4 @@
-var __defProp = Object.defineProperty;
+﻿var __defProp = Object.defineProperty;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
   get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
@@ -813,11 +813,11 @@ var init_googleTTS = __esm({
       detectTextLanguage(text) {
         const patterns = {
           en: /\b(hello|hi|thank|you|very|good|well|am|doing|glad|reaching|practice|english|here|chat|feel|free|ask|anything|tell|about|day|i'm|i am|today|would|like)\b/i,
-          es: /\b(hola|gracias|muy|bien|estoy|como|estas|que|para|con|pero|español|me|alegra|aprendiendo|gustaría|hablar|quiero|practicar)\b/i,
-          fr: /\b(bonjour|salut|merci|très|bien|suis|comment|allez|vous|français|que|pour|avec|mais|j'ai|apprends|voudrais|parler)\b/i,
+          es: /\b(hola|gracias|muy|bien|estoy|como|estas|que|para|con|pero|espaÃ±ol|me|alegra|aprendiendo|gustarÃ­a|hablar|quiero|practicar)\b/i,
+          fr: /\b(bonjour|salut|merci|trÃ¨s|bien|suis|comment|allez|vous|franÃ§ais|que|pour|avec|mais|j'ai|apprends|voudrais|parler)\b/i,
           it: /\b(ciao|grazie|molto|bene|sono|come|stai|italiano|che|per|con|ma|ho|sto|imparando|vorrei|parlare)\b/i,
-          de: /\b(hallo|guten|danke|sehr|gut|bin|wie|geht|deutsch|was|für|mit|aber|habe|lerne|möchte|sprechen)\b/i,
-          pt: /\b(olá|oi|obrigado|muito|bem|estou|como|está|português|que|para|com|mas|tenho|sou|aprendendo|gostaria|falar)\b/i
+          de: /\b(hallo|guten|danke|sehr|gut|bin|wie|geht|deutsch|was|fÃ¼r|mit|aber|habe|lerne|mÃ¶chte|sprechen)\b/i,
+          pt: /\b(olÃ¡|oi|obrigado|muito|bem|estou|como|estÃ¡|portuguÃªs|que|para|com|mas|tenho|sou|aprendendo|gostaria|falar)\b/i
         };
         const scores = {};
         for (const [lang, pattern] of Object.entries(patterns)) {
@@ -1630,11 +1630,11 @@ COMPORTAMENTO DE CORRE\xC7\xC3O EXAUSTIVA:
   validateLanguageCompliance(response, expectedLanguage) {
     const languagePatterns = {
       en: /\b(the|and|you|are|this|that|with|have|for)\b/i,
-      es: /\b(el|la|y|tú|eres|esto|eso|con|tener|para)\b/i,
+      es: /\b(el|la|y|tÃº|eres|esto|eso|con|tener|para)\b/i,
       fr: /\b(le|la|et|tu|es|ce|cette|avec|avoir|pour)\b/i,
       it: /\b(il|la|e|tu|sei|questo|quella|con|avere|per)\b/i,
-      de: /\b(der|die|und|du|bist|das|diese|mit|haben|für)\b/i,
-      pt: /\b(o|a|e|tu|és|isto|isso|com|ter|para)\b/i
+      de: /\b(der|die|und|du|bist|das|diese|mit|haben|fÃ¼r)\b/i,
+      pt: /\b(o|a|e|tu|Ã©s|isto|isso|com|ter|para)\b/i
     };
     const expectedPattern = languagePatterns[expectedLanguage];
     if (!expectedPattern) return true;
@@ -2315,14 +2315,14 @@ Create a concise summary for Clara to reference in future conversations:`;
       /j'ai entendu[.\s]+"([^"]+)"[.\s]*mais[.\s]*je pense que vous vouliez dire[.\s]+"([^"]+)"/i,
       /vous pourriez dire[.\s]+"([^"]+)"/i,
       /essayez de dire[.\s]+"([^"]+)"/i,
-      /une meilleure façon serait[.\s]+"([^"]+)"/i,
+      /une meilleure faÃ§on serait[.\s]+"([^"]+)"/i,
       // Spanish patterns
-      /podrías decir[.\s]+"([^"]+)"/i,
+      /podrÃ­as decir[.\s]+"([^"]+)"/i,
       /intenta decir[.\s]+"([^"]+)"/i,
-      /una mejor forma sería[.\s]+"([^"]+)"/i,
+      /una mejor forma serÃ­a[.\s]+"([^"]+)"/i,
       // General correction indicators
       /mais je pense que vous vouliez dire[.\s]+"([^"]+)"/i,
-      /pero creo que querías decir[.\s]+"([^"]+)"/i,
+      /pero creo que querÃ­as decir[.\s]+"([^"]+)"/i,
       /but I think you meant[.\s]+"([^"]+)"/i
     ];
     if (botResponse.includes("tu") && botResponse.includes("tout")) {
@@ -2488,30 +2488,30 @@ Create a concise summary for Clara to reference in future conversations:`;
       /listen to[,\s]*not listen from/i,
       /different from[,\s]*not different than/i,
       // Spanish patterns
-      /podrías decir[:\s]+"([^"]+)"/i,
-      /sería mejor decir[:\s]+"([^"]+)"/i,
+      /podrÃ­as decir[:\s]+"([^"]+)"/i,
+      /serÃ­a mejor decir[:\s]+"([^"]+)"/i,
       /la forma correcta es[:\s]+"([^"]+)"/i,
-      /en español decimos[:\s]+"([^"]+)"[,\s]*no[:\s]+"([^"]+)"/i,
+      /en espaÃ±ol decimos[:\s]+"([^"]+)"[,\s]*no[:\s]+"([^"]+)"/i,
       // French patterns
       /tu pourrais dire[:\s]+"([^"]+)"/i,
       /il vaut mieux dire[:\s]+"([^"]+)"/i,
-      /la façon correcte est[:\s]+"([^"]+)"/i,
-      /en français[,\s]*on dit[:\s]+"([^"]+)"[,\s]*pas[:\s]+"([^"]+)"/i,
+      /la faÃ§on correcte est[:\s]+"([^"]+)"/i,
+      /en franÃ§ais[,\s]*on dit[:\s]+"([^"]+)"[,\s]*pas[:\s]+"([^"]+)"/i,
       // Italian patterns
       /potresti dire[:\s]+"([^"]+)"/i,
       /sarebbe meglio dire[:\s]+"([^"]+)"/i,
-      /il modo corretto è[:\s]+"([^"]+)"/i,
+      /il modo corretto Ã¨[:\s]+"([^"]+)"/i,
       /in italiano diciamo[:\s]+"([^"]+)"[,\s]*non[:\s]+"([^"]+)"/i,
       // German patterns
-      /du könntest sagen[:\s]+"([^"]+)"/i,
-      /besser wäre[:\s]+"([^"]+)"/i,
+      /du kÃ¶nntest sagen[:\s]+"([^"]+)"/i,
+      /besser wÃ¤re[:\s]+"([^"]+)"/i,
       /richtig ist[:\s]+"([^"]+)"/i,
       /auf deutsch sagt man[:\s]+"([^"]+)"[,\s]*nicht[:\s]+"([^"]+)"/i,
       // Portuguese patterns
       /poderias dizer[:\s]+"([^"]+)"/i,
       /seria melhor dizer[:\s]+"([^"]+)"/i,
-      /a forma correta é[:\s]+"([^"]+)"/i,
-      /em português dizemos[:\s]+"([^"]+)"[,\s]*não[:\s]+"([^"]+)"/i
+      /a forma correta Ã©[:\s]+"([^"]+)"/i,
+      /em portuguÃªs dizemos[:\s]+"([^"]+)"[,\s]*nÃ£o[:\s]+"([^"]+)"/i
     ];
     for (const pattern of correctionPatterns) {
       const match = botResponse.match(pattern);
@@ -3600,3 +3600,4 @@ app.use((req, res, next) => {
     log(`serving on port ${port}`);
   });
 })();
+

@@ -1,4 +1,4 @@
-var __create = Object.create;
+﻿var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
@@ -4300,7 +4300,7 @@ var require_dbcs_data = __commonJS({
     module2.exports = {
       // == Japanese/ShiftJIS ====================================================
       // All japanese encodings are based on JIS X set of standards:
-      // JIS X 0201 - Single-byte encoding of ASCII + ¥ + Kana chars at 0xA1-0xDF.
+      // JIS X 0201 - Single-byte encoding of ASCII + Â¥ + Kana chars at 0xA1-0xDF.
       // JIS X 0208 - Main set of 6879 characters, placed in 94x94 plane, to be encoded by 2 bytes. 
       //              Has several variations in 1978, 1983, 1990 and 1997.
       // JIS X 0212 - Supplementary plane of 6067 chars in 94x94 plane. 1990. Effectively dead.
@@ -53365,7 +53365,7 @@ var require_ponyfill_es2018 = __commonJS({
         }
         /**
          * Returns a promise that will be fulfilled when the stream becomes closed, or rejected if the stream ever errors or
-         * the writer’s lock is released before the stream finishes closing.
+         * the writerâ€™s lock is released before the stream finishes closing.
          */
         get closed() {
           if (!IsWritableStreamDefaultWriter(this)) {
@@ -53374,12 +53374,12 @@ var require_ponyfill_es2018 = __commonJS({
           return this._closedPromise;
         }
         /**
-         * Returns the desired size to fill the stream’s internal queue. It can be negative, if the queue is over-full.
+         * Returns the desired size to fill the streamâ€™s internal queue. It can be negative, if the queue is over-full.
          * A producer can use this information to determine the right amount of data to write.
          *
          * It will be `null` if the stream cannot be successfully written to (due to either being errored, or having an abort
          * queued up). It will return zero if the stream is closed. And the getter will throw an exception if invoked when
-         * the writer’s lock is released.
+         * the writerâ€™s lock is released.
          */
         get desiredSize() {
           if (!IsWritableStreamDefaultWriter(this)) {
@@ -53391,11 +53391,11 @@ var require_ponyfill_es2018 = __commonJS({
           return WritableStreamDefaultWriterGetDesiredSize(this);
         }
         /**
-         * Returns a promise that will be fulfilled when the desired size to fill the stream’s internal queue transitions
+         * Returns a promise that will be fulfilled when the desired size to fill the streamâ€™s internal queue transitions
          * from non-positive to positive, signaling that it is no longer applying backpressure. Once the desired size dips
          * back to zero or below, the getter will return a new promise that stays pending until the next transition.
          *
-         * If the stream becomes errored or aborted, or the writer’s lock is released, the returned promise will become
+         * If the stream becomes errored or aborted, or the writerâ€™s lock is released, the returned promise will become
          * rejected.
          */
         get ready() {
@@ -53433,13 +53433,13 @@ var require_ponyfill_es2018 = __commonJS({
           return WritableStreamDefaultWriterClose(this);
         }
         /**
-         * Releases the writer’s lock on the corresponding stream. After the lock is released, the writer is no longer active.
+         * Releases the writerâ€™s lock on the corresponding stream. After the lock is released, the writer is no longer active.
          * If the associated stream is errored when the lock is released, the writer will appear errored in the same way from
          * now on; otherwise, the writer will appear closed.
          *
          * Note that the lock can still be released even if some ongoing writes have not yet finished (i.e. even if the
          * promises returned from previous calls to {@link WritableStreamDefaultWriter.write | write()} have not yet settled).
-         * It’s not necessary to hold the lock on the writer for the duration of the write; the lock instead simply prevents
+         * Itâ€™s not necessary to hold the lock on the writer for the duration of the write; the lock instead simply prevents
          * other producers from writing in an interleaved manner.
          */
         releaseLock() {
@@ -55346,7 +55346,7 @@ var require_ponyfill_es2018 = __commonJS({
           throw new TypeError("Illegal constructor");
         }
         /**
-         * Returns the desired size to fill the readable side’s internal queue. It can be negative, if the queue is over-full.
+         * Returns the desired size to fill the readable sideâ€™s internal queue. It can be negative, if the queue is over-full.
          */
         get desiredSize() {
           if (!IsTransformStreamDefaultController(this)) {
@@ -58761,7 +58761,7 @@ var require_bignumber = __commonJS({
               return new BigNumber2(
                 // Return NaN if either NaN, or both Infinity or 0.
                 !x3.s || !y2.s || (xc ? yc && xc[0] == yc[0] : !yc) ? NaN : (
-                  // Return ±0 if x is ±0 or y is ±Infinity, or return ±Infinity as y is ±0.
+                  // Return Â±0 if x is Â±0 or y is Â±Infinity, or return Â±Infinity as y is Â±0.
                   xc && xc[0] == 0 || !yc ? s2 * 0 : s2 / 0
                 )
               );
@@ -120078,7 +120078,7 @@ var init_ca = __esm({
         switch (issue2.code) {
           case "invalid_type":
             return `Tipus inv\xE0lid: s'esperava ${issue2.expected}, s'ha rebut ${parsedType4(issue2.input)}`;
-          // return `Tipus invàlid: s'esperava ${issue.expected}, s'ha rebut ${util.getParsedType(issue.input)}`;
+          // return `Tipus invÃ lid: s'esperava ${issue.expected}, s'ha rebut ${util.getParsedType(issue.input)}`;
           case "invalid_value":
             if (issue2.values.length === 1)
               return `Valor inv\xE0lid: s'esperava ${stringifyPrimitive(issue2.values[0])}`;
@@ -120119,7 +120119,7 @@ var init_ca = __esm({
             return `Clau inv\xE0lida a ${issue2.origin}`;
           case "invalid_union":
             return "Entrada inv\xE0lida";
-          // Could also be "Tipus d'unió invàlid" but "Entrada invàlida" is more general
+          // Could also be "Tipus d'uniÃ³ invÃ lid" but "Entrada invÃ lida" is more general
           case "invalid_element":
             return `Element inv\xE0lid a ${issue2.origin}`;
           default:
@@ -120716,7 +120716,7 @@ var init_es = __esm({
         switch (issue2.code) {
           case "invalid_type":
             return `Entrada inv\xE1lida: se esperaba ${issue2.expected}, recibido ${parsedType4(issue2.input)}`;
-          // return `Entrada inválida: se esperaba ${issue.expected}, recibido ${util.getParsedType(issue.input)}`;
+          // return `Entrada invÃ¡lida: se esperaba ${issue.expected}, recibido ${util.getParsedType(issue.input)}`;
           case "invalid_value":
             if (issue2.values.length === 1)
               return `Entrada inv\xE1lida: se esperaba ${stringifyPrimitive(issue2.values[0])}`;
@@ -122709,7 +122709,7 @@ var init_ota = __esm({
         switch (issue2.code) {
           case "invalid_type":
             return `F\xE2sit giren: umulan ${issue2.expected}, al\u0131nan ${parsedType4(issue2.input)}`;
-          // return `Fâsit giren: umulan ${issue.expected}, alınan ${util.getParsedType(issue.input)}`;
+          // return `FÃ¢sit giren: umulan ${issue.expected}, alÄ±nan ${util.getParsedType(issue.input)}`;
           case "invalid_value":
             if (issue2.values.length === 1)
               return `F\xE2sit giren: umulan ${stringifyPrimitive(issue2.values[0])}`;
@@ -123999,7 +123999,7 @@ var init_ua = __esm({
         switch (issue2.code) {
           case "invalid_type":
             return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0456 \u0432\u0445\u0456\u0434\u043D\u0456 \u0434\u0430\u043D\u0456: \u043E\u0447\u0456\u043A\u0443\u0454\u0442\u044C\u0441\u044F ${issue2.expected}, \u043E\u0442\u0440\u0438\u043C\u0430\u043D\u043E ${parsedType4(issue2.input)}`;
-          // return `Неправильні вхідні дані: очікується ${issue.expected}, отримано ${util.getParsedType(issue.input)}`;
+          // return `ÐÐµÐ¿Ñ€Ð°Ð²Ð¸Ð»ÑŒÐ½Ñ– Ð²Ñ…Ñ–Ð´Ð½Ñ– Ð´Ð°Ð½Ñ–: Ð¾Ñ‡Ñ–ÐºÑƒÑ”Ñ‚ÑŒÑÑ ${issue.expected}, Ð¾Ñ‚Ñ€Ð¸Ð¼Ð°Ð½Ð¾ ${util.getParsedType(issue.input)}`;
           case "invalid_value":
             if (issue2.values.length === 1)
               return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0456 \u0432\u0445\u0456\u0434\u043D\u0456 \u0434\u0430\u043D\u0456: \u043E\u0447\u0456\u043A\u0443\u0454\u0442\u044C\u0441\u044F ${stringifyPrimitive(issue2.values[0])}`;
@@ -139067,11 +139067,11 @@ var init_googleTTS = __esm({
       detectTextLanguage(text2) {
         const patterns = {
           en: /\b(hello|hi|thank|you|very|good|well|am|doing|glad|reaching|practice|english|here|chat|feel|free|ask|anything|tell|about|day|i'm|i am|today|would|like)\b/i,
-          es: /\b(hola|gracias|muy|bien|estoy|como|estas|que|para|con|pero|español|me|alegra|aprendiendo|gustaría|hablar|quiero|practicar)\b/i,
-          fr: /\b(bonjour|salut|merci|très|bien|suis|comment|allez|vous|français|que|pour|avec|mais|j'ai|apprends|voudrais|parler)\b/i,
+          es: /\b(hola|gracias|muy|bien|estoy|como|estas|que|para|con|pero|espaÃ±ol|me|alegra|aprendiendo|gustarÃ­a|hablar|quiero|practicar)\b/i,
+          fr: /\b(bonjour|salut|merci|trÃ¨s|bien|suis|comment|allez|vous|franÃ§ais|que|pour|avec|mais|j'ai|apprends|voudrais|parler)\b/i,
           it: /\b(ciao|grazie|molto|bene|sono|come|stai|italiano|che|per|con|ma|ho|sto|imparando|vorrei|parlare)\b/i,
-          de: /\b(hallo|guten|danke|sehr|gut|bin|wie|geht|deutsch|was|für|mit|aber|habe|lerne|möchte|sprechen)\b/i,
-          pt: /\b(olá|oi|obrigado|muito|bem|estou|como|está|português|que|para|com|mas|tenho|sou|aprendendo|gostaria|falar)\b/i
+          de: /\b(hallo|guten|danke|sehr|gut|bin|wie|geht|deutsch|was|fÃ¼r|mit|aber|habe|lerne|mÃ¶chte|sprechen)\b/i,
+          pt: /\b(olÃ¡|oi|obrigado|muito|bem|estou|como|estÃ¡|portuguÃªs|que|para|com|mas|tenho|sou|aprendendo|gostaria|falar)\b/i
         };
         const scores = {};
         for (const [lang, pattern] of Object.entries(patterns)) {
@@ -140418,7 +140418,7 @@ var APIPromise = class _APIPromise extends Promise {
    * If you want to parse the response body but still get the `Response`
    * instance, you can use {@link withResponse()}.
    *
-   * 👋 Getting the wrong TypeScript type for `Response`?
+   * ðŸ‘‹ Getting the wrong TypeScript type for `Response`?
    * Try setting `"moduleResolution": "NodeNext"` or add `"lib": ["DOM"]`
    * to your `tsconfig.json`.
    */
@@ -140433,7 +140433,7 @@ var APIPromise = class _APIPromise extends Promise {
    * If you just want to get the raw `Response` instance without parsing it,
    * you can use {@link asResponse()}.
    *
-   * 👋 Getting the wrong TypeScript type for `Response`?
+   * ðŸ‘‹ Getting the wrong TypeScript type for `Response`?
    * Try setting `"moduleResolution": "NodeNext"` or add `"lib": ["DOM"]`
    * to your `tsconfig.json`.
    */
@@ -146406,11 +146406,11 @@ COMPORTAMENTO DE CORRE\xC7\xC3O EXAUSTIVA:
   validateLanguageCompliance(response, expectedLanguage) {
     const languagePatterns = {
       en: /\b(the|and|you|are|this|that|with|have|for)\b/i,
-      es: /\b(el|la|y|tú|eres|esto|eso|con|tener|para)\b/i,
+      es: /\b(el|la|y|tÃº|eres|esto|eso|con|tener|para)\b/i,
       fr: /\b(le|la|et|tu|es|ce|cette|avec|avoir|pour)\b/i,
       it: /\b(il|la|e|tu|sei|questo|quella|con|avere|per)\b/i,
-      de: /\b(der|die|und|du|bist|das|diese|mit|haben|für)\b/i,
-      pt: /\b(o|a|e|tu|és|isto|isso|com|ter|para)\b/i
+      de: /\b(der|die|und|du|bist|das|diese|mit|haben|fÃ¼r)\b/i,
+      pt: /\b(o|a|e|tu|Ã©s|isto|isso|com|ter|para)\b/i
     };
     const expectedPattern = languagePatterns[expectedLanguage];
     if (!expectedPattern) return true;
@@ -147091,14 +147091,14 @@ Create a concise summary for Clara to reference in future conversations:`;
       /j'ai entendu[.\s]+"([^"]+)"[.\s]*mais[.\s]*je pense que vous vouliez dire[.\s]+"([^"]+)"/i,
       /vous pourriez dire[.\s]+"([^"]+)"/i,
       /essayez de dire[.\s]+"([^"]+)"/i,
-      /une meilleure façon serait[.\s]+"([^"]+)"/i,
+      /une meilleure faÃ§on serait[.\s]+"([^"]+)"/i,
       // Spanish patterns
-      /podrías decir[.\s]+"([^"]+)"/i,
+      /podrÃ­as decir[.\s]+"([^"]+)"/i,
       /intenta decir[.\s]+"([^"]+)"/i,
-      /una mejor forma sería[.\s]+"([^"]+)"/i,
+      /una mejor forma serÃ­a[.\s]+"([^"]+)"/i,
       // General correction indicators
       /mais je pense que vous vouliez dire[.\s]+"([^"]+)"/i,
-      /pero creo que querías decir[.\s]+"([^"]+)"/i,
+      /pero creo que querÃ­as decir[.\s]+"([^"]+)"/i,
       /but I think you meant[.\s]+"([^"]+)"/i
     ];
     if (botResponse.includes("tu") && botResponse.includes("tout")) {
@@ -147264,30 +147264,30 @@ Create a concise summary for Clara to reference in future conversations:`;
       /listen to[,\s]*not listen from/i,
       /different from[,\s]*not different than/i,
       // Spanish patterns
-      /podrías decir[:\s]+"([^"]+)"/i,
-      /sería mejor decir[:\s]+"([^"]+)"/i,
+      /podrÃ­as decir[:\s]+"([^"]+)"/i,
+      /serÃ­a mejor decir[:\s]+"([^"]+)"/i,
       /la forma correcta es[:\s]+"([^"]+)"/i,
-      /en español decimos[:\s]+"([^"]+)"[,\s]*no[:\s]+"([^"]+)"/i,
+      /en espaÃ±ol decimos[:\s]+"([^"]+)"[,\s]*no[:\s]+"([^"]+)"/i,
       // French patterns
       /tu pourrais dire[:\s]+"([^"]+)"/i,
       /il vaut mieux dire[:\s]+"([^"]+)"/i,
-      /la façon correcte est[:\s]+"([^"]+)"/i,
-      /en français[,\s]*on dit[:\s]+"([^"]+)"[,\s]*pas[:\s]+"([^"]+)"/i,
+      /la faÃ§on correcte est[:\s]+"([^"]+)"/i,
+      /en franÃ§ais[,\s]*on dit[:\s]+"([^"]+)"[,\s]*pas[:\s]+"([^"]+)"/i,
       // Italian patterns
       /potresti dire[:\s]+"([^"]+)"/i,
       /sarebbe meglio dire[:\s]+"([^"]+)"/i,
-      /il modo corretto è[:\s]+"([^"]+)"/i,
+      /il modo corretto Ã¨[:\s]+"([^"]+)"/i,
       /in italiano diciamo[:\s]+"([^"]+)"[,\s]*non[:\s]+"([^"]+)"/i,
       // German patterns
-      /du könntest sagen[:\s]+"([^"]+)"/i,
-      /besser wäre[:\s]+"([^"]+)"/i,
+      /du kÃ¶nntest sagen[:\s]+"([^"]+)"/i,
+      /besser wÃ¤re[:\s]+"([^"]+)"/i,
       /richtig ist[:\s]+"([^"]+)"/i,
       /auf deutsch sagt man[:\s]+"([^"]+)"[,\s]*nicht[:\s]+"([^"]+)"/i,
       // Portuguese patterns
       /poderias dizer[:\s]+"([^"]+)"/i,
       /seria melhor dizer[:\s]+"([^"]+)"/i,
-      /a forma correta é[:\s]+"([^"]+)"/i,
-      /em português dizemos[:\s]+"([^"]+)"[,\s]*não[:\s]+"([^"]+)"/i
+      /a forma correta Ã©[:\s]+"([^"]+)"/i,
+      /em portuguÃªs dizemos[:\s]+"([^"]+)"[,\s]*nÃ£o[:\s]+"([^"]+)"/i
     ];
     for (const pattern of correctionPatterns) {
       const match = botResponse.match(pattern);
@@ -148733,13 +148733,13 @@ web-streams-polyfill/dist/ponyfill.es2018.js:
    *)
 
 fetch-blob/index.js:
-  (*! fetch-blob. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> *)
+  (*! fetch-blob. MIT License. Jimmy WÃ¤rting <https://jimmy.warting.se/opensource> *)
 
 formdata-polyfill/esm.min.js:
-  (*! formdata-polyfill. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> *)
+  (*! formdata-polyfill. MIT License. Jimmy WÃ¤rting <https://jimmy.warting.se/opensource> *)
 
 node-domexception/index.js:
-  (*! node-domexception. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> *)
+  (*! node-domexception. MIT License. Jimmy WÃ¤rting <https://jimmy.warting.se/opensource> *)
 
 gtoken/build/cjs/src/index.cjs:
   (*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE *)
@@ -148759,3 +148759,4 @@ gtoken/build/cjs/src/index.cjs:
      *)
   *)
 */
+
