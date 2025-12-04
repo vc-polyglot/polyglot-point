@@ -148609,7 +148609,7 @@ app.use(import_express3.default.json());
 app.use(import_express3.default.urlencoded({ extended: false }));
 async function chatHandler(req, res) {
   try {
-    console.log("\xF0\u0178\u201C\xA8 Chat request received");
+    console.log("\u{1F4E8} Chat request received");
     const { message, text: text2, userId } = req.body;
     const input = message ?? text2 ?? null;
     if (!input) {
@@ -148618,23 +148618,23 @@ async function chatHandler(req, res) {
         received: req.body
       });
     }
-    console.log(`\xE2\u0153\u2026 Message received: ${input.substring(0, 50)}...`);
+    console.log(`\u2705 Message received: ${input.substring(0, 50)}...`);
     res.json({
       corrected: input,
       explanations: [
-        "\xE2\u0153\u2026 Conexi\xC3\xB3n establecida con el backend",
-        "\xF0\u0178\u201C\xA8 Formato de respuesta 100% compatible con el frontend"
+        "\u2705 Conexi\xF3n establecida con el backend",
+        "\u{1F4E8} Formato de respuesta 100% compatible con el frontend"
       ],
       tips: [
-        "\xF0\u0178\u201D\xA7 Listo para conectar OpenAI/GPT/Claude",
-        "\xF0\u0178\u017D\xAF Cambia esta respuesta por la correcci\xC3\xB3n gramatical real"
+        "\u{1F527} Listo para conectar OpenAI/GPT/Claude",
+        "\u{1F3AF} Cambia esta respuesta por la correcci\xF3n gramatical real"
       ],
       language: "es",
       timestamp: (/* @__PURE__ */ new Date()).toISOString(),
       status: "operational"
     });
   } catch (error40) {
-    console.error("\xE2\x9D\u0152 Error in /chat:", error40);
+    console.error("\u274C Error in /chat:", error40);
     res.status(500).json({
       error: "Internal server error",
       message: error40 instanceof Error ? error40.message : String(error40)
@@ -148650,7 +148650,7 @@ app.use((req, res, next) => {
   const originalResJson = res.json;
   res.json = function(bodyJson, ...args) {
     capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
+    return originalResJson.apply(this, [bodyJson, ...args]);
   };
   res.on("finish", () => {
     const duration3 = Date.now() - start;
@@ -148660,7 +148660,7 @@ app.use((req, res, next) => {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
       if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "\xE2\u20AC\xA6";
+        logLine = logLine.slice(0, 79) + "\u2026";
       }
       log(logLine);
     }
@@ -148680,9 +148680,9 @@ app.use((req, res, next) => {
   } else {
     serveStatic(app);
   }
-  const port = Number(process.env.PORT) || 5e3;
-  server.listen(port, "0.0.0.0", () => {
-    log(`serving on port ${port}`);
+  const PORT = Number(process.env.PORT) || 8080;
+  server.listen(PORT, "0.0.0.0", () => {
+    log(`\u{1F4DD} serving on port ${PORT}`);
   });
 })();
 /*! Bundled license information:
