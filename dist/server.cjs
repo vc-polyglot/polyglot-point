@@ -148606,6 +148606,7 @@ app.use(
   })
 );
 app.use(import_express3.default.json());
+app.use(import_express3.default.urlencoded({ extended: false }));
 app.post("/chat", async (req, res) => {
   try {
     console.log("\u{1F4E8} Chat request received");
@@ -148619,21 +148620,18 @@ app.post("/chat", async (req, res) => {
     }
     console.log(`\u2705 Message received: ${input.substring(0, 50)}...`);
     res.json({
-      corrected: `\u2705 Recibido: ${input}`,
+      corrected: input,
       explanations: [
-        "Conexi\xF3n backend-frontend establecida exitosamente"
+        "\u2705 Conexi\xF3n establecida con el backend",
+        "\u{1F4E8} Formato de respuesta 100% compatible con el frontend"
       ],
       tips: [
-        "El sistema est\xE1 funcionando correctamente",
-        "Ahora puedes integrar OpenAI para correcciones reales"
+        "\u{1F527} Listo para conectar OpenAI/GPT/Claude",
+        "\u{1F3AF} Cambia esta respuesta por la correcci\xF3n gramatical real"
       ],
       language: "es",
       timestamp: (/* @__PURE__ */ new Date()).toISOString(),
-      debug: {
-        backend: "polyglot-point-production",
-        status: "connected",
-        inputLength: input.length
-      }
+      status: "operational"
     });
   } catch (error40) {
     console.error("\u274C Error in /chat:", error40);
@@ -148643,7 +148641,6 @@ app.post("/chat", async (req, res) => {
     });
   }
 });
-app.use(import_express3.default.urlencoded({ extended: false }));
 app.use((req, res, next) => {
   const start = Date.now();
   const path7 = req.path;
@@ -148661,7 +148658,7 @@ app.use((req, res, next) => {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
       if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "\xE2\u20AC\xA6";
+        logLine = logLine.slice(0, 79) + "\u2026";
       }
       log(logLine);
     }

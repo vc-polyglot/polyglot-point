@@ -1,4 +1,4 @@
-﻿import express, { type Request, Response, NextFunction } from "express";
+import express, { type Request, type Response, type NextFunction } from "express";
 import cors from "cors";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
@@ -14,56 +14,52 @@ app.use(
     ],
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type", "x-user-id"],
-  })
+  }),
 );
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 // ========== RUTA CHAT PARA POLYGLOT POINT ==========
 app.post("/chat", async (req: Request, res: Response) => {
   try {
     console.log("📨 Chat request received");
-    
+
     const { message, text, userId } = req.body;
     const input = message ?? text ?? null;
-    
+
     if (!input) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: "Missing message text",
-        received: req.body
+        received: req.body,
       });
     }
-    
+
     console.log(`✅ Message received: ${input.substring(0, 50)}...`);
-    
-    // Respuesta que espera el frontend de Polyglot Point
+
+    // Respuesta que entiende el frontend de Polyglot Point: Write
     res.json({
-      corrected: `✅ Recibido: ${input}`,
+      corrected: input,
       explanations: [
-        "Conexión backend-frontend establecida exitosamente"
+        "✅ Conexión establecida con el backend",
+        "📨 Formato de respuesta 100% compatible con el frontend",
       ],
       tips: [
-        "El sistema está funcionando correctamente",
-        "Ahora puedes integrar OpenAI para correcciones reales"
+        "🔧 Listo para conectar OpenAI/GPT/Claude",
+        "🎯 Cambia esta respuesta por la corrección gramatical real",
       ],
       language: "es",
       timestamp: new Date().toISOString(),
-      debug: {
-        backend: "polyglot-point-production",
-        status: "connected",
-        inputLength: input.length
-      }
+      status: "operational",
     });
-    
   } catch (error) {
     console.error("❌ Error in /chat:", error);
     res.status(500).json({
       error: "Internal server error",
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     });
   }
 });
-
-app.use(express.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -85,7 +81,7 @@ app.use((req, res, next) => {
       }
 
       if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "â€¦";
+        logLine = logLine.slice(0, 79) + "…";
       }
 
       log(logLine);
