@@ -56,6 +56,13 @@ export const sendMessage = async (
   }
 
   const data = await res.json().catch(() => ({} as any));
+  console.log("Respuesta del backend:", data);
 
-  return data.reply ?? data.message ?? "No entendí, ¿puedes repetirlo?";
+  const reply =
+    data.corrected ??
+    data.reply ??
+    data.message ??
+    "No entendí, ¿puedes repetirlo?";
+
+  return reply;
 };
