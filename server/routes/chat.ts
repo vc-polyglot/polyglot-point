@@ -1,142 +1,103 @@
-﻿import { Request, Response } from "express";
+﻿import express, { Request, Response } from "express";
 import OpenAI from "openai";
+import { detectIntent } from "../services/intent-classifier";
+import { buildClaraPrompt } from "../prompts/builder";
 
-const CONFIG = {
-  MAX_CHARS: 280,
-  MODEL: "gpt-4o-mini",
-  TEMPERATURE: 0.3,
-  MAX_TOKENS: 500,
-} as const;
+const router = express.Router();
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
-let openai: OpenAI | null = null;
-
-const getOpenAI = (): OpenAI => {
-  if (!openai) {
-    const key = process.env.OPENAI_API_KEY;
-    if (!key) {
-      throw new Error("OPENAI_API_KEY no configurada");
-    }
-    openai = new OpenAI({ apiKey: key });
-  }
-  return openai;
-};
-
-export const chatHandler = async (req: Request, res: Response) => {
-  const { text, language = "es" } = (req.body || {}) as { text?: string; language?: string };
-
-  // ✅ Validación suave: SIEMPRE devolvemos corrected / explanations / tips
-  if (!text || !text.trim()) {
-    return res.json({
-      corrected: "",
-      explanations: ["No has escrito nada para corregir."],
-      tips: ["Escribe un texto y Clara te ayudará con gusto."],
-    });
-  }
-
-  if (text.length > CONFIG.MAX_CHARS) {
-    return res.json({
-      corrected: text,
-      explanations: [
-        `Tu mensaje tiene ${text.length} caracteres.`,
-        `El límite es de ${CONFIG.MAX_CHARS} caracteres por mensaje.`,
-      ],
-      tips: ["Intenta resumir tu idea en un texto más breve."],
-    });
-  }
-
-  try {
-    const client = getOpenAI();
-
-    const completion = await client.chat.completions.create({
-      model: CONFIG.MODEL,
-      temperature: CONFIG.TEMPERATURE,
-      max_tokens: CONFIG.MAX_TOKENS,
-      response_format: { type: "json_object" },
-      messages: [
-        {
-          role: "system",
-          content: `Eres Clara, la tutora amable de Polyglot Point: Write.
-
-INSTRUCCIONES CRÍTICAS:
-- Responde SIEMPRE en el idioma indicado: ${language}.
-- Devuelve EXCLUSIVAMENTE un objeto JSON válido.
-- NO escribas nada fuera del JSON.
-
-Estructura EXACTA del JSON:
-{
-  "corrected": "texto corregido completo aquí",
-  "explanations": ["explicación breve 1", "explicación breve 2"],
-  "tips": ["sugerencia útil 1", "sugerencia útil 2"]
+interface ChatBody {
+  userId?: string;
+  message?: string;
+  text?: string;
+  targetLanguage?: string;
+  language?: string;
+  userLevel?: string;
 }
 
-REGLA ESPECIAL:
-Si el texto del usuario ya es gramaticalmente correcto y natural, usa exactamente:
-{
-  "corrected": "Tu texto ya está perfecto.",
-  "explanations": [],
-  "tips": ["¡Sigue así!"]
-}
-
-ESTILO:
-- Tono cálido, respetuoso y pedagógico.
-- Explicaciones claras y concretas (1–3 frases cada una).
-- Tips prácticos que el usuario pueda aplicar de inmediato.
-- Si corriges algo, deja claro QUÉ cambiaste y POR QUÉ.`
-        },
-        {
-          role: "user",
-          content: text.trim(),
-        },
-      ],
-    });
-
-    const rawContent = completion.choices[0]?.message?.content;
-
-    if (!rawContent) {
-      console.error("OpenAI devolvió contenido vacío.");
-      return res.json({
-        corrected: text,
-        explanations: ["Hubo un problema al generar la corrección."],
-        tips: ["Intenta de nuevo en unos segundos."],
-      });
-    }
-
-    let parsed: any;
+router.post(
+  "/chat",
+  async (req: Request<{}, {}, ChatBody>, res: Response) => {
     try {
-      parsed = JSON.parse(rawContent);
-    } catch (e) {
-      console.error("Error al parsear JSON de OpenAI:", e, rawContent);
-      return res.json({
-        corrected: text,
-        explanations: ["La respuesta de Clara no tuvo el formato esperado."],
-        tips: ["Intenta de nuevo; si el problema persiste, avisa al desarrollador."],
+      const { userId, message, text, targetLanguage, language, userLevel } =
+        req.body || {};
+
+      const finalMessage = (message ?? text ?? "").trim();
+      if (!finalMessage) {
+        return res.status(400).json({ error: "Mensaje vacío" });
+      }
+
+      const finalTargetLanguage = targetLanguage || language || "es";
+
+      // 1. Detectamos intent en el backend
+      const intent = detectIntent(finalMessage);
+
+      // 2. Historial simple en memoria (temporal)
+      const g = globalThis as any;
+      if (!g.claraHistory) g.claraHistory = {};
+      const key = userId || "anon";
+      const history: { role: "user" | "assistant"; content: string }[] =
+        g.claraHistory[key] || [];
+
+      // 3. Construimos el prompt NUEVO y POTENTE
+      const systemPrompt = buildClaraPrompt({
+        intent,
+        targetLanguage: finalTargetLanguage,
+        userLevel: userLevel || "intermediate",
+        userMessage: finalMessage,
+        conversationHistory: history.slice(-10),
       });
+
+      // 4. Llamada a OpenAI – system fuerte + user explícito
+      const completion = await openai.chat.completions.create({
+        model: process.env.OPENAI_MODEL || "gpt-4.1-mini",
+        temperature:
+          intent === "CORRECCION" || intent === "PREGUNTA" ? 0.4 : 0.7,
+        max_tokens: 900,
+        messages: [
+          {
+            role: "system",
+            content: `${systemPrompt}
+
+REGLAS ABSOLUTAS (nunca las rompas):
+- NUNCA digas solo "Tu texto ya está perfecto" o "Está correcto".
+- SIEMPRE aporta valor: matiz, ejemplo, pregunta o corrección útil.
+- Usa EXACTAMENTE el formato indicado en el modo activo.
+- Responde ÚNICAMENTE con el mensaje de Clara. Nada más.
+
+Modo forzado por el sistema: ${intent}
+`.trim(),
+          },
+          {
+            role: "user",
+            content: finalMessage,
+          },
+        ],
+      });
+
+      const respuesta = (completion.choices[0]?.message?.content || "").trim();
+
+      // 5. Guardamos historial en memoria
+      history.push({ role: "user", content: finalMessage });
+      history.push({ role: "assistant", content: respuesta });
+      if (history.length > 20) {
+        history.splice(0, history.length - 20);
+      }
+      g.claraHistory[key] = history;
+
+      // 6. Respuesta en formato compatible con el frontend de Write
+      return res.json({
+        original: finalMessage,
+        corrected: respuesta,
+        explanations: [],
+        tips: [],
+        intent,
+      });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Error interno" });
     }
-
-    const corrected =
-      typeof parsed.corrected === "string" && parsed.corrected.trim().length > 0
-        ? parsed.corrected
-        : text;
-
-    const explanations = Array.isArray(parsed.explanations)
-      ? parsed.explanations.filter((x: unknown) => typeof x === "string")
-      : [];
-
-    const tips = Array.isArray(parsed.tips)
-      ? parsed.tips.filter((x: unknown) => typeof x === "string")
-      : [];
-
-    return res.json({
-      corrected,
-      explanations,
-      tips,
-    });
-  } catch (error) {
-    console.error("OpenAI error en chatHandler:", error);
-    return res.json({
-      corrected: text,
-      explanations: ["Hubo un problema al procesar tu mensaje."],
-      tips: ["Por favor, intenta de nuevo en unos segundos."],
-    });
   }
-};
+);
+
+export default router;
