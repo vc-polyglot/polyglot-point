@@ -10,7 +10,7 @@ const CONFIG = {
 
 let openai: OpenAI | null = null;
 
-const getOpenAI = () => {
+const getOpenAI = (): OpenAI => {
   if (!openai) {
     const key = process.env.OPENAI_API_KEY;
     if (!key) {
@@ -21,45 +21,27 @@ const getOpenAI = () => {
   return openai;
 };
 
-interface ChatResponse {
-  corrected: string;
-  explanations: string[];
-  tips: string[];
-}
-
-interface ChatRequest {
-  text?: string;
-  language?: string;
-}
-
 export const chatHandler = async (req: Request, res: Response) => {
-  const { text, language = "es" } = req.body as ChatRequest;
+  const { text, language = "es" } = (req.body || {}) as { text?: string; language?: string };
 
-  // 1) Texto vacío o solo espacios
+  // ✅ Validación suave: siempre devolvemos corrected / explanations / tips
   if (!text || !text.trim()) {
-    const base: ChatResponse = {
+    return res.json({
       corrected: "",
       explanations: ["No has escrito nada para corregir."],
       tips: ["Escribe un texto y Clara te ayudará con gusto."],
-    };
-    return res.json(base);
+    });
   }
 
-  const trimmed = text.trim();
-
-  // 2) Texto más largo de 280 (solo pasaría si alguien llama directo a la API)
-  if (trimmed.length > CONFIG.MAX_CHARS) {
-    const recortado = trimmed.slice(0, CONFIG.MAX_CHARS);
-    const tooLong: ChatResponse = {
-      corrected: recortado,
+  if (text.length > CONFIG.MAX_CHARS) {
+    return res.json({
+      corrected: text,
       explanations: [
-        `Tu mensaje era muy largo, así que tomé solo los primeros ${CONFIG.MAX_CHARS} caracteres para corregirlos.`,
+        `Tu mensaje tiene ${text.length} caracteres.`,
+        `El límite es de ${CONFIG.MAX_CHARS} caracteres por mensaje.`,
       ],
-      tips: [
-        "Si necesitas corregir un texto más largo, divídelo en partes más pequeñas.",
-      ],
-    };
-    return res.json(tooLong);
+      tips: ["Intenta resumir tu idea en un texto más breve."],
+    });
   }
 
   try {
@@ -73,78 +55,88 @@ export const chatHandler = async (req: Request, res: Response) => {
       messages: [
         {
           role: "system",
-          content: `Eres Clara, tutor amable de Polyglot Point: Write.
-Responde SIEMPRE en ${language}.
-Devuelve SOLO un objeto JSON con esta estructura exacta:
+          content: `Eres Clara, la tutora amable de Polyglot Point: Write.
+
+INSTRUCCIONES CRÍTICAS:
+- Responde SIEMPRE en el idioma indicado: ${language}.
+- Devuelve EXCLUSIVAMENTE un objeto JSON válido.
+- NO escribas nada fuera del JSON.
+
+Estructura EXACTA del JSON:
 {
-  "corrected": "texto corregido completo",
+  "corrected": "texto corregido completo aquí",
   "explanations": ["explicación breve 1", "explicación breve 2"],
   "tips": ["sugerencia útil 1", "sugerencia útil 2"]
 }
 
-Si el texto ya es correcto:
+REGLA ESPECIAL:
+Si el texto del usuario ya es gramaticalmente correcto y natural, usa exactamente:
 {
   "corrected": "Tu texto ya está perfecto.",
   "explanations": [],
   "tips": ["¡Sigue así!"]
 }
 
-No añadas texto fuera del JSON.`,
+ESTILO:
+- Tono cálido, respetuoso y pedagógico.
+- Explicaciones claras y concretas (1–3 frases cada una).
+- Tips prácticos que el usuario pueda aplicar de inmediato.
+- Si corriges algo, deja claro QUÉ cambiaste y POR QUÉ.`
         },
         {
           role: "user",
-          content: trimmed,
+          content: text.trim(),
         },
       ],
     });
 
-    const content = completion.choices[0].message.content;
+    const rawContent = completion.choices[0]?.message?.content;
 
-    if (!content) {
-      const fallback: ChatResponse = {
-        corrected: trimmed,
-        explanations: ["Clara no pudo generar una respuesta esta vez."],
-        tips: ["Por favor, intenta de nuevo en unos segundos."],
-      };
-      return res.json(fallback);
+    if (!rawContent) {
+      console.error("OpenAI devolvió contenido vacío.");
+      return res.json({
+        corrected: text,
+        explanations: ["Hubo un problema al generar la corrección."],
+        tips: ["Intenta de nuevo en unos segundos."],
+      });
     }
 
     let parsed: any;
     try {
-      parsed = JSON.parse(content);
+      parsed = JSON.parse(rawContent);
     } catch (e) {
-      console.error("Error al parsear JSON de Clara:", e, "content:", content);
-      const parseError: ChatResponse = {
-        corrected: trimmed,
-        explanations: ["Hubo un problema al interpretar la respuesta de Clara."],
-        tips: ["Inténtalo de nuevo con una frase un poco más corta o clara."],
-      };
-      return res.json(parseError);
+      console.error("Error al parsear JSON de OpenAI:", e, rawContent);
+      return res.json({
+        corrected: text,
+        explanations: ["La respuesta de Clara no tuvo el formato esperado."],
+        tips: ["Intenta de nuevo; si el problema persiste, avisa al desarrollador."],
+      });
     }
 
     const corrected =
-      typeof parsed.corrected === "string" ? parsed.corrected : trimmed;
-    const explanations = Array.isArray(parsed.explanations)
-      ? parsed.explanations
-      : [];
-    const tips = Array.isArray(parsed.tips) ? parsed.tips : [];
+      typeof parsed.corrected === "string" && parsed.corrected.trim().length > 0
+        ? parsed.corrected
+        : text;
 
-    const ok: ChatResponse = {
+    const explanations = Array.isArray(parsed.explanations)
+      ? parsed.explanations.filter((x: unknown) => typeof x === "string")
+      : [];
+
+    const tips = Array.isArray(parsed.tips)
+      ? parsed.tips.filter((x: unknown) => typeof x === "string")
+      : [];
+
+    return res.json({
       corrected,
       explanations,
       tips,
-    };
-
-    return res.json(ok);
-  } catch (err) {
-    console.error("OpenAI error:", err);
-
-    const errorResponse: ChatResponse = {
-      corrected: trimmed,
+    });
+  } catch (error) {
+    console.error("OpenAI error en chatHandler:", error);
+    return res.json({
+      corrected: text,
       explanations: ["Hubo un problema al procesar tu mensaje."],
       tips: ["Por favor, intenta de nuevo en unos segundos."],
-    };
-
-    return res.json(errorResponse);
+    });
   }
 };
