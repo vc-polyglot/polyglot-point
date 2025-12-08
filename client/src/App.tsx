@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState, useCallback, memo, FormEvent } from "react";
+﻿import React, { useEffect, useState, useCallback, FormEvent } from "react";
 import { fetchCorrection, fetchUsage, type CorrectionResponse } from "./api";
 
 const IDIOMAS = [
@@ -10,7 +10,9 @@ const IDIOMAS = [
   { codigo: "pt", nombre: "Portugués" },
 ];
 
-type Message = { role: "user"; content: string } | { role: "bot"; content: CorrectionResponse };
+type Message =
+  | { role: "user"; content: string }
+  | { role: "bot"; content: CorrectionResponse };
 
 const MAX_MENSAJES_DIARIOS = 20;
 const MAX_CHARS = 280;
@@ -19,140 +21,236 @@ const MAX_CHARS = 280;
 const isValidEmail = (email: string): boolean =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-const LanguageSelector = memo(({ languages, selected, onChange }: any) => (
-  <div className="selector-idiomas" role="radiogroup" aria-label="Selecciona idioma">
-    {languages.map((i: any) => (
-      <button
-        key={i.codigo}
-        type="button"
-        className={selected === i.codigo ? "idioma-btn active" : "idioma-btn"}
-        onClick={() => onChange(i.codigo)}
-        aria-label={`Seleccionar ${i.nombre}`}
-      >
-        {i.nombre}
-      </button>
-    ))}
-  </div>
-));
+// =============== COMPONENTES ===============
 
-const MessageCounter = memo(({ remaining, max, onPremiumClick }: any) => {
+type LanguageSelectorProps = {
+  languages: typeof IDIOMAS;
+  selected: string;
+  onChange: (code: string) => void;
+};
+
+const LanguageSelector: React.FC<LanguageSelectorProps> = ({
+  languages,
+  selected,
+  onChange,
+}) => {
+  return (
+    <div className="selector-idiomas" role="radiogroup" aria-label="Selecciona idioma">
+      {languages.map((i) => (
+        <button
+          key={i.codigo}
+          type="button"
+          className={selected === i.codigo ? "idioma-btn active" : "idioma-btn"}
+          onClick={() => onChange(i.codigo)}
+          aria-label={`Seleccionar ${i.nombre}`}
+        >
+          {i.nombre}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+type MessageCounterProps = {
+  remaining: number;
+  max: number;
+  onPremiumClick: () => void;
+};
+
+const MessageCounter: React.FC<MessageCounterProps> = ({
+  remaining,
+  max,
+  onPremiumClick,
+}) => {
   const p = (remaining / max) * 100;
+
   return (
     <div className="contador" aria-live="polite">
-      <span>Mensajes gratis hoy: {remaining}/{max}</span>
+      <span>
+        Mensajes gratis hoy: {remaining}/{max}
+      </span>
       <div className="barra-externa">
         <div className="barra-interna" style={{ width: `${p}%` }} />
       </div>
       {remaining <= 3 && remaining > 0 && (
-        <button className="btn-premium-mini" onClick={onPremiumClick}>
+        <button className="btn-premium-mini" type="button" onClick={onPremiumClick}>
           Activar Premium
         </button>
       )}
     </div>
   );
-});
+};
 
-const LoginForm = ({ loginName, loginEmail, setLoginName, setLoginEmail, onSubmit }: any) => (
-  <form onSubmit={onSubmit} className="login-form">
-    <label>
-      Nombre (opcional)
-      <input
-        value={loginName}
-        onChange={e => setLoginName(e.target.value)}
-        placeholder="Tu nombre"
-      />
-    </label>
-    <label>
-      Correo (opcional)
-      <input
-        type="email"
-        value={loginEmail}
-        onChange={e => setLoginEmail(e.target.value)}
-        placeholder="tucorreo@example.com"
-      />
-    </label>
-    <button type="submit">Entrar</button>
-  </form>
-);
+type LoginFormProps = {
+  loginName: string;
+  loginEmail: string;
+  setLoginName: (v: string) => void;
+  setLoginEmail: (v: string) => void;
+  onSubmit: (e: FormEvent) => void;
+};
 
-const ChatWindow = memo(({ messages, idiomaSeleccionado }: any) => (
-  <section className="chat-window" role="log" aria-live="polite">
-    {messages.length === 0 && (
-      <div className="chat-placeholder">
-        <p>Escribe en {idiomaSeleccionado} y Clara te corrige.</p>
-      </div>
-    )}
-    {messages.map((m: any, i: number) =>
-      m.role === "user" ? (
-        <div key={i} className="mensaje mensaje-user">
-          {m.content}
+const LoginForm: React.FC<LoginFormProps> = ({
+  loginName,
+  loginEmail,
+  setLoginName,
+  setLoginEmail,
+  onSubmit,
+}) => {
+  return (
+    <form onSubmit={onSubmit} className="login-form">
+      <label>
+        Nombre (opcional)
+        <input
+          value={loginName}
+          onChange={(e) => setLoginName(e.target.value)}
+          placeholder="Tu nombre"
+        />
+      </label>
+      <label>
+        Correo (opcional)
+        <input
+          type="email"
+          value={loginEmail}
+          onChange={(e) => setLoginEmail(e.target.value)}
+          placeholder="tucorreo@example.com"
+        />
+      </label>
+      <button type="submit">Entrar</button>
+    </form>
+  );
+};
+
+type ChatWindowProps = {
+  messages: Message[];
+  idiomaSeleccionado: string;
+};
+
+const ChatWindow: React.FC<ChatWindowProps> = ({
+  messages,
+  idiomaSeleccionado,
+}) => {
+  return (
+    <section className="chat-window" role="log" aria-live="polite">
+      {messages.length === 0 && (
+        <div className="chat-placeholder">
+          <p>Escribe en {idiomaSeleccionado} y Clara te corrige.</p>
         </div>
-      ) : (
-        <div key={i} className="mensaje mensaje-bot">
-          <p className="mensaje-correccion">{m.content.corrected}</p>
-          {m.content.explanations?.length > 0 && (
-            <div className="bloque-explicaciones">
-              <h4>Explicaciones</h4>
-              <ul>
-                {m.content.explanations.map((e: string, j: number) => (
-                  <li key={j}>{e}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {m.content.tips?.length > 0 && (
-            <div className="bloque-tips">
-              <h4>Consejos</h4>
-              <ul>
-                {m.content.tips.map((t: string, j: number) => (
-                  <li key={j}>{t}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      )
-    )}
-  </section>
-));
+      )}
 
-const InputArea = ({ text, setText, loading, onSend, idiomaSeleccionado }: any) => {
+      {messages.map((m, i) =>
+        m.role === "user" ? (
+          <div key={i} className="mensaje mensaje-user">
+            {m.content}
+          </div>
+        ) : (
+          <div key={i} className="mensaje mensaje-bot">
+            <p className="mensaje-correccion">{m.content.corrected}</p>
+
+            {m.content.explanations?.length > 0 && (
+              <div className="bloque-explicaciones">
+                <h4>Explicaciones</h4>
+                <ul>
+                  {m.content.explanations.map((e, j) => (
+                    <li key={j}>{e}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {m.content.tips?.length > 0 && (
+              <div className="bloque-tips">
+                <h4>Consejos</h4>
+                <ul>
+                  {m.content.tips.map((t, j) => (
+                    <li key={j}>{t}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )
+      )}
+    </section>
+  );
+};
+
+type InputAreaProps = {
+  text: string;
+  setText: (v: string) => void;
+  loading: boolean;
+  onSend: () => void;
+  idiomaSeleccionado: string;
+};
+
+const InputArea: React.FC<InputAreaProps> = ({
+  text,
+  setText,
+  loading,
+  onSend,
+  idiomaSeleccionado,
+}) => {
   const ratio = text.length / MAX_CHARS;
-  const cls = ratio > 0.9 ? "casi-lleno" : ratio > 0.6 ? "medio" : "";
+  let cls = "";
+  if (ratio > 0.9) cls = "casi-lleno";
+  else if (ratio > 0.6) cls = "medio";
+
   return (
     <section className="input-area">
       <textarea
         value={text}
-        onChange={e => setText(e.target.value)}
+        onChange={(e) => setText(e.target.value)}
         maxLength={MAX_CHARS}
         placeholder={`Escribe en ${idiomaSeleccionado}...`}
       />
       <div className="input-footer">
-        <span className={`contador-chars ${cls}`}>{text.length}/{MAX_CHARS}</span>
-        <button onClick={onSend} disabled={loading || !text.trim()}>
+        <span className={`contador-chars ${cls}`}>
+          {text.length}/{MAX_CHARS}
+        </span>
+        <button type="button" onClick={onSend} disabled={loading || !text.trim()}>
           {loading ? "Revisando..." : "Enviar"}
         </button>
       </div>
     </section>
   );
-});
+};
 
-const PremiumModal = ({ open, onClose, onPremiumClick, maxMensajes }: any) =>
-  open ? (
+type PremiumModalProps = {
+  open: boolean;
+  onClose: () => void;
+  onPremiumClick: () => void;
+  maxMensajes: number;
+};
+
+const PremiumModal: React.FC<PremiumModalProps> = ({
+  open,
+  onClose,
+  onPremiumClick,
+  maxMensajes,
+}) => {
+  if (!open) return null;
+
+  return (
     <div className="modal-backdrop" role="dialog" aria-modal="true">
       <div className="modal">
         <h2>Límite alcanzado</h2>
         <p>Has usado tus {maxMensajes} mensajes gratis hoy.</p>
-        <p>Activa Premium para tener <strong>mensajes ilimitados</strong>.</p>
+        <p>
+          Activa Premium para tener <strong>mensajes ilimitados</strong>.
+        </p>
         <div className="modal-actions">
-          <button onClick={onPremiumClick}>
+          <button type="button" onClick={onPremiumClick}>
             Activar Premium · $9.99/mes · Ilimitado
           </button>
-          <button onClick={onClose}>Cerrar</button>
+          <button type="button" onClick={onClose}>
+            Cerrar
+          </button>
         </div>
       </div>
     </div>
-  ) : null;
+  );
+};
+
+// =============== APP PRINCIPAL ===============
 
 const App: React.FC = () => {
   const [userId, setUserId] = useState<string | null>(null);
@@ -167,6 +265,7 @@ const App: React.FC = () => {
   const [loginName, setLoginName] = useState("");
   const [loginEmail, setLoginEmail] = useState("");
 
+  // cargar userId desde localStorage
   useEffect(() => {
     const id = localStorage.getItem("pp_userId");
     if (id) {
@@ -175,12 +274,18 @@ const App: React.FC = () => {
     }
   }, []);
 
+  // cargar uso inicial
   useEffect(() => {
-    if (userId) {
-      fetchUsage(userId)
-        .then(u => setRemaining(u.remainingMessages ?? MAX_MENSAJES_DIARIOS))
-        .catch(() => {});
-    }
+    if (!userId) return;
+    fetchUsage(userId)
+      .then((u) => {
+        if (typeof u.remainingMessages === "number") {
+          setRemaining(u.remainingMessages);
+        }
+      })
+      .catch(() => {
+        // silencioso
+      });
   }, [userId]);
 
   const handleLogin = useCallback(
@@ -210,30 +315,35 @@ const App: React.FC = () => {
   }, []);
 
   const handleSend = useCallback(async () => {
-    if (!userId || !text.trim() || text.length > MAX_CHARS) return;
+    if (!userId) return;
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    if (trimmed.length > MAX_CHARS) {
+      setAviso("Tu mensaje es muy largo.");
+      return;
+    }
 
-    // Límite de mensajes: abre modal
     if (remaining <= 0) {
       setModalOpen(true);
       return;
     }
 
-    const msg = text.trim();
     setText("");
     setLoading(true);
-    setMessages(p => [...p, { role: "user", content: msg }]);
+    setAviso(null);
+    setMessages((prev) => [...prev, { role: "user", content: trimmed }]);
 
     try {
-      const res = await fetchCorrection(msg, language, userId);
-      setMessages(p => [...p, { role: "bot", content: res }]);
-      if (res.remainingMessages !== undefined) {
+      const res = await fetchCorrection(trimmed, language, userId);
+      setMessages((prev) => [...prev, { role: "bot", content: res }]);
+      if (typeof res.remainingMessages === "number") {
         setRemaining(res.remainingMessages);
       }
       if (res.remainingMessages === 0) {
         setModalOpen(true);
       }
-    } catch {
-      setAviso("Error al procesar");
+    } catch (err) {
+      setAviso("Error al procesar el mensaje.");
     } finally {
       setLoading(false);
     }
@@ -244,12 +354,15 @@ const App: React.FC = () => {
     try {
       const r = await fetch("/create-checkout-session", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-user-id": userId },
-        body: JSON.stringify({ userId })
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": userId,
+        },
+        body: JSON.stringify({ userId }),
       });
-      const { url } = await r.json();
-      if (url) {
-        window.location.href = url;
+      const data = await r.json();
+      if (data.url) {
+        window.location.href = data.url;
       } else {
         setAviso("Error Stripe");
       }
@@ -258,9 +371,10 @@ const App: React.FC = () => {
     }
   }, [userId]);
 
-  const idiomaSel = IDIOMAS.find(i => i.codigo === language)?.nombre ?? "idioma";
+  const idiomaSel =
+    IDIOMAS.find((i) => i.codigo === language)?.nombre ?? "idioma";
 
-  if (loginView || !userId)
+  if (loginView || !userId) {
     return (
       <div className="app app-login">
         <header>
@@ -281,6 +395,7 @@ const App: React.FC = () => {
         </main>
       </div>
     );
+  }
 
   return (
     <div className="app">
@@ -290,13 +405,17 @@ const App: React.FC = () => {
           <p>Corrección amable · Explicaciones claras</p>
         </div>
         <div className="header-right">
-          <LanguageSelector languages={IDIOMAS} selected={language} onChange={setLanguage} />
+          <LanguageSelector
+            languages={IDIOMAS}
+            selected={language}
+            onChange={setLanguage}
+          />
           <MessageCounter
             remaining={remaining}
             max={MAX_MENSAJES_DIARIOS}
             onPremiumClick={handlePremium}
           />
-          <button className="btn-logout" onClick={handleLogout}>
+          <button className="btn-logout" type="button" onClick={handleLogout}>
             Salir
           </button>
         </div>
