@@ -24,7 +24,7 @@ const getOpenAI = (): OpenAI => {
 export const chatHandler = async (req: Request, res: Response) => {
   const { text, language = "es" } = (req.body || {}) as { text?: string; language?: string };
 
-  // ✅ Validación suave: siempre devolvemos corrected / explanations / tips
+  // ✅ Validación suave: SIEMPRE devolvemos corrected / explanations / tips
   if (!text || !text.trim()) {
     return res.json({
       corrected: "",
