@@ -11,10 +11,15 @@ const IDIOMAS = [
   { codigo: "pt", nombre: "Portugués" },
 ];
 
-type Message = { role: "user"; content: string } | { role: "bot"; content: CorrectionResponse };
+type Message =
+  | { role: "user"; content: string }
+  | { role: "bot"; content: CorrectionResponse };
 
 const MAX_MENSAJES_DIARIOS = 20;
 const MAX_CHARS = 280;
+
+const isValidEmail = (email: string): boolean =>
+  /\S+@\S+\.\S+/.test(email);
 
 const App: React.FC = () => {
   const [userId, setUserId] = useState<string | null>(null);
@@ -31,7 +36,124 @@ const App: React.FC = () => {
 
   const t = translations[language as keyof typeof translations] || translations.es;
 
-  // ... (todo tu código de login, uso, handleSend, handlePremium exactamente igual que antes)
+  // Cargar userId desde localStorage al inicio
+  useEffect(() => {
+    const stored = localStorage.getItem("pp_userId");
+    if (stored) {
+      setUserId(stored);
+      setLoginView(false);
+    }
+  }, []);
+
+  // Cargar uso desde backend cuando ya hay userId
+  useEffect(() => {
+    if (!userId) return;
+    fetchUsage(userId)
+      .then((u) => {
+        if (typeof u.remainingMessages === "number") {
+          setRemaining(u.remainingMessages);
+        }
+      })
+      .catch(() => {
+        // si falla, no rompemos la app
+      });
+  }, [userId]);
+
+  const handleLogin = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault();
+      setAviso(null);
+
+      if (loginEmail && !isValidEmail(loginEmail)) {
+        setAviso(t.invalidEmail || "Correo inválido.");
+        return;
+      }
+
+      const base = (loginEmail || loginName || "anon").trim();
+      const newId = `pp_${base}_${Date.now()}`;
+      localStorage.setItem("pp_userId", newId);
+      setUserId(newId);
+      setLoginView(false);
+    },
+    [loginEmail, loginName, t]
+  );
+
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem("pp_userId");
+    setUserId(null);
+    setLoginView(true);
+    setMessages([]);
+    setRemaining(MAX_MENSAJES_DIARIOS);
+    setAviso(null);
+  }, []);
+
+  const handleSend = useCallback(async () => {
+    if (!userId) {
+      setAviso(t.needLogin || "Necesitas iniciar sesión para usar la app.");
+      return;
+    }
+
+    const trimmed = text.trim();
+    if (!trimmed) return;
+
+    if (trimmed.length > MAX_CHARS) {
+      setAviso(t.tooLong || "Tu mensaje es demasiado largo.");
+      return;
+    }
+
+    if (remaining <= 0) {
+      setModalOpen(true);
+      return;
+    }
+
+    setText("");
+    setLoading(true);
+    setAviso(null);
+    setMessages((prev) => [...prev, { role: "user", content: trimmed }]);
+
+    try {
+      const res = await fetchCorrection(trimmed, language, userId);
+      setMessages((prev) => [...prev, { role: "bot", content: res }]);
+      if (typeof res.remainingMessages === "number") {
+        setRemaining(res.remainingMessages);
+      }
+      if (res.aviso) {
+        setAviso(res.aviso);
+      }
+      if (res.remainingMessages === 0) {
+        setModalOpen(true);
+      }
+    } catch {
+      setAviso(t.processError || "Hubo un problema al procesar tu mensaje.");
+    } finally {
+      setLoading(false);
+    }
+  }, [userId, text, language, remaining, t]);
+
+  const handlePremium = useCallback(async () => {
+    if (!userId) {
+      setAviso(t.needLogin || "Necesitas iniciar sesión para continuar.");
+      return;
+    }
+    try {
+      const r = await fetch("/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": userId,
+        },
+        body: JSON.stringify({ userId }),
+      });
+      const data = await r.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setAviso(t.stripeError || "Error al iniciar el pago.");
+      }
+    } catch {
+      setAviso(t.stripeError || "Error al conectar con el sistema de pagos.");
+    }
+  }, [userId, t]);
 
   // Solo cambia el render para usar `t.xxx`
 
@@ -49,18 +171,22 @@ const App: React.FC = () => {
           <form onSubmit={handleLogin} className="login-form">
             <label>
               {t.nameLabel}
-              <input value={loginName} onChange={e => setLoginName(e.target.value)} />
+              <input
+                value={loginName}
+                onChange={(e) => setLoginName(e.target.value)}
+              />
             </label>
             <label>
               {t.emailLabel}
               <input
                 type="email"
                 value={loginEmail}
-                onChange={e => setLoginEmail(e.target.value)}
+                onChange={(e) => setLoginEmail(e.target.value)}
               />
             </label>
             <button type="submit">{t.enterButton}</button>
           </form>
+          {aviso && <div className="aviso">{aviso}</div>}
         </main>
       </div>
     );
@@ -75,7 +201,7 @@ const App: React.FC = () => {
         </div>
         <div className="header-right">
           <div className="selector-idiomas">
-            {IDIOMAS.map(i => (
+            {IDIOMAS.map((i) => (
               <button
                 key={i.codigo}
                 className={language === i.codigo ? "idioma-btn active" : "idioma-btn"}
@@ -93,7 +219,7 @@ const App: React.FC = () => {
               <div
                 className="barra-interna"
                 style={{
-                  width: (remaining / MAX_MENSAJES_DIARIOS) * 100 + "%"
+                  width: (remaining / MAX_MENSAJES_DIARIOS) * 100 + "%",
                 }}
               />
             </div>
@@ -118,6 +244,8 @@ const App: React.FC = () => {
           sendText={t.send}
           sendingText={t.sending}
         />
+
+        {aviso && <div className="aviso">{aviso}</div>}
       </main>
 
       <PremiumModal
