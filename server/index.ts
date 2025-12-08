@@ -1,10 +1,37 @@
-import express, { type Request, type Response, type NextFunction } from "express";
+import express, {
+  type Request,
+  type Response,
+  type NextFunction,
+} from "express";
 import cors from "cors";
+import OpenAI from "openai";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 
+// ========== CONFIG OPENAI / CLARA ==========
+const CONFIG = {
+  MAX_CHARS: 280,
+  MODEL: "gpt-4o-mini",
+  TEMPERATURE: 0.3,
+  MAX_TOKENS: 500,
+} as const;
+
+let openaiClient: OpenAI | null = null;
+
+const getOpenAI = (): OpenAI => {
+  if (!openaiClient) {
+    const key = process.env.OPENAI_API_KEY;
+    if (!key) {
+      throw new Error("OPENAI_API_KEY no configurada");
+    }
+    openaiClient = new OpenAI({ apiKey: key });
+  }
+  return openaiClient;
+};
+
+// ========== MIDDLEWARES BÁSICOS ==========
 app.use(
   cors({
     origin: [
@@ -19,52 +46,6 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-// ========== HANDLER ÚNICO PARA CHAT ==========
-async function chatHandler(req: Request, res: Response) {
-  try {
-    console.log("📨 Chat request received");
-
-    const { message, text, userId } = req.body;
-    const input = message ?? text ?? null;
-
-    if (!input) {
-      return res.status(400).json({
-        error: "Missing message text",
-        received: req.body,
-      });
-    }
-
-    console.log(`✅ Message received: ${input.substring(0, 50)}...`);
-
-    // Respuesta de prueba que entiende el frontend
-    res.json({
-      corrected: input,
-      explanations: [
-        "✅ Conexión establecida con el backend",
-        "📨 Formato de respuesta 100% compatible con el frontend",
-      ],
-      tips: [
-        "🔧 Listo para conectar OpenAI/GPT/Claude",
-        "🎯 Cambia esta respuesta por la corrección gramatical real",
-      ],
-      language: "es",
-      timestamp: new Date().toISOString(),
-      status: "operational",
-    });
-  } catch (error) {
-    console.error("❌ Error in /chat:", error);
-    res.status(500).json({
-      error: "Internal server error",
-      message: error instanceof Error ? error.message : String(error),
-    });
-  }
-}
-
-// ========== RUTAS CHAT (AMBAS) ==========
-// Lo que sea que use el frontend, cae aquí:
-app.post("/chat", chatHandler);
-app.post("/api/chat", chatHandler);
 
 // ========== LOG MIDDLEWARE ==========
 app.use((req, res, next) => {
@@ -98,6 +79,180 @@ app.use((req, res, next) => {
 
   next();
 });
+
+// ========== HANDLER ÚNICO PARA CHAT (CLARA REAL) ==========
+async function chatHandler(req: Request, res: Response) {
+  try {
+    console.log("📨 Chat request received");
+
+    const {
+      message,
+      text,
+      userId,
+      language: bodyLanguage,
+    } = (req.body || {}) as {
+      message?: string;
+      text?: string;
+      userId?: string;
+      language?: string;
+    };
+
+    const inputRaw =
+      typeof message === "string" && message.trim().length > 0
+        ? message
+        : typeof text === "string"
+          ? text
+          : "";
+
+    const input = inputRaw.trim();
+    const language =
+      typeof bodyLanguage === "string" && bodyLanguage.trim().length > 0
+        ? bodyLanguage
+        : "es";
+
+    if (!input) {
+      return res.status(400).json({
+        corrected: "",
+        explanations: ["No se recibió ningún texto para corregir."],
+        tips: ["Escribe un texto y Clara te ayudará con gusto."],
+        language,
+        timestamp: new Date().toISOString(),
+        status: "error",
+      });
+    }
+
+    if (input.length > CONFIG.MAX_CHARS) {
+      return res.json({
+        corrected: input,
+        explanations: [
+          `Tu mensaje tiene ${input.length} caracteres.`,
+          `El límite es de ${CONFIG.MAX_CHARS} caracteres por mensaje.`,
+        ],
+        tips: ["Intenta resumir tu idea en un texto más breve."],
+        language,
+        timestamp: new Date().toISOString(),
+        status: "too_long",
+      });
+    }
+
+    console.log(
+      `✅ Message received (${language}): ${input.substring(0, 80)}${
+        input.length > 80 ? "..." : ""
+      }`,
+    );
+
+    const client = getOpenAI();
+
+    const completion = await client.chat.completions.create({
+      model: CONFIG.MODEL,
+      temperature: CONFIG.TEMPERATURE,
+      max_tokens: CONFIG.MAX_TOKENS,
+      response_format: { type: "json_object" },
+      messages: [
+        {
+          role: "system",
+          content: `Eres Clara, la tutora amable de Polyglot Point: Write.
+
+INSTRUCCIONES CRÍTICAS:
+- Responde SIEMPRE en el idioma indicado: ${language}.
+- Devuelve EXCLUSIVAMENTE un objeto JSON válido.
+- NO escribas nada fuera del JSON.
+
+Estructura EXACTA del JSON:
+{
+  "corrected": "texto corregido completo aquí",
+  "explanations": ["explicación breve 1", "explicación breve 2"],
+  "tips": ["sugerencia útil 1", "sugerencia útil 2"]
+}
+
+REGLA ESPECIAL:
+Si el texto del usuario ya es gramaticalmente correcto y natural, usa exactamente:
+{
+  "corrected": "Tu texto ya está perfecto.",
+  "explanations": [],
+  "tips": ["¡Sigue así!"]
+}
+
+ESTILO:
+- Tono cálido, respetuoso y pedagógico.
+- Explicaciones claras y concretas (1–3 frases cada una).
+- Tips prácticos que el usuario pueda aplicar de inmediato.
+- Si corriges algo, deja claro QUÉ cambiaste y POR QUÉ.`,
+        },
+        {
+          role: "user",
+          content: input,
+        },
+      ],
+    });
+
+    const rawContent = completion.choices[0]?.message?.content;
+
+    if (typeof rawContent !== "string") {
+      console.error("OpenAI devolvió contenido no textual:", rawContent);
+      return res.json({
+        corrected: input,
+        explanations: ["Hubo un problema al interpretar la respuesta de Clara."],
+        tips: ["Intenta de nuevo; si el problema persiste, avisa al desarrollador."],
+        language,
+        timestamp: new Date().toISOString(),
+        status: "bad_format",
+      });
+    }
+
+    let parsed: any;
+    try {
+      parsed = JSON.parse(rawContent);
+    } catch (e) {
+      console.error("Error al parsear JSON de OpenAI:", e, rawContent);
+      return res.json({
+        corrected: input,
+        explanations: ["La respuesta de Clara no tuvo el formato JSON esperado."],
+        tips: ["Intenta de nuevo; si el problema persiste, avisa al desarrollador."],
+        language,
+        timestamp: new Date().toISOString(),
+        status: "parse_error",
+      });
+    }
+
+    const corrected =
+      typeof parsed.corrected === "string" && parsed.corrected.trim().length > 0
+        ? parsed.corrected
+        : input;
+
+    const explanations = Array.isArray(parsed.explanations)
+      ? parsed.explanations.filter((x: unknown) => typeof x === "string")
+      : [];
+
+    const tips = Array.isArray(parsed.tips)
+      ? parsed.tips.filter((x: unknown) => typeof x === "string")
+      : [];
+
+    return res.json({
+      corrected,
+      explanations,
+      tips,
+      language,
+      timestamp: new Date().toISOString(),
+      status: "ok",
+    });
+  } catch (error) {
+    console.error("❌ Error in /chat:", error);
+    return res.status(500).json({
+      corrected: "",
+      explanations: ["Hubo un problema al procesar tu mensaje."],
+      tips: ["Por favor, intenta de nuevo en unos segundos."],
+      language: "es",
+      timestamp: new Date().toISOString(),
+      status: "server_error",
+    });
+  }
+}
+
+// ========== RUTAS CHAT (AMBAS) ==========
+// Lo que sea que use el frontend, cae aquí:
+app.post("/chat", chatHandler);
+app.post("/api/chat", chatHandler);
 
 (async () => {
   const server = await registerRoutes(app);
