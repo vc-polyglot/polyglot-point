@@ -1,6 +1,5 @@
 ﻿import React, { useEffect, useState, useCallback, FormEvent } from "react";
 import { fetchCorrection, fetchUsage, type CorrectionResponse } from "./api";
-import { translations } from "./i18n";
 
 const IDIOMAS = [
   { codigo: "es", nombre: "Español" },
@@ -11,15 +10,10 @@ const IDIOMAS = [
   { codigo: "pt", nombre: "Portugués" },
 ];
 
-type Message =
-  | { role: "user"; content: string }
-  | { role: "bot"; content: CorrectionResponse };
+type Message = { role: "user"; content: string } | { role: "bot"; content: CorrectionResponse };
 
 const MAX_MENSAJES_DIARIOS = 20;
 const MAX_CHARS = 280;
-
-const isValidEmail = (email: string): boolean =>
-  /\S+@\S+\.\S+/.test(email);
 
 const App: React.FC = () => {
   const [userId, setUserId] = useState<string | null>(null);
@@ -27,166 +21,77 @@ const App: React.FC = () => {
   const [text, setText] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [remaining, setRemaining] = useState(MAX_MENSAJES_DIARIOS);
-  const [aviso, setAviso] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [loginView, setLoginView] = useState(true);
   const [loginName, setLoginName] = useState("");
   const [loginEmail, setLoginEmail] = useState("");
 
-  const t = translations[language as keyof typeof translations] || translations.es;
-
-  // Cargar userId desde localStorage al inicio
   useEffect(() => {
-    const stored = localStorage.getItem("pp_userId");
-    if (stored) {
-      setUserId(stored);
-      setLoginView(false);
-    }
+    const id = localStorage.getItem("pp_userId");
+    if (id) { setUserId(id); setLoginView(false); }
   }, []);
 
-  // Cargar uso desde backend cuando ya hay userId
   useEffect(() => {
-    if (!userId) return;
-    fetchUsage(userId)
-      .then((u) => {
-        if (typeof u.remainingMessages === "number") {
-          setRemaining(u.remainingMessages);
-        }
-      })
-      .catch(() => {
-        // si falla, no rompemos la app
-      });
+    if (userId) {
+      fetchUsage(userId).then(u => setRemaining(u.remainingMessages ?? MAX_MENSAJES_DIARIOS)).catch(() => {});
+    }
   }, [userId]);
 
-  const handleLogin = useCallback(
-    (e: FormEvent) => {
-      e.preventDefault();
-      setAviso(null);
-
-      if (loginEmail && !isValidEmail(loginEmail)) {
-        setAviso(t.invalidEmail || "Correo inválido.");
-        return;
-      }
-
-      const base = (loginEmail || loginName || "anon").trim();
-      const newId = `pp_${base}_${Date.now()}`;
-      localStorage.setItem("pp_userId", newId);
-      setUserId(newId);
-      setLoginView(false);
-    },
-    [loginEmail, loginName, t]
-  );
+  const handleLogin = useCallback((e: FormEvent) => {
+    e.preventDefault();
+    const base = (loginEmail || loginName || "anon").trim();
+    const newId = `pp_${base}_${Date.now()}`;
+    localStorage.setItem("pp_userId", newId);
+    setUserId(newId);
+    setLoginView(false);
+  }, [loginEmail, loginName]);
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem("pp_userId");
-    setUserId(null);
-    setLoginView(true);
-    setMessages([]);
-    setRemaining(MAX_MENSAJES_DIARIOS);
-    setAviso(null);
+    setUserId(null); setLoginView(true); setMessages([]); setRemaining(MAX_MENSAJES_DIARIOS);
   }, []);
 
   const handleSend = useCallback(async () => {
-    if (!userId) {
-      setAviso(t.needLogin || "Necesitas iniciar sesión para usar la app.");
-      return;
-    }
-
-    const trimmed = text.trim();
-    if (!trimmed) return;
-
-    if (trimmed.length > MAX_CHARS) {
-      setAviso(t.tooLong || "Tu mensaje es demasiado largo.");
-      return;
-    }
-
-    if (remaining <= 0) {
-      setModalOpen(true);
-      return;
-    }
-
-    setText("");
-    setLoading(true);
-    setAviso(null);
-    setMessages((prev) => [...prev, { role: "user", content: trimmed }]);
-
+    if (!userId || !text.trim() || text.length > MAX_CHARS || remaining <= 0) return;
+    const msg = text.trim();
+    setText(""); setLoading(true);
+    setMessages(p => [...p, { role: "user", content: msg }]);
     try {
-      const res = await fetchCorrection(trimmed, language, userId);
-      setMessages((prev) => [...prev, { role: "bot", content: res }]);
-      if (typeof res.remainingMessages === "number") {
-        setRemaining(res.remainingMessages);
-      }
-      if (res.aviso) {
-        setAviso(res.aviso);
-      }
-      if (res.remainingMessages === 0) {
-        setModalOpen(true);
-      }
-    } catch {
-      setAviso(t.processError || "Hubo un problema al procesar tu mensaje.");
-    } finally {
-      setLoading(false);
-    }
-  }, [userId, text, language, remaining, t]);
+      const res = await fetchCorrection(msg, language, userId);
+      setMessages(p => [...p, { role: "bot", content: res }]);
+      if (res.remainingMessages !== undefined) setRemaining(res.remainingMessages);
+      if (res.remainingMessages === 0) setModalOpen(true);
+    } catch { } finally { setLoading(false); }
+  }, [userId, text, language, remaining]);
 
   const handlePremium = useCallback(async () => {
-    if (!userId) {
-      setAviso(t.needLogin || "Necesitas iniciar sesión para continuar.");
-      return;
-    }
+    if (!userId) return;
     try {
       const r = await fetch("/create-checkout-session", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-user-id": userId,
-        },
-        body: JSON.stringify({ userId }),
+        headers: { "Content-Type": "application/json", "x-user-id": userId },
+        body: JSON.stringify({ userId })
       });
-      const data = await r.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        setAviso(t.stripeError || "Error al iniciar el pago.");
-      }
-    } catch {
-      setAviso(t.stripeError || "Error al conectar con el sistema de pagos.");
-    }
-  }, [userId, t]);
+      const { url } = await r.json();
+      window.location.href = url;
+    } catch { }
+  }, [userId]);
 
-  // Solo cambia el render para usar `t.xxx`
+  const progress = (remaining / MAX_MENSAJES_DIARIOS) * 100;
 
   if (loginView || !userId) {
     return (
       <div className="app app-login">
-        <header>
-          <h1>{t.title}</h1>
-          <p>{t.subtitle}</p>
-        </header>
+        <header><h1>Polyglot Point: Write</h1><p>Corrección amable · Explicaciones claras</p></header>
         <main className="login-card">
-          <h2>{t.loginTitle}</h2>
-          <p>{t.loginDesc}</p>
-          {/* form igual pero con t.nameLabel, t.emailLabel, t.enterButton */}
+          <h2>Inicia sesión</h2>
+          <p>Solo para contar tus mensajes.</p>
           <form onSubmit={handleLogin} className="login-form">
-            <label>
-              {t.nameLabel}
-              <input
-                value={loginName}
-                onChange={(e) => setLoginName(e.target.value)}
-              />
-            </label>
-            <label>
-              {t.emailLabel}
-              <input
-                type="email"
-                value={loginEmail}
-                onChange={(e) => setLoginEmail(e.target.value)}
-              />
-            </label>
-            <button type="submit">{t.enterButton}</button>
+            <label>Nombre (opcional)<input value={loginName} onChange={e => setLoginName(e.target.value)} placeholder="Tu nombre" /></label>
+            <label>Correo (opcional)<input type="email" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} placeholder="tucorreo@example.com" /></label>
+            <button type="submit">Entrar</button>
           </form>
-          {aviso && <div className="aviso">{aviso}</div>}
         </main>
       </div>
     );
@@ -195,13 +100,10 @@ const App: React.FC = () => {
   return (
     <div className="app">
       <header className="app-header">
-        <div>
-          <h1>{t.title}</h1>
-          <p>{t.subtitle}</p>
-        </div>
+        <div><h1>Polyglot Point: Write</h1><p>Corrección amable · Explicaciones claras</p></div>
         <div className="header-right">
           <div className="selector-idiomas">
-            {IDIOMAS.map((i) => (
+            {IDIOMAS.map(i => (
               <button
                 key={i.codigo}
                 className={language === i.codigo ? "idioma-btn active" : "idioma-btn"}
@@ -212,51 +114,67 @@ const App: React.FC = () => {
             ))}
           </div>
           <div className="contador">
-            <span>
-              {t.messagesToday}: {remaining}/{MAX_MENSAJES_DIARIOS}
-            </span>
+            <span>Mensajes gratis hoy: {remaining}/{MAX_MENSAJES_DIARIOS}</span>
             <div className="barra-externa">
-              <div
-                className="barra-interna"
-                style={{
-                  width: (remaining / MAX_MENSAJES_DIARIOS) * 100 + "%",
-                }}
-              />
+              <div className="barra-interna" style={{ width: progress + "%" }} />
             </div>
-            {remaining <= 3 && (
-              <button onClick={handlePremium}>{t.activatePremium}</button>
+            {remaining <= 3 && remaining > 0 && (
+              <button className="btn-premium-mini" onClick={handlePremium}>
+                Activar Premium · $9.99/mes · Ilimitado
+              </button>
             )}
           </div>
-          <button className="btn-logout" onClick={handleLogout}>
-            {t.logout}
-          </button>
+          <button className="btn-logout" onClick={handleLogout}>Salir</button>
         </div>
       </header>
 
       <main className="chat-layout">
-        {/* chat igual */}
-        <InputArea
-          text={text}
-          setText={setText}
-          loading={loading}
-          onSend={handleSend}
-          placeholder={t.placeholder}
-          sendText={t.send}
-          sendingText={t.sending}
-        />
+        <section className="chat-window">
+          {messages.length === 0 && (
+            <div className="chat-placeholder">
+              <p>Escribe lo que quieras practicar o corregir...</p>
+            </div>
+          )}
+          {messages.map((m, i) => m.role === "user" ? (
+            <div key={i} className="mensaje mensaje-user">{m.content}</div>
+          ) : (
+            <div key={i} className="mensaje mensaje-bot">
+              <p className="mensaje-correccion">{(m.content as CorrectionResponse).corrected}</p>
+              {(m.content as CorrectionResponse).explanations?.map((e, j) => <p key={j}>{e}</p>)}
+              {(m.content as CorrectionResponse).tips?.map((t, j) => <p key={j}>{t}</p>)}
+            </div>
+          ))}
+        </section>
 
-        {aviso && <div className="aviso">{aviso}</div>}
+        <section className="input-area">
+          <textarea
+            value={text}
+            onChange={e => setText(e.target.value)}
+            maxLength={MAX_CHARS}
+            placeholder="Escribe aquí..."
+          />
+          <div className="input-footer">
+            <span className={text.length > 250 ? "casi-lleno" : ""}>
+              {text.length}/{MAX_CHARS}
+            </span>
+            <button onClick={handleSend} disabled={loading || !text.trim() || remaining <= 0}>
+              {loading ? "Enviando..." : "Enviar"}
+            </button>
+          </div>
+        </section>
       </main>
 
-      <PremiumModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onPremiumClick={handlePremium}
-        title={t.limitReached}
-        message={t.limitMessage}
-        benefit={t.premiumBenefit}
-        buttonText={t.premiumUnlimited}
-      />
+      {modalOpen && (
+        <div className="modal-backdrop">
+          <div className="modal">
+            <h2>Límite alcanzado</h2>
+            <p>Has usado tus {MAX_MENSAJES_DIARIOS} mensajes gratis hoy.</p>
+            <p>Activa Premium para tener mensajes ilimitados.</p>
+            <button onClick={handlePremium}>Activar Premium · $9.99/mes · Ilimitado</button>
+            <button onClick={() => setModalOpen(false)}>Cerrar</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
