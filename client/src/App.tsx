@@ -47,8 +47,18 @@ const App: React.FC = () => {
           <p>{t.loginDesc}</p>
           {/* form igual pero con t.nameLabel, t.emailLabel, t.enterButton */}
           <form onSubmit={handleLogin} className="login-form">
-            <label>{t.nameLabel}<input value={loginName} onChange={e => setLoginName(e.target.value)} /></label>
-            <label>{t.emailLabel}<input type="email" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} /></label>
+            <label>
+              {t.nameLabel}
+              <input value={loginName} onChange={e => setLoginName(e.target.value)} />
+            </label>
+            <label>
+              {t.emailLabel}
+              <input
+                type="email"
+                value={loginEmail}
+                onChange={e => setLoginEmail(e.target.value)}
+              />
+            </label>
             <button type="submit">{t.enterButton}</button>
           </form>
         </main>
@@ -66,36 +76,53 @@ const App: React.FC = () => {
         <div className="header-right">
           <div className="selector-idiomas">
             {IDIOMAS.map(i => (
-              <button key={i.codigo} className={language === i.codigo ? "idioma-btn active" : "idioma-btn"} onClick={() => setLanguage(i.codigo)}>
+              <button
+                key={i.codigo}
+                className={language === i.codigo ? "idioma-btn active" : "idioma-btn"}
+                onClick={() => setLanguage(i.codigo)}
+              >
                 {i.nombre}
               </button>
             ))}
           </div>
           <div className="contador">
-            <span>{t.messagesToday}: {remaining}/{MAX_MENSAJES_DIARIOS}</span>
-            <div className="barra-externa"><div className="barra-interna" style={{width: \`\${(remaining/20)*100}%\`}} /></div>
-            {remaining <= 3 && <button onClick={handlePremium}>{t.activatePremium}</button>}
+            <span>
+              {t.messagesToday}: {remaining}/{MAX_MENSAJES_DIARIOS}
+            </span>
+            <div className="barra-externa">
+              <div
+                className="barra-interna"
+                style={{
+                  width: (remaining / MAX_MENSAJES_DIARIOS) * 100 + "%"
+                }}
+              />
+            </div>
+            {remaining <= 3 && (
+              <button onClick={handlePremium}>{t.activatePremium}</button>
+            )}
           </div>
-          <button className="btn-logout" onClick={handleLogout}>{t.logout}</button>
+          <button className="btn-logout" onClick={handleLogout}>
+            {t.logout}
+          </button>
         </div>
       </header>
 
       <main className="chat-layout">
         {/* chat igual */}
-        <InputArea 
-          text={text} 
-          setText={setText} 
-          loading={loading} 
-          onSend={handleSend} 
-          placeholder={t.placeholder} 
-          sendText={t.send} 
+        <InputArea
+          text={text}
+          setText={setText}
+          loading={loading}
+          onSend={handleSend}
+          placeholder={t.placeholder}
+          sendText={t.send}
           sendingText={t.sending}
         />
       </main>
 
-      <PremiumModal 
-        open={modalOpen} 
-        onClose={() => setModalOpen(false)} 
+      <PremiumModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
         onPremiumClick={handlePremium}
         title={t.limitReached}
         message={t.limitMessage}
