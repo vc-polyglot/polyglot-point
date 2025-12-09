@@ -39,6 +39,14 @@ router.post(
       const history: { role: "user" | "assistant"; content: string }[] =
         g.claraHistory[key] || [];
 
+      // 🔍 LOG PRINCIPAL: saber que esta ruta se está ejecutando
+      console.log("CLARA_ROUTE_HIT", {
+        userId: key,
+        finalTargetLanguage,
+        intent,
+        finalMessagePreview: finalMessage.slice(0, 80),
+      });
+
       // 3. Construimos el prompt NUEVO y POTENTE
       const systemPrompt = buildClaraPrompt({
         intent,
@@ -47,6 +55,12 @@ router.post(
         userMessage: finalMessage,
         conversationHistory: history.slice(-10),
       });
+
+      // 🔍 LOG DEL PROMPT (solo un preview para no llenar logs)
+      console.log(
+        "CLARA_SYSTEM_PROMPT_PREVIEW",
+        systemPrompt.slice(0, 300)
+      );
 
       // 4. Llamada a OpenAI – system fuerte + user explícito
       const completion = await openai.chat.completions.create({
@@ -86,15 +100,16 @@ Modo forzado por el sistema: ${intent}
       g.claraHistory[key] = history;
 
       // 6. Respuesta en formato compatible con el frontend de Write
+      //    con prefijo DEBUG para comprobar que ESTA ruta es la que responde
       return res.json({
         original: finalMessage,
-        corrected: respuesta,
+        corrected: `DEBUG-CLARA-NUEVA: ${respuesta}`,
         explanations: [],
         tips: [],
         intent,
       });
     } catch (err) {
-      console.error(err);
+      console.error("CLARA_ROUTE_ERROR", err);
       return res.status(500).json({ error: "Error interno" });
     }
   }
