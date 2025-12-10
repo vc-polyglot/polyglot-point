@@ -1,0 +1,10 @@
+﻿{
+  "tsconfig": {
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "@shared/*": ["shared/*"]
+      }
+    }
+  }
+}

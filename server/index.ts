@@ -1,3 +1,10 @@
+process.on("uncaughtException", (err) => {
+  console.error("?? UNCAUGHT EXCEPTION AL ARRANCAR:", err);
+});
+
+process.on("unhandledRejection", (reason) => {
+  console.error("?? UNHANDLED REJECTION AL ARRANCAR:", reason);
+});
 import express, {
   type Request,
   type Response,
@@ -9,6 +16,16 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
+
+// ========== HEALTHCHECK SENCILLO ==========
+app.get("/health", (_req: Request, res: Response) => {
+  res.status(200).json({
+    status: "ok",
+    source: "polyglot-point-backend",
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || "development",
+  });
+});
 
 // ========== CONFIG OPENAI / CLARA ==========
 const CONFIG = {
@@ -31,7 +48,7 @@ const getOpenAI = (): OpenAI => {
   return openaiClient;
 };
 
-// ========== MIDDLEWARES BÃSICOS ==========
+// ========== MIDDLEWARES BÁSICOS ==========
 app.use(
   cors({
     origin: [
@@ -70,7 +87,7 @@ app.use((req, res, next) => {
       }
 
       if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "â€¦";
+        logLine = logLine.slice(0, 79) + "…";
       }
 
       log(logLine);
@@ -80,10 +97,10 @@ app.use((req, res, next) => {
   next();
 });
 
-// ========== HANDLER ÃšNICO PARA CHAT (CLARA REAL) ==========
+// ========== HANDLER ÚNICO PARA CHAT (CLARA REAL) ==========
 async function chatHandler(req: Request, res: Response) {
   try {
-    console.log("ğŸ“¨ Chat request received");
+    console.log("?? Chat request received");
 
     const {
       message,
@@ -113,8 +130,8 @@ async function chatHandler(req: Request, res: Response) {
     if (!input) {
       return res.status(400).json({
         corrected: "",
-        explanations: ["No se recibiÃ³ ningÃºn texto para corregir."],
-        tips: ["Escribe un texto y Clara te ayudarÃ¡ con gusto."],
+        explanations: ["No se recibió ningún texto para corregir."],
+        tips: ["Escribe un texto y Clara te ayudará con gusto."],
         language,
         timestamp: new Date().toISOString(),
         status: "error",
@@ -126,9 +143,9 @@ async function chatHandler(req: Request, res: Response) {
         corrected: input,
         explanations: [
           `Tu mensaje tiene ${input.length} caracteres.`,
-          `El lÃ­mite es de ${CONFIG.MAX_CHARS} caracteres por mensaje.`,
+          `El límite es de ${CONFIG.MAX_CHARS} caracteres por mensaje.`,
         ],
-        tips: ["Intenta resumir tu idea en un texto mÃ¡s breve."],
+        tips: ["Intenta resumir tu idea en un texto más breve."],
         language,
         timestamp: new Date().toISOString(),
         status: "too_long",
@@ -136,7 +153,7 @@ async function chatHandler(req: Request, res: Response) {
     }
 
     console.log(
-      `âœ… Message received (${language}): ${input.substring(0, 80)}${
+      `? Message received (${language}): ${input.substring(0, 80)}${
         input.length > 80 ? "..." : ""
       }`,
     );
@@ -153,31 +170,31 @@ async function chatHandler(req: Request, res: Response) {
           role: "system",
           content: `Eres Clara, la tutora amable de Polyglot Point: Write.
 
-INSTRUCCIONES CRÃTICAS:
+INSTRUCCIONES CRÍTICAS:
 - Responde SIEMPRE en el idioma indicado: ${language}.
-- Devuelve EXCLUSIVAMENTE un objeto JSON vÃ¡lido.
+- Devuelve EXCLUSIVAMENTE un objeto JSON válido.
 - NO escribas nada fuera del JSON.
 
 Estructura EXACTA del JSON:
 {
-  "corrected": "texto corregido completo aquÃ­",
-  "explanations": ["explicaciÃ³n breve 1", "explicaciÃ³n breve 2"],
-  "tips": ["sugerencia Ãºtil 1", "sugerencia Ãºtil 2"]
+  "corrected": "texto corregido completo aquí",
+  "explanations": ["explicación breve 1", "explicación breve 2"],
+  "tips": ["sugerencia útil 1", "sugerencia útil 2"]
 }
 
-REGLA ESPECIAL:
-Si el texto del usuario ya es gramaticalmente correcto y natural, usa exactamente:
-{
-  "corrected": "Tu texto ya estÃ¡ perfecto.",
-  "explanations": [],
-  "tips": ["Â¡Sigue asÃ­!"]
-}
+REGLAS ESPECIALES:
+- Si el texto del usuario ya es gramaticalmente correcto y natural:
+  - Pon el mismo texto del usuario en "corrected".
+  - En "explanations", escribe 1–2 frases breves aclarando que no fue necesario hacer cambios importantes.
+  - "tips" puede estar vacío o contener una sugerencia concreta para seguir mejorando.
+- NO uses frases genéricas como "Tu texto ya está perfecto".
+- NO devuelvas mensajes vacíos del tipo "¡Sigue así!" sin explicar nada.
 
 ESTILO:
-- Tono cÃ¡lido, respetuoso y pedagÃ³gico.
-- Explicaciones claras y concretas (1â€“3 frases cada una).
-- Tips prÃ¡cticos que el usuario pueda aplicar de inmediato.
-- Si corriges algo, deja claro QUÃ‰ cambiaste y POR QUÃ‰.`,
+- Tono cálido, respetuoso y pedagógico.
+- Explicaciones claras y concretas (1–3 frases cada una).
+- Tips prácticos que el usuario pueda aplicar de inmediato.
+- Si corriges algo, deja claro QUÉ cambiaste y POR QUÉ.`,
         },
         {
           role: "user",
@@ -189,7 +206,7 @@ ESTILO:
     const rawContent = completion.choices[0]?.message?.content;
 
     if (typeof rawContent !== "string") {
-      console.error("OpenAI devolviÃ³ contenido no textual:", rawContent);
+      console.error("OpenAI devolvió contenido no textual:", rawContent);
       return res.json({
         corrected: input,
         explanations: ["Hubo un problema al interpretar la respuesta de Clara."],
@@ -237,7 +254,7 @@ ESTILO:
       status: "ok",
     });
   } catch (error) {
-    console.error("âŒ Error in /chat:", error);
+    console.error("? Error in /chat:", error);
     return res.status(500).json({
       corrected: "",
       explanations: ["Hubo un problema al procesar tu mensaje."],
@@ -250,7 +267,7 @@ ESTILO:
 }
 
 // ========== RUTAS CHAT (AMBAS) ==========
-// Lo que sea que use el frontend, cae aquÃ­:
+// Lo que sea que use el frontend, cae aquí:
 app.post("/chat", chatHandler);
 app.post("/api/chat", chatHandler);
 
@@ -274,6 +291,7 @@ app.post("/api/chat", chatHandler);
   const PORT = Number(process.env.PORT) || 8080;
 
   server.listen(PORT, "0.0.0.0", () => {
-    log(`ğŸ“ serving on port ${PORT}`);
+    log(`?? serving on port ${PORT}`);
   });
 })();
+

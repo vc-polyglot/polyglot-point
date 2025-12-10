@@ -148400,7 +148400,21 @@ function log(message) {
 }
 
 // server/index.ts
+process.on("uncaughtException", (err) => {
+  console.error("?? UNCAUGHT EXCEPTION AL ARRANCAR:", err);
+});
+process.on("unhandledRejection", (reason) => {
+  console.error("?? UNHANDLED REJECTION AL ARRANCAR:", reason);
+});
 var app = (0, import_express3.default)();
+app.get("/health", (_req, res) => {
+  res.status(200).json({
+    status: "ok",
+    source: "polyglot-point-backend",
+    timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+    environment: process.env.NODE_ENV || "development"
+  });
+});
 var CONFIG = {
   MAX_CHARS: 280,
   MODEL: "gpt-4o-mini",
@@ -148448,7 +148462,7 @@ app.use((req, res, next) => {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
       if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "\u2026";
+        logLine = logLine.slice(0, 79) + "\uFFFD";
       }
       log(logLine);
     }
@@ -148457,7 +148471,7 @@ app.use((req, res, next) => {
 });
 async function chatHandler(req, res) {
   try {
-    console.log("\u{1F4E8} Chat request received");
+    console.log("?? Chat request received");
     const {
       message,
       text: text2,
@@ -148470,8 +148484,8 @@ async function chatHandler(req, res) {
     if (!input) {
       return res.status(400).json({
         corrected: "",
-        explanations: ["No se recibi\xF3 ning\xFAn texto para corregir."],
-        tips: ["Escribe un texto y Clara te ayudar\xE1 con gusto."],
+        explanations: ["No se recibi\uFFFD ning\uFFFDn texto para corregir."],
+        tips: ["Escribe un texto y Clara te ayudar\uFFFD con gusto."],
         language,
         timestamp: (/* @__PURE__ */ new Date()).toISOString(),
         status: "error"
@@ -148482,16 +148496,16 @@ async function chatHandler(req, res) {
         corrected: input,
         explanations: [
           `Tu mensaje tiene ${input.length} caracteres.`,
-          `El l\xEDmite es de ${CONFIG.MAX_CHARS} caracteres por mensaje.`
+          `El l\uFFFDmite es de ${CONFIG.MAX_CHARS} caracteres por mensaje.`
         ],
-        tips: ["Intenta resumir tu idea en un texto m\xE1s breve."],
+        tips: ["Intenta resumir tu idea en un texto m\uFFFDs breve."],
         language,
         timestamp: (/* @__PURE__ */ new Date()).toISOString(),
         status: "too_long"
       });
     }
     console.log(
-      `\u2705 Message received (${language}): ${input.substring(0, 80)}${input.length > 80 ? "..." : ""}`
+      `? Message received (${language}): ${input.substring(0, 80)}${input.length > 80 ? "..." : ""}`
     );
     const client = getOpenAI();
     const completion = await client.chat.completions.create({
@@ -148504,31 +148518,31 @@ async function chatHandler(req, res) {
           role: "system",
           content: `Eres Clara, la tutora amable de Polyglot Point: Write.
 
-INSTRUCCIONES CR\xCDTICAS:
+INSTRUCCIONES CR\uFFFDTICAS:
 - Responde SIEMPRE en el idioma indicado: ${language}.
-- Devuelve EXCLUSIVAMENTE un objeto JSON v\xE1lido.
+- Devuelve EXCLUSIVAMENTE un objeto JSON v\uFFFDlido.
 - NO escribas nada fuera del JSON.
 
 Estructura EXACTA del JSON:
 {
-  "corrected": "texto corregido completo aqu\xED",
-  "explanations": ["explicaci\xF3n breve 1", "explicaci\xF3n breve 2"],
-  "tips": ["sugerencia \xFAtil 1", "sugerencia \xFAtil 2"]
+  "corrected": "texto corregido completo aqu\uFFFD",
+  "explanations": ["explicaci\uFFFDn breve 1", "explicaci\uFFFDn breve 2"],
+  "tips": ["sugerencia \uFFFDtil 1", "sugerencia \uFFFDtil 2"]
 }
 
-REGLA ESPECIAL:
-Si el texto del usuario ya es gramaticalmente correcto y natural, usa exactamente:
-{
-  "corrected": "Tu texto ya est\xE1 perfecto.",
-  "explanations": [],
-  "tips": ["\xA1Sigue as\xED!"]
-}
+REGLAS ESPECIALES:
+- Si el texto del usuario ya es gramaticalmente correcto y natural:
+  - Pon el mismo texto del usuario en "corrected".
+  - En "explanations", escribe 1\uFFFD2 frases breves aclarando que no fue necesario hacer cambios importantes.
+  - "tips" puede estar vac\uFFFDo o contener una sugerencia concreta para seguir mejorando.
+- NO uses frases gen\uFFFDricas como "Tu texto ya est\uFFFD perfecto".
+- NO devuelvas mensajes vac\uFFFDos del tipo "\uFFFDSigue as\uFFFD!" sin explicar nada.
 
 ESTILO:
-- Tono c\xE1lido, respetuoso y pedag\xF3gico.
-- Explicaciones claras y concretas (1\u20133 frases cada una).
-- Tips pr\xE1cticos que el usuario pueda aplicar de inmediato.
-- Si corriges algo, deja claro QU\xC9 cambiaste y POR QU\xC9.`
+- Tono c\uFFFDlido, respetuoso y pedag\uFFFDgico.
+- Explicaciones claras y concretas (1\uFFFD3 frases cada una).
+- Tips pr\uFFFDcticos que el usuario pueda aplicar de inmediato.
+- Si corriges algo, deja claro QU\uFFFD cambiaste y POR QU\uFFFD.`
         },
         {
           role: "user",
@@ -148538,7 +148552,7 @@ ESTILO:
     });
     const rawContent = completion.choices[0]?.message?.content;
     if (typeof rawContent !== "string") {
-      console.error("OpenAI devolvi\xF3 contenido no textual:", rawContent);
+      console.error("OpenAI devolvi\uFFFD contenido no textual:", rawContent);
       return res.json({
         corrected: input,
         explanations: ["Hubo un problema al interpretar la respuesta de Clara."],
@@ -148574,7 +148588,7 @@ ESTILO:
       status: "ok"
     });
   } catch (error40) {
-    console.error("\u274C Error in /chat:", error40);
+    console.error("? Error in /chat:", error40);
     return res.status(500).json({
       corrected: "",
       explanations: ["Hubo un problema al procesar tu mensaje."],
@@ -148602,7 +148616,7 @@ app.post("/api/chat", chatHandler);
   }
   const PORT = Number(process.env.PORT) || 8080;
   server.listen(PORT, "0.0.0.0", () => {
-    log(`\u{1F4DD} serving on port ${PORT}`);
+    log(`?? serving on port ${PORT}`);
   });
 })();
 /*! Bundled license information:
