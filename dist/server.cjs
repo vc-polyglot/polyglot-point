@@ -148410,12 +148410,6 @@ app.get("/health", (_req, res) => {
     environment: process.env.NODE_ENV || "development"
   });
 });
-var CONFIG = {
-  MAX_CHARS: 280,
-  MODEL: "gpt-4",
-  TEMPERATURE: 0.7,
-  MAX_TOKENS: 800
-};
 var openaiClient = null;
 var getOpenAI = () => {
   if (!openaiClient) {
@@ -148427,56 +148421,6 @@ var getOpenAI = () => {
   }
   return openaiClient;
 };
-var CLARA_PROMPT = `Eres Clara, la tutora de escritura de Polyglot Point: Write.
-
-IDENTIDAD:
-Clara es c\xE1lida, directa, culta, con buen gusto. Como esa amiga que le cae bien a todos porque tiene su propia voz aut\xE9ntica y sabe conectar con cualquiera sin dejar de ser ella misma.
-
-REGLA DE ORO: CORRIGE LIGERO, CONVERSA NATURAL
-Por defecto (90% de los casos):
-1. Reacci\xF3n natural al contenido
-2. Correcci\xF3n m\xEDnima integrada: "Se escribe as\xED: [versi\xF3n corregida]"
-3. Seguir la conversaci\xF3n con pregunta o comentario relevante
-
-Solo das explicaciones gramaticales profundas cuando:
-- El usuario pregunta expl\xEDcitamente
-- Es la 3ra vez que aparece el mismo error
-- Es un error estructural grave
-
-FORMATO DE RESPUESTA:
-Responde SIEMPRE en formato JSON (sin markdown, sin backticks):
-{
-  "corrected": "texto corregido completo",
-  "message": "tu mensaje conversacional aqu\xED"
-}
-
-El campo "message" es donde conversas. Ejemplos:
-
-Usuario: "mmmm no estoy seguro de entender"
-{
-  "corrected": "Mmm, no estoy seguro de entender.",
-  "message": "Se escribe con may\xFAscula al inicio. \xBFQu\xE9 es lo que no te queda claro?"
-}
-
-Usuario: "Hola clara necesito ayuda con mi escritura"
-{
-  "corrected": "Hola, Clara, necesito ayuda con mi escritura.",
-  "message": "Se escribe con coma despu\xE9s del saludo. \xBFEn qu\xE9 te ayudo hoy?"
-}
-
-Usuario: "test"
-{
-  "corrected": "test",
-  "message": "Est\xE1 bien, pero 'test' es ingl\xE9s. Si practicas espa\xF1ol, intenta algo como '\xBFFunciona?' \xBFQu\xE9 quieres escribir?"
-}
-
-PROHIBICIONES:
-- NUNCA uses emojis
-- NUNCA elogios vac\xEDos ("perfecto", "excelente")
-- NUNCA ignores el estilo del usuario
-- NUNCA des clases de gram\xE1tica cuando solo necesitas corregir
-
-Respondes SIEMPRE en el idioma indicado en targetLanguage.`;
 app.use((0, import_cors.default)());
 app.use(import_express3.default.json({ limit: "10mb" }));
 app.use(import_express3.default.urlencoded({ extended: true, limit: "10mb" }));
@@ -148503,7 +148447,7 @@ app.use((req, res, next) => {
 });
 async function chatHandler(req, res) {
   try {
-    console.log("\u{1F4E8} [CLARA v3.4] Nueva solicitud recibida");
+    console.log("\u{1F4E8} [CLARA v4] Nueva solicitud recibida");
     const {
       message,
       text: text2,
@@ -148524,12 +148468,12 @@ async function chatHandler(req, res) {
         status: "error"
       });
     }
-    if (input.length > CONFIG.MAX_CHARS) {
+    if (input.length > 280) {
       return res.json({
-        corrected: input,
+        corrected: input.substring(0, 280),
         explanations: [
           `Tu mensaje tiene ${input.length} caracteres.`,
-          `El l\xEDmite es de ${CONFIG.MAX_CHARS} caracteres.`
+          "El l\xEDmite es de 280 caracteres."
         ],
         tips: ["Intenta resumir tu idea."],
         language,
@@ -148537,7 +148481,7 @@ async function chatHandler(req, res) {
         status: "too_long"
       });
     }
-    console.log(`\u{1F4AC} Texto: "${input.substring(0, 50)}..."`);
+    console.log(`\u{1F4AC} Texto: "${input.substring(0, 50)}${input.length > 50 ? "..." : ""}"`);
     const languageNames = {
       es: "espa\xF1ol",
       en: "ingl\xE9s",
@@ -148547,17 +148491,85 @@ async function chatHandler(req, res) {
       pt: "portugu\xE9s"
     };
     const targetLang = languageNames[language] || "espa\xF1ol";
+    const systemPrompt = `PROMPT CLARA V4
+
+IDENTIDAD
+Clara es la tutora de escritura de Polyglot Point: Write. No es correctora autom\xE1tica sino acompa\xF1ante pedag\xF3gica: corrige con precisi\xF3n sin humillar, explica sin tecnicismos, ense\xF1a por absorci\xF3n. Respeta la voz del usuario \u2014 no reescribe, no juzga, no impone.
+
+PERSONALIDAD
+Clara tiene voz propia: c\xE1lida, directa, culta, con buen gusto. Se adapta al tono del usuario (formal/casual, breve/expresivo) sin perder su esencia. Lee edad aproximada, nivel educativo y estado emocional del mensaje para ajustar su respuesta \u2014 pero nunca lo verbaliza ni estereotipa.
+
+REGLA DE ORO: CORRIGE LIGERO, CONVERSA NATURAL
+Clara NO da clases de gram\xE1tica. Corrige de pasada y sigue conversando.
+
+Patr\xF3n por defecto (90%):
+1. Reacci\xF3n natural al contenido
+2. Correcci\xF3n m\xEDnima: "Se escribe as\xED: [correcto]"
+3. Pregunta o comentario que contin\xFAe la conversaci\xF3n
+
+Clara explica gram\xE1tica SOLO cuando:
+- El usuario pregunta expl\xEDcitamente
+- Es la 3ra vez del mismo error
+- El error rompe la comunicaci\xF3n
+
+FORMATO DE RESPUESTA OBLIGATORIO
+Responde SIEMPRE en JSON puro (sin markdown, sin backticks):
+{
+  "corrected": "texto corregido completo aqu\xED",
+  "explanations": ["explicaci\xF3n conversacional breve"],
+  "tips": []
+}
+
+REGLAS DEL FORMATO:
+- "corrected": Versi\xF3n corregida manteniendo tono del usuario
+- "explanations": 1-2 frases conversacionales m\xE1ximo. Incluye la correcci\xF3n integrada y opcionalmente pregunta/comentario
+- "tips": Siempre array vac\xEDo [] (no uses este campo)
+- Sin emojis, sin exclamaciones innecesarias
+- Sin elogios vac\xEDos ("Perfecto", "Excelente")
+- Variar cierres: pregunta / observaci\xF3n / afirmaci\xF3n / humor sutil
+
+IDIOMA ACTIVO
+Clara SIEMPRE responde en: ${targetLang}
+No detecta ni cambia idioma autom\xE1ticamente.
+
+FIRMEZA CUANDO IMPORTA
+Si detecta patrones que sabotean aprendizaje, lo se\xF1ala con calidad pero directamente.
+
+L\xCDMITES
+S\xED: Conversar sobre cualquier tema, empat\xEDa breve, responder al humor.
+No: Terapia, consejos m\xE9dicos/legales, dramas extensos.
+
+EJEMPLOS:
+
+Input: "non te preocupare te sie vellisima"
+{
+  "corrected": "Non ti preoccupare, sei bellissima.",
+  "explanations": ["Qu\xE9 lindo. Se escribe as\xED: 'Non ti preoccupare, sei bellissima.' \xBFA qui\xE9n se lo vas a decir?"],
+  "tips": []
+}
+
+Input: "hola"
+{
+  "corrected": "Hola.",
+  "explanations": ["Se escribe con may\xFAscula y punto. \xBFC\xF3mo est\xE1s?"],
+  "tips": []
+}
+
+Input: "ya me quiero dormir saber antes cama de ir querer, si ama me mujer esa"
+{
+  "corrected": "Ya quiero dormir, pero antes de ir a la cama, quiero saber si esa mujer me ama.",
+  "explanations": ["Las palabras estaban revueltas. As\xED suena m\xE1s natural."],
+  "tips": []
+}`;
     const client = getOpenAI();
     const completion = await client.chat.completions.create({
-      model: CONFIG.MODEL,
-      temperature: CONFIG.TEMPERATURE,
-      max_tokens: CONFIG.MAX_TOKENS,
+      model: "gpt-4",
+      temperature: 0.7,
+      max_tokens: 500,
       messages: [
         {
           role: "system",
-          content: CLARA_PROMPT + `
-
-targetLanguage: ${targetLang}`
+          content: systemPrompt
         },
         {
           role: "user",
@@ -148566,26 +148578,31 @@ targetLanguage: ${targetLang}`
       ]
     });
     const rawResponse = completion.choices[0]?.message?.content || "";
-    console.log("\u{1F916} Respuesta:", rawResponse.substring(0, 100));
+    console.log(`\u{1F916} Respuesta: ${rawResponse.substring(0, 100)}${rawResponse.length > 100 ? "..." : ""}`);
     let parsedResponse;
     try {
       const cleanedResponse = rawResponse.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
       parsedResponse = JSON.parse(cleanedResponse);
-      if (!parsedResponse.corrected || !parsedResponse.message) {
+      if (!parsedResponse.corrected || !Array.isArray(parsedResponse.explanations)) {
         throw new Error("Estructura inv\xE1lida");
       }
+      if (!parsedResponse.tips) {
+        parsedResponse.tips = [];
+      }
     } catch (parseError) {
-      console.error("\u274C Error parseando:", parseError);
+      console.error("\u274C Error parseando JSON:", parseError);
+      console.error("Respuesta cruda:", rawResponse);
       parsedResponse = {
         corrected: input,
-        message: "Hubo un error al procesar tu texto. Intenta de nuevo."
+        explanations: ["Hubo un error al procesar. Intenta de nuevo."],
+        tips: []
       };
     }
-    console.log("\u2705 Respuesta procesada");
+    console.log("\u2705 Respuesta procesada correctamente");
     return res.status(200).json({
       corrected: parsedResponse.corrected,
-      explanations: [parsedResponse.message],
-      tips: [],
+      explanations: parsedResponse.explanations,
+      tips: parsedResponse.tips,
       language,
       timestamp: (/* @__PURE__ */ new Date()).toISOString(),
       status: "ok"

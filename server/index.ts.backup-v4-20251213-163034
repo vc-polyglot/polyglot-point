@@ -132,7 +132,7 @@ app.use((req, res, next) => {
 // ========== HANDLER CLARA V3.4 CONVERSACIONAL ==========
 async function chatHandler(req: Request, res: Response) {
   try {
-    console.log("📨 [CLARA v4] Nueva solicitud recibida");
+    console.log("📨 [CLARA v3.4] Nueva solicitud recibida");
     
     const {
       message,
@@ -172,12 +172,12 @@ async function chatHandler(req: Request, res: Response) {
       });
     }
 
-    if (input.length > 280) {
+    if (input.length > CONFIG.MAX_CHARS) {
       return res.json({
-        corrected: input.substring(0, 280),
+        corrected: input,
         explanations: [
           `Tu mensaje tiene ${input.length} caracteres.`,
-          "El límite es de 280 caracteres.",
+          `El límite es de ${CONFIG.MAX_CHARS} caracteres.`,
         ],
         tips: ["Intenta resumir tu idea."],
         language,
@@ -186,7 +186,7 @@ async function chatHandler(req: Request, res: Response) {
       });
     }
 
-    console.log(`💬 Texto: "${input.substring(0, 50)}${input.length > 50 ? "..." : ""}"`);
+    console.log(`💬 Texto: "${input.substring(0, 50)}..."`);
 
     const languageNames: Record<string, string> = {
       es: "español",
@@ -199,86 +199,15 @@ async function chatHandler(req: Request, res: Response) {
 
     const targetLang = languageNames[language] || "español";
 
-    const systemPrompt = `PROMPT CLARA V4
-
-IDENTIDAD
-Clara es la tutora de escritura de Polyglot Point: Write. No es correctora automática sino acompañante pedagógica: corrige con precisión sin humillar, explica sin tecnicismos, enseña por absorción. Respeta la voz del usuario — no reescribe, no juzga, no impone.
-
-PERSONALIDAD
-Clara tiene voz propia: cálida, directa, culta, con buen gusto. Se adapta al tono del usuario (formal/casual, breve/expresivo) sin perder su esencia. Lee edad aproximada, nivel educativo y estado emocional del mensaje para ajustar su respuesta — pero nunca lo verbaliza ni estereotipa.
-
-REGLA DE ORO: CORRIGE LIGERO, CONVERSA NATURAL
-Clara NO da clases de gramática. Corrige de pasada y sigue conversando.
-
-Patrón por defecto (90%):
-1. Reacción natural al contenido
-2. Corrección mínima: "Se escribe así: [correcto]"
-3. Pregunta o comentario que continúe la conversación
-
-Clara explica gramática SOLO cuando:
-- El usuario pregunta explícitamente
-- Es la 3ra vez del mismo error
-- El error rompe la comunicación
-
-FORMATO DE RESPUESTA OBLIGATORIO
-Responde SIEMPRE en JSON puro (sin markdown, sin backticks):
-{
-  "corrected": "texto corregido completo aquí",
-  "explanations": ["explicación conversacional breve"],
-  "tips": []
-}
-
-REGLAS DEL FORMATO:
-- "corrected": Versión corregida manteniendo tono del usuario
-- "explanations": 1-2 frases conversacionales máximo. Incluye la corrección integrada y opcionalmente pregunta/comentario
-- "tips": Siempre array vacío [] (no uses este campo)
-- Sin emojis, sin exclamaciones innecesarias
-- Sin elogios vacíos ("Perfecto", "Excelente")
-- Variar cierres: pregunta / observación / afirmación / humor sutil
-
-IDIOMA ACTIVO
-Clara SIEMPRE responde en: ${targetLang}
-No detecta ni cambia idioma automáticamente.
-
-FIRMEZA CUANDO IMPORTA
-Si detecta patrones que sabotean aprendizaje, lo señala con calidad pero directamente.
-
-LÍMITES
-Sí: Conversar sobre cualquier tema, empatía breve, responder al humor.
-No: Terapia, consejos médicos/legales, dramas extensos.
-
-EJEMPLOS:
-
-Input: "non te preocupare te sie vellisima"
-{
-  "corrected": "Non ti preoccupare, sei bellissima.",
-  "explanations": ["Qué lindo. Se escribe así: 'Non ti preoccupare, sei bellissima.' ¿A quién se lo vas a decir?"],
-  "tips": []
-}
-
-Input: "hola"
-{
-  "corrected": "Hola.",
-  "explanations": ["Se escribe con mayúscula y punto. ¿Cómo estás?"],
-  "tips": []
-}
-
-Input: "ya me quiero dormir saber antes cama de ir querer, si ama me mujer esa"
-{
-  "corrected": "Ya quiero dormir, pero antes de ir a la cama, quiero saber si esa mujer me ama.",
-  "explanations": ["Las palabras estaban revueltas. Así suena más natural."],
-  "tips": []
-}`;
-
     const client = getOpenAI();
     const completion = await client.chat.completions.create({
-      model: "gpt-4",
-      temperature: 0.7,
-      max_tokens: 500,
+      model: CONFIG.MODEL,
+      temperature: CONFIG.TEMPERATURE,
+      max_tokens: CONFIG.MAX_TOKENS,
       messages: [
         {
           role: "system",
-          content: systemPrompt,
+          content: CLARA_PROMPT + `\n\ntargetLanguage: ${targetLang}`,
         },
         {
           role: "user",
@@ -288,9 +217,9 @@ Input: "ya me quiero dormir saber antes cama de ir querer, si ama me mujer esa"
     });
 
     const rawResponse = completion.choices[0]?.message?.content || "";
-    console.log(`🤖 Respuesta: ${rawResponse.substring(0, 100)}${rawResponse.length > 100 ? "..." : ""}`);
+    console.log("🤖 Respuesta:", rawResponse.substring(0, 100));
 
-    let parsedResponse: { corrected: string; explanations: string[]; tips: string[] };
+    let parsedResponse: { corrected: string; message: string };
 
     try {
       const cleanedResponse = rawResponse
@@ -300,29 +229,24 @@ Input: "ya me quiero dormir saber antes cama de ir querer, si ama me mujer esa"
 
       parsedResponse = JSON.parse(cleanedResponse);
 
-      if (!parsedResponse.corrected || !Array.isArray(parsedResponse.explanations)) {
+      if (!parsedResponse.corrected || !parsedResponse.message) {
         throw new Error("Estructura inválida");
       }
-
-      if (!parsedResponse.tips) {
-        parsedResponse.tips = [];
-      }
     } catch (parseError) {
-      console.error("❌ Error parseando JSON:", parseError);
-      console.error("Respuesta cruda:", rawResponse);
+      console.error("❌ Error parseando:", parseError);
       parsedResponse = {
         corrected: input,
-        explanations: ["Hubo un error al procesar. Intenta de nuevo."],
-        tips: [],
+        message: "Hubo un error al procesar tu texto. Intenta de nuevo.",
       };
     }
 
-    console.log("✅ Respuesta procesada correctamente");
+    console.log("✅ Respuesta procesada");
 
+    // Convertir formato conversacional a formato legacy para frontend
     return res.status(200).json({
       corrected: parsedResponse.corrected,
-      explanations: parsedResponse.explanations,
-      tips: parsedResponse.tips,
+      explanations: [parsedResponse.message],
+      tips: [],
       language: language,
       timestamp: new Date().toISOString(),
       status: "ok",
