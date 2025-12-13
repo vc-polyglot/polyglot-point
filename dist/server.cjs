@@ -138787,14 +138787,6 @@ var init_storage = __esm({
       }
     };
     MemStorage = class {
-      conversations;
-      messages;
-      sessionSettings;
-      sessionStartTimes;
-      audioFiles;
-      userProfiles;
-      inactivityWarnings;
-      currentId;
       constructor() {
         this.conversations = /* @__PURE__ */ new Map();
         this.messages = /* @__PURE__ */ new Map();
@@ -145503,7 +145495,6 @@ var path2 = __toESM(require("path"), 1);
 
 // server/services/universalErrorDetector.ts
 var UniversalErrorDetector = class {
-  client;
   constructor(apiKey) {
     this.client = new OpenAI({ apiKey });
   }
@@ -145700,8 +145691,6 @@ Focus only on making speech sound natural and fluent, not on minor grammar detai
 
 // server/services/openai.ts
 var OpenAIService = class {
-  openai;
-  universalDetector;
   constructor() {
     if (!process.env.POLYGLOT_OPENAI_KEY) {
       throw new Error("POLYGLOT_OPENAI_KEY environment variable is required");
@@ -145844,9 +145833,11 @@ init_googleTTS();
 // server/services/subscriptionManager.ts
 init_storage();
 var SubscriptionManager = class {
-  FREEMIUM_LANGUAGES = 1;
-  PREMIUM_LANGUAGES = 6;
-  ALL_LANGUAGES = ["es", "en", "fr", "it", "de", "pt"];
+  constructor() {
+    this.FREEMIUM_LANGUAGES = 1;
+    this.PREMIUM_LANGUAGES = 6;
+    this.ALL_LANGUAGES = ["es", "en", "fr", "it", "de", "pt"];
+  }
   /**
    * Initialize user profile with subscription-based language access
    */
@@ -145967,16 +145958,17 @@ var subscriptionManager = new SubscriptionManager();
 
 // server/services/languageEnforcer.ts
 var LanguageEnforcer = class {
-  LANGUAGE_NAMES = {
-    es: "espa\xF1ol",
-    en: "English",
-    fr: "fran\xE7ais",
-    it: "italiano",
-    de: "Deutsch",
-    pt: "portugu\xEAs"
-  };
-  prompts = {
-    es: `Eres Clara, una profesora de idiomas experta y emp\xE1tica que ayuda a estudiantes a mejorar sus habilidades conversacionales.
+  constructor() {
+    this.LANGUAGE_NAMES = {
+      es: "espa\xF1ol",
+      en: "English",
+      fr: "fran\xE7ais",
+      it: "italiano",
+      de: "Deutsch",
+      pt: "portugu\xEAs"
+    };
+    this.prompts = {
+      es: `Eres Clara, una profesora de idiomas experta y emp\xE1tica que ayuda a estudiantes a mejorar sus habilidades conversacionales.
 
 REGLA CR\xCDTICA DE IDIOMA:
 - SIEMPRE responde EXCLUSIVAMENTE en espa\xF1ol
@@ -146020,7 +146012,7 @@ COMPORTAMIENTO DE CORRECCI\xD3N EXHAUSTIVA:
 - Responde directamente al input del usuario sin forzar correcciones innecesarias
 - Adapta el tono al estado de \xE1nimo del usuario naturalmente
 - El usuario debe tener ganas de seguir hablando contigo`,
-    en: `You are Clara, an expert and empathetic language teacher who helps students improve their conversational skills.
+      en: `You are Clara, an expert and empathetic language teacher who helps students improve their conversational skills.
 
 CRITICAL LANGUAGE RULE:
 - ALWAYS respond EXCLUSIVELY in English
@@ -146064,7 +146056,7 @@ EXHAUSTIVE CORRECTION BEHAVIOR:
 - Respond directly to the user's input without forcing unnecessary corrections
 - Adapt tone to user's mood naturally
 - User must want to keep talking with you`,
-    fr: `Tu es Clara, une professeure de langues experte et empathique qui aide les \xE9tudiants \xE0 am\xE9liorer leurs comp\xE9tences conversationnelles.
+      fr: `Tu es Clara, une professeure de langues experte et empathique qui aide les \xE9tudiants \xE0 am\xE9liorer leurs comp\xE9tences conversationnelles.
 
 R\xC8GLE CRITIQUE DE LANGUE:
 - R\xE9ponds TOUJOURS EXCLUSIVEMENT en fran\xE7ais
@@ -146107,7 +146099,7 @@ COMPORTEMENT DE CORRECTION EXHAUSTIVE:
 - R\xE9ponds directement \xE0 l'entr\xE9e de l'utilisateur sans \xE9viter la correction
 - Adapte le ton \xE0 l'humeur de l'utilisateur naturellement
 - L'utilisateur doit avoir envie de continuer \xE0 te parler`,
-    it: `Sei Clara, un'insegnante di lingue esperta ed empatica che aiuta gli studenti a migliorare le loro competenze conversazionali.
+      it: `Sei Clara, un'insegnante di lingue esperta ed empatica che aiuta gli studenti a migliorare le loro competenze conversazionali.
 
 REGOLA CRITICA DELLA LINGUA:
 - Rispondi SEMPRE ESCLUSIVAMENTE in italiano
@@ -146152,7 +146144,7 @@ COMPORTAMENTO DI CORREZIONE ESAUSTIVA:
 - Rispondi direttamente all'input dell'utente senza forzare correzioni inutili
 - Adatta il tono all'umore dell'utente naturalmente
 - L'utente deve aver voglia di continuare a parlarti`,
-    de: `Du bist Clara, eine erfahrene und einf\xFChlsame Sprachlehrerin, die Sch\xFClern hilft, ihre Konversationsf\xE4higkeiten zu verbessern.
+      de: `Du bist Clara, eine erfahrene und einf\xFChlsame Sprachlehrerin, die Sch\xFClern hilft, ihre Konversationsf\xE4higkeiten zu verbessern.
 
 KRITISCHE SPRACHREGEL:
 - Antworte IMMER AUSSCHLIESSLICH auf Deutsch
@@ -146194,7 +146186,7 @@ EXHAUSTIVES KORREKTURVERHALTEN:
 - Antworte direkt auf die Eingabe des Benutzers ohne Korrektur zu vermeiden
 - Passe den Ton an die Stimmung des Benutzers nat\xFCrlich an
 - Der Benutzer muss Lust haben, weiter mit dir zu reden`,
-    pt: `Voc\xEA \xE9 Clara, uma professora de idiomas experiente e emp\xE1tica que ajuda estudantes a melhorar suas habilidades conversacionais.
+      pt: `Voc\xEA \xE9 Clara, uma professora de idiomas experiente e emp\xE1tica que ajuda estudantes a melhorar suas habilidades conversacionais.
 
 REGRA CR\xCDTICA DE IDIOMA:
 - SEMPRE responda EXCLUSIVAMENTE em portugu\xEAs
@@ -146237,7 +146229,8 @@ COMPORTAMENTO DE CORRE\xC7\xC3O EXAUSTIVA:
 - Responda diretamente \xE0 entrada do usu\xE1rio sem evitar a corre\xE7\xE3o
 - Adapte o tom ao humor do usu\xE1rio naturalmente
 - O usu\xE1rio deve ter vontade de continuar conversando com voc\xEA`
-  };
+    };
+  }
   /**
    * Get Clara's system prompt enforcing the active language
    */
@@ -146273,20 +146266,22 @@ var languageEnforcer = new LanguageEnforcer();
 // server/services/conversation.ts
 init_storage();
 var ConversationService = class {
-  vadTimeout = 1200;
-  // 1.2 seconds VAD timeout
-  activeTimeouts = /* @__PURE__ */ new Map();
-  recentCorrections = /* @__PURE__ */ new Map();
-  recentUserInputs = /* @__PURE__ */ new Map();
-  // Store last 3 user inputs per session
-  usedResponsePatterns = /* @__PURE__ */ new Map();
-  // Track used response patterns per session
-  pendingCorrections = /* @__PURE__ */ new Map();
-  // Track corrections awaiting practice
-  // Dynamic Memory System - 30 turns with automatic summaries
-  conversationHistory = /* @__PURE__ */ new Map();
-  // Store last 30 turns
-  conversationSummaries = /* @__PURE__ */ new Map();
+  constructor() {
+    this.vadTimeout = 1200;
+    // 1.2 seconds VAD timeout
+    this.activeTimeouts = /* @__PURE__ */ new Map();
+    this.recentCorrections = /* @__PURE__ */ new Map();
+    this.recentUserInputs = /* @__PURE__ */ new Map();
+    // Store last 3 user inputs per session
+    this.usedResponsePatterns = /* @__PURE__ */ new Map();
+    // Track used response patterns per session
+    this.pendingCorrections = /* @__PURE__ */ new Map();
+    // Track corrections awaiting practice
+    // Dynamic Memory System - 30 turns with automatic summaries
+    this.conversationHistory = /* @__PURE__ */ new Map();
+    // Store last 30 turns
+    this.conversationSummaries = /* @__PURE__ */ new Map();
+  }
   // Store accumulated summaries
   /**
    * Check if input appears to be a poor quality transcription
@@ -147444,10 +147439,10 @@ init_storage();
 
 // server/services/languageManager.ts
 var LanguageManager = class {
-  currentLanguage = "en";
-  isChangingLanguage = false;
-  sessionId = null;
   constructor() {
+    this.currentLanguage = "en";
+    this.isChangingLanguage = false;
+    this.sessionId = null;
     this.loadLanguagePreference();
   }
   loadLanguagePreference() {
@@ -148401,10 +148396,10 @@ function log(message) {
 
 // server/index.ts
 process.on("uncaughtException", (err) => {
-  console.error("?? UNCAUGHT EXCEPTION AL ARRANCAR:", err);
+  console.error("\u{1F4A5} UNCAUGHT EXCEPTION AL ARRANCAR:", err);
 });
 process.on("unhandledRejection", (reason) => {
-  console.error("?? UNHANDLED REJECTION AL ARRANCAR:", reason);
+  console.error("\u{1F4A5} UNHANDLED REJECTION AL ARRANCAR:", reason);
 });
 var app = (0, import_express3.default)();
 app.get("/health", (_req, res) => {
@@ -148417,9 +148412,9 @@ app.get("/health", (_req, res) => {
 });
 var CONFIG = {
   MAX_CHARS: 280,
-  MODEL: "gpt-4o-mini",
-  TEMPERATURE: 0.3,
-  MAX_TOKENS: 500
+  MODEL: "gpt-4",
+  TEMPERATURE: 0.7,
+  MAX_TOKENS: 800
 };
 var openaiClient = null;
 var getOpenAI = () => {
@@ -148432,19 +148427,59 @@ var getOpenAI = () => {
   }
   return openaiClient;
 };
-app.use(
-  (0, import_cors.default)({
-    origin: [
-      "http://localhost:5173",
-      "https://polyglot-point.vercel.app",
-      "https://polyglot-point-production.up.railway.app"
-    ],
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "x-user-id"]
-  })
-);
-app.use(import_express3.default.json());
-app.use(import_express3.default.urlencoded({ extended: false }));
+var CLARA_PROMPT = `Eres Clara, la tutora de escritura de Polyglot Point: Write.
+
+IDENTIDAD:
+Clara es c\xE1lida, directa, culta, con buen gusto. Como esa amiga que le cae bien a todos porque tiene su propia voz aut\xE9ntica y sabe conectar con cualquiera sin dejar de ser ella misma.
+
+REGLA DE ORO: CORRIGE LIGERO, CONVERSA NATURAL
+Por defecto (90% de los casos):
+1. Reacci\xF3n natural al contenido
+2. Correcci\xF3n m\xEDnima integrada: "Se escribe as\xED: [versi\xF3n corregida]"
+3. Seguir la conversaci\xF3n con pregunta o comentario relevante
+
+Solo das explicaciones gramaticales profundas cuando:
+- El usuario pregunta expl\xEDcitamente
+- Es la 3ra vez que aparece el mismo error
+- Es un error estructural grave
+
+FORMATO DE RESPUESTA:
+Responde SIEMPRE en formato JSON (sin markdown, sin backticks):
+{
+  "corrected": "texto corregido completo",
+  "message": "tu mensaje conversacional aqu\xED"
+}
+
+El campo "message" es donde conversas. Ejemplos:
+
+Usuario: "mmmm no estoy seguro de entender"
+{
+  "corrected": "Mmm, no estoy seguro de entender.",
+  "message": "Se escribe con may\xFAscula al inicio. \xBFQu\xE9 es lo que no te queda claro?"
+}
+
+Usuario: "Hola clara necesito ayuda con mi escritura"
+{
+  "corrected": "Hola, Clara, necesito ayuda con mi escritura.",
+  "message": "Se escribe con coma despu\xE9s del saludo. \xBFEn qu\xE9 te ayudo hoy?"
+}
+
+Usuario: "test"
+{
+  "corrected": "test",
+  "message": "Est\xE1 bien, pero 'test' es ingl\xE9s. Si practicas espa\xF1ol, intenta algo como '\xBFFunciona?' \xBFQu\xE9 quieres escribir?"
+}
+
+PROHIBICIONES:
+- NUNCA uses emojis
+- NUNCA elogios vac\xEDos ("perfecto", "excelente")
+- NUNCA ignores el estilo del usuario
+- NUNCA des clases de gram\xE1tica cuando solo necesitas corregir
+
+Respondes SIEMPRE en el idioma indicado en targetLanguage.`;
+app.use((0, import_cors.default)());
+app.use(import_express3.default.json({ limit: "10mb" }));
+app.use(import_express3.default.urlencoded({ extended: true, limit: "10mb" }));
 app.use((req, res, next) => {
   const start = Date.now();
   const path6 = req.path;
@@ -148452,17 +148487,14 @@ app.use((req, res, next) => {
   const originalResJson = res.json;
   res.json = function(bodyJson, ...args) {
     capturedJsonResponse = bodyJson;
-    return originalResJson.apply(this, [bodyJson, ...args]);
+    return originalResJson.apply(res, [bodyJson, ...args]);
   };
   res.on("finish", () => {
     const duration3 = Date.now() - start;
     if (path6.startsWith("/api") || path6 === "/chat") {
       let logLine = `${req.method} ${path6} ${res.statusCode} in ${duration3}ms`;
       if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      }
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "\uFFFD";
+        logLine += ` :: ${JSON.stringify(capturedJsonResponse).substring(0, 80)}`;
       }
       log(logLine);
     }
@@ -148471,7 +148503,7 @@ app.use((req, res, next) => {
 });
 async function chatHandler(req, res) {
   try {
-    console.log("?? Chat request received");
+    console.log("\u{1F4E8} [CLARA v3.4] Nueva solicitud recibida");
     const {
       message,
       text: text2,
@@ -148481,11 +148513,12 @@ async function chatHandler(req, res) {
     const inputRaw = typeof message === "string" && message.trim().length > 0 ? message : typeof text2 === "string" ? text2 : "";
     const input = inputRaw.trim();
     const language = typeof bodyLanguage === "string" && bodyLanguage.trim().length > 0 ? bodyLanguage : "es";
+    console.log(`\u{1F464} Usuario: ${userId || "anonymous"}, Idioma: ${language}`);
     if (!input) {
       return res.status(400).json({
         corrected: "",
-        explanations: ["No se recibi\uFFFD ning\uFFFDn texto para corregir."],
-        tips: ["Escribe un texto y Clara te ayudar\uFFFD con gusto."],
+        explanations: ["No se recibi\xF3 ning\xFAn texto."],
+        tips: [],
         language,
         timestamp: (/* @__PURE__ */ new Date()).toISOString(),
         status: "error"
@@ -148496,53 +148529,35 @@ async function chatHandler(req, res) {
         corrected: input,
         explanations: [
           `Tu mensaje tiene ${input.length} caracteres.`,
-          `El l\uFFFDmite es de ${CONFIG.MAX_CHARS} caracteres por mensaje.`
+          `El l\xEDmite es de ${CONFIG.MAX_CHARS} caracteres.`
         ],
-        tips: ["Intenta resumir tu idea en un texto m\uFFFDs breve."],
+        tips: ["Intenta resumir tu idea."],
         language,
         timestamp: (/* @__PURE__ */ new Date()).toISOString(),
         status: "too_long"
       });
     }
-    console.log(
-      `? Message received (${language}): ${input.substring(0, 80)}${input.length > 80 ? "..." : ""}`
-    );
+    console.log(`\u{1F4AC} Texto: "${input.substring(0, 50)}..."`);
+    const languageNames = {
+      es: "espa\xF1ol",
+      en: "ingl\xE9s",
+      fr: "franc\xE9s",
+      it: "italiano",
+      de: "alem\xE1n",
+      pt: "portugu\xE9s"
+    };
+    const targetLang = languageNames[language] || "espa\xF1ol";
     const client = getOpenAI();
     const completion = await client.chat.completions.create({
       model: CONFIG.MODEL,
       temperature: CONFIG.TEMPERATURE,
       max_tokens: CONFIG.MAX_TOKENS,
-      response_format: { type: "json_object" },
       messages: [
         {
           role: "system",
-          content: `Eres Clara, la tutora amable de Polyglot Point: Write.
+          content: CLARA_PROMPT + `
 
-INSTRUCCIONES CR\uFFFDTICAS:
-- Responde SIEMPRE en el idioma indicado: ${language}.
-- Devuelve EXCLUSIVAMENTE un objeto JSON v\uFFFDlido.
-- NO escribas nada fuera del JSON.
-
-Estructura EXACTA del JSON:
-{
-  "corrected": "texto corregido completo aqu\uFFFD",
-  "explanations": ["explicaci\uFFFDn breve 1", "explicaci\uFFFDn breve 2"],
-  "tips": ["sugerencia \uFFFDtil 1", "sugerencia \uFFFDtil 2"]
-}
-
-REGLAS ESPECIALES:
-- Si el texto del usuario ya es gramaticalmente correcto y natural:
-  - Pon el mismo texto del usuario en "corrected".
-  - En "explanations", escribe 1\uFFFD2 frases breves aclarando que no fue necesario hacer cambios importantes.
-  - "tips" puede estar vac\uFFFDo o contener una sugerencia concreta para seguir mejorando.
-- NO uses frases gen\uFFFDricas como "Tu texto ya est\uFFFD perfecto".
-- NO devuelvas mensajes vac\uFFFDos del tipo "\uFFFDSigue as\uFFFD!" sin explicar nada.
-
-ESTILO:
-- Tono c\uFFFDlido, respetuoso y pedag\uFFFDgico.
-- Explicaciones claras y concretas (1\uFFFD3 frases cada una).
-- Tips pr\uFFFDcticos que el usuario pueda aplicar de inmediato.
-- Si corriges algo, deja claro QU\uFFFD cambiaste y POR QU\uFFFD.`
+targetLanguage: ${targetLang}`
         },
         {
           role: "user",
@@ -148550,52 +148565,40 @@ ESTILO:
         }
       ]
     });
-    const rawContent = completion.choices[0]?.message?.content;
-    if (typeof rawContent !== "string") {
-      console.error("OpenAI devolvi\uFFFD contenido no textual:", rawContent);
-      return res.json({
-        corrected: input,
-        explanations: ["Hubo un problema al interpretar la respuesta de Clara."],
-        tips: ["Intenta de nuevo; si el problema persiste, avisa al desarrollador."],
-        language,
-        timestamp: (/* @__PURE__ */ new Date()).toISOString(),
-        status: "bad_format"
-      });
-    }
-    let parsed;
+    const rawResponse = completion.choices[0]?.message?.content || "";
+    console.log("\u{1F916} Respuesta:", rawResponse.substring(0, 100));
+    let parsedResponse;
     try {
-      parsed = JSON.parse(rawContent);
-    } catch (e2) {
-      console.error("Error al parsear JSON de OpenAI:", e2, rawContent);
-      return res.json({
+      const cleanedResponse = rawResponse.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+      parsedResponse = JSON.parse(cleanedResponse);
+      if (!parsedResponse.corrected || !parsedResponse.message) {
+        throw new Error("Estructura inv\xE1lida");
+      }
+    } catch (parseError) {
+      console.error("\u274C Error parseando:", parseError);
+      parsedResponse = {
         corrected: input,
-        explanations: ["La respuesta de Clara no tuvo el formato JSON esperado."],
-        tips: ["Intenta de nuevo; si el problema persiste, avisa al desarrollador."],
-        language,
-        timestamp: (/* @__PURE__ */ new Date()).toISOString(),
-        status: "parse_error"
-      });
+        message: "Hubo un error al procesar tu texto. Intenta de nuevo."
+      };
     }
-    const corrected = typeof parsed.corrected === "string" && parsed.corrected.trim().length > 0 ? parsed.corrected : input;
-    const explanations = Array.isArray(parsed.explanations) ? parsed.explanations.filter((x3) => typeof x3 === "string") : [];
-    const tips = Array.isArray(parsed.tips) ? parsed.tips.filter((x3) => typeof x3 === "string") : [];
-    return res.json({
-      corrected,
-      explanations,
-      tips,
+    console.log("\u2705 Respuesta procesada");
+    return res.status(200).json({
+      corrected: parsedResponse.corrected,
+      explanations: [parsedResponse.message],
+      tips: [],
       language,
       timestamp: (/* @__PURE__ */ new Date()).toISOString(),
       status: "ok"
     });
   } catch (error40) {
-    console.error("? Error in /chat:", error40);
+    console.error("\u274C Error en /chat:", error40);
     return res.status(500).json({
       corrected: "",
-      explanations: ["Hubo un problema al procesar tu mensaje."],
-      tips: ["Por favor, intenta de nuevo en unos segundos."],
+      explanations: ["Error interno del servidor."],
+      tips: [],
       language: "es",
       timestamp: (/* @__PURE__ */ new Date()).toISOString(),
-      status: "server_error"
+      status: "error"
     });
   }
 }
@@ -148616,7 +148619,7 @@ app.post("/api/chat", chatHandler);
   }
   const PORT = Number(process.env.PORT) || 8080;
   server.listen(PORT, "0.0.0.0", () => {
-    log(`?? serving on port ${PORT}`);
+    log(`\u{1F4DD} \u{1F680} serving on port ${PORT}`);
   });
 })();
 /*! Bundled license information:
