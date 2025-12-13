@@ -148410,6 +148410,55 @@ app.get("/health", (_req, res) => {
     environment: process.env.NODE_ENV || "development"
   });
 });
+var sessions = /* @__PURE__ */ new Map();
+setInterval(() => {
+  const now = Date.now();
+  const timeout = 30 * 60 * 1e3;
+  let cleaned = 0;
+  for (const [userId, session] of sessions.entries()) {
+    if (now - session.lastAccess > timeout) {
+      sessions.delete(userId);
+      cleaned++;
+    }
+  }
+  if (cleaned > 0) {
+    console.log(`\u{1F9F9} Limpieza de memoria: ${cleaned} sesiones eliminadas`);
+  }
+}, 30 * 60 * 1e3);
+function extractEstado(response) {
+  const match = response.match(/\|\|\|ESTADO\|\|\|([\s\S]*?)\|\|\|FIN\|\|\|/);
+  return match ? match[1].trim() : "";
+}
+function cleanResponse(response) {
+  return response.replace(/\|\|\|ESTADO\|\|\|[\s\S]*?\|\|\|FIN\|\|\|/, "").trim();
+}
+function getOrCreateSession(userId) {
+  if (!sessions.has(userId)) {
+    sessions.set(userId, {
+      userId,
+      estado: "",
+      ventana: [],
+      lastAccess: Date.now()
+    });
+  }
+  const session = sessions.get(userId);
+  session.lastAccess = Date.now();
+  return session;
+}
+function updateSession(userId, userMsg, assistantMsg, nuevoEstado) {
+  const session = getOrCreateSession(userId);
+  if (nuevoEstado) {
+    session.estado = nuevoEstado;
+  }
+  session.ventana.push(
+    { role: "user", content: userMsg },
+    { role: "assistant", content: assistantMsg }
+  );
+  if (session.ventana.length > 4) {
+    session.ventana = session.ventana.slice(-4);
+  }
+  session.lastAccess = Date.now();
+}
 var openaiClient = null;
 var getOpenAI = () => {
   if (!openaiClient) {
@@ -148447,17 +148496,18 @@ app.use((req, res, next) => {
 });
 async function chatHandler(req, res) {
   try {
-    console.log("\u{1F4E8} [CLARA v4] Nueva solicitud recibida");
+    console.log("\u{1F4E8} [CLARA v4 + MEMORIA] Nueva solicitud");
     const {
       message,
       text: text2,
-      userId,
+      userId: bodyUserId,
       language: bodyLanguage
     } = req.body || {};
     const inputRaw = typeof message === "string" && message.trim().length > 0 ? message : typeof text2 === "string" ? text2 : "";
     const input = inputRaw.trim();
     const language = typeof bodyLanguage === "string" && bodyLanguage.trim().length > 0 ? bodyLanguage : "es";
-    console.log(`\u{1F464} Usuario: ${userId || "anonymous"}, Idioma: ${language}`);
+    const userId = bodyUserId || "anonymous";
+    console.log(`\u{1F464} Usuario: ${userId}, Idioma: ${language}`);
     if (!input) {
       return res.status(400).json({
         corrected: "",
@@ -148482,6 +148532,8 @@ async function chatHandler(req, res) {
       });
     }
     console.log(`\u{1F4AC} Texto: "${input.substring(0, 50)}${input.length > 50 ? "..." : ""}"`);
+    const session = getOrCreateSession(userId);
+    console.log(`\u{1F9E0} Memoria: ${session.ventana.length} mensajes, Estado: ${session.estado ? "S\xED" : "No"}`);
     const languageNames = {
       es: "espa\xF1ol",
       en: "ingl\xE9s",
@@ -148491,7 +148543,7 @@ async function chatHandler(req, res) {
       pt: "portugu\xE9s"
     };
     const targetLang = languageNames[language] || "espa\xF1ol";
-    const systemPrompt = `PROMPT CLARA V4
+    let systemPrompt = `PROMPT CLARA V4
 
 IDENTIDAD
 Clara es la tutora de escritura de Polyglot Point: Write. No es correctora autom\xE1tica sino acompa\xF1ante pedag\xF3gica: corrige con precisi\xF3n sin humillar, explica sin tecnicismos, ense\xF1a por absorci\xF3n. Respeta la voz del usuario \u2014 no reescribe, no juzga, no impone.
@@ -148513,7 +148565,7 @@ Clara explica gram\xE1tica SOLO cuando:
 - El error rompe la comunicaci\xF3n
 
 FORMATO DE RESPUESTA OBLIGATORIO
-Responde SIEMPRE en JSON puro (sin markdown, sin backticks):
+Responde en JSON puro (sin markdown, sin backticks):
 {
   "corrected": "texto corregido completo aqu\xED",
   "explanations": ["explicaci\xF3n conversacional breve"],
@@ -148522,67 +148574,83 @@ Responde SIEMPRE en JSON puro (sin markdown, sin backticks):
 
 REGLAS DEL FORMATO:
 - "corrected": Versi\xF3n corregida manteniendo tono del usuario
-- "explanations": 1-2 frases conversacionales m\xE1ximo. Incluye la correcci\xF3n integrada y opcionalmente pregunta/comentario
-- "tips": Siempre array vac\xEDo [] (no uses este campo)
+- "explanations": 1-2 frases conversacionales m\xE1ximo
+- "tips": Siempre array vac\xEDo []
 - Sin emojis, sin exclamaciones innecesarias
-- Sin elogios vac\xEDos ("Perfecto", "Excelente")
+- Sin elogios vac\xEDos
 - Variar cierres: pregunta / observaci\xF3n / afirmaci\xF3n / humor sutil
 
 IDIOMA ACTIVO
 Clara SIEMPRE responde en: ${targetLang}
-No detecta ni cambia idioma autom\xE1ticamente.
 
 FIRMEZA CUANDO IMPORTA
-Si detecta patrones que sabotean aprendizaje, lo se\xF1ala con calidad pero directamente.
+Si detecta patrones que sabotean aprendizaje, lo se\xF1ala con calidez pero directamente.
 
 L\xCDMITES
 S\xED: Conversar sobre cualquier tema, empat\xEDa breve, responder al humor.
 No: Terapia, consejos m\xE9dicos/legales, dramas extensos.
 
+## MEMORIA
+Al final de CADA respuesta JSON, genera un bloque de estado actualizado:
+
+|||ESTADO|||
+nivel: [principiante|intermedio|avanzado]
+tono: [formal|casual]
+idioma: ${targetLang}
+errores: [lista m\xE1x 3 errores recurrentes]
+notas: [datos relevantes del usuario, m\xE1x 3 observaciones]
+|||FIN|||
+
+Este bloque es interno, no lo menciones en la conversaci\xF3n.
+
 EJEMPLOS:
 
-Input: "non te preocupare te sie vellisima"
-{
-  "corrected": "Non ti preoccupare, sei bellissima.",
-  "explanations": ["Qu\xE9 lindo. Se escribe as\xED: 'Non ti preoccupare, sei bellissima.' \xBFA qui\xE9n se lo vas a decir?"],
-  "tips": []
-}
-
 Input: "hola"
+Output:
 {
   "corrected": "Hola.",
   "explanations": ["Se escribe con may\xFAscula y punto. \xBFC\xF3mo est\xE1s?"],
   "tips": []
 }
 
-Input: "ya me quiero dormir saber antes cama de ir querer, si ama me mujer esa"
-{
-  "corrected": "Ya quiero dormir, pero antes de ir a la cama, quiero saber si esa mujer me ama.",
-  "explanations": ["Las palabras estaban revueltas. As\xED suena m\xE1s natural."],
-  "tips": []
-}`;
+|||ESTADO|||
+nivel: principiante
+tono: casual
+idioma: ${targetLang}
+errores: may\xFAsculas al inicio
+notas: primera interacci\xF3n
+|||FIN|||`;
+    if (session.estado) {
+      systemPrompt += `
+
+## ESTADO ACTUAL DEL USUARIO
+|||ESTADO|||
+${session.estado}
+|||FIN|||`;
+    }
+    const messages2 = [{ role: "system", content: systemPrompt }];
+    if (session.ventana.length > 0) {
+      messages2.push(...session.ventana);
+    }
+    messages2.push({ role: "user", content: input });
     const client = getOpenAI();
     const completion = await client.chat.completions.create({
       model: "gpt-4",
       temperature: 0.7,
       max_tokens: 500,
-      messages: [
-        {
-          role: "system",
-          content: systemPrompt
-        },
-        {
-          role: "user",
-          content: input
-        }
-      ]
+      messages: messages2
     });
     const rawResponse = completion.choices[0]?.message?.content || "";
-    console.log(`\u{1F916} Respuesta: ${rawResponse.substring(0, 100)}${rawResponse.length > 100 ? "..." : ""}`);
+    console.log(`\u{1F916} Respuesta (${rawResponse.length} chars)`);
+    const nuevoEstado = extractEstado(rawResponse);
+    if (nuevoEstado) {
+      console.log(`\u{1F9E0} Estado actualizado: ${nuevoEstado.substring(0, 50)}...`);
+    }
+    const cleanedRaw = cleanResponse(rawResponse);
     let parsedResponse;
     try {
-      const cleanedResponse = rawResponse.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-      parsedResponse = JSON.parse(cleanedResponse);
+      const jsonCleaned = cleanedRaw.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+      parsedResponse = JSON.parse(jsonCleaned);
       if (!parsedResponse.corrected || !Array.isArray(parsedResponse.explanations)) {
         throw new Error("Estructura inv\xE1lida");
       }
@@ -148591,14 +148659,15 @@ Input: "ya me quiero dormir saber antes cama de ir querer, si ama me mujer esa"
       }
     } catch (parseError) {
       console.error("\u274C Error parseando JSON:", parseError);
-      console.error("Respuesta cruda:", rawResponse);
       parsedResponse = {
         corrected: input,
         explanations: ["Hubo un error al procesar. Intenta de nuevo."],
         tips: []
       };
     }
-    console.log("\u2705 Respuesta procesada correctamente");
+    const assistantMsg = cleanedRaw;
+    updateSession(userId, input, assistantMsg, nuevoEstado);
+    console.log("\u2705 Respuesta procesada y memoria actualizada");
     return res.status(200).json({
       corrected: parsedResponse.corrected,
       explanations: parsedResponse.explanations,
