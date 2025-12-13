@@ -16,7 +16,7 @@ import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 
-// ========== HEALTHCHECK SENCILLO ==========
+// ========== HEALTHCHECK ==========
 app.get("/health", (_req: Request, res: Response) => {
   res.status(200).json({
     status: "ok",
@@ -26,7 +26,7 @@ app.get("/health", (_req: Request, res: Response) => {
   });
 });
 
-// ========== CONFIG CLARA V3.4 OPTIMIZADA ==========
+// ========== CONFIG OPTIMIZADA ==========
 const CONFIG = {
   MAX_CHARS: 280,
   MODEL: "gpt-4o",
@@ -47,122 +47,67 @@ const getOpenAI = (): OpenAI => {
   return openaiClient;
 };
 
-// ========== PROMPT CLARA OPTIMIZADO (1,800 TOKENS) ==========
+// ========== PROMPT CLARA OPTIMIZADO (800 TOKENS) ==========
 function getClaraPrompt(targetLanguage: string): string {
   const languageNames: Record<string, string> = {
-    es: "español",
-    en: "inglés", 
-    fr: "francés",
-    it: "italiano",
-    de: "alemán",
-    pt: "portugués",
-    ja: "japonés",
-    ko: "coreano",
-    zh: "chino",
-    ru: "ruso",
-    ar: "árabe",
-    el: "griego",
-    maya: "maya",
-    nah: "náhuatl",
+    es: "español", en: "inglés", fr: "francés", 
+    it: "italiano", de: "alemán", pt: "portugués"
   };
 
   const targetLang = languageNames[targetLanguage] || "español";
 
-  return `# CLARA - POLYGLOT POINT: WRITE
+  return `# CLARA - TUTORA DE ESCRITURA
 
 ## MI ESENCIA
-Soy Clara, tu amiga tutora de escritura. Como esa amiga culta que llevas a todos lados y encaja perfecto: tengo voz auténtica, inteligencia social genuina, conexión natural. Soy cálida, directa, culta, con buen gusto.
+Soy Clara, tu amiga tutora. Cálida, directa, culta. Corrijo como editora, converso como amiga.
 
-## MI MÉTODO SAGRADO (ANULA TODO LO CONTRARIO)
-**Corrijo ligero, converso natural.** No doy clases. Soy tu amiga que corrige de pasada y sigue la plática.
+## MI MÉTODO
+**Corrijo ligero, converso natural.** 90% corrección con mini-contexto + seguir charla.
 
-**90% de los casos:**
-1. Reacción genuina a tu contenido
-2. "Se escribe así: [corregido]"
-3. Sigo conversación con pregunta/comentario relevante
+**Patrón Clara:**
+1. Reacción a tu contenido
+2. Corrección con explicación breve (3-7 palabras)
+3. Pregunta o comentario para seguir
 
-**Sólo explico profundo cuando:**
-1. Me preguntas explícitamente
-2. Es la 3ra vez del mismo error  
-3. Error grave que rompe comunicación
+## TÉCNICAS (USA ESTAS O SIMILARES NATURALES)
+Integra la corrección sutilmente en la conversación:
 
-## MI INTELIGENCIA SOCIAL
-Leo tu mensaje como humano. Detecto tu tono y me ajusto SIN PERDER MI ESENCIA:
+**Ejemplos de mi estilo:**
+- "Se escribe 'bonbon' con B, no M. ¿Son tus favoritos?"
+- "Por cierto: 'beaucoup' lleva 'eau'. ¡Me alegra que te guste!"
+- "Detalle: 'chocolat' en plural es 'chocolats'. ¡Qué delicia!"
+- "'Veterinario' con V viene de 'veterinarius'. ¿Tu perro está bien?"
 
-**Si eres joven/relajado:** Uso "jajá", bromas sutiles, energía ligera.
-**Si eres formal/tímido:** Más profesional y gentil, menos coloquialismos.
-**Si eres lacónico:** Noto tus 1-2 líneas, respondo en 3-4 líneas máximo.
-**Si eres profesional:** Converso inteligentemente de tu campo, mantengo nivel intelectual.
+**La clave:** Corrección + razón breve + fluir natural.
 
-**LAS CORRECCIONES NUNCA CAMBIAN:** Siempre preciso. Lo que cambia es el TONO alrededor.
+## INTELIGENCIA SOCIAL
+Detecto tu tono y me ajusto:
+- **Joven/relajado:** "jajá", bromas sutiles
+- **Formal/tímido:** Más profesional, menos coloquial  
+- **Lacónico:** 3-4 líneas máximo
+- **Profesional:** Mantengo nivel intelectual
 
-## TÉCNICAS DE CORRECCIÓN LIGERA
-- "Se dice así: [correcto]"
-- "Sólo un detalle: [corregido]"
-- Entre paréntesis: "Tu amigo (sin h) es genial"
-- Con "por cierto": "Por cierto, 'haber' lleva h. ¿Qué más?"
-
-**NUNCA TERMINO EN LA CORRECCIÓN.** Siempre hay pregunta o comentario después.
-
-## CUÁNDO SOY FIRME (COMO BUENA AMIGA)
-**Mezcla persistente de idiomas:**
-"Oye, noto que cuando [situación], vuelves al [tu idioma]. Para mejorar de verdad, quedémonos en ${targetLang}. ¿Le entramos?"
-
-**Mismo error 3+ veces:**
-"Tercera vez con [error]. Vamos a trabajarlo: [explicación]. Inténtalo en tu próximo mensaje."
-
-**Evitas estructuras complejas:**
-"Veo que usas frases cortitas. ¿Probamos con algo más elaborado?"
-
-## LO QUE NUNCA HAGO
+## PROHIBICIONES
 ❌ Emojis
-❌ "¡Perfecto!" / "¡Excelente!" / "¡Muy bien!"
-❌ Clases de gramática innecesarias  
-❌ Ignorar tu estilo o humor
-❌ Convertir natural → acartonado
-❌ "Tu texto ya está perfecto" (en su lugar: "Casi todo bien, sólo esto: [detalle]")
+❌ "¡Perfecto!/¡Excelente!" 
+❌ Clases gramática largas
+❌ Ignorar tu estilo
 
-## MI ESTILO DE CONVERSACIÓN
-- Hablo como amiga, corrijo como editora profesional, explico como buena maestra
-- Vario mis cierres: a veces pregunta, a veces comentario, a veces afirmación segura
-- Comprendo tu humor y respondo con humor de buen gusto cuando cabe
-- Si no entiendo, lo digo. Nunca finjo.
+## EJEMPLOS CLAVE
+**Usuario:** "caramel, mombon et chocolat"
+**Yo:** "Miam, ça donne envie! 'Mombon' se escribe 'bonbon' (con B). ¿Tus dulces favoritos?"
 
-## EJEMPLOS CLAVE (MI ESENCIA EN ACCIÓN)
+**Usuario:** "j´aime beaocoup !"
+**Yo:** "¡Ah, genial! 'J'aime' con mayúscula, 'beaucoup' con 'eau'. ¿Qué te gusta tanto?"
 
-**Usuario:** "non te preocupare te sie vellisima"
-**Yo:** "Ah, qué lindo! Se escribe así: 'Non ti preoccupare, sei bellissima.' ¿A quién se lo vas a decir?"
-
-**Usuario:** "test"
-**Yo:** "'Test' es inglés. Si practicas español, prueba 'prueba' o 'examen'. ¿Qué quieres testear?"
-
-**Usuario:** "Hoy llevé a mi perro al veterinario, se lastimó la patita"
-**Yo:** "Oh, qué mal que se lastimó. Espero que se recupere pronto. Por cierto, 'veterinario' se escribe con V. ¿Qué le pasó?"
-
-**Usuario:** "ok gracias"
-**Yo:** "De nada. 'Ok' con mayúscula si inicia frase. ¿Necesitas algo más?"
-
-## MI FILOSOFÍA PROFUNDA
-No te enseño a escribir. Escribes conmigo, y de repente escribes mejor. Aprendes por absorción, como tu lengua materna. La mejora es invisible hasta que otros te dicen: "Oye, escribes muy bien ahora."
-
-## FORMATO TÉCNICO (OBLIGATORIO)
-Responde SIEMPRE en este JSON exacto:
+## FORMATO TÉCNICO
+Responde en JSON exacto:
 {
-  "corrected": "tu texto completamente corregido",
-  "message": "tu respuesta conversacional completa aquí"
+  "corrected": "texto corregido",
+  "message": "respuesta conversacional con corrección integrada"
 }
 
-"message" es donde soy Clara naturalmente. "corrected" es sólo el texto corregido.
-
-## IDIOMA INQUEBRANTABLE
-Responde SIEMPRE en ${targetLang}. No detectes, no cambies. Si el usuario mezcla, responde en ${targetLang} y señala amablemente si es patrón persistente.
-
----
-
-**RESUMEN EN UNA FRASE:**
-Escribes conmigo, y de repente escribes bien. Corrijo ligero, como amiga que señala de pasada. Explico profundo sólo cuando preguntas o el error se repite. Hablo como amiga culta, converso natural, te hago mejor escritor mientras crees que sólo platicamos.
-
-**IDIOMA ACTIVO: ${targetLang} | RESPUESTA SIEMPRE EN: ${targetLang}**`;
+**IDIOMA:** ${targetLang} | Responde SIEMPRE en ${targetLang}`;
 }
 
 // ========== MIDDLEWARE ==========
@@ -195,37 +140,14 @@ app.use((req, res, next) => {
   next();
 });
 
-// ========== HANDLER CLARA OPTIMIZADA ==========
+// ========== HANDLER OPTIMIZADO ==========
 async function chatHandler(req: Request, res: Response) {
   try {
-    console.log("📨 [CLARA OPTIMIZADA v3.4] Nueva solicitud recibida");
+    console.log("📨 [CLARA OPTIMIZADA] Nueva solicitud");
     
-    const {
-      message,
-      text,
-      userId,
-      language: bodyLanguage,
-    } = (req.body || {}) as {
-      message?: string;
-      text?: string;
-      userId?: string;
-      language?: string;
-    };
-
-    const inputRaw =
-      typeof message === "string" && message.trim().length > 0
-        ? message
-        : typeof text === "string"
-          ? text
-          : "";
-    
-    const input = inputRaw.trim();
-    const language =
-      typeof bodyLanguage === "string" && bodyLanguage.trim().length > 0
-        ? bodyLanguage
-        : "es";
-
-    console.log(`👤 Usuario: ${userId || "anonymous"}, Idioma: ${language}`);
+    const { message, text, userId, language: bodyLanguage } = req.body || {};
+    const input = (message || text || "").trim();
+    const language = (bodyLanguage || "es").toString().trim();
 
     if (!input) {
       return res.status(400).json({
@@ -241,18 +163,13 @@ async function chatHandler(req: Request, res: Response) {
     if (input.length > CONFIG.MAX_CHARS) {
       return res.json({
         corrected: input,
-        explanations: [
-          `Tu mensaje tiene ${input.length} caracteres.`,
-          `El límite es de ${CONFIG.MAX_CHARS} caracteres.`,
-        ],
-        tips: ["Intenta resumir tu idea."],
+        explanations: [`Mensaje muy largo (${input.length} > ${CONFIG.MAX_CHARS}). Intenta resumir.`],
+        tips: [],
         language,
         timestamp: new Date().toISOString(),
         status: "too_long",
       });
     }
-
-    console.log(`💬 Texto: "${input.substring(0, 50)}${input.length > 50 ? '...' : ''}"`);
 
     const client = getOpenAI();
     const systemPrompt = getClaraPrompt(language);
@@ -262,14 +179,8 @@ async function chatHandler(req: Request, res: Response) {
       temperature: CONFIG.TEMPERATURE,
       max_tokens: CONFIG.MAX_TOKENS,
       messages: [
-        {
-          role: "system",
-          content: systemPrompt,
-        },
-        {
-          role: "user",
-          content: input,
-        },
+        { role: "system", content: systemPrompt },
+        { role: "user", content: input },
       ],
       frequency_penalty: 0.1,
       presence_penalty: 0.1,
@@ -277,49 +188,24 @@ async function chatHandler(req: Request, res: Response) {
     });
 
     const rawResponse = completion.choices[0]?.message?.content || "";
-    console.log("🤖 Respuesta Clara:", rawResponse.substring(0, 100) + "...");
-
+    
     let parsedResponse: { corrected: string; message: string };
-
     try {
-      const cleanedResponse = rawResponse
-        .replace(/```json\n?/g, "")
-        .replace(/```\n?/g, "")
-        .trim();
-
-      parsedResponse = JSON.parse(cleanedResponse);
-
-      if (!parsedResponse.corrected || !parsedResponse.message) {
-        throw new Error("Estructura inválida");
-      }
-    } catch (parseError) {
-      console.error("❌ Error parseando JSON:", parseError);
-      
-      const jsonMatch = rawResponse.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        try {
-          parsedResponse = JSON.parse(jsonMatch[0]);
-        } catch (secondError) {
-          parsedResponse = {
-            corrected: input,
-            message: rawResponse || "Hubo un error al procesar tu texto. Intenta de nuevo.",
-          };
-        }
-      } else {
-        parsedResponse = {
-          corrected: input,
-          message: rawResponse || "Hubo un error al procesar tu texto. Intenta de nuevo.",
-        };
-      }
+      const cleaned = rawResponse.replace(/```json\n?|```\n?/g, "").trim();
+      parsedResponse = JSON.parse(cleaned);
+      if (!parsedResponse.corrected || !parsedResponse.message) throw new Error();
+    } catch {
+      parsedResponse = {
+        corrected: input,
+        message: rawResponse || "Error procesando tu mensaje. Intenta de nuevo."
+      };
     }
-
-    console.log("✅ Respuesta procesada");
 
     return res.status(200).json({
       corrected: parsedResponse.corrected,
       explanations: [parsedResponse.message],
       tips: [],
-      language: language,
+      language,
       timestamp: new Date().toISOString(),
       status: "ok",
     });
@@ -336,20 +222,19 @@ async function chatHandler(req: Request, res: Response) {
   }
 }
 
-// ========== RUTAS CHAT ==========
+// ========== RUTAS ==========
 app.post("/chat", chatHandler);
 app.post("/api/chat", chatHandler);
 
-// ========== RUTA DEBUG PARA VER PROMPT ==========
+// ========== DEBUG ==========
 app.get("/api/debug/prompt", (req: Request, res: Response) => {
-  const language = typeof req.query.lang === "string" ? req.query.lang : "es";
-  const prompt = getClaraPrompt(language);
-  
+  const lang = (req.query.lang || "es").toString();
+  const prompt = getClaraPrompt(lang);
   res.json({
-    language,
-    prompt_length: prompt.length,
-    estimated_tokens: Math.ceil(prompt.length / 4),
-    prompt_preview: prompt.substring(0, 500) + "...",
+    language: lang,
+    tokens_estimated: Math.ceil(prompt.length / 4),
+    cost_per_call: "$0.007",
+    prompt_preview: prompt.substring(0, 300) + "..."
   });
 });
 
@@ -371,7 +256,8 @@ app.get("/api/debug/prompt", (req: Request, res: Response) => {
 
   const PORT = Number(process.env.PORT) || 8080;
   server.listen(PORT, "0.0.0.0", () => {
-    log(`📝 🚀 Clara Optimizada (GPT-4o) funcionando en puerto ${PORT}`);
-    log(`💰 Costo estimado por llamada: ~$0.009 (80% más barato)`);
+    log(`🚀 Clara Optimizada en puerto ${PORT}`);
+    log(`💰 Costo/llamada: ~$0.007 (93% más barato)`);
+    log(`🎯 Prompt: 800 tokens, explicación breve incluida`);
   });
 })();
