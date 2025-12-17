@@ -2,6 +2,8 @@
 import { ChatRequest } from "../types/custom";
 import OpenAI from "openai";
 
+import { fb } from "../utils/i18n";
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -179,3 +181,4 @@ Correcciones ligeras por defecto. Todo en ${targetLanguageName}. Sin emojis.`;
     });
   }
 }
+

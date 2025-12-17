@@ -13,6 +13,8 @@ import cors from "cors";
 import OpenAI from "openai";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+
+import { fb } from "./utils/i18n";
 
 const app = express();
 
@@ -472,3 +474,5 @@ app.post("/api/chat", chatHandler);
     log(`📝 🚀 serving on port ${PORT}`);
   });
 })();
+
+
