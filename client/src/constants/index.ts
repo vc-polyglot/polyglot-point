@@ -1,5 +1,9 @@
-﻿export const CONSTANTS = {
-  DAILY_LIMIT: 10,
-  ONE_DAY_MS: 24 * 60 * 60 * 1000,
-  API_BASE: import.meta.env.VITE_API_URL || "https://polyglot-point-production.up.railway.app",
-} as const;
+﻿import { API_BASE_URL } from "../api";
+
+/**
+ * Single source of truth:
+ * API_BASE_URL lives in src/api.ts
+ */
+export const ENV = {
+  API_BASE: API_BASE_URL,
+};

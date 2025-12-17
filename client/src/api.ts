@@ -1,35 +1,40 @@
-﻿export type CorrectionResponse = {
+﻿/**
+ * API base URL fallback:
+ * 1) VITE_API_BASE_URL (preferido: dominio final / proxy)
+ * 2) VITE_API_URL (legacy)
+ * 3) window.location.origin (same-origin: Railway hoy, dominio propio mañana)
+ */
+export const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.VITE_API_URL ||
+  window.location.origin;
+
+export type CorrectionResponse = {
   corrected: string;
-  explanations: string[];
-  tips: string[];
+  explanations?: string[];
+  tips?: string[];
   remainingMessages?: number;
-  aviso?: string;
 };
 
-// Usa Vite (recomendado)
-const API_BASE =
-  // @ts-ignore
-  (import.meta as any).env?.VITE_API_BASE_URL ||
-  "https://polyglot-point-production.up.railway.app";
-
-export const fetchCorrection = async (
-  text: string,
-  language: string,
-  userId: string
-) => {
-  const r = await fetch(`${API_BASE}/chat`, {
+export async function fetchCorrection(text: string, language: string, userId: string) {
+  const r = await fetch(`${API_BASE_URL}/chat`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", "x-user-id": userId },
+    headers: {
+      "Content-Type": "application/json",
+      "x-user-id": userId,
+    },
     body: JSON.stringify({ text, language }),
   });
+
   if (!r.ok) throw new Error("Error corrección");
   return (await r.json()) as CorrectionResponse;
-};
+}
 
-export const fetchUsage = async (userId: string) => {
-  const r = await fetch(`${API_BASE}/user`, {
+export async function fetchUsage(userId: string) {
+  const r = await fetch(`${API_BASE_URL}/user`, {
     headers: { "x-user-id": userId },
   });
+
   if (!r.ok) throw new Error("Error uso");
-  return (await r.json()) as { remainingMessages: number };
-};
+  return await r.json();
+}
