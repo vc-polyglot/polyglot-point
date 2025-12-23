@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useState, useCallback } from "react";
-import { fetchCorrection, type CorrectionResponse } from "./api";
+import { fetchCorrection, fetchUsage, type CorrectionResponse } from "./api";
 import { translations, type Language } from "./i18n";
 
 const IDIOMAS: { codigo: Language; nombre: string; flag: string }[] = [
@@ -303,4 +303,5 @@ const App: React.FC = () => {
 };
 
 export default App;
+
 

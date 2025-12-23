@@ -1,45 +1,57 @@
 {
-  "name": "polyglot-point-railway",
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": {
-    "build-client": "cd client && npm install && npm run build",
-    "build-server": "esbuild server/index.ts --platform=node --bundle --format=cjs --alias:@shared=./shared --external:ws --external:multer --outfile=dist/server.cjs",
-    "build": "npm run build-client && npm run build-server && shx mkdir -p dist/public && shx cp -r client/dist/* dist/public/",
-    "start": "node dist/server.cjs"
-  },
-  "engines": {
-    "node": ">=20.0.0"
-  },
-  "dependencies": {
-    "@google-cloud/text-to-speech": "^6.1.0",
-    "@neondatabase/serverless": "^0.10.4",
-    "@radix-ui/react-dialog": "^1.1.14",
-    "@radix-ui/react-dropdown-menu": "^2.1.15",
-    "@radix-ui/react-tooltip": "^1.2.7",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "drizzle-orm": "^0.44.2",
-    "drizzle-zod": "^0.8.2",
-    "express": "^4.21.1",
-    "multer": "^1.4.5-lts.1",
-    "openai": "^5.23.2",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "sonner": "^2.0.6",
-    "tailwindcss": "^3.3.0",
-    "typescript": "^5.0.0",
-    "ws": "^8.18.0",
-    "zod": "^3.24.1"
-  },
-  "devDependencies": {
-    "@types/react": "^18.3.23",
-    "@types/react-dom": "^18.2.0",
-    "@vitejs/plugin-react": "^4.0.0",
-    "autoprefixer": "^10.4.0",
-    "esbuild": "^0.25.5",
-    "postcss": "^8.4.0",
-    "shx": "^0.3.4",
-    "vite": "^4.0.0"
-  }
+    "name": "polyglot-point-railway",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+        "dev:server": "npx tsx watch server/index.ts",
+        "dev:client": "cd client && npm run dev",
+        "build-client": "cd client && npm install && npm run build",
+        "build-server": "esbuild server/index.ts --platform=node --bundle --format=cjs --alias:@shared=./shared --external:ws --external:multer --external:pg --outfile=dist/server.cjs",
+        "build": "npm run build-client && npm run build-server && shx mkdir -p dist/public && shx cp -r client/dist/* dist/public/",
+        "start": "node dist/server.cjs",
+        "db:start": "docker compose up -d",
+        "db:stop": "docker compose down",
+        "db:push": "npx drizzle-kit push",
+        "db:studio": "npx drizzle-kit studio",
+        "db:generate": "npx drizzle-kit generate"
+    },
+    "engines": {
+        "node": ">=20.0.0"
+    },
+    "dependencies": {
+        "@google-cloud/text-to-speech": "^6.1.0",
+        "@neondatabase/serverless": "^0.10.4",
+        "@radix-ui/react-dialog": "^1.1.14",
+        "@radix-ui/react-dropdown-menu": "^2.1.15",
+        "@radix-ui/react-tooltip": "^1.2.7",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.5",
+        "drizzle-orm": "^0.44.7",
+        "drizzle-zod": "^0.8.2",
+        "express": "^4.21.1",
+        "multer": "^1.4.5-lts.1",
+        "openai": "^5.23.2",
+        "pg": "^8.16.3",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "sonner": "^2.0.6",
+        "tailwindcss": "^3.3.0",
+        "typescript": "^5.0.0",
+        "ws": "^8.18.0",
+        "zod": "^3.24.1"
+    },
+    "devDependencies": {
+        "@types/pg": "^8.16.0",
+        "@types/react": "^18.3.23",
+        "@types/react-dom": "^18.2.0",
+        "@vitejs/plugin-react": "^4.0.0",
+        "autoprefixer": "^10.4.0",
+        "concurrently": "^9.2.1",
+        "drizzle-kit": "^0.31.8",
+        "esbuild": "^0.25.5",
+        "postcss": "^8.4.0",
+        "shx": "^0.3.4",
+        "vite": "^4.0.0"
+    }
 }
