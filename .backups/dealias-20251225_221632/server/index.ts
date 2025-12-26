@@ -15,7 +15,6 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 import { fb } from "./utils/i18n";
-import { subscriptionManager } from "./services/subscriptionManager";
 import session from "express-session";
 import passport from "./auth";
 import authRoutes from "./authRoutes";
@@ -58,7 +57,7 @@ setInterval(() => {
   
   if (cleaned > 0) {
     console.log(`?? Limpieza de memoria: ${cleaned} sesiones eliminadas`);
-  }
+  }
 }, 30 * 60 * 1000);
 
 function extractEstado(response: string): string {
@@ -140,7 +139,9 @@ app.use(session({
   secret: process.env.SESSION_SECRET || "polyglot-dev-secret-change-in-prod",
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
+  cookie: {
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
   },
 }));
 app.use(passport.initialize());
@@ -174,25 +175,9 @@ app.use((req, res, next) => {
 
 // ========== HANDLER CLARA V3.4 CONVERSACIONAL ==========
 async function chatHandler(req: Request, res: Response) {
-  const authUser = (req as any).user as any;
-
   try {
     console.log("?? [CLARA v4 + MEMORIA] Nueva solicitud");
-    
-  // Verificar saldo de mensajes (solo si autenticado)
-  if (authUser?.id) {
-    const { bank } = await subscriptionManager.getUsage(authUser.id);
-    if (bank <= 0) {
-      return res.status(403).json({
-        corrected: "",
-        explanations: [fb(language).NO_MESSAGES || "Sin mensajes disponibles"],
-        tips: [],
-        language,
-        timestamp: new Date().toISOString(),
-        status: "no_messages",
-      });
-    }
-  }
+    
     const {
       message,
       text,
@@ -221,21 +206,7 @@ async function chatHandler(req: Request, res: Response) {
     const userId = bodyUserId || "anonymous";
 
     console.log(`?? Usuario: ${userId}, Idioma: ${language}`);
-
-  // Verificar saldo de mensajes (solo si autenticado)
-  if (authUser?.id) {
-    const { bank } = await subscriptionManager.getUsage(authUser.id);
-    if (bank <= 0) {
-      return res.status(403).json({
-        corrected: "",
-        explanations: [fb(language).NO_MESSAGES || "Sin mensajes disponibles"],
-        tips: [],
-        language,
-        timestamp: new Date().toISOString(),
-        status: "no_messages",
-      });
-    }
-  }
+
     if (!input) {
       return res.status(400).json({
         corrected: "",
@@ -248,16 +219,7 @@ async function chatHandler(req: Request, res: Response) {
     }
 
     if (input.length > 280) {
-  // Descontar mensaje SOLO si vamos a responder exitosamente
-  if (authUser?.id) {
-    const r = await subscriptionManager.consumeMessage(authUser.id);
-    if (!r.success) {
-      console.warn("⚠️ No se pudo descontar mensaje (saldo 0 o race)");
-    } else {
-      console.log(`💰 Mensajes restantes: ${r.remaining}`);
-    }
-  }
-  return res.json({
+      return res.json({
         corrected: input.substring(0, 280),
         explanations: [
           `Tu mensaje tiene ${input.length} caracteres.`,
@@ -271,39 +233,11 @@ async function chatHandler(req: Request, res: Response) {
     }
 
     console.log(`?? Texto: "${input.substring(0, 50)}${input.length > 50 ? "..." : ""}"`);
-
-  // Verificar saldo de mensajes (solo si autenticado)
-  if (authUser?.id) {
-    const { bank } = await subscriptionManager.getUsage(authUser.id);
-    if (bank <= 0) {
-      return res.status(403).json({
-        corrected: "",
-        explanations: [fb(language).NO_MESSAGES || "Sin mensajes disponibles"],
-        tips: [],
-        language,
-        timestamp: new Date().toISOString(),
-        status: "no_messages",
-      });
-    }
-  }
+
     // Obtener o crear sesión
     const session = getOrCreateSession(userId);
     console.log(`?? Memoria: ${session.ventana.length} mensajes, Estado: ${session.estado ? 'Sí' : 'No'}`);
-
-  // Verificar saldo de mensajes (solo si autenticado)
-  if (authUser?.id) {
-    const { bank } = await subscriptionManager.getUsage(authUser.id);
-    if (bank <= 0) {
-      return res.status(403).json({
-        corrected: "",
-        explanations: [fb(language).NO_MESSAGES || "Sin mensajes disponibles"],
-        tips: [],
-        language,
-        timestamp: new Date().toISOString(),
-        status: "no_messages",
-      });
-    }
-  }
+
     const languageNames: Record<string, string> = {
       es: "español",
       en: "inglés",
@@ -416,39 +350,11 @@ NUNCA respondas en un idioma diferente a ${targetLang}.`;
 
     const rawResponse = completion.choices[0]?.message?.content || "";
     console.log(`?? Respuesta (${rawResponse.length} chars)`);
-
-  // Verificar saldo de mensajes (solo si autenticado)
-  if (authUser?.id) {
-    const { bank } = await subscriptionManager.getUsage(authUser.id);
-    if (bank <= 0) {
-      return res.status(403).json({
-        corrected: "",
-        explanations: [fb(language).NO_MESSAGES || "Sin mensajes disponibles"],
-        tips: [],
-        language,
-        timestamp: new Date().toISOString(),
-        status: "no_messages",
-      });
-    }
-  }
+
     // Extraer estado
     const nuevoEstado = extractEstado(rawResponse);
     if (nuevoEstado) {
-      console.log(`?? Estado actualizado: ${nuevoEstado.substring(0, 50)}...`);
-  // Verificar saldo de mensajes (solo si autenticado)
-  if (authUser?.id) {
-    const { bank } = await subscriptionManager.getUsage(authUser.id);
-    if (bank <= 0) {
-      return res.status(403).json({
-        corrected: "",
-        explanations: [fb(language).NO_MESSAGES || "Sin mensajes disponibles"],
-        tips: [],
-        language,
-        timestamp: new Date().toISOString(),
-        status: "no_messages",
-      });
-    }
-  }
+      console.log(`?? Estado actualizado: ${nuevoEstado.substring(0, 50)}...`);
     }
 
     // Limpiar respuesta
@@ -485,21 +391,7 @@ NUNCA respondas en un idioma diferente a ${targetLang}.`;
     updateSession(userId, input, assistantMsg, nuevoEstado);
 
     console.log("? Respuesta procesada y memoria actualizada");
-
-  // Verificar saldo de mensajes (solo si autenticado)
-  if (authUser?.id) {
-    const { bank } = await subscriptionManager.getUsage(authUser.id);
-    if (bank <= 0) {
-      return res.status(403).json({
-        corrected: "",
-        explanations: [fb(language).NO_MESSAGES || "Sin mensajes disponibles"],
-        tips: [],
-        language,
-        timestamp: new Date().toISOString(),
-        status: "no_messages",
-      });
-    }
-  }
+
     return res.status(200).json({
       corrected: parsedResponse.corrected,
       explanations: parsedResponse.explanations,
@@ -540,7 +432,7 @@ app.post("/api/chat", chatHandler);
     serveStatic(app);
   }
 
-  const PORT = Number(process.env.PORT) || 3000;
+  const PORT = Number(process.env.PORT) || 8080;
   server.listen(PORT, "0.0.0.0", () => {
     log(`?? ?? serving on port ${PORT}`);
   });

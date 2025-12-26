@@ -58,7 +58,8 @@ setInterval(() => {
   
   if (cleaned > 0) {
     console.log(`?? Limpieza de memoria: ${cleaned} sesiones eliminadas`);
-  }
+  }
+  }
 }, 30 * 60 * 1000);
 
 function extractEstado(response: string): string {
@@ -140,7 +141,9 @@ app.use(session({
   secret: process.env.SESSION_SECRET || "polyglot-dev-secret-change-in-prod",
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
+  cookie: {
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
   },
 }));
 app.use(passport.initialize());
@@ -525,6 +528,8 @@ app.post("/chat", chatHandler);
 app.post("/api/chat", chatHandler);
 
 (async () => {
+  const authUser = (req as any).user as any;
+
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -540,7 +545,7 @@ app.post("/api/chat", chatHandler);
     serveStatic(app);
   }
 
-  const PORT = Number(process.env.PORT) || 3000;
+  const PORT = Number(process.env.PORT) || 8080;
   server.listen(PORT, "0.0.0.0", () => {
     log(`?? ?? serving on port ${PORT}`);
   });

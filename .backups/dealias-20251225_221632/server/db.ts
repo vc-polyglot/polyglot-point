@@ -1,0 +1,36 @@
+﻿import * as schema from "@shared/schema";
+
+if (!process.env.DATABASE_URL) {
+  throw new Error(
+    "DATABASE_URL must be set. Did you forget to provision a database?",
+  );
+}
+
+const isNeon = process.env.DATABASE_URL.includes("neon.tech") || 
+               process.env.DATABASE_URL.includes("neon.") ||
+               process.env.USE_NEON === "true";
+
+let db: any;
+let pool: any;
+
+if (isNeon) {
+  // Producción: Neon (WebSocket)
+  const { Pool, neonConfig } = require("@neondatabase/serverless");
+  const { drizzle } = require("drizzle-orm/neon-serverless");
+  const ws = require("ws");
+  
+  neonConfig.webSocketConstructor = ws;
+  pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  db = drizzle({ client: pool, schema });
+  console.log("📡 DB: Connected to Neon (production)");
+} else {
+  // Local: Postgres estándar
+  const { Pool } = require("pg");
+  const { drizzle } = require("drizzle-orm/node-postgres");
+  
+  pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  db = drizzle({ client: pool, schema });
+  console.log("🐘 DB: Connected to local Postgres (development)");
+}
+
+export { db, pool };

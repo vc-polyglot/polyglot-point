@@ -1,36 +1,22 @@
-﻿import * as schema from "@shared/schema";
+﻿import "dotenv/config";
+import { Pool } from "pg";
+import { drizzle } from "drizzle-orm/node-postgres";
+import * as schema from "../shared/schema";
 
-if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL must be set. Did you forget to provision a database?",
-  );
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  throw new Error("DATABASE_URL must be set. Did you forget to provision a database?");
 }
 
-const isNeon = process.env.DATABASE_URL.includes("neon.tech") || 
-               process.env.DATABASE_URL.includes("neon.") ||
-               process.env.USE_NEON === "true";
+// SSL solo cuando aplica (Railway/Supabase suelen requerirlo)
+const needsSSL =
+  connectionString.includes("sslmode=require") ||
+  process.env.NODE_ENV === "production" ||
+  process.env.PGSSLMODE === "require";
 
-let db: any;
-let pool: any;
+export const pool = new Pool({
+  connectionString,
+  ...(needsSSL ? { ssl: { rejectUnauthorized: false } } : {}),
+});
 
-if (isNeon) {
-  // Producción: Neon (WebSocket)
-  const { Pool, neonConfig } = require("@neondatabase/serverless");
-  const { drizzle } = require("drizzle-orm/neon-serverless");
-  const ws = require("ws");
-  
-  neonConfig.webSocketConstructor = ws;
-  pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  db = drizzle({ client: pool, schema });
-  console.log("📡 DB: Connected to Neon (production)");
-} else {
-  // Local: Postgres estándar
-  const { Pool } = require("pg");
-  const { drizzle } = require("drizzle-orm/node-postgres");
-  
-  pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  db = drizzle({ client: pool, schema });
-  console.log("🐘 DB: Connected to local Postgres (development)");
-}
-
-export { db, pool };
+export const db = drizzle(pool, { schema });

@@ -22209,9 +22209,9 @@ var require_language = __commonJS({
     function parseAcceptLanguage(accept) {
       var accepts = accept.split(",");
       for (var i2 = 0, j = 0; i2 < accepts.length; i2++) {
-        var language = parseLanguage(accepts[i2].trim(), i2);
-        if (language) {
-          accepts[j++] = language;
+        var language2 = parseLanguage(accepts[i2].trim(), i2);
+        if (language2) {
+          accepts[j++] = language2;
         }
       }
       accepts.length = j;
@@ -22240,18 +22240,18 @@ var require_language = __commonJS({
         full
       };
     }
-    function getLanguagePriority(language, accepted, index) {
+    function getLanguagePriority(language2, accepted, index) {
       var priority = { o: -1, q: 0, s: 0 };
       for (var i2 = 0; i2 < accepted.length; i2++) {
-        var spec = specify(language, accepted[i2], index);
+        var spec = specify(language2, accepted[i2], index);
         if (spec && (priority.s - spec.s || priority.q - spec.q || priority.o - spec.o) < 0) {
           priority = spec;
         }
       }
       return priority;
     }
-    function specify(language, spec, index) {
-      var p = parseLanguage(language);
+    function specify(language2, spec, index) {
+      var p = parseLanguage(language2);
       if (!p) return null;
       var s2 = 0;
       if (spec.full.toLowerCase() === p.full.toLowerCase()) {
@@ -22486,7 +22486,7 @@ var require_negotiator = __commonJS({
     Negotiator.prototype.encodings = function encodings(available) {
       return preferredEncodings(this.request.headers["accept-encoding"], available);
     };
-    Negotiator.prototype.language = function language(available) {
+    Negotiator.prototype.language = function language2(available) {
       var set2 = this.languages(available);
       return set2 && set2[0];
     };
@@ -28934,8 +28934,8 @@ var require_service_config = __commonJS({
         }
         if (Array.isArray(validatedConfig.clientLanguage)) {
           let languageMatched = false;
-          for (const language of validatedConfig.clientLanguage) {
-            if (language === CLIENT_LANGUAGE_STRING) {
+          for (const language2 of validatedConfig.clientLanguage) {
+            if (language2 === CLIENT_LANGUAGE_STRING) {
               languageMatched = true;
             }
           }
@@ -149857,15 +149857,15 @@ var init_storage = __esm({
         }).returning();
         return result;
       }
-      async updatePreferredLanguage(sessionId, language) {
+      async updatePreferredLanguage(sessionId, language2) {
         await db.update(userProfiles).set({
-          preferredLanguage: language,
+          preferredLanguage: language2,
           updatedAt: /* @__PURE__ */ new Date()
         }).where(eq(userProfiles.sessionId, sessionId));
       }
-      async updateActiveLanguage(sessionId, language) {
+      async updateActiveLanguage(sessionId, language2) {
         await db.update(userProfiles).set({
-          activeLanguage: language,
+          activeLanguage: language2,
           updatedAt: /* @__PURE__ */ new Date()
         }).where(eq(userProfiles.sessionId, sessionId));
       }
@@ -150053,18 +150053,18 @@ var init_storage = __esm({
         this.userProfiles.set(profile.sessionId, userProfile);
         return userProfile;
       }
-      async updatePreferredLanguage(sessionId, language) {
+      async updatePreferredLanguage(sessionId, language2) {
         const profile = this.userProfiles.get(sessionId);
         if (profile) {
-          profile.preferredLanguage = language;
+          profile.preferredLanguage = language2;
           profile.updatedAt = /* @__PURE__ */ new Date();
           this.userProfiles.set(sessionId, profile);
         }
       }
-      async updateActiveLanguage(sessionId, language) {
+      async updateActiveLanguage(sessionId, language2) {
         const profile = this.userProfiles.get(sessionId);
         if (profile) {
-          profile.activeLanguage = language;
+          profile.activeLanguage = language2;
           profile.updatedAt = /* @__PURE__ */ new Date();
           this.userProfiles.set(sessionId, profile);
         }
@@ -156709,9 +156709,9 @@ var UniversalErrorDetector = class {
    * Basic error detector for spelling, grammar, and syntax
    * Catches obvious mistakes before checking artificial constructions
    */
-  async detectBasicErrors(userInput, language) {
+  async detectBasicErrors(userInput, language2) {
     try {
-      console.log(`\u{1F50D} BASIC ERROR DETECTION: Analyzing "${userInput}" in ${language}`);
+      console.log(`\u{1F50D} BASIC ERROR DETECTION: Analyzing "${userInput}" in ${language2}`);
       const validCommonPhrases = [
         "hi",
         "hello",
@@ -156785,7 +156785,7 @@ var UniversalErrorDetector = class {
 6. Incorrect verb forms
 
 User input: "${userInput}"
-Target language: ${language}
+Target language: ${language2}
 
 If you find basic errors, respond with JSON format:
 {
@@ -156838,9 +156838,9 @@ Focus on obvious mistakes that any native speaker would immediately notice.`;
    * Universal AI-powered artificial construction detector
    * Works across all languages automatically
    */
-  async detectArtificialConstructions(userInput, language) {
+  async detectArtificialConstructions(userInput, language2) {
     try {
-      console.log(`\u{1F50D} UNIVERSAL ERROR DETECTION: Analyzing "${userInput}" in ${language}`);
+      console.log(`\u{1F50D} UNIVERSAL ERROR DETECTION: Analyzing "${userInput}" in ${language2}`);
       const prompt = `Analyze this user input for artificial/robotic constructions that don't sound natural to native speakers. Look for:
 
 1. Overly literal translations from other languages
@@ -156851,7 +156851,7 @@ Focus on obvious mistakes that any native speaker would immediately notice.`;
 6. Expressions that sound translated rather than naturally thought in the target language
 
 User input: "${userInput}"
-Target language: ${language}
+Target language: ${language2}
 
 If you find artificial constructions, respond with JSON format:
 {
@@ -156967,9 +156967,9 @@ var OpenAIService = class {
     }
     throw new Error("Transcription failed");
   }
-  async generateResponse(userMessage, language, conversationHistory, settings, customSystemPrompt) {
+  async generateResponse(userMessage, language2, conversationHistory, settings, customSystemPrompt) {
     console.log(`Generating AI response for: "${userMessage}"`);
-    console.log(`\u{1F3AF} CLARA LANGUAGE: ${language}`);
+    console.log(`\u{1F3AF} CLARA LANGUAGE: ${language2}`);
     const languageNames = {
       "en": "English",
       "es": "Spanish",
@@ -156978,7 +156978,7 @@ var OpenAIService = class {
       "pt": "Portuguese",
       "de": "German"
     };
-    const selectedLanguageName = languageNames[language] || "English";
+    const selectedLanguageName = languageNames[language2] || "English";
     const finalSystemPrompt = customSystemPrompt || `You are Clara, a language tutor. The user has selected the ${selectedLanguageName} tab, so you MUST respond ONLY in ${selectedLanguageName}. 
 
 CRITICAL RULES:
@@ -157025,10 +157025,10 @@ You need "are" instead of "you are" in questions. Good job practicing! Want to t
       content: responseContent
     };
   }
-  async detectBasicErrors(userInput, language) {
+  async detectBasicErrors(userInput, language2) {
     return [];
   }
-  async detectTranslationErrors(userInput, language) {
+  async detectTranslationErrors(userInput, language2) {
     return [];
   }
 };
@@ -157086,37 +157086,37 @@ var SubscriptionManager = class {
   /**
    * Check if user can access a specific language
    */
-  async canAccessLanguage(sessionId, language) {
+  async canAccessLanguage(sessionId, language2) {
     const profile = await storage.getUserProfile(sessionId);
     if (!profile) return false;
-    return profile.availableLanguages.includes(language);
+    return profile.availableLanguages.includes(language2);
   }
   /**
    * Switch active language (only if user has access)
    */
-  async switchActiveLanguage(sessionId, language) {
+  async switchActiveLanguage(sessionId, language2) {
     const profile = await storage.getUserProfile(sessionId);
     if (!profile) {
       return { success: false, message: "Profile not found" };
     }
-    if (!profile.availableLanguages.includes(language)) {
+    if (!profile.availableLanguages.includes(language2)) {
       if (profile.subscriptionType === "freemium") {
         return {
           success: false,
-          message: `Language ${language} requires premium subscription. Upgrade to access all languages.`
+          message: `Language ${language2} requires premium subscription. Upgrade to access all languages.`
         };
       } else {
         return {
           success: false,
-          message: `Language ${language} not available in your subscription.`
+          message: `Language ${language2} not available in your subscription.`
         };
       }
     }
-    await storage.updateActiveLanguage(sessionId, language);
-    console.log(`\u{1F504} LANGUAGE SWITCHED: ${sessionId} \u2192 ${language}`);
+    await storage.updateActiveLanguage(sessionId, language2);
+    console.log(`\u{1F504} LANGUAGE SWITCHED: ${sessionId} \u2192 ${language2}`);
     return {
       success: true,
-      message: `Active language changed to ${language}`
+      message: `Active language changed to ${language2}`
     };
   }
   /**
@@ -157448,8 +157448,8 @@ COMPORTAMENTO DE CORRE\xC7\xC3O EXAUSTIVA:
   /**
    * Get Clara's system prompt for a specific language (respects language tab selection)
    */
-  getClaraSystemPromptForLanguage(language) {
-    return this.prompts[language] || this.prompts.en;
+  getClaraSystemPromptForLanguage(language2) {
+    return this.prompts[language2] || this.prompts.en;
   }
   /**
    * Validate that a response is in the correct language
@@ -157674,7 +157674,7 @@ var ConversationService = class {
   /**
    * Get natural Clara message for low-quality input
    */
-  getNaturalQualityMessage(language) {
+  getNaturalQualityMessage(language2) {
     const messages2 = {
       es: "\xBFSeguimos conversando en espa\xF1ol? Intenta una frase m\xE1s clara y te acompa\xF1o.",
       en: "Shall we continue in English? Try a clearer phrase and I'll help you.",
@@ -157683,12 +157683,12 @@ var ConversationService = class {
       de: "Sprechen wir weiter auf Deutsch? Versuchen Sie einen klareren Satz und ich helfe Ihnen.",
       pt: "Vamos continuar em portugu\xEAs? Tente uma frase mais clara e eu te acompanho."
     };
-    return messages2[language] || messages2.es;
+    return messages2[language2] || messages2.es;
   }
   /**
    * Get varied response for repetitions based on type
    */
-  getRepetitionResponse(sessionId, type, language) {
+  getRepetitionResponse(sessionId, type, language2) {
     const usedPatterns = this.usedResponsePatterns.get(sessionId) || /* @__PURE__ */ new Set();
     const responses = {
       error: [
@@ -158197,11 +158197,11 @@ Create a concise summary for Clara to reference in future conversations:`;
   /**
    * Generate contextual follow-up question after successful practice
    */
-  generateContextualFollowUp(correctedText, language) {
+  generateContextualFollowUp(correctedText, language2) {
     const words = correctedText.toLowerCase().split(/\s+/);
     for (const word of words) {
       if (word.includes("guitar") || word.includes("guitarra") || word.includes("guitare") || word.includes("chitarra") || word.includes("gitarre")) {
-        switch (language) {
+        switch (language2) {
           case "es":
             return "\xA1Perfecto! \xBFTocas la guitarra?";
           case "fr":
@@ -158217,7 +158217,7 @@ Create a concise summary for Clara to reference in future conversations:`;
         }
       }
       if (word.includes("music") || word.includes("m\xFAsica") || word.includes("musique") || word.includes("musica") || word.includes("musik")) {
-        switch (language) {
+        switch (language2) {
           case "es":
             return "\xA1Excelente! \xBFQu\xE9 tipo de m\xFAsica te gusta?";
           case "fr":
@@ -158233,7 +158233,7 @@ Create a concise summary for Clara to reference in future conversations:`;
         }
       }
       if (word.includes("book") || word.includes("libro") || word.includes("livre") || word.includes("buch")) {
-        switch (language) {
+        switch (language2) {
           case "es":
             return "\xA1Muy bien! \xBFQu\xE9 tipo de libros te gustan?";
           case "fr":
@@ -158249,7 +158249,7 @@ Create a concise summary for Clara to reference in future conversations:`;
         }
       }
       if (word.includes("food") || word.includes("comida") || word.includes("nourriture") || word.includes("cibo") || word.includes("essen")) {
-        switch (language) {
+        switch (language2) {
           case "es":
             return "\xA1Perfecto! \xBFTe gusta cocinar?";
           case "fr":
@@ -158265,7 +158265,7 @@ Create a concise summary for Clara to reference in future conversations:`;
         }
       }
       if (word.includes("travel") || word.includes("viaje") || word.includes("voyage") || word.includes("viaggio") || word.includes("reise")) {
-        switch (language) {
+        switch (language2) {
           case "es":
             return "\xA1Excelente! \xBFTe gusta viajar?";
           case "fr":
@@ -158281,7 +158281,7 @@ Create a concise summary for Clara to reference in future conversations:`;
         }
       }
     }
-    switch (language) {
+    switch (language2) {
       case "es":
         return "\xA1Perfecto! \xA1Son\xF3 genial!";
       case "fr":
@@ -158403,8 +158403,8 @@ Create a concise summary for Clara to reference in future conversations:`;
   /**
    * Get a natural clarification message for poor transcriptions
    */
-  getNaturalClarificationMessage(language) {
-    switch (language) {
+  getNaturalClarificationMessage(language2) {
+    switch (language2) {
       case "es":
         return "No te escuch\xE9 bien. \xBFPodr\xEDas repetir lo que dijiste?";
       case "en":
@@ -158594,10 +158594,10 @@ var VoiceController = class {
   /**
    * Generate TTS audio from text
    */
-  async generateTTS(text2, language = "en") {
+  async generateTTS(text2, language2 = "en") {
     try {
       const openaiService2 = conversationService.openaiService;
-      return await openaiService2.generateTTS(text2, language);
+      return await openaiService2.generateTTS(text2, language2);
     } catch (error40) {
       console.error("TTS generation error:", error40);
       throw new Error("Failed to generate TTS audio");
@@ -158807,25 +158807,25 @@ var LanguageManager = class {
   /**
    * Reset STT module for new language
    */
-  async resetSTTModule(language) {
+  async resetSTTModule(language2) {
     global.sttContext = global.sttContext || {};
-    global.sttContext.currentLanguage = language;
+    global.sttContext.currentLanguage = language2;
     global.sttContext.lastReset = Date.now();
   }
   /**
    * Reset TTS module for new language
    */
-  async resetTTSModule(language) {
+  async resetTTSModule(language2) {
     global.ttsContext = global.ttsContext || {};
-    global.ttsContext.currentLanguage = language;
+    global.ttsContext.currentLanguage = language2;
     global.ttsContext.lastReset = Date.now();
   }
   /**
    * Update Clara's language context
    */
-  async updateClaraLanguage(language) {
+  async updateClaraLanguage(language2) {
     global.claraContext = global.claraContext || {};
-    global.claraContext.currentLanguage = language;
+    global.claraContext.currentLanguage = language2;
     global.claraContext.lastReset = Date.now();
   }
   /**
@@ -158840,23 +158840,23 @@ var LanguageManager = class {
   /**
    * Save language to session storage
    */
-  async saveLanguageToSession(sessionId, language) {
+  async saveLanguageToSession(sessionId, language2) {
     try {
       const { storage: storage2 } = await Promise.resolve().then(() => (init_storage(), storage_exports));
       let settings = await storage2.getSessionSettings(sessionId);
       if (!settings) {
         settings = {
-          language,
+          language: language2,
           speechSpeed: 1,
           voiceVolume: 80,
           enableCorrections: true,
           enableSuggestions: true
         };
       } else {
-        settings.language = language;
+        settings.language = language2;
       }
       await storage2.saveSessionSettings(sessionId, settings);
-      console.log(`\u{1F4BE} LANGUAGE SAVED TO SESSION: ${language}`);
+      console.log(`\u{1F4BE} LANGUAGE SAVED TO SESSION: ${language2}`);
     } catch (error40) {
       console.error(`\u274C Failed to save language to session: ${error40}`);
       throw error40;
@@ -158886,23 +158886,23 @@ router.get("/status/:sessionId", async (req, res) => {
 });
 router.post("/switch-language", async (req, res) => {
   try {
-    const { sessionId, language } = req.body;
-    if (!sessionId || !language) {
+    const { sessionId, language: language2 } = req.body;
+    if (!sessionId || !language2) {
       return res.status(400).json({
         error: "Session ID and language are required"
       });
     }
-    const result = await subscriptionManager.switchActiveLanguage(sessionId, language);
+    const result = await subscriptionManager.switchActiveLanguage(sessionId, language2);
     if (result.success) {
-      const responseMessage = await languageEnforcer.handleLanguageSwitchRequest(sessionId, language);
+      const responseMessage = await languageEnforcer.handleLanguageSwitchRequest(sessionId, language2);
       res.json({
         success: true,
         message: result.message,
         claraResponse: responseMessage,
-        newActiveLanguage: language
+        newActiveLanguage: language2
       });
     } else {
-      const responseMessage = await languageEnforcer.handleLanguageSwitchRequest(sessionId, language);
+      const responseMessage = await languageEnforcer.handleLanguageSwitchRequest(sessionId, language2);
       res.status(403).json({
         success: false,
         error: result.message,
@@ -159017,13 +159017,13 @@ async function registerRoutes(app2) {
   });
   app2.post("/api/tts/generate", async (req, res) => {
     try {
-      const { text: text2, language } = req.body;
-      if (!text2 || !language) {
+      const { text: text2, language: language2 } = req.body;
+      if (!text2 || !language2) {
         return res.status(400).json({ error: "Text and language are required" });
       }
       const { googleTTSService: googleTTSService2 } = await Promise.resolve().then(() => (init_googleTTS(), googleTTS_exports));
       const sessionId = `tts_${Date.now()}`;
-      const result = await googleTTSService2.synthesizeSpeech(text2, language, sessionId);
+      const result = await googleTTSService2.synthesizeSpeech(text2, language2, sessionId);
       const audioBase64 = result.buffer.toString("base64");
       res.json({
         success: true,
@@ -159039,11 +159039,11 @@ async function registerRoutes(app2) {
   app2.use("/api/subscription", subscriptionRoutes_default);
   app2.post("/api/tts", async (req, res) => {
     try {
-      const { text: text2, language } = req.body;
+      const { text: text2, language: language2 } = req.body;
       if (!text2) {
         return res.status(400).json({ error: "Text is required" });
       }
-      const audioBuffer = await voiceController.generateTTS(text2, language || "en");
+      const audioBuffer = await voiceController.generateTTS(text2, language2 || "en");
       res.setHeader("Content-Type", "audio/mpeg");
       res.setHeader("Content-Length", audioBuffer.length);
       res.send(audioBuffer);
@@ -159055,19 +159055,19 @@ async function registerRoutes(app2) {
   app2.post("/api/language/change", async (req, res) => {
     try {
       console.log(`\u{1F6A8} LANGUAGE CHANGE API CALLED:`, req.body);
-      const { language, sessionId } = req.body;
-      if (!language || !sessionId) {
-        console.error(`\u274C MISSING PARAMETERS: language=${language}, sessionId=${sessionId}`);
+      const { language: language2, sessionId } = req.body;
+      if (!language2 || !sessionId) {
+        console.error(`\u274C MISSING PARAMETERS: language=${language2}, sessionId=${sessionId}`);
         return res.status(400).json({ error: "Language and sessionId are required" });
       }
-      console.log(`\u{1F504} LANGUAGE CHANGE REQUEST: ${language} for session ${sessionId}`);
+      console.log(`\u{1F504} LANGUAGE CHANGE REQUEST: ${language2} for session ${sessionId}`);
       if (languageManager.isLanguageChanging()) {
         return res.status(429).json({
           error: "Language change in progress",
           message: "Please wait for current language change to complete"
         });
       }
-      const result = await languageManager.changeLanguage(language, sessionId);
+      const result = await languageManager.changeLanguage(language2, sessionId);
       if (result.success) {
         console.log(`\u2705 LANGUAGE CHANGE SUCCESSFUL: ${result.oldLanguage} \u2192 ${result.newLanguage}`);
         res.json(result);
@@ -159127,7 +159127,7 @@ async function registerRoutes(app2) {
           if (!hasWarning) {
             await storage.setInactivityWarning(ws.sessionId);
             const settings = await storage.getSessionSettings(ws.sessionId);
-            const language = settings?.language || "es";
+            const language2 = settings?.language || "es";
             const warningMessages = {
               es: "\xBFEst\xE1s ah\xED? Tu sesi\xF3n se cerrar\xE1 en 5 minutos por inactividad.",
               en: "Are you there? Your session will close in 5 minutes due to inactivity.",
@@ -159141,7 +159141,7 @@ async function registerRoutes(app2) {
               data: {
                 id: `warning_${Date.now()}`,
                 type: "ai",
-                content: warningMessages[language] || warningMessages.es,
+                content: warningMessages[language2] || warningMessages.es,
                 timestamp: (/* @__PURE__ */ new Date()).toISOString()
               }
             }));
@@ -159715,15 +159715,15 @@ async function chatHandler(req, res) {
     } = req.body || {};
     const inputRaw = typeof message === "string" && message.trim().length > 0 ? message : typeof text2 === "string" ? text2 : "";
     const input = inputRaw.trim();
-    const language = typeof bodyLanguage === "string" && bodyLanguage.trim().length > 0 ? bodyLanguage : "es";
+    const language2 = typeof bodyLanguage === "string" && bodyLanguage.trim().length > 0 ? bodyLanguage : "es";
     const userId = bodyUserId || "anonymous";
-    console.log(`\u{1F464} Usuario: ${userId}, Idioma: ${language}`);
+    console.log(`\u{1F464} Usuario: ${userId}, Idioma: ${language2}`);
     if (!input) {
       return res.status(400).json({
         corrected: "",
-        explanations: ["No se recibi\xF3 ning\xFAn texto."],
+        explanations: [language2 === "fr" ? "Aucun texte re\xE7u." : language2 === "en" ? "No text received." : language2 === "it" ? "Nessun testo ricevuto." : language2 === "de" ? "Kein Text erhalten." : language2 === "pt" ? "Nenhum texto recebido." : "No se recibi\xF3 ning\xFAn texto."],
         tips: [],
-        language,
+        language: language2,
         timestamp: (/* @__PURE__ */ new Date()).toISOString(),
         status: "error"
       });
@@ -159736,7 +159736,7 @@ async function chatHandler(req, res) {
           "El l\xEDmite es de 280 caracteres."
         ],
         tips: ["Intenta resumir tu idea."],
-        language,
+        language: language2,
         timestamp: (/* @__PURE__ */ new Date()).toISOString(),
         status: "too_long"
       });
@@ -159752,7 +159752,7 @@ async function chatHandler(req, res) {
       de: "alem\xE1n",
       pt: "portugu\xE9s"
     };
-    const targetLang = languageNames[language] || "espa\xF1ol";
+    const targetLang = languageNames[language2] || "espa\xF1ol";
     let systemPrompt = `PROMPT CLARA V4
 
 IDENTIDAD
@@ -159813,23 +159813,19 @@ notas: [datos relevantes del usuario, m\xE1x 3 observaciones]
 
 Este bloque es interno, no lo menciones en la conversaci\xF3n.
 
-EJEMPLOS:
+REGLA CR\xCDTICA - IDIOMA DE RESPUESTA:
+Responde EXCLUSIVAMENTE en ${targetLang}. Esto incluye:
+- El campo "explanations"
+- Cualquier pregunta o comentario
+- TODO el texto de tu respuesta
 
-Input: "hola"
-Output:
-{
-  "corrected": "Hola.",
-  "explanations": ["Se escribe con may\xFAscula y punto. \xBFC\xF3mo est\xE1s?"],
-  "tips": []
-}
+Si ${targetLang} es "franc\xE9s" y el usuario escribe "salut", responde:
+{"corrected": "Salut.", "explanations": ["Majuscule au d\xE9but. Comment \xE7a va?"], "tips": []}
 
-|||ESTADO|||
-nivel: principiante
-tono: casual
-idioma: ${targetLang}
-errores: may\xFAsculas al inicio
-notas: primera interacci\xF3n
-|||FIN|||`;
+Si ${targetLang} es "espa\xF1ol" y el usuario escribe "hola", responde:
+{"corrected": "Hola.", "explanations": ["May\xFAscula al inicio. \xBFC\xF3mo est\xE1s?"], "tips": []}
+
+NUNCA respondas en un idioma diferente a ${targetLang}.`;
     if (session.estado) {
       systemPrompt += `
 
@@ -159871,7 +159867,7 @@ ${session.estado}
       console.error("\u274C Error parseando JSON:", parseError);
       parsedResponse = {
         corrected: input,
-        explanations: ["Hubo un error al procesar. Intenta de nuevo."],
+        explanations: [language2 === "fr" ? "Erreur de traitement. R\xE9essaie." : language2 === "en" ? "Processing error. Try again." : language2 === "it" ? "Errore di elaborazione. Riprova." : language2 === "de" ? "Verarbeitungsfehler. Versuche es erneut." : language2 === "pt" ? "Erro ao processar. Tente novamente." : "Hubo un error al procesar. Intenta de nuevo."],
         tips: []
       };
     }
@@ -159882,7 +159878,7 @@ ${session.estado}
       corrected: parsedResponse.corrected,
       explanations: parsedResponse.explanations,
       tips: parsedResponse.tips,
-      language,
+      language: language2,
       timestamp: (/* @__PURE__ */ new Date()).toISOString(),
       status: "ok"
     });
@@ -159890,7 +159886,7 @@ ${session.estado}
     console.error("\u274C Error en /chat:", error40);
     return res.status(500).json({
       corrected: "",
-      explanations: ["Error interno del servidor."],
+      explanations: [language === "fr" ? "Erreur interne du serveur." : language === "en" ? "Internal server error." : language === "it" ? "Errore interno del server." : language === "de" ? "Interner Serverfehler." : language === "pt" ? "Erro interno do servidor." : "Error interno del servidor."],
       tips: [],
       language: "es",
       timestamp: (/* @__PURE__ */ new Date()).toISOString(),
