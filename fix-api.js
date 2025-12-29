@@ -1,4 +1,7 @@
-﻿export type CorrectionResponse = {
+﻿const fs = require('fs');
+
+const content = [
+export type CorrectionResponse = {
   corrected: string;
   explanations?: string[];
   tips?: string[];
@@ -17,10 +20,12 @@ export async function fetchCorrection(text: string, language: string, userId: st
 }
 
 export async function fetchUsage(userId: string) {
-  const r = await fetch("/api/me", {
-    credentials: "include",
-  });
+  const r = await fetch("/api/usage", { credentials: "include" });
   if (!r.ok) throw new Error("Error uso");
-  const data = await r.json();
-  return { remainingMessages: data.remainingMessages ?? data.messagesBank };
+  return await r.json();
 }
+
+].join('');
+
+fs.writeFileSync('./client/src/api.ts', content, 'utf8');
+console.log('api.ts reescrito limpio (sin API_BASE_URL)');

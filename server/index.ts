@@ -13,7 +13,8 @@ import cors from "cors";
 import OpenAI from "openai";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-
+
+
 import { fb } from "./utils/i18n";
 import { subscriptionManager } from "./services/subscriptionManager";
 import session from "express-session";
@@ -32,88 +33,195 @@ app.get("/health", (_req: Request, res: Response) => {
   });
 });
 
-// ========== CONFIG CLARA V3.4 ==========
-// ========== SISTEMA DE MEMORIA CLARA V4 ==========
-interface SessionMemory {
+// ========== SISTEMA DE MEMORIA SIMPLIFICADO ==========
+interface Session {
   userId: string;
-  estado: string;
   ventana: Array<{ role: 'user' | 'assistant'; content: string }>;
   lastAccess: number;
 }
 
-const sessions = new Map<string, SessionMemory>();
+const sessions = new Map<string, Session>();
+const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
+const SESSION_CLEANUP_MS = 5 * 60 * 1000;
 
-// Limpieza automática cada 30 minutos
-setInterval(() => {
+// Limpieza automática cada 5 minutos
+let cleanupInterval: NodeJS.Timeout | null = null;
+
+function startSessionCleanup() {
+  if (cleanupInterval) return;
+  cleanupInterval = setInterval(() => {
+    const now = Date.now();
+    for (const [id, session] of sessions.entries()) {
+      if (now - session.lastAccess > SESSION_TIMEOUT_MS) {
+        sessions.delete(id);
+      }
+    }
+  }, SESSION_CLEANUP_MS);
+}
+
+startSessionCleanup();
+
+function getOrCreateSession(userId: string): Session {
   const now = Date.now();
-  const timeout = 30 * 60 * 1000; // 30 minutos
-  let cleaned = 0;
   
-  for (const [userId, session] of sessions.entries()) {
-    if (now - session.lastAccess > timeout) {
-      sessions.delete(userId);
-      cleaned++;
+  if (sessions.size > 1000) {
+    for (const [id, session] of sessions.entries()) {
+      if (now - session.lastAccess > SESSION_TIMEOUT_MS) {
+        sessions.delete(id);
+      }
     }
   }
   
-  if (cleaned > 0) {
-    console.log(`?? Limpieza de memoria: ${cleaned} sesiones eliminadas`);
-  }
-}, 30 * 60 * 1000);
-
-function extractEstado(response: string): string {
-  const match = response.match(/\|\|\|ESTADO\|\|\|([\s\S]*?)\|\|\|FIN\|\|\|/);
-  return match ? match[1].trim() : "";
-}
-
-function cleanResponse(response: string): string {
-  return response.replace(/\|\|\|ESTADO\|\|\|[\s\S]*?\|\|\|FIN\|\|\|/, "").trim();
-}
-
-function getOrCreateSession(userId: string): SessionMemory {
   if (!sessions.has(userId)) {
     sessions.set(userId, {
       userId,
-      estado: "",
       ventana: [],
-      lastAccess: Date.now(),
+      lastAccess: now,
     });
   }
   
   const session = sessions.get(userId)!;
-  session.lastAccess = Date.now();
+  session.lastAccess = now;
   return session;
 }
 
-function updateSession(userId: string, userMsg: string, assistantMsg: string, nuevoEstado: string) {
+function updateSession(userId: string, userMsg: string, assistantMsg: string): void {
   const session = getOrCreateSession(userId);
-  
-  // Actualizar estado
-  if (nuevoEstado) {
-    session.estado = nuevoEstado;
-  }
-  
-  // Actualizar ventana (máximo 4 mensajes = 2 turnos)
-  session.ventana.push(
+  session.ventana = [
     { role: 'user', content: userMsg },
     { role: 'assistant', content: assistantMsg }
-  );
-  
-  // Mantener solo últimos 4 mensajes
-  if (session.ventana.length > 4) {
-    session.ventana = session.ventana.slice(-4);
-  }
-  
+  ];
   session.lastAccess = Date.now();
 }
 
+// ========== HELPERS ==========
+function timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) => 
+      setTimeout(() => reject(new Error(`Timeout after ${ms}ms`)), ms)
+    )
+  ]);
+}
 
-const CONFIG = {
-  MAX_CHARS: 280,
-  MODEL: "gpt-4",
-  TEMPERATURE: 0.7,
-  MAX_TOKENS: 800,
-} as const;
+function buildClaraPrompt(language: string): string {
+  const LANG_MAP: Record<string, string> = {
+    es: "español", en: "inglés", fr: "francés",
+    it: "italiano", de: "alemán", pt: "portugués",
+  };
+  const targetLang = LANG_MAP[language] || "español";
+  
+  return `Clara es tutora de escritura. Corrige escribiendo bien dentro de la conversación.
+Responde siempre en ${targetLang}. Voz: cálida, directa, culta.
+Devuelve solo JSON: {"corrected":"...","explanations":[],"tips":[]}`;
+}
+
+// ========== PARSER INFALIBLE ==========
+function parseClaraResponse(raw: string, fallback: string, language: string): {
+  corrected: string;
+  explanations: string[];
+} {
+  const clean = raw.trim();
+  
+  const extractionStrategies = [
+    () => clean.match(/^\s*(\{[\s\S]*\})\s*$/)?.[1] || null,
+    () => clean.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/)?.[1] || null,
+    () => {
+      const start = clean.indexOf('{');
+      if (start === -1) return null;
+      let depth = 0;
+      for (let i = start; i < clean.length; i++) {
+        if (clean[i] === '{') depth++;
+        if (clean[i] === '}') depth--;
+        if (depth === 0) {
+          let jsonStr = clean.slice(start, i + 1);
+          const lastBrace = jsonStr.lastIndexOf('}');
+          if (lastBrace !== jsonStr.length - 1) {
+            jsonStr = jsonStr.slice(0, lastBrace + 1);
+          }
+          return jsonStr;
+        }
+      }
+      return null;
+    },
+    () => {
+      const matches = [...clean.matchAll(/\{[\s\S]*?\}/g)];
+      return matches.length > 0 
+        ? matches.reduce((a, b) => a[0].length > b[0].length ? a : b)[0]
+        : null;
+    }
+  ];
+  
+  for (const strategy of extractionStrategies) {
+    const jsonStr = strategy();
+    if (!jsonStr) continue;
+    
+    try {
+      const parsed = JSON.parse(jsonStr) as any;
+      if (parsed?.corrected && typeof parsed.corrected === 'string') {
+        const explanations = Array.isArray(parsed.explanations)
+          ? parsed.explanations.slice(0, 1).filter((e: any) => typeof e === 'string')
+          : [];
+        
+        return {
+          corrected: parsed.corrected.trim(),
+          explanations: explanations.map((e: string) => e.trim()),
+        };
+      }
+    } catch {
+      continue;
+    }
+  }
+  
+  return {
+    corrected: fallback,
+    explanations: [fb(language).PROCESS_ERROR || 'Error procesando respuesta'],
+  };
+}
+
+// ========== VALIDACIÓN ==========
+function validateChatRequest(body: unknown): {
+  valid: boolean;
+  error?: string;
+  data?: {
+    input: string;
+    language: string;
+    userId: string;
+    wasTrimmed: boolean;
+    originalLength: number;
+  };
+} {
+  if (!body || typeof body !== 'object') {
+    return { valid: false, error: 'invalid_request' };
+  }
+  
+  const req = body as Record<string, unknown>;
+  
+  let language = 'es';
+  if (typeof req.language === 'string') {
+    const cleanLang = req.language.trim().toLowerCase();
+    if (['es', 'en', 'fr', 'it', 'de', 'pt'].includes(cleanLang)) {
+      language = cleanLang;
+    }
+  }
+  
+  const message = typeof req.message === 'string' ? req.message.trim() : '';
+  const text = typeof req.text === 'string' ? req.text.trim() : '';
+  const inputRaw = message || text;
+  const originalLength = inputRaw.length;
+  const input = inputRaw.slice(0, 280);
+  const wasTrimmed = originalLength > 280;
+  
+  let userId = 'anonymous';
+  if (typeof req.userId === 'string' && req.userId.trim()) {
+    userId = req.userId.trim().slice(0, 100);
+  }
+  
+  return {
+    valid: true,
+    data: { input, language, userId, wasTrimmed, originalLength },
+  };
+}
 
 let openaiClient: OpenAI | null = null;
 
@@ -128,8 +236,6 @@ const getOpenAI = (): OpenAI => {
   return openaiClient;
 };
 
-// CLARA_PROMPT eliminado - era código muerto
-
 // ========== MIDDLEWARE ==========
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
@@ -140,8 +246,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET || "polyglot-dev-secret-change-in-prod",
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
-  },
+  cookie: { secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: 30 * 24 * 60 * 60 * 1000 },
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -172,354 +277,171 @@ app.use((req, res, next) => {
   next();
 });
 
-// ========== HANDLER CLARA V3.4 CONVERSACIONAL ==========
+// ========== HANDLER CLARA 10/10 ==========
 async function chatHandler(req: Request, res: Response) {
-  const authUser = (req as any).user as any;
-
-  try {
-    console.log("?? [CLARA v4 + MEMORIA] Nueva solicitud");
-    
-  // Verificar saldo de mensajes (solo si autenticado)
-  if (authUser?.id) {
-    const { bank } = await subscriptionManager.getUsage(authUser.id);
-    if (bank <= 0) {
-      return res.status(403).json({
-        corrected: "",
-        explanations: [fb(language).NO_MESSAGES || "Sin mensajes disponibles"],
-        tips: [],
-        language,
-        timestamp: new Date().toISOString(),
-        status: "no_messages",
-      });
-    }
-  }
-    const {
-      message,
-      text,
-      userId: bodyUserId,
-      language: bodyLanguage,
-    } = (req.body || {}) as {
-      message?: string;
-      text?: string;
-      userId?: string;
-      language?: string;
-    };
-
-    const inputRaw =
-      typeof message === "string" && message.trim().length > 0
-        ? message
-        : typeof text === "string"
-          ? text
-          : "";
-    
-    const input = inputRaw.trim();
-    const language =
-      typeof bodyLanguage === "string" && bodyLanguage.trim().length > 0
-        ? bodyLanguage
-        : "es";
-    
-    const userId = bodyUserId || "anonymous";
-
-    console.log(`?? Usuario: ${userId}, Idioma: ${language}`);
-
-  // Verificar saldo de mensajes (solo si autenticado)
-  if (authUser?.id) {
-    const { bank } = await subscriptionManager.getUsage(authUser.id);
-    if (bank <= 0) {
-      return res.status(403).json({
-        corrected: "",
-        explanations: [fb(language).NO_MESSAGES || "Sin mensajes disponibles"],
-        tips: [],
-        language,
-        timestamp: new Date().toISOString(),
-        status: "no_messages",
-      });
-    }
-  }
-    if (!input) {
-      return res.status(400).json({
-        corrected: "",
-        explanations: [fb(language).NO_TEXT],
-        tips: [],
-        language,
-        timestamp: new Date().toISOString(),
-        status: "error",
-      });
-    }
-
-    if (input.length > 280) {
-  // Descontar mensaje SOLO si vamos a responder exitosamente
-  if (authUser?.id) {
-    const r = await subscriptionManager.consumeMessage(authUser.id);
-    if (!r.success) {
-      console.warn("⚠️ No se pudo descontar mensaje (saldo 0 o race)");
-    } else {
-      console.log(`💰 Mensajes restantes: ${r.remaining}`);
-    }
-  }
-  return res.json({
-        corrected: input.substring(0, 280),
-        explanations: [
-          `Tu mensaje tiene ${input.length} caracteres.`,
-          "El límite es de 280 caracteres.",
-        ],
-        tips: ["Intenta resumir tu idea."],
-        language,
-        timestamp: new Date().toISOString(),
-        status: "too_long",
-      });
-    }
-
-    console.log(`?? Texto: "${input.substring(0, 50)}${input.length > 50 ? "..." : ""}"`);
-
-  // Verificar saldo de mensajes (solo si autenticado)
-  if (authUser?.id) {
-    const { bank } = await subscriptionManager.getUsage(authUser.id);
-    if (bank <= 0) {
-      return res.status(403).json({
-        corrected: "",
-        explanations: [fb(language).NO_MESSAGES || "Sin mensajes disponibles"],
-        tips: [],
-        language,
-        timestamp: new Date().toISOString(),
-        status: "no_messages",
-      });
-    }
-  }
-    // Obtener o crear sesión
-    const session = getOrCreateSession(userId);
-    console.log(`?? Memoria: ${session.ventana.length} mensajes, Estado: ${session.estado ? 'Sí' : 'No'}`);
-
-  // Verificar saldo de mensajes (solo si autenticado)
-  if (authUser?.id) {
-    const { bank } = await subscriptionManager.getUsage(authUser.id);
-    if (bank <= 0) {
-      return res.status(403).json({
-        corrected: "",
-        explanations: [fb(language).NO_MESSAGES || "Sin mensajes disponibles"],
-        tips: [],
-        language,
-        timestamp: new Date().toISOString(),
-        status: "no_messages",
-      });
-    }
-  }
-    const languageNames: Record<string, string> = {
-      es: "español",
-      en: "inglés",
-      fr: "francés",
-      it: "italiano",
-      de: "alemán",
-      pt: "portugués",
-    };
-
-    const targetLang = languageNames[language] || "español";
-
-    // Construir prompt con memoria
-    let systemPrompt = `PROMPT CLARA V4
-
-IDENTIDAD
-Clara es la tutora de escritura de Polyglot Point: Write. No es correctora automática sino acompañante pedagógica: corrige con precisión sin humillar, explica sin tecnicismos, enseña por absorción. Respeta la voz del usuario — no reescribe, no juzga, no impone.
-
-PERSONALIDAD
-Clara tiene voz propia: cálida, directa, culta, con buen gusto. Se adapta al tono del usuario (formal/casual, breve/expresivo) sin perder su esencia. Lee edad aproximada, nivel educativo y estado emocional del mensaje para ajustar su respuesta — pero nunca lo verbaliza ni estereotipa.
-
-REGLA DE ORO: CORRIGE LIGERO, CONVERSA NATURAL
-Clara NO da clases de gramática. Corrige de pasada y sigue conversando.
-
-Patrón por defecto (90%):
-1. Reacción natural al contenido
-2. Corrección mínima: "Se escribe así: [correcto]"
-3. Pregunta o comentario que continúe la conversación
-
-Clara explica gramática SOLO cuando:
-- El usuario pregunta explícitamente
-- Es la 3ra vez del mismo error
-- El error rompe la comunicación
-
-FORMATO DE RESPUESTA OBLIGATORIO
-Responde en JSON puro (sin markdown, sin backticks):
-{
-  "corrected": "texto corregido completo aquí",
-  "explanations": ["explicación conversacional breve"],
-  "tips": []
-}
-
-REGLAS DEL FORMATO:
-- "corrected": Versión corregida manteniendo tono del usuario
-- "explanations": 1-2 frases conversacionales máximo
-- "tips": Siempre array vacío []
-- Sin emojis, sin exclamaciones innecesarias
-- Sin elogios vacíos
-- Variar cierres: pregunta / observación / afirmación / humor sutil
-
-IDIOMA ACTIVO
-Clara SIEMPRE responde en: ${targetLang}
-
-FIRMEZA CUANDO IMPORTA
-Si detecta patrones que sabotean aprendizaje, lo señala con calidez pero directamente.
-
-LÍMITES
-Sí: Conversar sobre cualquier tema, empatía breve, responder al humor.
-No: Terapia, consejos médicos/legales, dramas extensos.
-
-## MEMORIA
-Al final de CADA respuesta JSON, genera un bloque de estado actualizado:
-
-|||ESTADO|||
-nivel: [principiante|intermedio|avanzado]
-tono: [formal|casual]
-idioma: ${targetLang}
-errores: [lista máx 3 errores recurrentes]
-notas: [datos relevantes del usuario, máx 3 observaciones]
-|||FIN|||
-
-Este bloque es interno, no lo menciones en la conversación.
-
-REGLA CRÍTICA - IDIOMA DE RESPUESTA:
-Responde EXCLUSIVAMENTE en ${targetLang}. Esto incluye:
-- El campo "explanations"
-- Cualquier pregunta o comentario
-- TODO el texto de tu respuesta
-
-Si ${targetLang} es "francés" y el usuario escribe "salut", responde:
-{"corrected": "Salut.", "explanations": ["Majuscule au début. Comment ça va?"], "tips": []}
-
-Si ${targetLang} es "español" y el usuario escribe "hola", responde:
-{"corrected": "Hola.", "explanations": ["Mayúscula al inicio. ¿Cómo estás?"], "tips": []}
-
-NUNCA respondas en un idioma diferente a ${targetLang}.`;
-
-    // Agregar estado si existe
-    if (session.estado) {
-      systemPrompt += `\n\n## ESTADO ACTUAL DEL USUARIO\n|||ESTADO|||\n${session.estado}\n|||FIN|||`;
-    }
-
-    // Construir mensajes con ventana
-    const messages: any[] = [{ role: "system", content: systemPrompt }];
-    
-    // Agregar ventana (últimos 2 turnos)
-    if (session.ventana.length > 0) {
-      messages.push(...session.ventana);
-    }
-    
-    // Agregar mensaje nuevo
-    messages.push({ role: "user", content: input });
-
-    const client = getOpenAI();
-    const completion = await client.chat.completions.create({
-      model: "gpt-4",
-      temperature: 0.7,
-      max_tokens: 500,
-      messages: messages,
+  const startTime = Date.now();
+  const requestId = crypto.randomUUID().slice(0, 8);
+  const authUser = (req as any).user;
+  
+  res.setHeader('X-Request-ID', requestId);
+  
+  const validation = validateChatRequest(req.body);
+  if (!validation.valid) {
+    return res.status(400).json({
+      corrected: '',
+      explanations: [fb('es').NO_TEXT],
+      language: 'es',
+      status: validation.error,
+      timestamp: new Date().toISOString(),
+      requestId,
     });
-
-    const rawResponse = completion.choices[0]?.message?.content || "";
-    console.log(`?? Respuesta (${rawResponse.length} chars)`);
-
-  // Verificar saldo de mensajes (solo si autenticado)
-  if (authUser?.id) {
-    const { bank } = await subscriptionManager.getUsage(authUser.id);
-    if (bank <= 0) {
-      return res.status(403).json({
-        corrected: "",
-        explanations: [fb(language).NO_MESSAGES || "Sin mensajes disponibles"],
-        tips: [],
-        language,
-        timestamp: new Date().toISOString(),
-        status: "no_messages",
-      });
-    }
   }
-    // Extraer estado
-    const nuevoEstado = extractEstado(rawResponse);
-    if (nuevoEstado) {
-      console.log(`?? Estado actualizado: ${nuevoEstado.substring(0, 50)}...`);
-  // Verificar saldo de mensajes (solo si autenticado)
-  if (authUser?.id) {
-    const { bank } = await subscriptionManager.getUsage(authUser.id);
-    if (bank <= 0) {
-      return res.status(403).json({
-        corrected: "",
-        explanations: [fb(language).NO_MESSAGES || "Sin mensajes disponibles"],
-        tips: [],
-        language,
-        timestamp: new Date().toISOString(),
-        status: "no_messages",
-      });
-    }
+  
+  const { input, language, userId, wasTrimmed, originalLength } = validation.data;
+  
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`[${requestId}] ${userId} ${language} ${originalLength}ch`);
   }
-    }
-
-    // Limpiar respuesta
-    const cleanedRaw = cleanResponse(rawResponse);
-
-    let parsedResponse: { corrected: string; explanations: string[]; tips: string[] };
-
+  
+  const billingState = { hasBalance: true, remaining: undefined, dbFailed: false };
+  
+  if (authUser?.id) {
     try {
-      const jsonCleaned = cleanedRaw
-        .replace(/```json\n?/g, "")
-        .replace(/```\n?/g, "")
-        .trim();
-
-      parsedResponse = JSON.parse(jsonCleaned);
-
-      if (!parsedResponse.corrected || !Array.isArray(parsedResponse.explanations)) {
-        throw new Error("Estructura inválida");
+      const usage = await subscriptionManager.getUsage(authUser.id);
+      billingState.remaining = usage.bank;
+      billingState.hasBalance = usage.bank > 0;
+      
+      if (!billingState.hasBalance) {
+        return res.status(403).json({
+          corrected: '',
+          explanations: [fb(language).NO_MESSAGES],
+          language,
+          status: 'no_messages',
+          remainingMessages: 0,
+          timestamp: new Date().toISOString(),
+          requestId,
+        });
       }
-
-      if (!parsedResponse.tips) {
-        parsedResponse.tips = [];
-      }
-    } catch (parseError) {
-      console.error("? Error parseando JSON:", parseError);
-      parsedResponse = {
-        corrected: input,
-        explanations: [fb(language).PROCESS_ERROR],
-        tips: [],
-      };
-    }
-
-    // Actualizar sesión
-    const assistantMsg = cleanedRaw;
-    updateSession(userId, input, assistantMsg, nuevoEstado);
-
-    console.log("? Respuesta procesada y memoria actualizada");
-
-  // Verificar saldo de mensajes (solo si autenticado)
-  if (authUser?.id) {
-    const { bank } = await subscriptionManager.getUsage(authUser.id);
-    if (bank <= 0) {
-      return res.status(403).json({
-        corrected: "",
-        explanations: [fb(language).NO_MESSAGES || "Sin mensajes disponibles"],
-        tips: [],
-        language,
-        timestamp: new Date().toISOString(),
-        status: "no_messages",
-      });
+    } catch {
+      billingState.dbFailed = true;
+      billingState.hasBalance = false;
     }
   }
-    return res.status(200).json({
-      corrected: parsedResponse.corrected,
-      explanations: parsedResponse.explanations,
-      tips: parsedResponse.tips,
-      language: language,
-      timestamp: new Date().toISOString(),
-      status: "ok",
-    });
+  
+  const session = getOrCreateSession(userId);
+  
+  let rawResponse: string;
+  try {
+    const client = getOpenAI();
+    const messages = [
+      { role: 'system', content: buildClaraPrompt(language) },
+      ...session.ventana,
+      { role: 'user', content: input },
+    ];
+    
+    const completion = await timeout(
+      client.chat.completions.create({
+        model: 'gpt-4o-mini',
+        temperature: 0.7,
+        max_tokens: 500,
+        messages,
+      }),
+      10000
+    );
+    
+    rawResponse = completion.choices[0]?.message?.content || '';
+    
+    if (!rawResponse.trim() || rawResponse.length > 10000) {
+      throw new Error('Respuesta OpenAI inválida');
+    }
+    
   } catch (error: any) {
-    console.error("? Error en /chat:", error);
-    return res.status(500).json({
-      corrected: "",
-      explanations: [fb(language).INTERNAL_ERROR],
-      tips: [],
-      language: language,
+    const responseTime = Date.now() - startTime;
+    
+    if (process.env.NODE_ENV === 'production') {
+      console.error(JSON.stringify({
+        type: 'openai_error',
+        requestId,
+        userId,
+        language,
+        error: error.message,
+        time: responseTime,
+      }));
+    }
+    
+    return res.status(200).json({
+      corrected: input,
+      explanations: [fb(language).PROCESS_ERROR],
+      language,
+      status: 'openai_error',
+      wasTrimmed,
+      responseTime,
       timestamp: new Date().toISOString(),
-      status: "error",
+      requestId,
     });
   }
+  
+  const claraResponse = parseClaraResponse(rawResponse, input, language);
+  
+  if (authUser?.id && billingState.hasBalance && !billingState.dbFailed) {
+    try {
+      const result = await subscriptionManager.consumeMessage(authUser.id);
+      billingState.remaining = result.remaining;
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(`[${requestId}] billing_error: ${error.message}`);
+      }
+    }
+  }
+  
+  setImmediate(() => {
+    try {
+      updateSession(userId, input, claraResponse.corrected);
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(`[${requestId}] session_update_warn: ${error.message}`);
+      }
+    }
+  });
+  
+  const responseTime = Date.now() - startTime;
+  const response: any = {
+    corrected: claraResponse.corrected,
+    explanations: claraResponse.explanations,
+    tips: [],
+    language,
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    responseTime,
+    wasTrimmed,
+    requestId,
+  };
+  
+  if (authUser?.id && billingState.remaining !== undefined) {
+    response.remainingMessages = billingState.remaining;
+    if (billingState.remaining <= 5 && billingState.remaining > 0) {
+      response.lowBalanceWarning = `Te quedan ${billingState.remaining} mensaje${billingState.remaining === 1 ? '' : 's'}`;
+    }
+  }
+  
+  if (process.env.NODE_ENV === 'production') {
+    console.log(JSON.stringify({
+      type: 'chat_request',
+      requestId,
+      userId,
+      language,
+      inputLength: originalLength,
+      responseTime,
+      status: 'ok',
+      remaining: billingState.remaining,
+    }));
+  } else {
+    console.log(`[${requestId}] ok ${responseTime}ms`);
+  }
+  
+  return res.status(200).json(response);
 }
+
 // ========== RUTAS CHAT (AMBAS) ==========
 app.post("/chat", chatHandler);
 app.post("/api/chat", chatHandler);
@@ -545,9 +467,3 @@ app.post("/api/chat", chatHandler);
     log(`?? ?? serving on port ${PORT}`);
   });
 })();
-
-
-
-
-
-

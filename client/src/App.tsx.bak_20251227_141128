@@ -18,7 +18,7 @@ type Message = {
   response: CorrectionResponse | null;
 };
 
-const MAX_MENSAJES_DIARIOS = 20;
+const MAX_MENSAJES_DIARIOS = 15;
 const MAX_CHARS = 280;
 const PHRASE_INTERVAL = 120000;
 
@@ -296,7 +296,7 @@ const App: React.FC = () => {
             <button
               key={lang.codigo}
               className={`lang-btn ${language === lang.codigo ? "active" : ""}`}
-              onClick={() => { setLanguage(lang.codigo); setLanguageJustChanged(true); }}
+              onClick={() => setLanguage(lang.codigo)}
               disabled={loading}
             >
               <span className="lang-flag">{lang.flag}</span>
@@ -433,5 +433,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-

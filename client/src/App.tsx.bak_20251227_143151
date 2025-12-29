@@ -296,7 +296,7 @@ const App: React.FC = () => {
             <button
               key={lang.codigo}
               className={`lang-btn ${language === lang.codigo ? "active" : ""}`}
-              onClick={() => { setLanguage(lang.codigo); setLanguageJustChanged(true); }}
+              onClick={() => setLanguage(lang.codigo)}
               disabled={loading}
             >
               <span className="lang-flag">{lang.flag}</span>
@@ -433,5 +433,4 @@ const App: React.FC = () => {
 };
 
 export default App;
-
 

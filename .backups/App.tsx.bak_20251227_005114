@@ -1,0 +1,314 @@
+﻿import React, { useEffect, useState, useCallback } from "react";
+import { fetchCorrection, type CorrectionResponse } from "./api";
+import { translations, type Language } from "./i18n";
+import { useAuth } from "./auth/AuthContext";
+
+const IDIOMAS: { codigo: Language; nombre: string; flag: string }[] = [
+  { codigo: "es", nombre: "Español", flag: "🇪🇸" },
+  { codigo: "en", nombre: "English", flag: "🇬🇧" },
+  { codigo: "fr", nombre: "Français", flag: "🇫🇷" },
+  { codigo: "it", nombre: "Italiano", flag: "🇮🇹" },
+  { codigo: "de", nombre: "Deutsch", flag: "🇩🇪" },
+  { codigo: "pt", nombre: "Português", flag: "🇧🇷" },
+];
+
+type Message = {
+  userText: string;
+  response: CorrectionResponse | null;
+};
+
+const MAX_CHARS = 280;
+const PHRASE_INTERVAL = 120000;
+
+const App: React.FC = () => {
+  const [language, setLanguage] = useState<Language>("es");
+  const [text, setText] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [remaining, setRemaining] = useState<number | null>(null);
+  const [limit, setLimit] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [phraseFade, setPhraseFade] = useState(true);
+  const { user, loading: authLoading, logout } = useAuth();
+
+useEffect(() => {
+  if (user?.messagesBank !== undefined) {
+    setRemaining(user.messagesBank);
+    setLimit(user.messagesBank);
+  }
+}, [user]);
+
+  const t = translations[language];
+
+  
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPhraseFade(false);
+      setTimeout(() => {
+        setPhraseIndex((prev) => (prev + 1) % t.phrases.length);
+        setPhraseFade(true);
+      }, 400);
+    }, PHRASE_INTERVAL);
+    return () => clearInterval(interval);
+  }, [t.phrases.length]);
+
+  useEffect(() => {
+    setPhraseIndex(0);
+    setPhraseFade(true);
+  }, [language]);
+
+  const handleLogin = useCallback((provider: "google" | "apple") => {
+    if (provider === "google") {
+      window.location.href = "/auth/google";
+    }
+    // Apple pendiente
+  }, []);
+
+  const handleLogout = useCallback(async () => {
+    await logout();
+    setMessages([]);
+    setText("");
+    setShowPaywall(false);
+    
+  }, [logout]);
+
+  const handleSend = useCallback(async () => {
+    if (!user || !text.trim() || text.length > MAX_CHARS || remaining !== null && remaining <= 0) return;
+    const msg = text.trim();
+    setText("");
+    setLoading(true);
+    setError(false);
+    setMessages((prev) => [...prev, { userText: msg, response: null }]);
+    try {
+      const res = await fetchCorrection(msg, language, user.id.toString());
+      setMessages((prev) => {
+        const updated = [...prev];
+        updated[updated.length - 1].response = res;
+        return updated;
+      });
+      if (res.remainingMessages !== undefined) {
+        setRemaining(res.remainingMessages);
+        if (res.remainingMessages === 0) setShowPaywall(true);
+      }
+    } catch {
+      setError(true);
+      setMessages((prev) => prev.slice(0, -1));
+    } finally {
+      setLoading(false);
+    }
+  }, [user, text, language, remaining]);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        handleSend();
+      }
+    },
+    [handleSend]
+  );
+
+  const handleRetry = useCallback(() => setError(false), []);
+
+  const handleSubscribe = useCallback(async (plan: "monthly" | "annual") => {
+    if (!user) return;
+    try {
+      const r = await fetch("/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ plan }),
+      });
+      const { url } = await r.json();
+      window.location.href = url;
+    } catch {}
+  }, [user]);
+
+  const progress = remaining !== null && limit ? (remaining / limit) * 100 : 0;
+
+  if (authLoading) return <div className="login-screen"><div className="login-card"><p>Cargando...</p></div></div>;
+  if (!user) {
+    return (
+      <div className="login-screen">
+        <div className="login-card">
+          <h1><span>Polyglot</span> Point</h1>
+          <p className="login-phrase">{t.phrases[0]}</p>
+          <div className="login-buttons">
+            <button className="btn-oauth btn-google" onClick={() => handleLogin("google")}>
+              <svg className="oauth-icon" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              {t.loginWithGoogle}
+            </button>
+            <button className="btn-oauth btn-apple" onClick={() => handleLogin("apple")}>
+              <svg className="oauth-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+              </svg>
+              {t.loginWithApple}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="app">
+      <div className="app-container">
+        <header className="app-header">
+          <div className="header-brand">
+            <h1><span>Polyglot</span> Point</h1>
+            <p className={`header-phrase ${phraseFade ? "fade-in" : "fade-out"}`}>
+              {t.phrases[phraseIndex]}
+            </p>
+          </div>
+          <div className="header-right">
+            <div className="header-stats">
+              <span className="messages-count">{t.messagesLeft}: {remaining ?? "–"}/{limit ?? "–"}</span>
+              <div className="progress-bar">
+                <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
+              </div>
+            </div>
+            <button className="btn-logout" onClick={handleLogout}>{t.logout}</button>
+          </div>
+        </header>
+
+        <div className="language-selector">
+          {IDIOMAS.map((lang) => (
+            <button
+              key={lang.codigo}
+              className={`lang-btn ${language === lang.codigo ? "active" : ""}`}
+              onClick={() => setLanguage(lang.codigo)}
+            >
+              <span className="lang-flag">{lang.flag}</span>
+              <span>{lang.nombre}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="chat-layout">
+          <div className="response-column">
+            <div className="response-card">
+              {error ? (
+                <div className="error-state">
+                  <div className="error-icon">🤖</div>
+                  <h3>{t.error.title}</h3>
+                  <p>{t.error.message}</p>
+                  <button className="btn-retry" onClick={handleRetry}>{t.error.retry}</button>
+                  <p className="error-contact">{t.error.contact}</p>
+                </div>
+              ) : messages.length === 0 && !loading ? (
+                <div className="response-placeholder">
+                  <p>{t.placeholder}</p>
+                </div>
+              ) : (
+                <div className="response-content">
+                  {messages.map((msg, i) => (
+                    <div key={i} className="message-pair">
+                      <div className="user-text">{msg.userText}</div>
+                      {msg.response ? (
+                        <div className="clara-response">
+                          <p className="corrected-text">{msg.response.corrected}</p>
+                          {msg.response.explanations?.map((exp, j) => (
+                            <p key={j} className="explanation">{exp}</p>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="clara-thinking">
+                          <span></span>
+                          <span></span>
+                          <span></span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="input-column">
+            <div className="input-card">
+              <textarea
+                value={text}
+                onChange={(e) => setText(e.target.value.slice(0, MAX_CHARS))}
+                onKeyDown={handleKeyDown}
+                placeholder={t.inputPlaceholder}
+                disabled={loading || remaining !== null && remaining <= 0}
+              />
+              <div className="input-footer">
+                <span className={`char-count ${text.length > 250 ? "warning" : ""}`}>
+                  {text.length}/{MAX_CHARS}
+                </span>
+                <button
+                  className={`btn-send ${text.trim() && !loading && remaining > 0 ? "active" : ""}`}
+                  onClick={handleSend}
+                  disabled={loading || !text.trim() || remaining !== null && remaining <= 0}
+                >
+                  {loading ? t.sending : t.send}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer className="app-footer">
+        <div className="footer-links">
+          <a href="/privacy-policy.html" target="_blank">{t.privacy}</a>
+          <a href="/terms" target="_blank">{t.terms}</a>
+        </div>
+      </footer>
+
+      {showPaywall && (
+        <div className="paywall-overlay">
+          <div className="paywall-card">
+            <h2>{t.paywall.title}</h2>
+            <p>{t.paywall.subtitle}</p>
+            <div className="plan-option featured" onClick={() => handleSubscribe("annual")}>
+              <span className="plan-badge">{t.paywall.annualSave}</span>
+              <div className="plan-header">
+                <span className="plan-name">{t.paywall.annualLabel}</span>
+                <span className="plan-price">{t.paywall.annualPrice}</span>
+              </div>
+              <p className="plan-desc">{t.paywall.annualDesc}</p>
+              <p className="plan-note">{t.paywall.annualPerMonth}</p>
+            </div>
+            <div className="plan-option" onClick={() => handleSubscribe("monthly")}>
+              <div className="plan-header">
+                <span className="plan-name">{t.paywall.monthlyLabel}</span>
+                <span className="plan-price">{t.paywall.monthlyPrice}</span>
+              </div>
+              <p className="plan-desc">{t.paywall.monthlyDesc}</p>
+            </div>
+            <button className="btn-subscribe" onClick={() => handleSubscribe("annual")}>
+              {t.paywall.subscribe}
+            </button>
+            <div className="paywall-footer">
+              <p className="reset-notice">{t.paywall.resetNotice}</p>
+              <button className="btn-later" onClick={() => setShowPaywall(false)}>
+                {t.paywall.maybeLater}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default App;
+
+
+
+
+
+
+
+
