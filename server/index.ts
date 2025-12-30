@@ -1,5 +1,4 @@
-﻿
-process.on("uncaughtException", (err) => console.error("UNCAUGHT EXCEPTION:", err));
+﻿process.on("uncaughtException", (err) => console.error("UNCAUGHT EXCEPTION:", err));
 process.on("unhandledRejection", (reason) => console.error("UNHANDLED REJECTION:", reason));
 
 import crypto from "crypto";
@@ -78,7 +77,8 @@ const sessionOptions: session.SessionOptions = {
   },
 };
 
-(async () => {
+// ✅ FIX: inicializar Redis store ANTES de montar session()
+async function initRedisSessionStore(): Promise<void> {
   if (!process.env.REDIS_URL) {
     if (isProduction) console.warn("REDIS_URL no configurado en producción (MemoryStore no recomendado)");
     return;
@@ -95,51 +95,12 @@ const sessionOptions: session.SessionOptions = {
     await redisClient.connect();
 
     sessionOptions.store = new RedisStore({ client: redisClient, prefix: "polyglot:session:" });
-    console.log("Session store: Redis");
+    console.log("Session store: Redis (READY before session middleware)");
   } catch (e) {
-    console.error("RedisStore error:", e);
+    console.error("RedisStore init error:", e);
     console.warn("Fallback a MemoryStore");
   }
-})().catch((e) => console.error("Redis init failed:", e));
-
-app.use(session(sessionOptions));
-app.use(passport.initialize());
-app.use(passport.session());
-
-// ---------- Auth ----------
-app.use("/auth", authRoutes);
-
-app.get("/api/me", (req: Request, res: Response) => {
-  if (req.isAuthenticated() && req.user) {
-    const user = req.user as any;
-    res.json({
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      planType: user.planType || "freemium",
-      messagesBank: user.messagesBank || 20,
-      remainingMessages: user.messagesBank || 20,
-    });
-    return;
-  }
-  res.status(401).json({ error: "No autenticado" });
-});
-
-app.post("/api/logout", (req: Request, res: Response) => {
-  req.logout((err) => {
-    if (err) return res.status(500).json({ error: "Error al cerrar sesión" });
-    req.session.destroy((err2) => {
-      if (err2) return res.status(500).json({ error: "Error destruyendo sesión" });
-      res.clearCookie("connect.sid", {
-        path: "/",
-        secure: isProduction,
-        sameSite: isProduction ? "none" : "lax",
-        httpOnly: true,
-      });
-      res.json({ message: "Sesión cerrada" });
-    });
-  });
-});
+}
 
 // ---------- Health ----------
 app.get("/health", (_req: Request, res: Response) => {
@@ -522,6 +483,48 @@ app.post("/api/chat", chatHandler);
 
 // ---------- Main ----------
 (async () => {
+  // ✅ FIX: Redis store listo ANTES de session()
+  await initRedisSessionStore();
+
+  app.use(session(sessionOptions));
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+  // ---------- Auth ----------
+  app.use("/auth", authRoutes);
+
+  app.get("/api/me", (req: Request, res: Response) => {
+    if (req.isAuthenticated && req.isAuthenticated() && req.user) {
+      const user = req.user as any;
+      res.json({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        planType: user.planType || "freemium",
+        messagesBank: user.messagesBank || 20,
+        remainingMessages: user.messagesBank || 20,
+      });
+      return;
+    }
+    res.status(401).json({ error: "No autenticado" });
+  });
+
+  app.post("/api/logout", (req: Request, res: Response) => {
+    req.logout((err) => {
+      if (err) return res.status(500).json({ error: "Error al cerrar sesión" });
+      req.session.destroy((err2) => {
+        if (err2) return res.status(500).json({ error: "Error destruyendo sesión" });
+        res.clearCookie("connect.sid", {
+          path: "/",
+          secure: isProduction,
+          sameSite: isProduction ? "none" : "lax",
+          httpOnly: true,
+        });
+        res.json({ message: "Sesión cerrada" });
+      });
+    });
+  });
+
   const server = await registerRoutes(app);
 
   // Error handler (AL FINAL, después de registerRoutes)
@@ -544,9 +547,9 @@ app.post("/api/chat", chatHandler);
     console.log("NODE_ENV: " + (process.env.NODE_ENV || "development"));
     console.log("SESSION_SECRET configurado: " + !!process.env.SESSION_SECRET);
     console.log("REDIS_URL configurado: " + !!process.env.REDIS_URL);
+    if (sessionOptions.store) console.log("Session store: Redis (attached)");
   });
 })().catch((e) => {
   console.error("BOOTSTRAP FAILED:", e);
   process.exit(1);
 });
-
