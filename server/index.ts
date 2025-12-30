@@ -1,459 +1,529 @@
-﻿process.on("uncaughtException", (err) => {
-  console.error("?? UNCAUGHT EXCEPTION AL ARRANCAR:", err);
-});
-process.on("unhandledRejection", (reason) => {
-  console.error("?? UNHANDLED REJECTION AL ARRANCAR:", reason);
-});
-import express, {
-  type Request,
-  type Response,
-  type NextFunction,
-} from "express";
+﻿
+process.on("uncaughtException", (err) => console.error("UNCAUGHT EXCEPTION:", err));
+process.on("unhandledRejection", (reason) => console.error("UNHANDLED REJECTION:", reason));
+
+import crypto from "crypto";
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import OpenAI from "openai";
+import session from "express-session";
+
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
-
-import { fb } from "./utils/i18n";
-import { subscriptionManager } from "./services/subscriptionManager";
-import session from "express-session";
 import passport from "./auth";
 import authRoutes from "./authRoutes";
 
-const app = express();
+import { fb } from "./utils/i18n";
+import { subscriptionManager } from "./services/subscriptionManager";
 
-// ========== HEALTHCHECK SENCILLO ==========
+const app = express();
+const isProduction = process.env.NODE_ENV === "production";
+
+app.set("trust proxy", 1);
+if (isProduction && !process.env.SESSION_SECRET) throw new Error("SESSION_SECRET faltante");
+
+// ---------- CORS (exactos + previews Vercel por regex) ----------
+const vercelProjectSlug = (process.env.VERCEL_PROJECT_SLUG || "polyglot-point").trim();
+const allowedExact = new Set(
+  [
+    process.env.CLIENT_URL,
+    process.env.FRONTEND_URL,
+    process.env.VERCEL_PROD_URL,
+    "http://localhost:5173",
+    "https://polyglot-point-production.up.railway.app",
+  ]
+    .filter(Boolean)
+    .map((s) => String(s).replace(/\/$/, ""))
+);
+
+const allowedPatterns: RegExp[] = [
+  new RegExp(`^https:\\/\\/${vercelProjectSlug}(?:-[a-z0-9-]+)?\\.vercel\\.app$`, "i"),
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // curl/postman/SSR
+      const o = String(origin).replace(/\/$/, "");
+      if (allowedExact.has(o)) return callback(null, true);
+      if (allowedPatterns.some((re) => re.test(o))) return callback(null, true);
+      console.warn("CORS bloqueado:", origin);
+      return callback(new Error("CORS bloqueado"));
+    },
+    credentials: true,
+  })
+);
+
+// ---------- Body ----------
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+
+// ---------- Session + Redis (si hay REDIS_URL) ----------
+const sessionOptions: session.SessionOptions = {
+  secret: process.env.SESSION_SECRET || "polyglot-dev-secret-change-in-prod",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    httpOnly: true,
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+  },
+};
+
+(async () => {
+  if (!process.env.REDIS_URL) {
+    if (isProduction) console.warn("REDIS_URL no configurado en producción (MemoryStore no recomendado)");
+    return;
+  }
+
+  try {
+    // connect-redis v7: { RedisStore }
+    // redis v4: { createClient }
+    const { RedisStore } = require("connect-redis");
+    const { createClient } = require("redis");
+
+    const redisClient = createClient({ url: process.env.REDIS_URL });
+    redisClient.on("error", (e: any) => console.error("Redis error:", e));
+    await redisClient.connect();
+
+    sessionOptions.store = new RedisStore({ client: redisClient, prefix: "polyglot:session:" });
+    console.log("Session store: Redis");
+  } catch (e) {
+    console.error("RedisStore error:", e);
+    console.warn("Fallback a MemoryStore");
+  }
+})().catch((e) => console.error("Redis init failed:", e));
+
+app.use(session(sessionOptions));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// ---------- Auth ----------
+app.use("/auth", authRoutes);
+
+app.get("/api/me", (req: Request, res: Response) => {
+  if (req.isAuthenticated() && req.user) {
+    const user = req.user as any;
+    res.json({
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      planType: user.planType || "freemium",
+      messagesBank: user.messagesBank || 20,
+      remainingMessages: user.messagesBank || 20,
+    });
+    return;
+  }
+  res.status(401).json({ error: "No autenticado" });
+});
+
+app.post("/api/logout", (req: Request, res: Response) => {
+  req.logout((err) => {
+    if (err) return res.status(500).json({ error: "Error al cerrar sesión" });
+    req.session.destroy((err2) => {
+      if (err2) return res.status(500).json({ error: "Error destruyendo sesión" });
+      res.clearCookie("connect.sid", {
+        path: "/",
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax",
+        httpOnly: true,
+      });
+      res.json({ message: "Sesión cerrada" });
+    });
+  });
+});
+
+// ---------- Health ----------
 app.get("/health", (_req: Request, res: Response) => {
   res.status(200).json({
     status: "ok",
     source: "polyglot-point-backend",
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || "development",
+    sessionConfigured: !!process.env.SESSION_SECRET,
+    redisConfigured: !!process.env.REDIS_URL,
   });
 });
 
-// ========== SISTEMA DE MEMORIA SIMPLIFICADO ==========
-interface Session {
+// ---------- Chat session (memoria corta) ----------
+interface ChatSession {
   userId: string;
-  ventana: Array<{ role: 'user' | 'assistant'; content: string }>;
+  ventana: Array<{ role: "user" | "assistant"; content: string }>;
   lastAccess: number;
 }
 
-const sessions = new Map<string, Session>();
+const chatSessions = new Map<string, ChatSession>();
 const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
 const SESSION_CLEANUP_MS = 5 * 60 * 1000;
 
-// Limpieza automática cada 5 minutos
 let cleanupInterval: NodeJS.Timeout | null = null;
 
 function startSessionCleanup() {
   if (cleanupInterval) return;
   cleanupInterval = setInterval(() => {
     const now = Date.now();
-    for (const [id, session] of sessions.entries()) {
-      if (now - session.lastAccess > SESSION_TIMEOUT_MS) {
-        sessions.delete(id);
-      }
+    for (const [id, s] of chatSessions.entries()) {
+      if (now - s.lastAccess > SESSION_TIMEOUT_MS) chatSessions.delete(id);
     }
   }, SESSION_CLEANUP_MS);
 }
-
 startSessionCleanup();
 
-function getOrCreateSession(userId: string): Session {
+function getOrCreateChatSession(userId: string): ChatSession {
   const now = Date.now();
-  
-  if (sessions.size > 1000) {
-    for (const [id, session] of sessions.entries()) {
-      if (now - session.lastAccess > SESSION_TIMEOUT_MS) {
-        sessions.delete(id);
-      }
+
+  if (chatSessions.size > 1000) {
+    for (const [id, s] of chatSessions.entries()) {
+      if (now - s.lastAccess > SESSION_TIMEOUT_MS) chatSessions.delete(id);
     }
   }
-  
-  if (!sessions.has(userId)) {
-    sessions.set(userId, {
-      userId,
-      ventana: [],
-      lastAccess: now,
-    });
+
+  const existing = chatSessions.get(userId);
+  if (existing) {
+    existing.lastAccess = now;
+    return existing;
   }
-  
-  const session = sessions.get(userId)!;
-  session.lastAccess = now;
-  return session;
+
+  const created: ChatSession = { userId, ventana: [], lastAccess: now };
+  chatSessions.set(userId, created);
+  return created;
 }
 
-function updateSession(userId: string, userMsg: string, assistantMsg: string): void {
-  const session = getOrCreateSession(userId);
-  session.ventana = [
-    { role: 'user', content: userMsg },
-    { role: 'assistant', content: assistantMsg }
+function updateChatSession(userId: string, userMsg: string, assistantMsg: string): void {
+  const s = getOrCreateChatSession(userId);
+  s.ventana = [
+    { role: "user", content: userMsg },
+    { role: "assistant", content: assistantMsg },
   ];
-  session.lastAccess = Date.now();
+  s.lastAccess = Date.now();
 }
 
-// ========== HELPERS ==========
+// ---------- Helpers ----------
 function timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return Promise.race([
     promise,
-    new Promise<never>((_, reject) => 
-      setTimeout(() => reject(new Error(`Timeout after ${ms}ms`)), ms)
-    )
+    new Promise<never>((_, reject) => setTimeout(() => reject(new Error(`Timeout after ${ms}ms`)), ms)),
   ]);
 }
 
 function buildClaraPrompt(language: string): string {
-  const LANG_MAP: Record<string, string> = {
-    es: "español", en: "inglés", fr: "francés",
-    it: "italiano", de: "alemán", pt: "portugués",
+  const LANG: Record<string, string> = {
+    es: "español",
+    en: "inglés",
+    fr: "francés",
+    it: "italiano",
+    de: "alemán",
+    pt: "portugués",
   };
-  const targetLang = LANG_MAP[language] || "español";
-  
-  return `Clara es tutora de escritura. Corrige escribiendo bien dentro de la conversación.
-Responde siempre en ${targetLang}. Voz: cálida, directa, culta.
-Devuelve solo JSON: {"corrected":"...","explanations":[],"tips":[]}`;
+  const target = LANG[language] || "español";
+
+  // 4 líneas, sin markdown, JSON estricto
+  return [
+    "Clara es tutora de escritura.",
+    `Responde siempre en ${target}.`,
+    'Devuelve SOLO JSON estricto con llaves: corrected, explanations, tips.',
+    'Formato: {"corrected":"...","explanations":["..."],"tips":["..."]}',
+  ].join("\n");
 }
 
-// ========== PARSER INFALIBLE ==========
-function parseClaraResponse(raw: string, fallback: string, language: string): {
-  corrected: string;
-  explanations: string[];
-} {
-  const clean = raw.trim();
-  
-  const extractionStrategies = [
+function parseClaraResponse(
+  raw: string,
+  fallback: string,
+  language: string
+): { corrected: string; explanations: string[]; tips: string[] } {
+  const clean = (raw || "").trim();
+
+  const extractionStrategies: Array<() => string | null> = [
     () => clean.match(/^\s*(\{[\s\S]*\})\s*$/)?.[1] || null,
     () => clean.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/)?.[1] || null,
     () => {
-      const start = clean.indexOf('{');
+      const start = clean.indexOf("{");
       if (start === -1) return null;
       let depth = 0;
       for (let i = start; i < clean.length; i++) {
-        if (clean[i] === '{') depth++;
-        if (clean[i] === '}') depth--;
-        if (depth === 0) {
-          let jsonStr = clean.slice(start, i + 1);
-          const lastBrace = jsonStr.lastIndexOf('}');
-          if (lastBrace !== jsonStr.length - 1) {
-            jsonStr = jsonStr.slice(0, lastBrace + 1);
-          }
-          return jsonStr;
-        }
+        if (clean[i] === "{") depth++;
+        if (clean[i] === "}") depth--;
+        if (depth === 0) return clean.slice(start, i + 1);
       }
       return null;
     },
     () => {
       const matches = [...clean.matchAll(/\{[\s\S]*?\}/g)];
-      return matches.length > 0 
-        ? matches.reduce((a, b) => a[0].length > b[0].length ? a : b)[0]
-        : null;
-    }
+      if (!matches.length) return null;
+      return matches.reduce((a, b) => (a[0].length > b[0].length ? a : b))[0];
+    },
   ];
-  
+
   for (const strategy of extractionStrategies) {
     const jsonStr = strategy();
     if (!jsonStr) continue;
-    
+
     try {
       const parsed = JSON.parse(jsonStr) as any;
-      if (parsed?.corrected && typeof parsed.corrected === 'string') {
+      if (typeof parsed?.corrected === "string") {
         const explanations = Array.isArray(parsed.explanations)
-          ? parsed.explanations.slice(0, 1).filter((e: any) => typeof e === 'string')
+          ? parsed.explanations.filter((x: any) => typeof x === "string").slice(0, 1)
           : [];
-        
+        const tips = Array.isArray(parsed.tips) ? parsed.tips.filter((x: any) => typeof x === "string").slice(0, 2) : [];
         return {
           corrected: parsed.corrected.trim(),
-          explanations: explanations.map((e: string) => e.trim()),
+          explanations: explanations.map((s: string) => s.trim()),
+          tips: tips.map((s: string) => s.trim()),
         };
       }
     } catch {
       continue;
     }
   }
-  
+
   return {
     corrected: fallback,
-    explanations: [fb(language).PROCESS_ERROR || 'Error procesando respuesta'],
+    explanations: [fb(language).PROCESS_ERROR || "Error procesando respuesta"],
+    tips: [],
   };
 }
 
-// ========== VALIDACIÓN ==========
 function validateChatRequest(body: unknown): {
   valid: boolean;
-  error?: string;
-  data?: {
-    input: string;
-    language: string;
-    userId: string;
-    wasTrimmed: boolean;
-    originalLength: number;
-  };
+  error?: "invalid_request" | "no_text";
+  data?: { input: string; language: string; userId: string; wasTrimmed: boolean; originalLength: number };
 } {
-  if (!body || typeof body !== 'object') {
-    return { valid: false, error: 'invalid_request' };
-  }
-  
+  if (!body || typeof body !== "object") return { valid: false, error: "invalid_request" };
   const req = body as Record<string, unknown>;
-  
-  let language = 'es';
-  if (typeof req.language === 'string') {
-    const cleanLang = req.language.trim().toLowerCase();
-    if (['es', 'en', 'fr', 'it', 'de', 'pt'].includes(cleanLang)) {
-      language = cleanLang;
-    }
+
+  let language = "es";
+  if (typeof req.language === "string") {
+    const l = req.language.trim().toLowerCase();
+    if (["es", "en", "fr", "it", "de", "pt"].includes(l)) language = l;
   }
-  
-  const message = typeof req.message === 'string' ? req.message.trim() : '';
-  const text = typeof req.text === 'string' ? req.text.trim() : '';
+
+  const message = typeof req.message === "string" ? req.message.trim() : "";
+  const text = typeof req.text === "string" ? req.text.trim() : "";
   const inputRaw = message || text;
+  if (!inputRaw) return { valid: false, error: "no_text" };
+
   const originalLength = inputRaw.length;
   const input = inputRaw.slice(0, 280);
   const wasTrimmed = originalLength > 280;
-  
-  let userId = 'anonymous';
-  if (typeof req.userId === 'string' && req.userId.trim()) {
-    userId = req.userId.trim().slice(0, 100);
-  }
-  
-  return {
-    valid: true,
-    data: { input, language, userId, wasTrimmed, originalLength },
-  };
+
+  let userId = "anonymous";
+  if (typeof req.userId === "string" && req.userId.trim()) userId = req.userId.trim().slice(0, 100);
+
+  return { valid: true, data: { input, language, userId, wasTrimmed, originalLength } };
 }
 
+// ---------- OpenAI ----------
 let openaiClient: OpenAI | null = null;
 
 const getOpenAI = (): OpenAI => {
-  if (!openaiClient) {
-    const key = process.env.OPENAI_API_KEY;
-    if (!key) {
-      throw new Error("OPENAI_API_KEY no configurada");
-    }
-    openaiClient = new OpenAI({ apiKey: key });
-  }
+  if (openaiClient) return openaiClient;
+  const key = process.env.OPENAI_API_KEY || process.env.POLYGLOT_OPENAI_KEY;
+  if (!key) throw new Error("OPENAI_API_KEY no configurada");
+  openaiClient = new OpenAI({ apiKey: key });
   return openaiClient;
 };
 
-// ========== MIDDLEWARE ==========
-app.use(cors());
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true, limit: "10mb" }));
-
-// ========== AUTH SESSION ==========
-app.use(session({
-  secret: process.env.SESSION_SECRET || "polyglot-dev-secret-change-in-prod",
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: 30 * 24 * 60 * 60 * 1000 },
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(authRoutes);
-
+// ---------- Request log (sobrio) ----------
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
 
-  const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
-  };
+  const originalJson = res.json.bind(res);
+  let captured: any;
+  res.json = ((body: any) => {
+    captured = body;
+    return originalJson(body);
+  }) as any;
 
   res.on("finish", () => {
+    if (!path.startsWith("/api") && path !== "/chat") return;
     const duration = Date.now() - start;
-    if (path.startsWith("/api") || path === "/chat") {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse).substring(0, 80)}`;
-      }
-      log(logLine);
-    }
+    const preview = captured ? JSON.stringify(captured).slice(0, 80) : "";
+    log(`${req.method} ${path} ${res.statusCode} in ${duration}ms${preview ? " :: " + preview : ""}`);
   });
 
   next();
 });
 
-// ========== HANDLER CLARA 10/10 ==========
+// ---------- Chat ----------
 async function chatHandler(req: Request, res: Response) {
   const startTime = Date.now();
   const requestId = crypto.randomUUID().slice(0, 8);
-  const authUser = (req as any).user;
-  
-  res.setHeader('X-Request-ID', requestId);
-  
+  res.setHeader("X-Request-ID", requestId);
+
   const validation = validateChatRequest(req.body);
   if (!validation.valid) {
+    const lang =
+      req.body && typeof req.body === "object" && "language" in req.body && typeof (req.body as any).language === "string"
+        ? String((req.body as any).language).trim().toLowerCase()
+        : "es";
+    const safeLang = ["es", "en", "fr", "it", "de", "pt"].includes(lang) ? lang : "es";
     return res.status(400).json({
-      corrected: '',
-      explanations: [fb('es').NO_TEXT],
-      language: 'es',
+      corrected: "",
+      explanations: [fb(safeLang).NO_TEXT],
+      tips: [],
+      language: safeLang,
       status: validation.error,
       timestamp: new Date().toISOString(),
       requestId,
     });
   }
-  
-  const { input, language, userId, wasTrimmed, originalLength } = validation.data;
-  
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`[${requestId}] ${userId} ${language} ${originalLength}ch`);
-  }
-  
-  const billingState = { hasBalance: true, remaining: undefined, dbFailed: false };
-  
+
+  const { input, language, userId, wasTrimmed, originalLength } = validation.data!;
+  const authUser = (req as any).user;
+
+  const billingState: { remaining?: number; dbFailed: boolean } = { dbFailed: false };
+
   if (authUser?.id) {
     try {
       const usage = await subscriptionManager.getUsage(authUser.id);
       billingState.remaining = usage.bank;
-      billingState.hasBalance = usage.bank > 0;
-      
-      if (!billingState.hasBalance) {
+
+      if (usage.bank <= 0) {
         return res.status(403).json({
-          corrected: '',
+          corrected: "",
           explanations: [fb(language).NO_MESSAGES],
+          tips: [],
           language,
-          status: 'no_messages',
+          status: "no_messages",
           remainingMessages: 0,
           timestamp: new Date().toISOString(),
           requestId,
         });
       }
     } catch {
+      // DB falló: NO bloqueamos, NO consumimos, avisamos al frontend.
       billingState.dbFailed = true;
-      billingState.hasBalance = false;
     }
   }
-  
-  const session = getOrCreateSession(userId);
-  
-  let rawResponse: string;
+
+  const chatSession = getOrCreateChatSession(userId);
+
+  let rawResponse = "";
   try {
     const client = getOpenAI();
     const messages = [
-      { role: 'system', content: buildClaraPrompt(language) },
-      ...session.ventana,
-      { role: 'user', content: input },
+      { role: "system", content: buildClaraPrompt(language) as any },
+      ...chatSession.ventana,
+      { role: "user", content: input as any },
     ];
-    
+
     const completion = await timeout(
       client.chat.completions.create({
-        model: 'gpt-4o-mini',
-        temperature: 0.7,
+        model: "gpt-4o-mini",
+        temperature: 0.25,
         max_tokens: 500,
-        messages,
+        messages: messages as any,
       }),
       10000
     );
-    
-    rawResponse = completion.choices[0]?.message?.content || '';
-    
-    if (!rawResponse.trim() || rawResponse.length > 10000) {
-      throw new Error('Respuesta OpenAI inválida');
-    }
-    
+
+    rawResponse = completion.choices[0]?.message?.content || "";
+    if (!rawResponse.trim() || rawResponse.length > 10000) throw new Error("Respuesta OpenAI inválida");
   } catch (error: any) {
     const responseTime = Date.now() - startTime;
-    
-    if (process.env.NODE_ENV === 'production') {
-      console.error(JSON.stringify({
-        type: 'openai_error',
-        requestId,
-        userId,
-        language,
-        error: error.message,
-        time: responseTime,
-      }));
+
+    if (isProduction) {
+      console.error(
+        JSON.stringify({
+          type: "openai_error",
+          requestId,
+          userId,
+          language,
+          error: error?.message || String(error),
+          time: responseTime,
+        })
+      );
     }
-    
+
     return res.status(200).json({
       corrected: input,
       explanations: [fb(language).PROCESS_ERROR],
+      tips: [],
       language,
-      status: 'openai_error',
+      status: "openai_error",
       wasTrimmed,
       responseTime,
       timestamp: new Date().toISOString(),
       requestId,
     });
   }
-  
-  const claraResponse = parseClaraResponse(rawResponse, input, language);
-  
-  if (authUser?.id && billingState.hasBalance && !billingState.dbFailed) {
+
+  const clara = parseClaraResponse(rawResponse, input, language);
+
+  if (authUser?.id && !billingState.dbFailed) {
     try {
       const result = await subscriptionManager.consumeMessage(authUser.id);
       billingState.remaining = result.remaining;
-    } catch (error) {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn(`[${requestId}] billing_error: ${error.message}`);
-      }
+    } catch (e) {
+      // si falla el consumo, degradamos (pero ya respondimos al usuario con su corrección)
+      billingState.dbFailed = true;
     }
   }
-  
+
   setImmediate(() => {
     try {
-      updateSession(userId, input, claraResponse.corrected);
-    } catch (error) {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn(`[${requestId}] session_update_warn: ${error.message}`);
-      }
-    }
+      updateChatSession(userId, input, clara.corrected);
+    } catch {}
   });
-  
+
   const responseTime = Date.now() - startTime;
+
   const response: any = {
-    corrected: claraResponse.corrected,
-    explanations: claraResponse.explanations,
-    tips: [],
+    corrected: clara.corrected,
+    explanations: clara.explanations,
+    tips: clara.tips,
     language,
-    status: 'ok',
+    status: billingState.dbFailed ? "billing_degraded" : "ok",
     timestamp: new Date().toISOString(),
     responseTime,
     wasTrimmed,
     requestId,
   };
-  
+
+  if (billingState.dbFailed) response.billingDegraded = true;
+
   if (authUser?.id && billingState.remaining !== undefined) {
     response.remainingMessages = billingState.remaining;
-    if (billingState.remaining <= 5 && billingState.remaining > 0) {
-      response.lowBalanceWarning = `Te quedan ${billingState.remaining} mensaje${billingState.remaining === 1 ? '' : 's'}`;
+    if (billingState.remaining > 0 && billingState.remaining <= 5) {
+      response.lowBalanceWarning = `Te quedan ${billingState.remaining} mensaje${billingState.remaining === 1 ? "" : "s"}`;
     }
   }
-  
-  if (process.env.NODE_ENV === 'production') {
-    console.log(JSON.stringify({
-      type: 'chat_request',
-      requestId,
-      userId,
-      language,
-      inputLength: originalLength,
-      responseTime,
-      status: 'ok',
-      remaining: billingState.remaining,
-    }));
-  } else {
-    console.log(`[${requestId}] ok ${responseTime}ms`);
+
+  if (isProduction) {
+    console.log(
+      JSON.stringify({
+        type: "chat_request",
+        requestId,
+        userId,
+        language,
+        inputLength: originalLength,
+        responseTime,
+        status: response.status,
+        remaining: billingState.remaining,
+        dbFailed: billingState.dbFailed,
+      })
+    );
   }
-  
+
   return res.status(200).json(response);
 }
 
-// ========== RUTAS CHAT (AMBAS) ==========
 app.post("/chat", chatHandler);
 app.post("/api/chat", chatHandler);
 
+// ---------- Main ----------
 (async () => {
   const server = await registerRoutes(app);
 
+  // Error handler (AL FINAL, después de registerRoutes)
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+    const status = err?.status || err?.statusCode || 500;
+    const message = err?.message || "Internal Server Error";
+    console.error("[EXPRESS_ERROR]", err);
     res.status(status).json({ message });
-    throw err;
   });
 
   if (app.get("env") === "development") {
@@ -464,6 +534,12 @@ app.post("/api/chat", chatHandler);
 
   const PORT = Number(process.env.PORT) || 3000;
   server.listen(PORT, "0.0.0.0", () => {
-    log(`?? ?? serving on port ${PORT}`);
+    console.log("SERVIDOR INICIADO en puerto " + PORT);
+    console.log("NODE_ENV: " + (process.env.NODE_ENV || "development"));
+    console.log("SESSION_SECRET configurado: " + !!process.env.SESSION_SECRET);
+    console.log("REDIS_URL configurado: " + !!process.env.REDIS_URL);
   });
-})();
+})().catch((e) => {
+  console.error("BOOTSTRAP FAILED:", e);
+  process.exit(1);
+});
