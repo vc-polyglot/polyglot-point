@@ -21,7 +21,13 @@ const app = express();
 const isProduction = process.env.NODE_ENV === "production";
 
 app.set("trust proxy", 1);
-if (isProduction && !process.env.SESSION_SECRET) throw new Error("SESSION_SECRET faltante");
+const SESSION_SECRET =
+  process.env.SESSION_SECRET ||
+  (isProduction ? crypto.randomBytes(32).toString("hex") : "polyglot-dev-secret-change-in-prod");
+
+if (isProduction && !process.env.SESSION_SECRET) {
+  console.error("[WARN] SESSION_SECRET faltante en producción; usando secreto efímero. Configura SESSION_SECRET en Railway.");
+}
 
 // ---------- CORS (exactos + previews Vercel por regex) ----------
 const vercelProjectSlug = (process.env.VERCEL_PROJECT_SLUG || "polyglot-point").trim();
@@ -61,7 +67,7 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // ---------- Session + Redis (si hay REDIS_URL) ----------
 const sessionOptions: session.SessionOptions = {
-  secret: process.env.SESSION_SECRET || "polyglot-dev-secret-change-in-prod",
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -543,3 +549,4 @@ app.post("/api/chat", chatHandler);
   console.error("BOOTSTRAP FAILED:", e);
   process.exit(1);
 });
+
