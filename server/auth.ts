@@ -4,10 +4,12 @@ import { db } from "./db";
 import { users } from "../shared/schema";
 import { eq } from "drizzle-orm";
 
-const __cid = (process.env.GOOGLE_CLIENT_ID || "").trim();
-const __csec = (process.env.GOOGLE_CLIENT_SECRET || "").trim();
+// FIX: Fallback a _X para Railway (primero sin _X, luego _X)
+const __cid = (process.env.GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID_X || "").trim();
+const __csec = (process.env.GOOGLE_CLIENT_SECRET || process.env.GOOGLE_CLIENT_SECRET_X || "").trim();
 const __cb = (
-  process.env.GOOGLE_CALLBACK_URL ||
+  process.env.GOOGLE_CALLBACK_URL || 
+  process.env.GOOGLE_CALLBACK_URL_X ||
   (process.env.NODE_ENV === "production"
     ? "/auth/google/callback"
     : "http://localhost:5173/auth/google/callback")
@@ -18,11 +20,14 @@ console.log("[env google]", {
   idLen: __cid.length,
   secretLen: __csec.length,
   cbLen: __cb.length,
+  hasId_X: !!process.env.GOOGLE_CLIENT_ID_X,
+  hasSecret_X: !!process.env.GOOGLE_CLIENT_SECRET_X,
 });
 
-if (!__cid || !__csec || !__cb) {
-  console.warn("[auth] Google OAuth OFF (missing env vars)");
+if (!__cid || !__csec) {
+  console.warn("[auth] Google OAuth OFF (missing client id/secret)");
 } else {
+  console.log("[auth] Google OAuth ON");
   passport.use(
     new GoogleStrategy(
       {
