@@ -57578,6 +57578,47 @@ var pool = new import_pg3.Pool({
   ...needsSSL ? { ssl: { rejectUnauthorized: false } } : {}
 });
 var db = drizzle(pool, { schema: schema_exports });
+async function ensureTables() {
+  try {
+    console.log("[db] Verificando estructura de la base de datos...");
+    const tableExists = await db.execute(sql`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'users'
+      )
+    `);
+    if (!tableExists.rows[0].exists) {
+      console.log("[db] Creando tabla 'users'...");
+      await db.execute(sql`
+        CREATE TABLE users (
+          id SERIAL PRIMARY KEY,
+          email VARCHAR(255) NOT NULL,
+          google_id VARCHAR(255),
+          apple_id VARCHAR(255),
+          name VARCHAR(255),
+          avatar_url TEXT,
+          plan_type VARCHAR(50) NOT NULL DEFAULT 'freemium',
+          messages_bank INTEGER NOT NULL DEFAULT 20,
+          messages_used_this_period INTEGER NOT NULL DEFAULT 0,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+      `);
+      await db.execute(sql`CREATE UNIQUE INDEX users_email_unique ON users (email)`);
+      await db.execute(sql`CREATE UNIQUE INDEX users_google_id_unique ON users (google_id)`);
+      await db.execute(sql`CREATE UNIQUE INDEX users_apple_id_unique ON users (apple_id)`);
+      console.log("[db] Tabla 'users' creada con \xEDndices");
+    } else {
+      console.log("[db] Tabla 'users' ya existe");
+    }
+  } catch (error40) {
+    console.error("[db] Error al verificar/crear tablas:", error40.message);
+  }
+}
+if (process.env.NODE_ENV !== "test") {
+  ensureTables();
+}
 
 // server/services/subscriptionManager.ts
 var SubscriptionManager = class {
@@ -57610,43 +57651,59 @@ var import_express_session = __toESM(require_express_session(), 1);
 // server/auth.ts
 var import_passport = __toESM(require_lib5(), 1);
 var import_passport_google_oauth20 = __toESM(require_lib7(), 1);
-import_passport.default.use(
-  new import_passport_google_oauth20.Strategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.NODE_ENV === "production" ? "/auth/google/callback" : "http://localhost:5173/auth/google/callback"
-    },
-    async (_accessToken, _refreshToken, profile, done) => {
-      try {
-        const email3 = profile.emails?.[0]?.value;
-        if (!email3) {
-          return done(new Error("No email from Google"), void 0);
-        }
-        let user = await db.select().from(users).where(eq(users.googleId, profile.id)).then((r) => r[0]);
-        if (!user) {
-          user = await db.select().from(users).where(eq(users.email, email3)).then((r) => r[0]);
-          if (user) {
-            await db.update(users).set({ googleId: profile.id }).where(eq(users.id, user.id));
-          } else {
-            const [newUser] = await db.insert(users).values({
-              email: email3,
-              googleId: profile.id,
-              name: profile.displayName,
-              avatarUrl: profile.photos?.[0]?.value,
-              planType: "freemium",
-              messagesBank: 20
-            }).returning();
-            user = newUser;
+var __cid = (process.env.GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID_X || "").trim();
+var __csec = (process.env.GOOGLE_CLIENT_SECRET || process.env.GOOGLE_CLIENT_SECRET_X || "").trim();
+var __cb = (process.env.GOOGLE_CALLBACK_URL || process.env.GOOGLE_CALLBACK_URL_X || (process.env.NODE_ENV === "production" ? "/auth/google/callback" : "http://localhost:5173/auth/google/callback")).trim();
+console.log("[env google]", {
+  keys: Object.keys(process.env).filter((k) => k.startsWith("GOOGLE_")),
+  idLen: __cid.length,
+  secretLen: __csec.length,
+  cbLen: __cb.length,
+  hasId_X: !!process.env.GOOGLE_CLIENT_ID_X,
+  hasSecret_X: !!process.env.GOOGLE_CLIENT_SECRET_X
+});
+if (!__cid || !__csec) {
+  console.warn("[auth] Google OAuth OFF (missing client id/secret)");
+} else {
+  console.log("[auth] Google OAuth ON");
+  import_passport.default.use(
+    new import_passport_google_oauth20.Strategy(
+      {
+        clientID: __cid,
+        clientSecret: __csec,
+        callbackURL: __cb
+      },
+      async (_accessToken, _refreshToken, profile, done) => {
+        try {
+          const email3 = profile.emails?.[0]?.value;
+          if (!email3) {
+            return done(new Error("No email from Google"), void 0);
           }
+          let user = await db.select().from(users).where(eq(users.googleId, profile.id)).then((r) => r[0]);
+          if (!user) {
+            user = await db.select().from(users).where(eq(users.email, email3)).then((r) => r[0]);
+            if (user) {
+              await db.update(users).set({ googleId: profile.id }).where(eq(users.id, user.id));
+            } else {
+              const [newUser] = await db.insert(users).values({
+                email: email3,
+                googleId: profile.id,
+                name: profile.displayName,
+                avatarUrl: profile.photos?.[0]?.value,
+                planType: "freemium",
+                messagesBank: 20
+              }).returning();
+              user = newUser;
+            }
+          }
+          return done(null, user);
+        } catch (error40) {
+          return done(error40, void 0);
         }
-        return done(null, user);
-      } catch (error40) {
-        return done(error40, void 0);
       }
-    }
-  )
-);
+    )
+  );
+}
 import_passport.default.serializeUser((user, done) => {
   done(null, user.id);
 });
