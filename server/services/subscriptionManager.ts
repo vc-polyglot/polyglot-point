@@ -1,4 +1,4 @@
-﻿import { db } from "../db";
+import { db } from "../db";
 import { users, PLAN_CONFIG } from "../../shared/schema";
 import { eq, and, sql } from "drizzle-orm";
 
@@ -17,7 +17,7 @@ class SubscriptionManager {
   }
 
   async consumeMessage(userId: number): Promise<{ remaining: number; success: boolean }> {
-    // ATÓMICO: descuenta solo si messagesBank > 0
+    // ATOMICO: descuenta solo si messagesBank > 0
     const [updated] = await db
       .update(users)
       .set({
