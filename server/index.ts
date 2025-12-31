@@ -29,7 +29,6 @@ if (isProduction && !process.env.SESSION_SECRET) {
   console.error("[WARN] SESSION_SECRET faltante en producción; usando secreto efímero. Configura SESSION_SECRET en Railway.");
 }
 
-// ---------- CORS (exactos + previews Vercel por regex) ----------
 const vercelProjectSlug = (process.env.VERCEL_PROJECT_SLUG || "polyglot-point").trim();
 const allowedExact = new Set(
   [
@@ -50,7 +49,7 @@ const allowedPatterns: RegExp[] = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin) return callback(null, true); // curl/postman/SSR
+      if (!origin) return callback(null, true);
       const o = String(origin).replace(/\/$/, "");
       if (allowedExact.has(o)) return callback(null, true);
       if (allowedPatterns.some((re) => re.test(o))) return callback(null, true);
@@ -61,11 +60,9 @@ app.use(
   })
 );
 
-// ---------- Body ----------
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-// ---------- Session + Redis (si hay REDIS_URL) ----------
 const sessionOptions: session.SessionOptions = {
   secret: SESSION_SECRET,
   resave: false,
@@ -78,7 +75,6 @@ const sessionOptions: session.SessionOptions = {
   },
 };
 
-// ✅ FIX: inicializar Redis store ANTES de montar session()
 async function initRedisSessionStore(): Promise<void> {
   if (!process.env.REDIS_URL) {
     if (isProduction) console.warn("REDIS_URL no configurado en producción (MemoryStore no recomendado)");
@@ -86,8 +82,6 @@ async function initRedisSessionStore(): Promise<void> {
   }
 
   try {
-    // connect-redis v7: { RedisStore }
-    // redis v4: { createClient }
     const { RedisStore } = require("connect-redis");
     const { createClient } = require("redis");
 
@@ -103,7 +97,6 @@ async function initRedisSessionStore(): Promise<void> {
   }
 }
 
-// ---------- Health ----------
 app.get("/health", (_req: Request, res: Response) => {
   res.status(200).json({
     status: "ok",
@@ -115,7 +108,6 @@ app.get("/health", (_req: Request, res: Response) => {
   });
 });
 
-// ---------- Chat session (memoria corta) ----------
 interface ChatSession {
   userId: string;
   ventana: Array<{ role: "user" | "assistant"; content: string }>;
@@ -168,7 +160,6 @@ function updateChatSession(userId: string, userMsg: string, assistantMsg: string
   s.lastAccess = Date.now();
 }
 
-// ---------- Helpers ----------
 function timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return Promise.race([
     promise,
@@ -292,7 +283,6 @@ function validateChatRequest(body: unknown): {
   return { valid: true, data: { input, language, userId, wasTrimmed, originalLength } };
 }
 
-// ---------- OpenAI ----------
 let openaiClient: OpenAI | null = null;
 
 const getOpenAI = (): OpenAI => {
@@ -303,7 +293,6 @@ const getOpenAI = (): OpenAI => {
   return openaiClient;
 };
 
-// ---------- Request log (sobrio) ----------
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -325,7 +314,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// ---------- Chat ----------
 async function chatHandler(req: Request, res: Response) {
   const startTime = Date.now();
   const requestId = crypto.randomUUID().slice(0, 8);
@@ -372,7 +360,6 @@ async function chatHandler(req: Request, res: Response) {
         });
       }
     } catch {
-      // DB falló: NO bloqueamos, NO consumimos, avisamos al frontend.
       billingState.dbFailed = true;
     }
   }
@@ -390,12 +377,12 @@ async function chatHandler(req: Request, res: Response) {
 
     const completion = await timeout(
       client.chat.completions.create({
-  model: "gpt-4o-mini",
-  temperature: 0.25,
-  max_tokens: 500,
-  messages: messages as any,
-  response_format: { type: "json_object" },
-}),
+        model: "gpt-4o-mini",
+        temperature: 0.25,
+        max_tokens: 500,
+        messages: messages as any,
+        response_format: { type: "json_object" },
+      }),
       10000
     );
 
@@ -433,19 +420,19 @@ async function chatHandler(req: Request, res: Response) {
   const clara = parseClaraResponse(rawResponse, input, language);
 
   if (authUser?.id && !billingState.dbFailed) {
-  try {
-    console.log("[BILLING] userId:", authUser.id);
-    const result = await subscriptionManager.consumeMessage(authUser.id);
-    console.log("[BILLING] result:", JSON.stringify(result));
-    billingState.remaining = result.remaining;
-  } catch (e: any) {
-    console.error("[BILLING] Error:", e.message);
-    console.error("[BILLING] Stack:", e.stack);
-    billingState.dbFailed = true;
+    try {
+      console.log("[BILLING] userId:", authUser.id);
+      const result = await subscriptionManager.consumeMessage(authUser.id);
+      console.log("[BILLING] result:", JSON.stringify(result));
+      billingState.remaining = result.remaining;
+    } catch (e: any) {
+      console.error("[BILLING] Error:", e.message);
+      console.error("[BILLING] Stack:", e.stack);
+      billingState.dbFailed = true;
+    }
+  } else {
+    console.log("[BILLING] Skip. authUser:", authUser?.id, "dbFailed:", billingState.dbFailed);
   }
-} else {
-  console.log("[BILLING] Skip. authUser:", authUser?.id, "dbFailed:", billingState.dbFailed);
-}
 
   setImmediate(() => {
     try {
@@ -495,27 +482,23 @@ async function chatHandler(req: Request, res: Response) {
   return res.status(200).json(response);
 }
 
-app.post("/chat", chatHandler);
-app.post("/api/chat", chatHandler);
-
-// ---------- Main ----------
 (async () => {
-  // ✅ FIX: Redis store listo ANTES de session()
   await initRedisSessionStore();
 
   app.use(session(sessionOptions));
   app.use(passport.initialize());
   app.use(passport.session());
 
-  // ---------- Auth ----------
+  app.post("/api/chat", chatHandler);
+
   app.use("/auth", authRoutes);
 
   app.get("/api/me", (req: Request, res: Response) => {
-  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
-  res.setHeader("Pragma", "no-cache");
-  res.setHeader("Expires", "0");
-  res.setHeader("Surrogate-Control", "no-store");
-  res.setHeader("Vary", "Cookie");
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+    res.setHeader("Surrogate-Control", "no-store");
+    res.setHeader("Vary", "Cookie");
     if (req.isAuthenticated && req.isAuthenticated() && req.user) {
       const user = req.user as any;
       res.json({
@@ -549,7 +532,6 @@ app.post("/api/chat", chatHandler);
 
   const server = await registerRoutes(app);
 
-  // Error handler (AL FINAL, después de registerRoutes)
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err?.status || err?.statusCode || 500;
     const message = err?.message || "Internal Server Error";
@@ -575,4 +557,3 @@ app.post("/api/chat", chatHandler);
   console.error("BOOTSTRAP FAILED:", e);
   process.exit(1);
 });
-
