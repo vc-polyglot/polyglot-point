@@ -17,6 +17,7 @@ import { fb } from "./utils/i18n";
 import { subscriptionManager } from "./services/subscriptionManager";
 
 const app = express();
+app.set("etag", false);
 const isProduction = process.env.NODE_ENV === "production";
 
 app.set("trust proxy", 1);
@@ -494,6 +495,11 @@ app.post("/api/chat", chatHandler);
   app.use("/auth", authRoutes);
 
   app.get("/api/me", (req: Request, res: Response) => {
+  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+  res.setHeader("Surrogate-Control", "no-store");
+  res.setHeader("Vary", "Cookie");
     if (req.isAuthenticated && req.isAuthenticated() && req.user) {
       const user = req.user as any;
       res.json({
@@ -553,3 +559,4 @@ app.post("/api/chat", chatHandler);
   console.error("BOOTSTRAP FAILED:", e);
   process.exit(1);
 });
+
