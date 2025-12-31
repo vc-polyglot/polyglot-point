@@ -85328,11 +85328,17 @@ async function chatHandler(req, res) {
   const clara = parseClaraResponse(rawResponse, input, language);
   if (authUser?.id && !billingState.dbFailed) {
     try {
+      console.log("[BILLING] userId:", authUser.id);
       const result = await subscriptionManager.consumeMessage(authUser.id);
+      console.log("[BILLING] result:", JSON.stringify(result));
       billingState.remaining = result.remaining;
     } catch (e) {
+      console.error("[BILLING] Error:", e.message);
+      console.error("[BILLING] Stack:", e.stack);
       billingState.dbFailed = true;
     }
+  } else {
+    console.log("[BILLING] Skip. authUser:", authUser?.id, "dbFailed:", billingState.dbFailed);
   }
   setImmediate(() => {
     try {

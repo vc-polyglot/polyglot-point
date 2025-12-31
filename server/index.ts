@@ -433,14 +433,19 @@ async function chatHandler(req: Request, res: Response) {
   const clara = parseClaraResponse(rawResponse, input, language);
 
   if (authUser?.id && !billingState.dbFailed) {
-    try {
-      const result = await subscriptionManager.consumeMessage(authUser.id);
-      billingState.remaining = result.remaining;
-    } catch (e) {
-      // si falla el consumo, degradamos (pero ya respondimos al usuario con su corrección)
-      billingState.dbFailed = true;
-    }
+  try {
+    console.log("[BILLING] userId:", authUser.id);
+    const result = await subscriptionManager.consumeMessage(authUser.id);
+    console.log("[BILLING] result:", JSON.stringify(result));
+    billingState.remaining = result.remaining;
+  } catch (e: any) {
+    console.error("[BILLING] Error:", e.message);
+    console.error("[BILLING] Stack:", e.stack);
+    billingState.dbFailed = true;
   }
+} else {
+  console.log("[BILLING] Skip. authUser:", authUser?.id, "dbFailed:", billingState.dbFailed);
+}
 
   setImmediate(() => {
     try {
