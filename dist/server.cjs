@@ -62123,20 +62123,22 @@ var import_path29 = __toESM(require("path"), 1);
 var import_express = __toESM(require_express2(), 1);
 function setupVite(app2, _server) {
   serveStatic(app2);
-  console.log("\u2705 setupVite ejecutado (modo producci\xF3n)");
+  console.log("setupVite ejecutado (modo producci\xF3n)");
 }
 function serveStatic(app2) {
   const publicPath = import_path29.default.resolve(process.cwd(), "dist/public");
-  console.log("\u{1F6E3}\uFE0F Sirviendo est\xE1ticos desde:", publicPath);
+  console.log("Sirviendo est\xE1ticos desde:", publicPath);
   app2.use(import_express.default.static(publicPath));
   app2.get("*", (req, res) => {
-    if (!req.path.startsWith("/api") && !req.path.startsWith("/chat")) {
-      res.sendFile(import_path29.default.join(publicPath, "index.html"));
+    const p = req.path || "";
+    if (!p.startsWith("/api") && !p.startsWith("/chat") && !p.startsWith("/auth")) {
+      return res.sendFile(import_path29.default.join(publicPath, "index.html"));
     }
+    return res.status(404).end();
   });
 }
 function log(message) {
-  console.log("\u{1F4DD}", message);
+  console.log(message);
 }
 
 // server/auth.ts
@@ -84938,11 +84940,14 @@ var auth_default = import_passport.default;
 // server/authRoutes.ts
 var import_express2 = __toESM(require_express2(), 1);
 var router = (0, import_express2.Router)();
-router.get("/auth/google", auth_default.authenticate("google", {
-  scope: ["profile", "email"]
-}));
 router.get(
-  "/auth/google/callback",
+  "/google",
+  auth_default.authenticate("google", {
+    scope: ["profile", "email"]
+  })
+);
+router.get(
+  "/google/callback",
   auth_default.authenticate("google", {
     failureRedirect: "/?error=auth_failed"
   }),
@@ -84950,30 +84955,6 @@ router.get(
     res.redirect("/?auth=success");
   }
 );
-router.get("/api/me", (req, res) => {
-  if (req.isAuthenticated() && req.user) {
-    const user = req.user;
-    res.json({
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      avatarUrl: user.avatarUrl,
-      planType: user.planType,
-      messagesBank: user.messagesBank,
-      activeLanguage: user.activeLanguage
-    });
-  } else {
-    res.status(401).json({ error: "Not authenticated" });
-  }
-});
-router.post("/api/logout", (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      return res.status(500).json({ error: "Logout failed" });
-    }
-    res.json({ success: true });
-  });
-});
 var authRoutes_default = router;
 
 // server/utils/i18n.ts
@@ -85020,6 +85001,7 @@ var subscriptionManager = new SubscriptionManager();
 process.on("uncaughtException", (err) => console.error("UNCAUGHT EXCEPTION:", err));
 process.on("unhandledRejection", (reason) => console.error("UNHANDLED REJECTION:", reason));
 var app = (0, import_express3.default)();
+app.set("etag", false);
 var isProduction = process.env.NODE_ENV === "production";
 app.set("trust proxy", 1);
 var SESSION_SECRET = process.env.SESSION_SECRET || (isProduction ? import_crypto.default.randomBytes(32).toString("hex") : "polyglot-dev-secret-change-in-prod");
@@ -85065,7 +85047,7 @@ var sessionOptions = {
     maxAge: 30 * 24 * 60 * 60 * 1e3
   }
 };
-(async () => {
+async function initRedisSessionStore() {
   if (!process.env.REDIS_URL) {
     if (isProduction) console.warn("REDIS_URL no configurado en producci\xF3n (MemoryStore no recomendado)");
     return;
@@ -85077,46 +85059,12 @@ var sessionOptions = {
     redisClient.on("error", (e) => console.error("Redis error:", e));
     await redisClient.connect();
     sessionOptions.store = new RedisStore({ client: redisClient, prefix: "polyglot:session:" });
-    console.log("Session store: Redis");
+    console.log("Session store: Redis (READY before session middleware)");
   } catch (e) {
-    console.error("RedisStore error:", e);
+    console.error("RedisStore init error:", e);
     console.warn("Fallback a MemoryStore");
   }
-})().catch((e) => console.error("Redis init failed:", e));
-app.use((0, import_express_session.default)(sessionOptions));
-app.use(auth_default.initialize());
-app.use(auth_default.session());
-app.use("/auth", authRoutes_default);
-app.get("/api/me", (req, res) => {
-  if (req.isAuthenticated() && req.user) {
-    const user = req.user;
-    res.json({
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      planType: user.planType || "freemium",
-      messagesBank: user.messagesBank || 20,
-      remainingMessages: user.messagesBank || 20
-    });
-    return;
-  }
-  res.status(401).json({ error: "No autenticado" });
-});
-app.post("/api/logout", (req, res) => {
-  req.logout((err) => {
-    if (err) return res.status(500).json({ error: "Error al cerrar sesi\xF3n" });
-    req.session.destroy((err2) => {
-      if (err2) return res.status(500).json({ error: "Error destruyendo sesi\xF3n" });
-      res.clearCookie("connect.sid", {
-        path: "/",
-        secure: isProduction,
-        sameSite: isProduction ? "none" : "lax",
-        httpOnly: true
-      });
-      res.json({ message: "Sesi\xF3n cerrada" });
-    });
-  });
-});
+}
 app.get("/health", (_req, res) => {
   res.status(200).json({
     status: "ok",
@@ -85181,12 +85129,31 @@ function buildClaraPrompt(language) {
     pt: "portugu\xE9s"
   };
   const target = LANG[language] || "espa\xF1ol";
-  return [
-    "Clara es tutora de escritura.",
-    `Responde siempre en ${target}.`,
-    "Devuelve SOLO JSON estricto con llaves: corrected, explanations, tips.",
-    'Formato: {"corrected":"...","explanations":["..."],"tips":["..."]}'
-  ].join("\n");
+  return `Clara es tutora de escritura de Polyglot Point, no correctora autom\xE1tica.
+Corrige escribiendo bien dentro de la conversaci\xF3n y hace avanzar el di\xE1logo.
+Respeta la voz del usuario: no reescribe, no juzga, no impone.
+
+Regla \xFAnica: Clara corrige escribiendo bien.
+La conversaci\xF3n parte del mensaje del usuario; Clara no inventa temas ni intenciones.
+Si el mensaje es ambiguo, puede proponer suavemente una posible intenci\xF3n sin afirmarla.
+
+Toda la voz de Clara va en "corrected": ah\xED vive la conversaci\xF3n completa.
+"explanations" es opcional: aparece solo cuando el cambio no es evidente o cuando el usuario podr\xEDa confundirse.
+Debe ser breve, humana, sin teor\xEDa y nunca sustituye la conversaci\xF3n.
+"tips" es opcional: solo si hay algo \xFAtil que agregar.
+
+Clara no da clases. Ense\xF1a por absorci\xF3n.
+Si el usuario pregunta, si un error se repite, o si la comprensi\xF3n se rompe, puede explicar con una sola frase clara.
+
+Si Clara se equivoca: "Disculpa, me equivoqu\xE9. La forma correcta es X." Y contin\xFAa naturalmente.
+
+Clara responde SIEMPRE en ${target}, sin importar en qu\xE9 idioma escriba el usuario.
+Si el usuario escribe en otro idioma, lo reconoce con naturalidad e invita a seguir en ${target}.
+
+Voz: c\xE1lida, directa, culta. Sin emojis, sin elogios vac\xEDos, sin muletillas.
+
+Clara devuelve SOLO un JSON v\xE1lido, sin texto antes o despu\xE9s:
+{"corrected":"...","explanations":[],"tips":[]}`;
 }
 function parseClaraResponse(raw, fallback, language) {
   const clean = (raw || "").trim();
@@ -85419,6 +85386,46 @@ async function chatHandler(req, res) {
 app.post("/chat", chatHandler);
 app.post("/api/chat", chatHandler);
 (async () => {
+  await initRedisSessionStore();
+  app.use((0, import_express_session.default)(sessionOptions));
+  app.use(auth_default.initialize());
+  app.use(auth_default.session());
+  app.use("/auth", authRoutes_default);
+  app.get("/api/me", (req, res) => {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+    res.setHeader("Surrogate-Control", "no-store");
+    res.setHeader("Vary", "Cookie");
+    if (req.isAuthenticated && req.isAuthenticated() && req.user) {
+      const user = req.user;
+      res.json({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        planType: user.planType || "freemium",
+        messagesBank: user.messagesBank || 20,
+        remainingMessages: user.messagesBank || 20
+      });
+      return;
+    }
+    res.status(401).json({ error: "No autenticado" });
+  });
+  app.post("/api/logout", (req, res) => {
+    req.logout((err) => {
+      if (err) return res.status(500).json({ error: "Error al cerrar sesi\xF3n" });
+      req.session.destroy((err2) => {
+        if (err2) return res.status(500).json({ error: "Error destruyendo sesi\xF3n" });
+        res.clearCookie("connect.sid", {
+          path: "/",
+          secure: isProduction,
+          sameSite: isProduction ? "none" : "lax",
+          httpOnly: true
+        });
+        res.json({ message: "Sesi\xF3n cerrada" });
+      });
+    });
+  });
   const server = await registerRoutes(app);
   app.use((err, _req, res, _next) => {
     const status = err?.status || err?.statusCode || 500;
@@ -85437,6 +85444,7 @@ app.post("/api/chat", chatHandler);
     console.log("NODE_ENV: " + (process.env.NODE_ENV || "development"));
     console.log("SESSION_SECRET configurado: " + !!process.env.SESSION_SECRET);
     console.log("REDIS_URL configurado: " + !!process.env.REDIS_URL);
+    if (sessionOptions.store) console.log("Session store: Redis (attached)");
   });
 })().catch((e) => {
   console.error("BOOTSTRAP FAILED:", e);
