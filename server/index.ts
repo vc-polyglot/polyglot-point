@@ -390,11 +390,12 @@ async function chatHandler(req: Request, res: Response) {
 
     const completion = await timeout(
       client.chat.completions.create({
-        model: "gpt-4o-mini",
-        temperature: 0.25,
-        max_tokens: 500,
-        messages: messages as any,
-      }),
+  model: "gpt-4o-mini",
+  temperature: 0.25,
+  max_tokens: 500,
+  messages: messages as any,
+  response_format: { type: "json_object" },
+}),
       10000
     );
 

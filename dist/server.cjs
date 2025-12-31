@@ -85292,7 +85292,8 @@ async function chatHandler(req, res) {
         model: "gpt-4o-mini",
         temperature: 0.25,
         max_tokens: 500,
-        messages: messages2
+        messages: messages2,
+        response_format: { type: "json_object" }
       }),
       1e4
     );
