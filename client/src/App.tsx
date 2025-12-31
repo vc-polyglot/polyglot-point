@@ -330,12 +330,7 @@ const App: React.FC = () => {
 
                       {msg.response ? (
                         <div className="clara-response">
-                          <p className="corrected-text">{msg.response.corrected}</p>
-                          {msg.response.explanations?.map((exp, j) => (
-                            <p key={j} className="explanation">
-                              {exp}
-                            </p>
-                          ))}
+                          <p className="clara-text">{msg.response.corrected}</p>
                         </div>
                       ) : (
                         <div className="clara-thinking">
