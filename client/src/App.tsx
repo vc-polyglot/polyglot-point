@@ -23,7 +23,6 @@ const MAX_CHARS = 280;
 const PHRASE_INTERVAL = 120000;
 
 const makeMsgId = () => {
-  // Evita colisión si dos clicks caen en el mismo ms
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID();
   return `msg_${Date.now()}_${Math.random().toString(16).slice(2)}`;
 };
@@ -48,6 +47,8 @@ const App: React.FC = () => {
   const t = translations[language];
 
   const phraseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   // ---------- USAGE ----------
   useEffect(() => {
@@ -60,18 +61,21 @@ const App: React.FC = () => {
         if (nextRemaining <= 0) setShowPaywall(true);
       })
       .catch(() => {
-        // En prod quizá prefieras silencio, en dev ayuda.
         console.warn("No se pudo cargar usage");
         setRemaining(MAX_MENSAJES_DIARIOS);
       });
   }, [user?.id]);
 
-  // Si por cualquier ruta remaining baja a 0, forzamos paywall
   useEffect(() => {
     if (user && remaining <= 0) setShowPaywall(true);
   }, [user, remaining]);
 
-  // ---------- FRASES (interval + timeout, con cleanup real) ----------
+  // ---------- AUTOSCROLL ----------
+  useEffect(() => {
+    chatContainerRef.current?.scrollTo({ top: chatContainerRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages]);
+
+  // ---------- FRASES ----------
   useEffect(() => {
     const interval = setInterval(() => {
       setPhraseFade(false);
@@ -124,7 +128,6 @@ const App: React.FC = () => {
       const clean = msg.trim();
       if (!clean) return;
 
-      // El UI ya bloquea cuando remaining <= 0, pero por si acaso:
       if (remaining <= 0) {
         setShowPaywall(true);
         return;
@@ -156,6 +159,7 @@ const App: React.FC = () => {
         setMessages((prev) => prev.filter((m) => m.id !== msgId));
       } finally {
         setLoading(false);
+        textareaRef.current?.focus();
       }
     },
     [user?.id, language, remaining]
@@ -201,7 +205,7 @@ const App: React.FC = () => {
         const data = (await r.json()) as { url?: string };
         if (data.url) window.location.href = data.url;
       } catch {
-        // Si quieres, aquí puedes setear error visible en el paywall
+        // error handling
       }
     },
     [user?.id]
@@ -296,7 +300,7 @@ const App: React.FC = () => {
             <button
               key={lang.codigo}
               className={`lang-btn ${language === lang.codigo ? "active" : ""}`}
-              onClick={() => { setLanguage(lang.codigo); setLanguageJustChanged(true); }}
+              onClick={() => setLanguage(lang.codigo)}
               disabled={loading}
             >
               <span className="lang-flag">{lang.flag}</span>
@@ -323,14 +327,14 @@ const App: React.FC = () => {
                   <p>{t.placeholder}</p>
                 </div>
               ) : (
-                <div className="response-content">
+                <div className="response-content" ref={chatContainerRef}>
                   {messages.map((msg) => (
                     <div key={msg.id} className="message-pair">
                       <div className="user-text">{msg.userText}</div>
 
                       {msg.response ? (
                         <div className="clara-response">
-                          <p className="clara-text">{msg.response.corrected}</p>
+                          <p className="clara-text" dangerouslySetInnerHTML={{ __html: msg.response.corrected.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') }} />
                         </div>
                       ) : (
                         <div className="clara-thinking">
@@ -349,6 +353,7 @@ const App: React.FC = () => {
           <div className="input-column">
             <div className="input-card">
               <textarea
+                ref={textareaRef}
                 value={text}
                 onChange={(e) => setText(e.target.value.slice(0, MAX_CHARS))}
                 onKeyDown={handleKeyDown}
@@ -410,7 +415,6 @@ const App: React.FC = () => {
             <div className="paywall-footer">
               <p className="reset-notice">{t.paywall.resetNotice}</p>
 
-              {/* Si remaining=0, no dejes cerrarlo (si lo cierras, el usuario queda “atorado”) */}
               <button
                 className="btn-later"
                 onClick={() => {
@@ -428,5 +432,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-
