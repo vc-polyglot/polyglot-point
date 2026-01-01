@@ -1,4 +1,4 @@
-ï»¿process.on("uncaughtException", (err) => console.error("UNCAUGHT EXCEPTION:", err));
+process.on("uncaughtException", (err) => console.error("UNCAUGHT EXCEPTION:", err));
 process.on("unhandledRejection", (reason) => console.error("UNHANDLED REJECTION:", reason));
 
 import crypto from "crypto";
@@ -26,7 +26,7 @@ const SESSION_SECRET =
   (isProduction ? crypto.randomBytes(32).toString("hex") : "polyglot-dev-secret-change-in-prod");
 
 if (isProduction && !process.env.SESSION_SECRET) {
-  console.error("[WARN] SESSION_SECRET faltante en producciÃ³n; usando secreto efÃ­mero. Configura SESSION_SECRET en Railway.");
+  console.error("[WARN] SESSION_SECRET faltante en producción; usando secreto efímero. Configura SESSION_SECRET en Railway.");
 }
 
 const vercelProjectSlug = (process.env.VERCEL_PROJECT_SLUG || "polyglot-point").trim();
@@ -77,7 +77,7 @@ const sessionOptions: session.SessionOptions = {
 
 async function initRedisSessionStore(): Promise<void> {
   if (!process.env.REDIS_URL) {
-    if (isProduction) console.warn("REDIS_URL no configurado en producciÃ³n (MemoryStore no recomendado)");
+    if (isProduction) console.warn("REDIS_URL no configurado en producción (MemoryStore no recomendado)");
     return;
   }
 
@@ -169,32 +169,32 @@ function timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 
 function buildClaraPrompt(language: string): string {
   const LANG: Record<string, string> = {
-    es: "espaÃ±ol",
-    en: "inglÃ©s",
-    fr: "francÃ©s",
+    es: "español",
+    en: "inglés",
+    fr: "francés",
     it: "italiano",
-    de: "alemÃ¡n",
-    pt: "portuguÃ©s",
+    de: "alemán",
+    pt: "portugués",
   };
-  const target = LANG[language] || "espaÃ±ol";
+  const target = LANG[language] || "español";
 
   return `Eres Clara, tutora de escritura de Polyglot Point. Respondes SIEMPRE en ${target}.
 
-Tu estilo: corriges errores de forma natural dentro de la conversaciÃ³n, como amiga culta. No eres eco ni correctora automÃ¡tica.
+Tu estilo: corriges errores de forma natural dentro de la conversación, como amiga culta. No eres eco ni correctora automática.
 
-CÃ³mo respondes:
-- Si hay errores: corriges brevemente ("Se escribe 'cocina' con c") y luego continÃºas la conversaciÃ³n
+Cómo respondes:
+- Si hay errores: corriges brevemente ("Se escribe 'cocina' con c") y luego continúas la conversación
 - Si no hay errores: solo conversas naturalmente
-- Siempre haces avanzar el diÃ¡logo con preguntas o comentarios relevantes
+- Siempre haces avanzar el diálogo con preguntas o comentarios relevantes
 
-Tono: cÃ¡lido, directo, paciente. Sin emojis, sin elogios vacÃ­os.
+Tono: cálido, directo, paciente. Sin emojis, sin elogios vacíos.
 
-Devuelve SOLO JSON vÃ¡lido:
-{"corrected":"Tu respuesta completa aquÃ­ - correcciÃ³n integrada + conversaciÃ³n natural"}
+Devuelve SOLO JSON válido:
+{"corrected":"Tu respuesta completa aquí - corrección integrada + conversación natural"}
 
 Ejemplo:
-Usuario: "me gustarÃ­a sabe mas de cosina"
-{"corrected":"'Saber' con r, 'mÃ¡s' con tilde, 'cocina' con c. Â¿Cocina mexicana o italiana? Â¿QuÃ© te gustarÃ­a aprender?"}`;
+Usuario: "me gustaría sabe mas de cosina"
+{"corrected":"'Saber' con r, 'más' con tilde, 'cocina' con c. ¿Cocina mexicana o italiana? ¿Qué te gustaría aprender?"}`;
 }
 
 function parseClaraResponse(
@@ -387,7 +387,7 @@ async function chatHandler(req: Request, res: Response) {
     );
 
     rawResponse = completion.choices[0]?.message?.content || "";
-    if (!rawResponse.trim() || rawResponse.length > 10000) throw new Error("Respuesta OpenAI invÃ¡lida");
+    if (!rawResponse.trim() || rawResponse.length > 10000) throw new Error("Respuesta OpenAI inválida");
   } catch (error: any) {
     const responseTime = Date.now() - startTime;
 
@@ -516,16 +516,16 @@ async function chatHandler(req: Request, res: Response) {
 
   app.post("/api/logout", (req: Request, res: Response) => {
     req.logout((err) => {
-      if (err) return res.status(500).json({ error: "Error al cerrar sesiÃ³n" });
+      if (err) return res.status(500).json({ error: "Error al cerrar sesión" });
       req.session.destroy((err2) => {
-        if (err2) return res.status(500).json({ error: "Error destruyendo sesiÃ³n" });
+        if (err2) return res.status(500).json({ error: "Error destruyendo sesión" });
         res.clearCookie("connect.sid", {
           path: "/",
           secure: isProduction,
           sameSite: isProduction ? "none" : "lax",
           httpOnly: true,
         });
-        res.json({ message: "SesiÃ³n cerrada" });
+        res.json({ message: "Sesión cerrada" });
       });
     });
   });
