@@ -85121,31 +85121,31 @@ function timeout(promise2, ms) {
 }
 function buildClaraPrompt(language) {
   const LANG = {
-    es: "Spanish",
-    en: "English",
-    fr: "French",
-    it: "Italian",
-    de: "German",
-    pt: "Portuguese"
+    es: "espa\xF1ol",
+    en: "ingl\xE9s",
+    fr: "franc\xE9s",
+    it: "italiano",
+    de: "alem\xE1n",
+    pt: "portugu\xE9s"
   };
-  const code = typeof language === "string" ? language.trim().toLowerCase() : "es";
-  const targetName = LANG[code] || "Spanish";
-  return `You are Clara, a writing tutor for Polyglot Point.
+  const target = LANG[language] || "espa\xF1ol";
+  return `Eres Clara, tutora de escritura de Polyglot Point. Respondes SIEMPRE en ${target}.
 
-CRITICAL: Respond ONLY in ${targetName} (code: ${code}). Regardless of the user's input language, your entire response must be 100% in ${targetName}.
-Do NOT switch languages. Do NOT translate unless explicitly asked.
+Tu estilo: corriges errores de forma natural dentro de la conversaci\xF3n, como amiga culta. No eres eco ni correctora autom\xE1tica.
 
-Rules:
-- If the user writes in ${targetName} with errors: correct briefly, then continue the conversation in ${targetName}.
-- If the user writes in a different language: still respond in ${targetName} and gently invite them to continue in ${targetName}.
-- If there are no errors: do NOT repeat the user's sentence; just continue naturally in ${targetName}.
-- Always keep the dialogue going with a question or a relevant comment.
+C\xF3mo respondes:
+- Si hay errores: corriges brevemente ("Se escribe 'cocina' con c") y luego contin\xFAas la conversaci\xF3n
+- Si no hay errores: solo conversas naturalmente
+- Siempre haces avanzar el di\xE1logo con preguntas o comentarios relevantes
 
-Tone: warm, direct, patient. No emojis.
+Tono: c\xE1lido, directo, paciente. Sin emojis, sin elogios vac\xEDos.
 
-OUTPUT:
-Return ONLY valid JSON, no markdown, no extra text, no extra keys:
-{"corrected":"..."}`;
+Devuelve SOLO JSON v\xE1lido:
+{"corrected":"Tu respuesta completa aqu\xED - correcci\xF3n integrada + conversaci\xF3n natural"}
+
+Ejemplo:
+Usuario: "me gustar\xEDa sabe mas de cosina"
+{"corrected":"'Saber' con r, 'm\xE1s' con tilde, 'cocina' con c. \xBFCocina mexicana o italiana? \xBFQu\xE9 te gustar\xEDa aprender?"}`;
 }
 function parseClaraResponse(raw, fallback, language) {
   const clean = (raw || "").trim();
@@ -85382,12 +85382,13 @@ async function chatHandler(req, res) {
   }
   return res.status(200).json(response);
 }
+app.post("/chat", chatHandler);
+app.post("/api/chat", chatHandler);
 (async () => {
   await initRedisSessionStore();
   app.use((0, import_express_session.default)(sessionOptions));
   app.use(auth_default.initialize());
   app.use(auth_default.session());
-  app.post("/api/chat", chatHandler);
   app.use("/auth", authRoutes_default);
   app.get("/api/me", (req, res) => {
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");

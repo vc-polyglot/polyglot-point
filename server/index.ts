@@ -1,4 +1,4 @@
-process.on("uncaughtException", (err) => console.error("UNCAUGHT EXCEPTION:", err));
+锘縫rocess.on("uncaughtException", (err) => console.error("UNCAUGHT EXCEPTION:", err));
 process.on("unhandledRejection", (reason) => console.error("UNHANDLED REJECTION:", reason));
 
 import crypto from "crypto";
@@ -26,7 +26,7 @@ const SESSION_SECRET =
   (isProduction ? crypto.randomBytes(32).toString("hex") : "polyglot-dev-secret-change-in-prod");
 
 if (isProduction && !process.env.SESSION_SECRET) {
-  console.error("[WARN] SESSION_SECRET faltante en producci髇; usando secreto ef韒ero. Configura SESSION_SECRET en Railway.");
+  console.error("[WARN] SESSION_SECRET faltante en producci贸n; usando secreto ef铆mero. Configura SESSION_SECRET en Railway.");
 }
 
 const vercelProjectSlug = (process.env.VERCEL_PROJECT_SLUG || "polyglot-point").trim();
@@ -77,7 +77,7 @@ const sessionOptions: session.SessionOptions = {
 
 async function initRedisSessionStore(): Promise<void> {
   if (!process.env.REDIS_URL) {
-    if (isProduction) console.warn("REDIS_URL no configurado en producci髇 (MemoryStore no recomendado)");
+    if (isProduction) console.warn("REDIS_URL no configurado en producci贸n (MemoryStore no recomendado)");
     return;
   }
 
@@ -187,7 +187,7 @@ Do NOT switch languages. Do NOT translate unless explicitly asked.
 Rules:
 - If the user writes in ${targetName} with errors: correct briefly, then continue the conversation in ${targetName}.
 - If the user writes in a different language: still respond in ${targetName} and gently invite them to continue in ${targetName}.
-- If there are no errors: NEVER repeat the user's sentence. Just respond naturally with a question or comment in ${targetName}.
+- If there are no errors: do NOT repeat the user's sentence; just continue naturally in ${targetName}.
 - Always keep the dialogue going with a question or a relevant comment.
 
 Tone: warm, direct, patient. No emojis.
@@ -387,7 +387,7 @@ async function chatHandler(req: Request, res: Response) {
     );
 
     rawResponse = completion.choices[0]?.message?.content || "";
-    if (!rawResponse.trim() || rawResponse.length > 10000) throw new Error("Respuesta OpenAI inv醠ida");
+    if (!rawResponse.trim() || rawResponse.length > 10000) throw new Error("Respuesta OpenAI inv谩lida");
   } catch (error: any) {
     const responseTime = Date.now() - startTime;
 
@@ -516,16 +516,16 @@ async function chatHandler(req: Request, res: Response) {
 
   app.post("/api/logout", (req: Request, res: Response) => {
     req.logout((err) => {
-      if (err) return res.status(500).json({ error: "Error al cerrar sesi髇" });
+      if (err) return res.status(500).json({ error: "Error al cerrar sesi贸n" });
       req.session.destroy((err2) => {
-        if (err2) return res.status(500).json({ error: "Error destruyendo sesi髇" });
+        if (err2) return res.status(500).json({ error: "Error destruyendo sesi贸n" });
         res.clearCookie("connect.sid", {
           path: "/",
           secure: isProduction,
           sameSite: isProduction ? "none" : "lax",
           httpOnly: true,
         });
-        res.json({ message: "Sesi髇 cerrada" });
+        res.json({ message: "Sesi贸n cerrada" });
       });
     });
   });
