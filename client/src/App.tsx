@@ -319,7 +319,7 @@ const App: React.FC = () => {
             <div className="response-card">
               {error ? (
                 <div className="error-state">
-                  <div className="error-icon">X</div>
+                  <div className="error-icon">🤖</div>
                   <h3>{uiT.error.title}</h3>
                   <p>{uiT.error.message}</p>
                   <button className="btn-retry" onClick={handleRetry}>
