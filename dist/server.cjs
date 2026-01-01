@@ -85018,9 +85018,7 @@ var allowedExact = new Set(
     "https://polyglot-point-production.up.railway.app"
   ].filter(Boolean).map((s) => String(s).replace(/\/$/, ""))
 );
-var allowedPatterns = [
-  new RegExp(`^https:\\/\\/${vercelProjectSlug}(?:-[a-z0-9-]+)?\\.vercel\\.app$`, "i")
-];
+var allowedPatterns = [new RegExp(`^https:\\/\\/${vercelProjectSlug}(?:-[a-z0-9-]+)?\\.vercel\\.app$`, "i")];
 app.use(
   (0, import_cors.default)({
     origin: (origin, callback) => {
@@ -85089,24 +85087,24 @@ function startSessionCleanup() {
   }, SESSION_CLEANUP_MS);
 }
 startSessionCleanup();
-function getOrCreateChatSession(userId) {
+function getOrCreateChatSession(key) {
   const now = Date.now();
   if (chatSessions.size > 1e3) {
     for (const [id, s] of chatSessions.entries()) {
       if (now - s.lastAccess > SESSION_TIMEOUT_MS) chatSessions.delete(id);
     }
   }
-  const existing = chatSessions.get(userId);
+  const existing = chatSessions.get(key);
   if (existing) {
     existing.lastAccess = now;
     return existing;
   }
-  const created = { userId, ventana: [], lastAccess: now };
-  chatSessions.set(userId, created);
+  const created = { key, ventana: [], lastAccess: now };
+  chatSessions.set(key, created);
   return created;
 }
-function updateChatSession(userId, userMsg, assistantMsg) {
-  const s = getOrCreateChatSession(userId);
+function updateChatSession(key, userMsg, assistantMsg) {
+  const s = getOrCreateChatSession(key);
   s.ventana = [
     { role: "user", content: userMsg },
     { role: "assistant", content: assistantMsg }
@@ -85119,7 +85117,7 @@ function timeout(promise2, ms) {
     new Promise((_, reject) => setTimeout(() => reject(new Error(`Timeout after ${ms}ms`)), ms))
   ]);
 }
-function buildClaraPrompt(language) {
+function targetLanguageName(code) {
   const LANG = {
     es: "espa\xF1ol",
     en: "ingl\xE9s",
@@ -85128,63 +85126,78 @@ function buildClaraPrompt(language) {
     de: "alem\xE1n",
     pt: "portugu\xE9s"
   };
-  const target = LANG[language] || "espa\xF1ol";
-  return `Eres Clara, tutora de escritura de Polyglot Point. Respondes SIEMPRE en ${target}.
-
-Tu estilo: corriges errores de forma natural dentro de la conversaci\xF3n, como amiga culta. No eres eco ni correctora autom\xE1tica.
-
-C\xF3mo respondes:
-- Si hay errores: corriges brevemente ("Se escribe 'cocina' con c") y luego contin\xFAas la conversaci\xF3n
-- Si no hay errores: solo conversas naturalmente
-- Siempre haces avanzar el di\xE1logo con preguntas o comentarios relevantes
-
-Tono: c\xE1lido, directo, paciente. Sin emojis, sin elogios vac\xEDos.
-
-Devuelve SOLO JSON v\xE1lido:
-{"corrected":"Tu respuesta completa aqu\xED - correcci\xF3n integrada + conversaci\xF3n natural"}
-
-Ejemplo:
-Usuario: "me gustar\xEDa sabe mas de cosina"
-{"corrected":"'Saber' con r, 'm\xE1s' con tilde, 'cocina' con c. \xBFCocina mexicana o italiana? \xBFQu\xE9 te gustar\xEDa aprender?"}`;
+  return LANG[code] || "espa\xF1ol";
+}
+function buildClaraPrompt(language) {
+  const target = targetLanguageName(language);
+  return [
+    `Eres Clara, tutora de escritura de Polyglot Point.`,
+    `Respondes siempre en ${target}.`,
+    ``,
+    `Tu trabajo: mejorar el texto del usuario dentro de una conversaci\xF3n natural.`,
+    `Corriges escribiendo bien, sin sermones.`,
+    `No elogias vac\xEDo, no usas emojis, no inventas intenciones.`,
+    `Si el usuario escribe en otro idioma, lo dices con naturalidad e invitas a continuar en ${target}.`,
+    `Si te equivocas, lo admites y corriges de inmediato.`,
+    ``,
+    `Devuelve SOLO JSON v\xE1lido con este esquema exacto:`,
+    `{"corrected":"...","explanations":[],"tips":[]}`,
+    ``,
+    `Reglas de campos:`,
+    `- corrected: contiene toda tu respuesta (con la correcci\xF3n integrada).`,
+    `- explanations: solo si el cambio puede confundir (m\xE1x 1).`,
+    `- tips: solo si aportan valor real (m\xE1x 2).`
+  ].join("\n");
+}
+function clampArrayStrings(x, max) {
+  if (!Array.isArray(x)) return [];
+  const out = [];
+  for (const v of x) {
+    if (typeof v !== "string") continue;
+    const s = v.trim();
+    if (!s) continue;
+    out.push(s);
+    if (out.length >= max) break;
+  }
+  return out;
+}
+function extractJsonCandidate(clean) {
+  const direct = clean.match(/^\s*(\{[\s\S]*\})\s*$/)?.[1];
+  if (direct) return direct;
+  const fenced = clean.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/)?.[1];
+  if (fenced) return fenced;
+  const start = clean.indexOf("{");
+  if (start !== -1) {
+    let depth = 0;
+    for (let i = start; i < clean.length; i++) {
+      const ch = clean[i];
+      if (ch === "{") depth++;
+      if (ch === "}") depth--;
+      if (depth === 0) return clean.slice(start, i + 1);
+    }
+  }
+  const matches = [...clean.matchAll(/\{[\s\S]*?\}/g)];
+  if (matches.length) {
+    let best = matches[0][0];
+    for (const m of matches) if (m[0].length > best.length) best = m[0];
+    return best;
+  }
+  return null;
 }
 function parseClaraResponse(raw, fallback, language) {
   const clean = (raw || "").trim();
-  const extractionStrategies = [
-    () => clean.match(/^\s*(\{[\s\S]*\})\s*$/)?.[1] || null,
-    () => clean.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/)?.[1] || null,
-    () => {
-      const start = clean.indexOf("{");
-      if (start === -1) return null;
-      let depth = 0;
-      for (let i = start; i < clean.length; i++) {
-        if (clean[i] === "{") depth++;
-        if (clean[i] === "}") depth--;
-        if (depth === 0) return clean.slice(start, i + 1);
-      }
-      return null;
-    },
-    () => {
-      const matches = [...clean.matchAll(/\{[\s\S]*?\}/g)];
-      if (!matches.length) return null;
-      return matches.reduce((a, b) => a[0].length > b[0].length ? a : b)[0];
-    }
-  ];
-  for (const strategy of extractionStrategies) {
-    const jsonStr = strategy();
-    if (!jsonStr) continue;
+  const jsonStr = extractJsonCandidate(clean);
+  if (jsonStr) {
     try {
       const parsed = JSON.parse(jsonStr);
-      if (typeof parsed?.corrected === "string") {
-        const explanations = Array.isArray(parsed.explanations) ? parsed.explanations.filter((x) => typeof x === "string").slice(0, 1) : [];
-        const tips = Array.isArray(parsed.tips) ? parsed.tips.filter((x) => typeof x === "string").slice(0, 2) : [];
+      if (typeof parsed?.corrected === "string" && parsed.corrected.trim()) {
         return {
           corrected: parsed.corrected.trim(),
-          explanations: explanations.map((s) => s.trim()),
-          tips: tips.map((s) => s.trim())
+          explanations: clampArrayStrings(parsed.explanations, 1),
+          tips: clampArrayStrings(parsed.tips, 2)
         };
       }
     } catch {
-      continue;
     }
   }
   return {
@@ -85193,33 +85206,33 @@ function parseClaraResponse(raw, fallback, language) {
     tips: []
   };
 }
+function readLangFromBody(req) {
+  const cand = typeof req.language === "string" && req.language || typeof req.activeLanguage === "string" && req.activeLanguage || "";
+  const l = String(cand || "").trim().toLowerCase();
+  return ["es", "en", "fr", "it", "de", "pt"].includes(l) ? l : "es";
+}
 function validateChatRequest(body) {
   if (!body || typeof body !== "object") return { valid: false, error: "invalid_request" };
   const req = body;
-  let language = "es";
-  if (typeof req.language === "string") {
-    const l = req.language.trim().toLowerCase();
-    if (["es", "en", "fr", "it", "de", "pt"].includes(l)) language = l;
-  }
-  const message = typeof req.message === "string" ? req.message.trim() : "";
-  const text2 = typeof req.text === "string" ? req.text.trim() : "";
+  const language = readLangFromBody(req);
+  const message = typeof req.message === "string" ? String(req.message).trim() : "";
+  const text2 = typeof req.text === "string" ? String(req.text).trim() : "";
   const inputRaw = message || text2;
   if (!inputRaw) return { valid: false, error: "no_text" };
   const originalLength = inputRaw.length;
   const input = inputRaw.slice(0, 280);
   const wasTrimmed = originalLength > 280;
-  let userId = "anonymous";
-  if (typeof req.userId === "string" && req.userId.trim()) userId = req.userId.trim().slice(0, 100);
-  return { valid: true, data: { input, language, userId, wasTrimmed, originalLength } };
+  const clientUserId = typeof req.userId === "string" && String(req.userId).trim() ? String(req.userId).trim().slice(0, 100) : "anonymous";
+  return { valid: true, data: { input, language, clientUserId, wasTrimmed, originalLength } };
 }
 var openaiClient = null;
-var getOpenAI = () => {
+function getOpenAI() {
   if (openaiClient) return openaiClient;
   const key = process.env.OPENAI_API_KEY || process.env.POLYGLOT_OPENAI_KEY;
   if (!key) throw new Error("OPENAI_API_KEY no configurada");
   openaiClient = new OpenAI({ apiKey: key });
   return openaiClient;
-};
+}
 app.use((req, res, next) => {
   const start = Date.now();
   const path3 = req.path;
@@ -85243,8 +85256,7 @@ async function chatHandler(req, res) {
   res.setHeader("X-Request-ID", requestId);
   const validation = validateChatRequest(req.body);
   if (!validation.valid) {
-    const lang = req.body && typeof req.body === "object" && "language" in req.body && typeof req.body.language === "string" ? String(req.body.language).trim().toLowerCase() : "es";
-    const safeLang = ["es", "en", "fr", "it", "de", "pt"].includes(lang) ? lang : "es";
+    const safeLang = req.body && typeof req.body === "object" ? readLangFromBody(req.body) : "es";
     return res.status(400).json({
       corrected: "",
       explanations: [fb(safeLang).NO_TEXT],
@@ -85255,8 +85267,9 @@ async function chatHandler(req, res) {
       requestId
     });
   }
-  const { input, language, userId, wasTrimmed, originalLength } = validation.data;
+  const { input, language, clientUserId, wasTrimmed, originalLength } = validation.data;
   const authUser = req.user;
+  const sessionKey = authUser?.id ? `u:${authUser.id}` : req.sessionID ? `s:${req.sessionID}` : `anon:${clientUserId}`;
   const billingState = { dbFailed: false };
   if (authUser?.id) {
     try {
@@ -85278,7 +85291,7 @@ async function chatHandler(req, res) {
       billingState.dbFailed = true;
     }
   }
-  const chatSession = getOrCreateChatSession(userId);
+  const chatSession = getOrCreateChatSession(sessionKey);
   let rawResponse = "";
   try {
     const client = getOpenAI();
@@ -85291,7 +85304,7 @@ async function chatHandler(req, res) {
       client.chat.completions.create({
         model: "gpt-4o-mini",
         temperature: 0.25,
-        max_tokens: 500,
+        max_tokens: 550,
         messages: messages2,
         response_format: { type: "json_object" }
       }),
@@ -85306,7 +85319,7 @@ async function chatHandler(req, res) {
         JSON.stringify({
           type: "openai_error",
           requestId,
-          userId,
+          sessionKey,
           language,
           error: error40?.message || String(error40),
           time: responseTime2
@@ -85328,21 +85341,15 @@ async function chatHandler(req, res) {
   const clara = parseClaraResponse(rawResponse, input, language);
   if (authUser?.id && !billingState.dbFailed) {
     try {
-      console.log("[BILLING] userId:", authUser.id);
       const result = await subscriptionManager.consumeMessage(authUser.id);
-      console.log("[BILLING] result:", JSON.stringify(result));
       billingState.remaining = result.remaining;
-    } catch (e) {
-      console.error("[BILLING] Error:", e.message);
-      console.error("[BILLING] Stack:", e.stack);
+    } catch {
       billingState.dbFailed = true;
     }
-  } else {
-    console.log("[BILLING] Skip. authUser:", authUser?.id, "dbFailed:", billingState.dbFailed);
   }
   setImmediate(() => {
     try {
-      updateChatSession(userId, input, clara.corrected);
+      updateChatSession(sessionKey, input, clara.corrected);
     } catch {
     }
   });
@@ -85370,7 +85377,7 @@ async function chatHandler(req, res) {
       JSON.stringify({
         type: "chat_request",
         requestId,
-        userId,
+        sessionKey,
         language,
         inputLength: originalLength,
         responseTime,
@@ -85382,13 +85389,12 @@ async function chatHandler(req, res) {
   }
   return res.status(200).json(response);
 }
-app.post("/chat", chatHandler);
-app.post("/api/chat", chatHandler);
 (async () => {
   await initRedisSessionStore();
   app.use((0, import_express_session.default)(sessionOptions));
   app.use(auth_default.initialize());
   app.use(auth_default.session());
+  app.post("/api/chat", chatHandler);
   app.use("/auth", authRoutes_default);
   app.get("/api/me", (req, res) => {
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");

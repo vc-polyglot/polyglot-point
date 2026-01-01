@@ -21,6 +21,7 @@ app.set("etag", false);
 const isProduction = process.env.NODE_ENV === "production";
 
 app.set("trust proxy", 1);
+
 const SESSION_SECRET =
   process.env.SESSION_SECRET ||
   (isProduction ? crypto.randomBytes(32).toString("hex") : "polyglot-dev-secret-change-in-prod");
@@ -30,6 +31,7 @@ if (isProduction && !process.env.SESSION_SECRET) {
 }
 
 const vercelProjectSlug = (process.env.VERCEL_PROJECT_SLUG || "polyglot-point").trim();
+
 const allowedExact = new Set(
   [
     process.env.CLIENT_URL,
@@ -42,9 +44,7 @@ const allowedExact = new Set(
     .map((s) => String(s).replace(/\/$/, ""))
 );
 
-const allowedPatterns: RegExp[] = [
-  new RegExp(`^https:\\/\\/${vercelProjectSlug}(?:-[a-z0-9-]+)?\\.vercel\\.app$`, "i"),
-];
+const allowedPatterns: RegExp[] = [new RegExp(`^https:\\/\\/${vercelProjectSlug}(?:-[a-z0-9-]+)?\\.vercel\\.app$`, "i")];
 
 app.use(
   cors({
@@ -108,9 +108,11 @@ app.get("/health", (_req: Request, res: Response) => {
   });
 });
 
+type Role = "user" | "assistant";
+
 interface ChatSession {
-  userId: string;
-  ventana: Array<{ role: "user" | "assistant"; content: string }>;
+  key: string;
+  ventana: Array<{ role: Role; content: string }>;
   lastAccess: number;
 }
 
@@ -129,9 +131,10 @@ function startSessionCleanup() {
     }
   }, SESSION_CLEANUP_MS);
 }
+
 startSessionCleanup();
 
-function getOrCreateChatSession(userId: string): ChatSession {
+function getOrCreateChatSession(key: string): ChatSession {
   const now = Date.now();
 
   if (chatSessions.size > 1000) {
@@ -140,19 +143,19 @@ function getOrCreateChatSession(userId: string): ChatSession {
     }
   }
 
-  const existing = chatSessions.get(userId);
+  const existing = chatSessions.get(key);
   if (existing) {
     existing.lastAccess = now;
     return existing;
   }
 
-  const created: ChatSession = { userId, ventana: [], lastAccess: now };
-  chatSessions.set(userId, created);
+  const created: ChatSession = { key, ventana: [], lastAccess: now };
+  chatSessions.set(key, created);
   return created;
 }
 
-function updateChatSession(userId: string, userMsg: string, assistantMsg: string): void {
-  const s = getOrCreateChatSession(userId);
+function updateChatSession(key: string, userMsg: string, assistantMsg: string): void {
+  const s = getOrCreateChatSession(key);
   s.ventana = [
     { role: "user", content: userMsg },
     { role: "assistant", content: assistantMsg },
@@ -167,7 +170,7 @@ function timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   ]);
 }
 
-function buildClaraPrompt(language: string): string {
+function targetLanguageName(code: string): string {
   const LANG: Record<string, string> = {
     es: "español",
     en: "inglés",
@@ -176,68 +179,89 @@ function buildClaraPrompt(language: string): string {
     de: "alemán",
     pt: "portugués",
   };
-  const target = LANG[language] || "español";
-
-  return `Eres Clara, tutora de Polyglot Point. Responde SIEMPRE en ${target}, sin importar en qué idioma escriba el usuario.
-
-Reglas:
-1. Responde ÚNICAMENTE en ${target}
-2. Si hay errores, corrígelos brevemente y sigue conversando
-3. Si NO hay errores, solo conversa (no digas "está correcto")
-4. Si falta mayúscula inicial, menciónalo
-5. NUNCA repitas la frase del usuario
-
-JSON: {"corrected":"tu respuesta en ${target}"}`;
+  return LANG[code] || "español";
 }
 
-function parseClaraResponse(
-  raw: string,
-  fallback: string,
-  language: string
-): { corrected: string; explanations: string[]; tips: string[] } {
+function buildClaraPrompt(language: string): string {
+  const target = targetLanguageName(language);
+  return [
+    `Eres Clara, tutora de escritura de Polyglot Point.`,
+    `Respondes siempre en ${target}.`,
+    ``,
+    `Tu trabajo: mejorar el texto del usuario dentro de una conversación natural.`,
+    `Corriges escribiendo bien, sin sermones.`,
+    `No elogias vacío, no usas emojis, no inventas intenciones.`,
+    `Si el usuario escribe en otro idioma, lo dices con naturalidad e invitas a continuar en ${target}.`,
+    `Si te equivocas, lo admites y corriges de inmediato.`,
+    ``,
+    `Devuelve SOLO JSON válido con este esquema exacto:`,
+    `{"corrected":"...","explanations":[],"tips":[]}`,
+    ``,
+    `Reglas de campos:`,
+    `- corrected: contiene toda tu respuesta (con la corrección integrada).`,
+    `- explanations: solo si el cambio puede confundir (máx 1).`,
+    `- tips: solo si aportan valor real (máx 2).`,
+  ].join("\n");
+}
+
+type ClaraParsed = { corrected: string; explanations: string[]; tips: string[] };
+
+function clampArrayStrings(x: any, max: number): string[] {
+  if (!Array.isArray(x)) return [];
+  const out: string[] = [];
+  for (const v of x) {
+    if (typeof v !== "string") continue;
+    const s = v.trim();
+    if (!s) continue;
+    out.push(s);
+    if (out.length >= max) break;
+  }
+  return out;
+}
+
+function extractJsonCandidate(clean: string): string | null {
+  const direct = clean.match(/^\s*(\{[\s\S]*\})\s*$/)?.[1];
+  if (direct) return direct;
+
+  const fenced = clean.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/)?.[1];
+  if (fenced) return fenced;
+
+  const start = clean.indexOf("{");
+  if (start !== -1) {
+    let depth = 0;
+    for (let i = start; i < clean.length; i++) {
+      const ch = clean[i];
+      if (ch === "{") depth++;
+      if (ch === "}") depth--;
+      if (depth === 0) return clean.slice(start, i + 1);
+    }
+  }
+
+  const matches = [...clean.matchAll(/\{[\s\S]*?\}/g)];
+  if (matches.length) {
+    let best = matches[0][0];
+    for (const m of matches) if (m[0].length > best.length) best = m[0];
+    return best;
+  }
+
+  return null;
+}
+
+function parseClaraResponse(raw: string, fallback: string, language: string): ClaraParsed {
   const clean = (raw || "").trim();
+  const jsonStr = extractJsonCandidate(clean);
 
-  const extractionStrategies: Array<() => string | null> = [
-    () => clean.match(/^\s*(\{[\s\S]*\})\s*$/)?.[1] || null,
-    () => clean.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/)?.[1] || null,
-    () => {
-      const start = clean.indexOf("{");
-      if (start === -1) return null;
-      let depth = 0;
-      for (let i = start; i < clean.length; i++) {
-        if (clean[i] === "{") depth++;
-        if (clean[i] === "}") depth--;
-        if (depth === 0) return clean.slice(start, i + 1);
-      }
-      return null;
-    },
-    () => {
-      const matches = [...clean.matchAll(/\{[\s\S]*?\}/g)];
-      if (!matches.length) return null;
-      return matches.reduce((a, b) => (a[0].length > b[0].length ? a : b))[0];
-    },
-  ];
-
-  for (const strategy of extractionStrategies) {
-    const jsonStr = strategy();
-    if (!jsonStr) continue;
-
+  if (jsonStr) {
     try {
       const parsed = JSON.parse(jsonStr) as any;
-      if (typeof parsed?.corrected === "string") {
-        const explanations = Array.isArray(parsed.explanations)
-          ? parsed.explanations.filter((x: any) => typeof x === "string").slice(0, 1)
-          : [];
-        const tips = Array.isArray(parsed.tips) ? parsed.tips.filter((x: any) => typeof x === "string").slice(0, 2) : [];
+      if (typeof parsed?.corrected === "string" && parsed.corrected.trim()) {
         return {
           corrected: parsed.corrected.trim(),
-          explanations: explanations.map((s: string) => s.trim()),
-          tips: tips.map((s: string) => s.trim()),
+          explanations: clampArrayStrings(parsed.explanations, 1),
+          tips: clampArrayStrings(parsed.tips, 2),
         };
       }
-    } catch {
-      continue;
-    }
+    } catch {}
   }
 
   return {
@@ -247,44 +271,53 @@ function parseClaraResponse(
   };
 }
 
+function readLangFromBody(req: Record<string, unknown>): string {
+  const cand =
+    (typeof (req as any).language === "string" && (req as any).language) ||
+    (typeof (req as any).activeLanguage === "string" && (req as any).activeLanguage) ||
+    "";
+
+  const l = String(cand || "").trim().toLowerCase();
+  return ["es", "en", "fr", "it", "de", "pt"].includes(l) ? l : "es";
+}
+
 function validateChatRequest(body: unknown): {
   valid: boolean;
   error?: "invalid_request" | "no_text";
-  data?: { input: string; language: string; userId: string; wasTrimmed: boolean; originalLength: number };
+  data?: { input: string; language: string; clientUserId: string; wasTrimmed: boolean; originalLength: number };
 } {
   if (!body || typeof body !== "object") return { valid: false, error: "invalid_request" };
   const req = body as Record<string, unknown>;
 
-  let language = "es";
-  if (typeof req.language === "string") {
-    const l = req.language.trim().toLowerCase();
-    if (["es", "en", "fr", "it", "de", "pt"].includes(l)) language = l;
-  }
+  const language = readLangFromBody(req);
 
-  const message = typeof req.message === "string" ? req.message.trim() : "";
-  const text = typeof req.text === "string" ? req.text.trim() : "";
+  const message = typeof (req as any).message === "string" ? String((req as any).message).trim() : "";
+  const text = typeof (req as any).text === "string" ? String((req as any).text).trim() : "";
   const inputRaw = message || text;
+
   if (!inputRaw) return { valid: false, error: "no_text" };
 
   const originalLength = inputRaw.length;
   const input = inputRaw.slice(0, 280);
   const wasTrimmed = originalLength > 280;
 
-  let userId = "anonymous";
-  if (typeof req.userId === "string" && req.userId.trim()) userId = req.userId.trim().slice(0, 100);
+  const clientUserId =
+    typeof (req as any).userId === "string" && String((req as any).userId).trim()
+      ? String((req as any).userId).trim().slice(0, 100)
+      : "anonymous";
 
-  return { valid: true, data: { input, language, userId, wasTrimmed, originalLength } };
+  return { valid: true, data: { input, language, clientUserId, wasTrimmed, originalLength } };
 }
 
 let openaiClient: OpenAI | null = null;
 
-const getOpenAI = (): OpenAI => {
+function getOpenAI(): OpenAI {
   if (openaiClient) return openaiClient;
   const key = process.env.OPENAI_API_KEY || process.env.POLYGLOT_OPENAI_KEY;
   if (!key) throw new Error("OPENAI_API_KEY no configurada");
   openaiClient = new OpenAI({ apiKey: key });
   return openaiClient;
-};
+}
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -292,6 +325,7 @@ app.use((req, res, next) => {
 
   const originalJson = res.json.bind(res);
   let captured: any;
+
   res.json = ((body: any) => {
     captured = body;
     return originalJson(body);
@@ -314,11 +348,9 @@ async function chatHandler(req: Request, res: Response) {
 
   const validation = validateChatRequest(req.body);
   if (!validation.valid) {
-    const lang =
-      req.body && typeof req.body === "object" && "language" in req.body && typeof (req.body as any).language === "string"
-        ? String((req.body as any).language).trim().toLowerCase()
-        : "es";
-    const safeLang = ["es", "en", "fr", "it", "de", "pt"].includes(lang) ? lang : "es";
+    const safeLang =
+      req.body && typeof req.body === "object" ? readLangFromBody(req.body as any) : "es";
+
     return res.status(400).json({
       corrected: "",
       explanations: [fb(safeLang).NO_TEXT],
@@ -330,8 +362,11 @@ async function chatHandler(req: Request, res: Response) {
     });
   }
 
-  const { input, language, userId, wasTrimmed, originalLength } = validation.data!;
+  const { input, language, clientUserId, wasTrimmed, originalLength } = validation.data!;
   const authUser = (req as any).user;
+
+  const sessionKey =
+    authUser?.id ? `u:${authUser.id}` : req.sessionID ? `s:${req.sessionID}` : `anon:${clientUserId}`;
 
   const billingState: { remaining?: number; dbFailed: boolean } = { dbFailed: false };
 
@@ -357,11 +392,13 @@ async function chatHandler(req: Request, res: Response) {
     }
   }
 
-  const chatSession = getOrCreateChatSession(userId);
+  const chatSession = getOrCreateChatSession(sessionKey);
 
   let rawResponse = "";
+
   try {
     const client = getOpenAI();
+
     const messages = [
       { role: "system", content: buildClaraPrompt(language) as any },
       ...chatSession.ventana,
@@ -372,7 +409,7 @@ async function chatHandler(req: Request, res: Response) {
       client.chat.completions.create({
         model: "gpt-4o-mini",
         temperature: 0.25,
-        max_tokens: 500,
+        max_tokens: 550,
         messages: messages as any,
         response_format: { type: "json_object" },
       }),
@@ -389,7 +426,7 @@ async function chatHandler(req: Request, res: Response) {
         JSON.stringify({
           type: "openai_error",
           requestId,
-          userId,
+          sessionKey,
           language,
           error: error?.message || String(error),
           time: responseTime,
@@ -414,22 +451,16 @@ async function chatHandler(req: Request, res: Response) {
 
   if (authUser?.id && !billingState.dbFailed) {
     try {
-      console.log("[BILLING] userId:", authUser.id);
       const result = await subscriptionManager.consumeMessage(authUser.id);
-      console.log("[BILLING] result:", JSON.stringify(result));
       billingState.remaining = result.remaining;
-    } catch (e: any) {
-      console.error("[BILLING] Error:", e.message);
-      console.error("[BILLING] Stack:", e.stack);
+    } catch {
       billingState.dbFailed = true;
     }
-  } else {
-    console.log("[BILLING] Skip. authUser:", authUser?.id, "dbFailed:", billingState.dbFailed);
   }
 
   setImmediate(() => {
     try {
-      updateChatSession(userId, input, clara.corrected);
+      updateChatSession(sessionKey, input, clara.corrected);
     } catch {}
   });
 
@@ -461,7 +492,7 @@ async function chatHandler(req: Request, res: Response) {
       JSON.stringify({
         type: "chat_request",
         requestId,
-        userId,
+        sessionKey,
         language,
         inputLength: originalLength,
         responseTime,
@@ -492,6 +523,7 @@ async function chatHandler(req: Request, res: Response) {
     res.setHeader("Expires", "0");
     res.setHeader("Surrogate-Control", "no-store");
     res.setHeader("Vary", "Cookie");
+
     if (req.isAuthenticated && req.isAuthenticated() && req.user) {
       const user = req.user as any;
       res.json({
@@ -504,6 +536,7 @@ async function chatHandler(req: Request, res: Response) {
       });
       return;
     }
+
     res.status(401).json({ error: "No autenticado" });
   });
 
@@ -539,12 +572,13 @@ async function chatHandler(req: Request, res: Response) {
   }
 
   const PORT = Number(process.env.PORT) || 3000;
+
   server.listen(PORT, "0.0.0.0", () => {
     console.log("SERVIDOR INICIADO en puerto " + PORT);
     console.log("NODE_ENV: " + (process.env.NODE_ENV || "development"));
     console.log("SESSION_SECRET configurado: " + !!process.env.SESSION_SECRET);
     console.log("REDIS_URL configurado: " + !!process.env.REDIS_URL);
-    if (sessionOptions.store) console.log("Session store: Redis (attached)");
+    if ((sessionOptions as any).store) console.log("Session store: Redis (attached)");
   });
 })().catch((e) => {
   console.error("BOOTSTRAP FAILED:", e);
