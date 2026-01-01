@@ -85131,35 +85131,24 @@ function targetLanguageName(code) {
 function buildClaraPrompt(language) {
   const target = targetLanguageName(language);
   return [
-    `Eres Clara, tutora de escritura de Polyglot Point.`,
-    `Respondes siempre en ${target}.`,
+    `Eres Clara, tutora de ${target} conversacional de Polyglot Point Write.`,
+    `Corriges ligero dentro del di\xE1logo; ense\xF1as por absorci\xF3n como amiga culta.`,
+    `Siempre respondes en ${target}.`,
     ``,
-    `Tu trabajo: mejorar el texto del usuario dentro de una conversaci\xF3n natural.`,
-    `Corriges escribiendo bien, sin sermones.`,
-    `No elogias vac\xEDo, no usas emojis, no inventas intenciones.`,
-    `Si el usuario escribe en otro idioma, lo dices con naturalidad e invitas a continuar en ${target}.`,
-    `Si te equivocas, lo admites y corriges de inmediato.`,
+    `REGLAS`,
+    `1) Si hay errores, integras la correcci\xF3n dentro de tu respuesta de forma natural. Evitas explicaciones largas.`,
+    `2) SIEMPRE contin\xFAas la conversaci\xF3n: respondes al contenido y haces UNA pregunta natural o un comentario que invite a seguir.`,
+    `3) Tono c\xE1lido, paciente y directo. Sin emojis. Sin elogios vac\xEDos. Sin moralizar.`,
+    `4) Si el usuario mezcla idiomas o insiste en hacerlo: "Noto que mezclas idiomas; qued\xE9monos en ${target} para avanzar mejor."`,
     ``,
-    `Devuelve SOLO JSON v\xE1lido con este esquema exacto:`,
-    `{"corrected":"...","explanations":[],"tips":[]}`,
+    `MEMORIA: usa el contexto de los \xFAltimos 3 intercambios para dar continuidad.`,
     ``,
-    `Reglas de campos:`,
-    `- corrected: contiene toda tu respuesta (con la correcci\xF3n integrada).`,
-    `- explanations: solo si el cambio puede confundir (m\xE1x 1).`,
-    `- tips: solo si aportan valor real (m\xE1x 2).`
+    `SALIDA: Devuelve SOLO JSON v\xE1lido con este esquema exacto:`,
+    `{"corrected":"Respuesta completa de Clara: correcci\xF3n integrada + di\xE1logo fluido + cierre natural"}`,
+    ``,
+    `INICIO: si no hay mensaje previo del usuario:`,
+    `{"corrected":"\xA1Hola! \xBFEn qu\xE9 practicamos ${target} hoy?"}`
   ].join("\n");
-}
-function clampArrayStrings(x, max) {
-  if (!Array.isArray(x)) return [];
-  const out = [];
-  for (const v of x) {
-    if (typeof v !== "string") continue;
-    const s = v.trim();
-    if (!s) continue;
-    out.push(s);
-    if (out.length >= max) break;
-  }
-  return out;
 }
 function extractJsonCandidate(clean) {
   const direct = clean.match(/^\s*(\{[\s\S]*\})\s*$/)?.[1];
@@ -85184,27 +85173,19 @@ function extractJsonCandidate(clean) {
   }
   return null;
 }
-function parseClaraResponse(raw, fallback, language) {
+function parseClaraResponse(raw, fallback) {
   const clean = (raw || "").trim();
   const jsonStr = extractJsonCandidate(clean);
   if (jsonStr) {
     try {
       const parsed = JSON.parse(jsonStr);
       if (typeof parsed?.corrected === "string" && parsed.corrected.trim()) {
-        return {
-          corrected: parsed.corrected.trim(),
-          explanations: clampArrayStrings(parsed.explanations, 1),
-          tips: clampArrayStrings(parsed.tips, 2)
-        };
+        return { corrected: parsed.corrected.trim() };
       }
     } catch {
     }
   }
-  return {
-    corrected: fallback,
-    explanations: [fb(language).PROCESS_ERROR || "Error procesando respuesta"],
-    tips: []
-  };
+  return { corrected: fallback };
 }
 function readLangFromBody(req) {
   const cand = typeof req.language === "string" && req.language || typeof req.activeLanguage === "string" && req.activeLanguage || "";
@@ -85295,17 +85276,18 @@ async function chatHandler(req, res) {
   let rawResponse = "";
   try {
     const client = getOpenAI();
-    const messages2 = [
-      { role: "system", content: buildClaraPrompt(language) },
-      ...chatSession.ventana,
-      { role: "user", content: input }
-    ];
+    const memoria = chatSession.ventana.slice(-3).map((m) => `${m.role}: ${m.content}`).join("\n");
+    const prompt = `${buildClaraPrompt(language)}
+[CONTEXTO_PREVIO]
+${memoria}
+[MENSAJE_USUARIO]
+${input}`;
     const completion = await timeout(
       client.chat.completions.create({
         model: "gpt-4o-mini",
         temperature: 0.25,
-        max_tokens: 550,
-        messages: messages2,
+        max_tokens: 500,
+        messages: [{ role: "system", content: prompt }],
         response_format: { type: "json_object" }
       }),
       1e4
@@ -85338,7 +85320,7 @@ async function chatHandler(req, res) {
       requestId
     });
   }
-  const clara = parseClaraResponse(rawResponse, input, language);
+  const clara = parseClaraResponse(rawResponse, input);
   if (authUser?.id && !billingState.dbFailed) {
     try {
       const result = await subscriptionManager.consumeMessage(authUser.id);
@@ -85356,8 +85338,8 @@ async function chatHandler(req, res) {
   const responseTime = Date.now() - startTime;
   const response = {
     corrected: clara.corrected,
-    explanations: clara.explanations,
-    tips: clara.tips,
+    explanations: [],
+    tips: [],
     language,
     status: billingState.dbFailed ? "billing_degraded" : "ok",
     timestamp: (/* @__PURE__ */ new Date()).toISOString(),

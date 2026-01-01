@@ -185,39 +185,27 @@ function targetLanguageName(code: string): string {
 function buildClaraPrompt(language: string): string {
   const target = targetLanguageName(language);
   return [
-    `Eres Clara, tutora de escritura de Polyglot Point.`,
-    `Respondes siempre en ${target}.`,
+    `Eres Clara, tutora de ${target} conversacional de Polyglot Point Write.`,
+    `Corriges ligero dentro del diálogo; enseñas por absorción como amiga culta.`,
+    `Siempre respondes en ${target}.`,
     ``,
-    `Tu trabajo: mejorar el texto del usuario dentro de una conversación natural.`,
-    `Corriges escribiendo bien, sin sermones.`,
-    `No elogias vacío, no usas emojis, no inventas intenciones.`,
-    `Si el usuario escribe en otro idioma, lo dices con naturalidad e invitas a continuar en ${target}.`,
-    `Si te equivocas, lo admites y corriges de inmediato.`,
+    `REGLAS`,
+    `1) Si hay errores, integras la corrección dentro de tu respuesta de forma natural. Evitas explicaciones largas.`,
+    `2) SIEMPRE continúas la conversación: respondes al contenido y haces UNA pregunta natural o un comentario que invite a seguir.`,
+    `3) Tono cálido, paciente y directo. Sin emojis. Sin elogios vacíos. Sin moralizar.`,
+    `4) Si el usuario mezcla idiomas o insiste en hacerlo: "Noto que mezclas idiomas; quedémonos en ${target} para avanzar mejor."`,
     ``,
-    `Devuelve SOLO JSON válido con este esquema exacto:`,
-    `{"corrected":"...","explanations":[],"tips":[]}`,
+    `MEMORIA: usa el contexto de los últimos 3 intercambios para dar continuidad.`,
     ``,
-    `Reglas de campos:`,
-    `- corrected: contiene toda tu respuesta (con la corrección integrada).`,
-    `- explanations: solo si el cambio puede confundir (máx 1).`,
-    `- tips: solo si aportan valor real (máx 2).`,
+    `SALIDA: Devuelve SOLO JSON válido con este esquema exacto:`,
+    `{"corrected":"Respuesta completa de Clara: corrección integrada + diálogo fluido + cierre natural"}`,
+    ``,
+    `INICIO: si no hay mensaje previo del usuario:`,
+    `{"corrected":"¡Hola! ¿En qué practicamos ${target} hoy?"}`,
   ].join("\n");
 }
 
-type ClaraParsed = { corrected: string; explanations: string[]; tips: string[] };
-
-function clampArrayStrings(x: any, max: number): string[] {
-  if (!Array.isArray(x)) return [];
-  const out: string[] = [];
-  for (const v of x) {
-    if (typeof v !== "string") continue;
-    const s = v.trim();
-    if (!s) continue;
-    out.push(s);
-    if (out.length >= max) break;
-  }
-  return out;
-}
+type ClaraParsed = { corrected: string };
 
 function extractJsonCandidate(clean: string): string | null {
   const direct = clean.match(/^\s*(\{[\s\S]*\})\s*$/)?.[1];
@@ -247,7 +235,7 @@ function extractJsonCandidate(clean: string): string | null {
   return null;
 }
 
-function parseClaraResponse(raw: string, fallback: string, language: string): ClaraParsed {
+function parseClaraResponse(raw: string, fallback: string): ClaraParsed {
   const clean = (raw || "").trim();
   const jsonStr = extractJsonCandidate(clean);
 
@@ -255,20 +243,12 @@ function parseClaraResponse(raw: string, fallback: string, language: string): Cl
     try {
       const parsed = JSON.parse(jsonStr) as any;
       if (typeof parsed?.corrected === "string" && parsed.corrected.trim()) {
-        return {
-          corrected: parsed.corrected.trim(),
-          explanations: clampArrayStrings(parsed.explanations, 1),
-          tips: clampArrayStrings(parsed.tips, 2),
-        };
+        return { corrected: parsed.corrected.trim() };
       }
     } catch {}
   }
 
-  return {
-    corrected: fallback,
-    explanations: [fb(language).PROCESS_ERROR || "Error procesando respuesta"],
-    tips: [],
-  };
+  return { corrected: fallback };
 }
 
 function readLangFromBody(req: Record<string, unknown>): string {
@@ -348,9 +328,7 @@ async function chatHandler(req: Request, res: Response) {
 
   const validation = validateChatRequest(req.body);
   if (!validation.valid) {
-    const safeLang =
-      req.body && typeof req.body === "object" ? readLangFromBody(req.body as any) : "es";
-
+    const safeLang = req.body && typeof req.body === "object" ? readLangFromBody(req.body as any) : "es";
     return res.status(400).json({
       corrected: "",
       explanations: [fb(safeLang).NO_TEXT],
@@ -399,18 +377,15 @@ async function chatHandler(req: Request, res: Response) {
   try {
     const client = getOpenAI();
 
-    const messages = [
-      { role: "system", content: buildClaraPrompt(language) as any },
-      ...chatSession.ventana,
-      { role: "user", content: input as any },
-    ];
+    const memoria = chatSession.ventana.slice(-3).map((m) => `${m.role}: ${m.content}`).join("\n");
+    const prompt = `${buildClaraPrompt(language)}\n[CONTEXTO_PREVIO]\n${memoria}\n[MENSAJE_USUARIO]\n${input}`;
 
     const completion = await timeout(
       client.chat.completions.create({
         model: "gpt-4o-mini",
         temperature: 0.25,
-        max_tokens: 550,
-        messages: messages as any,
+        max_tokens: 500,
+        messages: [{ role: "system", content: prompt } as any],
         response_format: { type: "json_object" },
       }),
       10000
@@ -447,7 +422,7 @@ async function chatHandler(req: Request, res: Response) {
     });
   }
 
-  const clara = parseClaraResponse(rawResponse, input, language);
+  const clara = parseClaraResponse(rawResponse, input);
 
   if (authUser?.id && !billingState.dbFailed) {
     try {
@@ -468,8 +443,8 @@ async function chatHandler(req: Request, res: Response) {
 
   const response: any = {
     corrected: clara.corrected,
-    explanations: clara.explanations,
-    tips: clara.tips,
+    explanations: [],
+    tips: [],
     language,
     status: billingState.dbFailed ? "billing_degraded" : "ok",
     timestamp: new Date().toISOString(),
