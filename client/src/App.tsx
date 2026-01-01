@@ -23,33 +23,43 @@ const MAX_CHARS = 280;
 const PHRASE_INTERVAL = 120000;
 
 const makeMsgId = () => {
-  // Evita colisión si dos clicks caen en el mismo ms
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID();
   return `msg_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+};
+
+const getBrowserLanguage = (): Language => {
+  if (typeof window === 'undefined') return 'en';
+  
+  const browserLang = navigator.language?.slice(0, 2);
+  const supportedUILanguages: Language[] = ["es", "en", "fr", "it", "de", "pt"];
+  
+  if (supportedUILanguages.includes(browserLang as Language)) {
+    return browserLang as Language;
+  }
+  
+  return 'en';
 };
 
 const App: React.FC = () => {
   const { user, loading: authLoading, logout } = useAuth();
 
-  const [language, setLanguage] = useState<Language>("es");
+  const [practiceLanguage, setPracticeLanguage] = useState<Language>("es");
+  const [uiLanguage, setUiLanguage] = useState<Language>(getBrowserLanguage());
   const [text, setText] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [remaining, setRemaining] = useState(MAX_MENSAJES_DIARIOS);
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
-
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [phraseFade, setPhraseFade] = useState(true);
-
   const [lastFailedMsg, setLastFailedMsg] = useState<string | null>(null);
 
-  const t = translations[language];
+  const uiT = translations[uiLanguage];
+  const practiceT = translations[practiceLanguage];
 
   const phraseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // ---------- USAGE ----------
   useEffect(() => {
     if (!user?.id) return;
 
@@ -60,25 +70,22 @@ const App: React.FC = () => {
         if (nextRemaining <= 0) setShowPaywall(true);
       })
       .catch(() => {
-        // En prod quizá prefieras silencio, en dev ayuda.
         console.warn("No se pudo cargar usage");
         setRemaining(MAX_MENSAJES_DIARIOS);
       });
   }, [user?.id]);
 
-  // Si por cualquier ruta remaining baja a 0, forzamos paywall
   useEffect(() => {
     if (user && remaining <= 0) setShowPaywall(true);
   }, [user, remaining]);
 
-  // ---------- FRASES (interval + timeout, con cleanup real) ----------
   useEffect(() => {
     const interval = setInterval(() => {
       setPhraseFade(false);
 
       if (phraseTimeoutRef.current) clearTimeout(phraseTimeoutRef.current);
       phraseTimeoutRef.current = setTimeout(() => {
-        setPhraseIndex((prev) => (prev + 1) % t.phrases.length);
+        setPhraseIndex((prev) => (prev + 1) % practiceT.phrases.length);
         setPhraseFade(true);
       }, 400);
     }, PHRASE_INTERVAL);
@@ -87,14 +94,13 @@ const App: React.FC = () => {
       clearInterval(interval);
       if (phraseTimeoutRef.current) clearTimeout(phraseTimeoutRef.current);
     };
-  }, [t.phrases.length]);
+  }, [practiceT.phrases.length]);
 
   useEffect(() => {
     setPhraseIndex(0);
     setPhraseFade(true);
-  }, [language]);
+  }, [practiceLanguage]);
 
-  // ---------- AUTH ----------
   const handleLogin = useCallback(() => {
     window.location.href = "/auth/google";
   }, []);
@@ -116,7 +122,6 @@ const App: React.FC = () => {
     hardResetUi();
   }, [logout, hardResetUi]);
 
-  // ---------- SEND ----------
   const sendMessage = useCallback(
     async (msg: string) => {
       if (!user?.id) return;
@@ -124,7 +129,6 @@ const App: React.FC = () => {
       const clean = msg.trim();
       if (!clean) return;
 
-      // El UI ya bloquea cuando remaining <= 0, pero por si acaso:
       if (remaining <= 0) {
         setShowPaywall(true);
         return;
@@ -142,7 +146,7 @@ const App: React.FC = () => {
       setMessages((prev) => [...prev, { id: msgId, userText: clean, response: null }]);
 
       try {
-        const res = await fetchCorrection(clean, language, user.id);
+        const res = await fetchCorrection(clean, practiceLanguage, user.id);
 
         setMessages((prev) => prev.map((m) => (m.id === msgId ? { ...m, response: res } : m)));
 
@@ -158,7 +162,7 @@ const App: React.FC = () => {
         setLoading(false);
       }
     },
-    [user?.id, language, remaining]
+    [user?.id, practiceLanguage, remaining]
   );
 
   const handleSend = useCallback(() => {
@@ -183,7 +187,6 @@ const App: React.FC = () => {
     sendMessage(lastFailedMsg);
   }, [lastFailedMsg, sendMessage]);
 
-  // ---------- STRIPE ----------
   const handleSubscribe = useCallback(
     async (plan: "monthly" | "annual") => {
       if (!user?.id) return;
@@ -196,23 +199,29 @@ const App: React.FC = () => {
           body: JSON.stringify({ plan }),
         });
 
-        if (!r.ok) throw new Error("Checkout session failed");
+        if (!r.ok) {
+          const errorText = await r.text();
+          throw new Error(`Checkout session failed: ${r.status} ${errorText}`);
+        }
 
         const data = (await r.json()) as { url?: string };
-        if (data.url) window.location.href = data.url;
-      } catch {
-        // Si quieres, aquí puedes setear error visible en el paywall
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          throw new Error("No checkout URL returned");
+        }
+      } catch (error: any) {
+        console.error("Checkout error:", error.message);
+        setError(true);
       }
     },
     [user?.id]
   );
 
-  // ---------- UI HELPERS ----------
   const progress = Math.max(0, Math.min(100, (remaining / MAX_MENSAJES_DIARIOS) * 100));
   const inputDisabled = loading || remaining <= 0;
   const canSend = !!text.trim() && !loading && remaining > 0;
 
-  // ---------- RENDER ----------
   if (authLoading) {
     return (
       <div className="login-screen">
@@ -233,7 +242,7 @@ const App: React.FC = () => {
           <h1>
             <span>Polyglot</span> Point
           </h1>
-          <p className="login-phrase">{t.phrases[0]}</p>
+          <p className="login-phrase">{uiT.phrases[0]}</p>
 
           <div className="login-buttons">
             <button className="btn-oauth btn-google" onClick={handleLogin}>
@@ -255,7 +264,7 @@ const App: React.FC = () => {
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                 />
               </svg>
-              {t.loginWithGoogle}
+              {uiT.loginWithGoogle}
             </button>
           </div>
         </div>
@@ -272,35 +281,35 @@ const App: React.FC = () => {
               <span>Polyglot</span> Point
             </h1>
             <p className={`header-phrase ${phraseFade ? "fade-in" : "fade-out"}`}>
-              {t.phrases[phraseIndex]}
+              {practiceT.phrases[phraseIndex]}
             </p>
           </div>
 
           <div className="header-right">
             <div className="header-stats">
               <span className="messages-count">
-                {t.messagesLeft}: {remaining}/{MAX_MENSAJES_DIARIOS}
+                {uiT.messagesLeft}: {remaining}/{MAX_MENSAJES_DIARIOS}
               </span>
               <div className="progress-bar">
                 <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
               </div>
             </div>
             <button className="btn-logout" onClick={handleLogout}>
-              {t.logout}
+              {uiT.logout}
             </button>
           </div>
         </header>
 
         <div className="language-selector">
-          {IDIOMAS.map((lang) => (
+          {IDIOMAS.map((idioma) => (
             <button
-              key={lang.codigo}
-              className={`lang-btn ${language === lang.codigo ? "active" : ""}`}
-              onClick={() => { setLanguage(lang.codigo); setLanguageJustChanged(true); }}
+              key={idioma.codigo}
+              className={`lang-btn ${practiceLanguage === idioma.codigo ? "active" : ""}`}
+              onClick={() => setPracticeLanguage(idioma.codigo)}
               disabled={loading}
             >
-              <span className="lang-flag">{lang.flag}</span>
-              <span>{lang.nombre}</span>
+              <span className="lang-flag">{idioma.flag}</span>
+              <span>{idioma.nombre}</span>
             </button>
           ))}
         </div>
@@ -310,17 +319,17 @@ const App: React.FC = () => {
             <div className="response-card">
               {error ? (
                 <div className="error-state">
-                  <div className="error-icon">🤖</div>
-                  <h3>{t.error.title}</h3>
-                  <p>{t.error.message}</p>
+                  <div className="error-icon">X</div>
+                  <h3>{uiT.error.title}</h3>
+                  <p>{uiT.error.message}</p>
                   <button className="btn-retry" onClick={handleRetry}>
-                    {lastFailedMsg ? t.error.retry : "Cerrar"}
+                    {lastFailedMsg ? uiT.error.retry : "Cerrar"}
                   </button>
-                  <p className="error-contact">{t.error.contact}</p>
+                  <p className="error-contact">{uiT.error.contact}</p>
                 </div>
               ) : messages.length === 0 && !loading ? (
                 <div className="response-placeholder">
-                  <p>{t.placeholder}</p>
+                  <p>{uiT.placeholder}</p>
                 </div>
               ) : (
                 <div className="response-content">
@@ -352,7 +361,7 @@ const App: React.FC = () => {
                 value={text}
                 onChange={(e) => setText(e.target.value.slice(0, MAX_CHARS))}
                 onKeyDown={handleKeyDown}
-                placeholder={t.inputPlaceholder}
+                placeholder={uiT.inputPlaceholder}
                 disabled={inputDisabled}
               />
               <div className="input-footer">
@@ -360,7 +369,7 @@ const App: React.FC = () => {
                   {text.length}/{MAX_CHARS}
                 </span>
                 <button className={`btn-send ${canSend ? "active" : ""}`} onClick={handleSend} disabled={!canSend}>
-                  {loading ? t.sending : t.send}
+                  {loading ? uiT.sending : uiT.send}
                 </button>
               </div>
             </div>
@@ -371,10 +380,10 @@ const App: React.FC = () => {
       <footer className="app-footer">
         <div className="footer-links">
           <a href="/privacy-policy.html" target="_blank" rel="noreferrer">
-            {t.privacy}
+            {uiT.privacy}
           </a>
           <a href="/terms" target="_blank" rel="noreferrer">
-            {t.terms}
+            {uiT.terms}
           </a>
         </div>
       </footer>
@@ -382,42 +391,39 @@ const App: React.FC = () => {
       {showPaywall && (
         <div className="paywall-overlay">
           <div className="paywall-card">
-            <h2>{t.paywall.title}</h2>
-            <p>{t.paywall.subtitle}</p>
-
-            <div className="plan-option featured" onClick={() => handleSubscribe("annual")}>
-              <span className="plan-badge">{t.paywall.annualSave}</span>
-              <div className="plan-header">
-                <span className="plan-name">{t.paywall.annualLabel}</span>
-                <span className="plan-price">{t.paywall.annualPrice}</span>
-              </div>
-              <p className="plan-desc">{t.paywall.annualDesc}</p>
-              <p className="plan-note">{t.paywall.annualPerMonth}</p>
-            </div>
+            <h2>{uiT.paywall.title}</h2>
+            <p>{uiT.paywall.subtitle}</p>
 
             <div className="plan-option" onClick={() => handleSubscribe("monthly")}>
               <div className="plan-header">
-                <span className="plan-name">{t.paywall.monthlyLabel}</span>
-                <span className="plan-price">{t.paywall.monthlyPrice}</span>
+                <span className="plan-name">{uiT.paywall.monthlyLabel}</span>
+                <span className="plan-price">{uiT.paywall.monthlyPrice}</span>
               </div>
-              <p className="plan-desc">{t.paywall.monthlyDesc}</p>
+              <p className="plan-desc">{uiT.paywall.monthlyDesc}</p>
+            </div>
+
+            <div className="plan-option featured" onClick={() => handleSubscribe("annual")}>
+              <span className="plan-badge">{uiT.paywall.annualSave}</span>
+              <div className="plan-header">
+                <span className="plan-name">{uiT.paywall.annualLabel}</span>
+                <span className="plan-price">{uiT.paywall.annualPrice}</span>
+              </div>
+              <p className="plan-desc">{uiT.paywall.annualDesc}</p>
+              <p className="plan-note">{uiT.paywall.annualPerMonth}</p>
             </div>
 
             <button className="btn-subscribe" onClick={() => handleSubscribe("annual")}>
-              {t.paywall.subscribe}
+              {uiT.paywall.subscribe}
             </button>
 
             <div className="paywall-footer">
-              <p className="reset-notice">{t.paywall.resetNotice}</p>
-
-              {/* Si remaining=0, no dejes cerrarlo (si lo cierras, el usuario queda “atorado”) */}
               <button
                 className="btn-later"
                 onClick={() => {
                   if (remaining > 0) setShowPaywall(false);
                 }}
               >
-                {t.paywall.maybeLater}
+                {uiT.paywall.maybeLater}
               </button>
             </div>
           </div>
@@ -428,5 +434,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-
