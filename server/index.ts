@@ -12,7 +12,7 @@ import { setupVite, serveStatic, log } from "./vite";
 
 import passport from "./auth";
 import authRoutes from "./authRoutes";
-
+import billingRoutes from "./routes/billing.routes";
 import { fb } from "./utils/i18n";
 import { subscriptionManager } from "./services/subscriptionManager";
 
@@ -491,6 +491,7 @@ async function chatHandler(req: Request, res: Response) {
   app.post("/api/chat", chatHandler);
 
   app.use("/auth", authRoutes);
+  app.use("/api", billingRoutes);
 
   app.get("/api/me", (req: Request, res: Response) => {
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");

@@ -20,6 +20,10 @@ export const users = pgTable("users", {
   messagesBank: integer("messages_bank").notNull().default(20), // Freemium empieza con 20
   messagesUsedThisPeriod: integer("messages_used_this_period").notNull().default(0),
 
+  // Corral diario Premium (V5.0)
+  premiumMessagesToday: integer("premium_messages_today").notNull().default(0),
+  premiumLastResetDate: varchar("premium_last_reset_date", { length: 10 }), // "YYYY-MM-DD"
+  
   // Reloj de recarga (source-of-truth: Stripe si hay suscripción; fallback interno si lo necesitas)
   lastRefillDate: timestamp("last_refill_date").defaultNow().notNull(),
   nextRefillAt: timestamp("next_refill_at"), // se setea por backend/webhook si decides usarlo
@@ -110,31 +114,37 @@ export const planChanges = pgTable("plan_changes", {
   changedAtIdx: index("plan_changes_changed_at_idx").on(t.changedAt),
 }));
 
-// ========== CONSTANTES DEL MODELO ==========
+// ========== CONSTANTES DEL MODELO V5.0 ==========
 export const PLAN_CONFIG = {
   freemium: {
     baseMessages: 20,
     maxTokens: 1500,
     contextTurns: 2,
-    ceiling: 20, // no rollover
+    ceiling: 20,
     priceMonthlyCents: 0,
-    priceMonthly: 0, // compat (deprecated)
+    renewable: false,      // NO se renueva nunca
+    dailyLimit: null,      // Sin límite diario
+    rollover: false,
   },
   premium: {
-    baseMessages: 500,
+    baseMessages: 50,      // V5.0: 50/día
     maxTokens: 1500,
     contextTurns: 2,
-    ceiling: 1250, // 2.5x
-    priceMonthlyCents: 1800,
-    priceMonthly: 1800, // compat (deprecated)
+    ceiling: 50,           // No acumula
+    priceMonthlyCents: 1800, // $18
+    renewable: true,
+    dailyLimit: 50,        // CORRAL DIARIO
+    rollover: false,       // No acumula
   },
   pro: {
-    baseMessages: 1200,
+    baseMessages: 4500,    // V5.0: 4500/mes
     maxTokens: 2000,
     contextTurns: 5,
-    ceiling: 3000, // 2.5x
-    priceMonthlyCents: 3900,
-    priceMonthly: 3900, // compat (deprecated)
+    ceiling: 11250,        // V5.0: techo 2.5x
+    priceMonthlyCents: 2900, // $29
+    renewable: true,
+    dailyLimit: null,      // SIN límite diario
+    rollover: true,        // SÍ acumula
     priorityQueue: true,
   },
 } as const;
