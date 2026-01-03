@@ -575,8 +575,8 @@ async function chatHandler(req: Request, res: Response) {
         email: user.email,
         name: user.name,
         planType: user.planType || "freemium",
-        messagesBank: user.messagesBank || 20,
-        remainingMessages: user.messagesBank || 20,
+        messagesBank: user.messagesBank ?? 20,
+        remainingMessages: user.messagesBank ?? 20,
       });
       return;
     }
