@@ -6,9 +6,7 @@ import { eq } from 'drizzle-orm';
 
 const router = Router();
 
-router.post('/create-checkout-session', async (req: Request, res: Response) => {
-  try {
-    if (!req.isAuthenticated || !req.isAuthenticated() || !req.user) {
+router.post('/create-checkout-session', async (req: Request, res: Response) => {`n  try {`n    console.log(\"[Checkout DEBUG PREAUTH]\", { hasIsAuth: typeof (req as any).isAuthenticated === \"function\", isAuth: (req as any).isAuthenticated?.(), hasUser: !!(req as any).user, user: (req as any).user && { id: (req as any).user.id, email: (req as any).user.email } });`nif (!req.isAuthenticated || !req.isAuthenticated() || !req.user) {
       return res.status(401).json({ error: 'No autenticado' });
     }
 
@@ -77,3 +75,4 @@ console.log("[Checkout DEBUG]", { reqUserId: user?.id, reqEmail: user?.email, db
 });
 
 export default router;
+
