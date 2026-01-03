@@ -188,7 +188,7 @@ const App: React.FC = () => {
   }, [lastFailedMsg, sendMessage]);
 
   const handleSubscribe = useCallback(
-    async (plan: "monthly" | "annual") => {
+    async (plan: "premium" | "pro") => {
       if (!user?.id) return;
 
       try {
@@ -394,25 +394,25 @@ const App: React.FC = () => {
             <h2>{uiT.paywall.title}</h2>
             <p>{uiT.paywall.subtitle}</p>
 
-            <div className="plan-option" onClick={() => handleSubscribe("monthly")}>
+            <div className="plan-option" onClick={() => handleSubscribe("premium")}>
               <div className="plan-header">
-                <span className="plan-name">{uiT.paywall.monthlyLabel}</span>
-                <span className="plan-price">{uiT.paywall.monthlyPrice}</span>
+                <span className="plan-name">{uiT.paywall.premiumLabel}</span>
+                <span className="plan-price">{uiT.paywall.premiumPrice}</span>
               </div>
-              <p className="plan-desc">{uiT.paywall.monthlyDesc}</p>
+              <p className="plan-desc">{uiT.paywall.premiumDesc}</p>
             </div>
 
-            <div className="plan-option featured" onClick={() => handleSubscribe("annual")}>
-              <span className="plan-badge">{uiT.paywall.annualSave}</span>
+            <div className="plan-option featured" onClick={() => handleSubscribe("pro")}>
+              <span className="plan-badge">{uiT.paywall.proBadge}</span>
               <div className="plan-header">
-                <span className="plan-name">{uiT.paywall.annualLabel}</span>
-                <span className="plan-price">{uiT.paywall.annualPrice}</span>
+                <span className="plan-name">{uiT.paywall.proLabel}</span>
+                <span className="plan-price">{uiT.paywall.proPrice}</span>
               </div>
-              <p className="plan-desc">{uiT.paywall.annualDesc}</p>
-              <p className="plan-note">{uiT.paywall.annualPerMonth}</p>
+              <p className="plan-desc">{uiT.paywall.proDesc}</p>
+              <p className="plan-note">{uiT.paywall.proNote}</p>
             </div>
 
-            <button className="btn-subscribe" onClick={() => handleSubscribe("annual")}>
+            <button className="btn-subscribe" onClick={() => handleSubscribe("pro")}>
               {uiT.paywall.subscribe}
             </button>
 
