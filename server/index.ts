@@ -85,7 +85,7 @@ app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), async
           const { db } = await import("./db");
           const { users, PLAN_CONFIG } = await import("../shared/schema");
           const { eq } = await import("drizzle-orm");
-          
+          console.log(`[Stripe Webhook] DEBUG: userId=${userId}, plan=${plan}, customer=${session.customer}, subscription=${session.subscription}`);
           const config = PLAN_CONFIG[plan];
           
           await db.update(users).set({
