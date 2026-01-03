@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+﻿import { Router, Request, Response } from 'express';
 import { stripeService } from '../services/stripe.service';
 import { db } from '../db';
 import { users, PLAN_CONFIG } from '../../shared/schema';
@@ -16,17 +16,19 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
     const { plan } = req.body;
 
     if (plan !== 'premium' && plan !== 'pro') {
-      return res.status(400).json({ error: 'Plan inválido. Usa "premium" o "pro"' });
+      return res.status(400).json({ error: 'Plan invÃ¡lido. Usa "premium" o "pro"' });
     }
 
     // Obtener datos actuales del usuario
     const [dbUser] = await db.select().from(users).where(eq(users.id, user.id));
-    
+    console.log("[Checkout DEBUG]", { reqUserId: user?.id, reqEmail: user?.email, dbUserId: dbUser?.id, dbEmail: dbUser?.email, dbStripeCustomerId: dbUser?.stripeCustomerId });
+console.log("[Checkout DEBUG]", { reqUserId: user?.id, reqEmail: user?.email, dbUserId: dbUser?.id, dbEmail: dbUser?.email, dbStripeCustomerId: dbUser?.stripeCustomerId });
+
     if (!dbUser) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    // Si ya tiene suscripción activa, actualizar en lugar de crear nueva
+    // Si ya tiene suscripciÃ³n activa, actualizar en lugar de crear nueva
     if (dbUser.stripeSubscriptionId) {
       try {
         const result = await stripeService.updateSubscription({
@@ -51,11 +53,11 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
         });
       } catch (err: any) {
         console.error('Error updating subscription:', err);
-        // Si falla la actualización, crear nueva sesión
+        // Si falla la actualizaciÃ³n, crear nueva sesiÃ³n
       }
     }
 
-    // Crear nueva sesión de checkout
+    // Crear nueva sesiÃ³n de checkout
     const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
 
     const result = await stripeService.createCheckoutSession({
@@ -70,7 +72,7 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
     res.json(result);
   } catch (error) {
     console.error('Checkout error:', error);
-    res.status(500).json({ error: 'Error al crear sesión de pago' });
+    res.status(500).json({ error: 'Error al crear sesiÃ³n de pago' });
   }
 });
 
