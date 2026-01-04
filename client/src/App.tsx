@@ -54,6 +54,9 @@ const App: React.FC = () => {
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [phraseFade, setPhraseFade] = useState(true);
   const [lastFailedMsg, setLastFailedMsg] = useState<string | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    return !localStorage.getItem("polyglot_onboarding_seen");
+  });
 
   const uiT = translations[uiLanguage];
   const practiceT = translations[practiceLanguage];
@@ -75,20 +78,7 @@ const App: React.FC = () => {
         console.warn("No se pudo cargar usage");
         setRemaining(MAX_MENSAJES_DIARIOS);
       });
-
-    // Onboarding: mostrar mensaje de bienvenida la primera vez
-    const hasSeenOnboarding = localStorage.getItem("polyglot_onboarding_seen");
-    if (!hasSeenOnboarding) {
-      const onboardingText = translations[uiLanguage].onboarding;
-      const welcomeMsg: Message = {
-        id: "onboarding",
-        userText: "",
-        response: { corrected: onboardingText }
-      };
-      setMessages([welcomeMsg]);
-      localStorage.setItem("polyglot_onboarding_seen", "true");
-    }
-  }, [user?.id, uiLanguage]);
+  }, [user?.id]);
 
   useEffect(() => {
     if (user && remaining <= 0) setShowPaywall(true);
@@ -163,6 +153,12 @@ const App: React.FC = () => {
       setLastFailedMsg(null);
       setText("");
 
+      // Ocultar onboarding al enviar primer mensaje
+      if (showOnboarding) {
+        setShowOnboarding(false);
+        localStorage.setItem("polyglot_onboarding_seen", "true");
+      }
+
       setMessages((prev) => [...prev, { id: msgId, userText: clean, response: null }]);
 
       try {
@@ -183,7 +179,7 @@ const App: React.FC = () => {
         textareaRef.current?.focus();
       }
     },
-    [user?.id, practiceLanguage, remaining]
+    [user?.id, practiceLanguage, remaining, showOnboarding]
   );
 
   const handleSend = useCallback(() => {
@@ -351,14 +347,22 @@ const progress = Math.max(0, Math.min(100, (remaining / maxMessages) * 100));
                   <p className="error-contact">{uiT.error.contact}</p>
                 </div>
               ) : messages.length === 0 && !loading ? (
-                <div className="response-placeholder">
-                  <p>{uiT.placeholder}</p>
-                </div>
+                showOnboarding ? (
+                  <div className="onboarding-message">
+                    <div className="clara-response">
+                      <p className="clara-text">{practiceT.onboarding}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="response-placeholder">
+                    <p>{uiT.placeholder}</p>
+                  </div>
+                )
               ) : (
                 <div className="response-content">
                   {messages.map((msg) => (
                     <div key={msg.id} className="message-pair">
-                      {msg.userText && <div className="user-text">{msg.userText}</div>}
+                      <div className="user-text">{msg.userText}</div>
 
                       {msg.response ? (
                         <div className="clara-response">
