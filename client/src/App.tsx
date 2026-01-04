@@ -218,7 +218,9 @@ const App: React.FC = () => {
     [user?.id]
   );
 
-  const progress = Math.max(0, Math.min(100, (remaining / MAX_MENSAJES_DIARIOS) * 100));
+  const planType = user?.planType || "free";
+const maxMessages = planType === "pro" ? 4500 : planType === "premium" ? 50 : 20;
+const progress = Math.max(0, Math.min(100, (remaining / maxMessages) * 100));
   const inputDisabled = loading || remaining <= 0;
   const canSend = !!text.trim() && !loading && remaining > 0;
 
@@ -288,7 +290,7 @@ const App: React.FC = () => {
           <div className="header-right">
             <div className="header-stats">
               <span className="messages-count">
-                {planType === "pro" ? <>Mensajes del mes: {remaining}</> : <>{uiT.messagesLeft}: {remaining}/{MAX_MENSAJES_DIARIOS}</>}
+                {planType === "pro" ? <>Mensajes del mes: {remaining}/{maxMessages}</> : <>{uiT.messagesLeft}: {remaining}/{maxMessages}</>}
               </span>
               <div className="progress-bar">
                 <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
@@ -434,5 +436,6 @@ const App: React.FC = () => {
 };
 
 export default App;
+
 
 
