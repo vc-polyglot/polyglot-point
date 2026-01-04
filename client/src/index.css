@@ -767,3 +767,23 @@ body {
 
 
 
+
+.login-tagline {
+  font-size: 1.4rem;
+  color: #2d5016;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.login-features {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+  text-align: left;
+}
+
+.feature {
+  font-size: 1rem;
+  color: #555;
+}
