@@ -8,7 +8,7 @@
       "Aprende haciendo"
     ],
     placeholder: "Escribe lo que quieras practicar o corregir...",
-    inputPlaceholder: "Escribe aquí tu texto...",
+    inputPlaceholder: "Escribe lo que quieras, Clara te ayuda a mejorarlo",
     send: "Enviar",
     sending: "Enviando...",
     messagesLeft: "Mensajes hoy",
@@ -16,7 +16,7 @@
     loginWithGoogle: "Continuar con Google",
     loginWithApple: "Continuar con Apple",
     paywall: {
-      title: "Has usado tus mensajes gratis",
+      title: "¿Te está sirviendo?",
       subtitle: "Clara está lista para seguir. ¿Y tú?",
       premiumLabel: "Premium",
       premiumPrice: "$18/mes",
@@ -26,9 +26,8 @@
       proBadge: "Más popular",
       proDesc: "4,500 mensajes/mes + rollover + respuestas largas",
       proNote: "Sin límite diario",
-      subscribe: "Suscribirme",
-      maybeLater: "Quizás después"
-    },
+      subscribe: "Seguir practicando",
+      maybeLater: "Quizás después",warning15: "Te quedan 5 mensajes hoy. ¿Quieres seguir sin límite?",postPayment: "¡Listo! Ya puedes seguir practicando"},
     error: {
       title: "¡Ups! Algo salió mal",
       message: "Clara se tropezó con un cable. Ya la estamos levantando.",
@@ -47,7 +46,7 @@
       "Learn by doing"
     ],
     placeholder: "Write whatever you want to practice or correct...",
-    inputPlaceholder: "Write your text here...",
+    inputPlaceholder: "Write whatever you want, Clara helps you improve it",
     send: "Send",
     sending: "Sending...",
     messagesLeft: "Messages today",
@@ -55,7 +54,7 @@
     loginWithGoogle: "Continue with Google",
     loginWithApple: "Continue with Apple",
     paywall: {
-      title: "You've used your free messages",
+      title: "Is this working for you?",
       subtitle: "Clara is ready to keep going. Are you?",
       premiumLabel: "Premium",
       premiumPrice: "$18/month",
@@ -65,9 +64,8 @@
       proBadge: "Most popular",
       proDesc: "4,500 messages/month + rollover + longer responses",
       proNote: "No daily limit",
-      subscribe: "Subscribe",
-      maybeLater: "Maybe later"
-    },
+      subscribe: "Keep practicing",
+      maybeLater: "Maybe later",warning15: "You have 5 messages left today. Want unlimited?",postPayment: "Done! You can keep practicing now"},
     error: {
       title: "Oops! Something went wrong",
       message: "Clara tripped over a cable. We're picking her up.",
@@ -86,7 +84,7 @@
       "Apprends en faisant"
     ],
     placeholder: "Écris ce que tu veux pratiquer ou corriger...",
-    inputPlaceholder: "Écris ton texte ici...",
+    inputPlaceholder: "Écris ce que tu veux, Clara t'aide à l'améliorer",
     send: "Envoyer",
     sending: "Envoi...",
     messagesLeft: "Messages aujourd'hui",
@@ -94,7 +92,7 @@
     loginWithGoogle: "Continuer avec Google",
     loginWithApple: "Continuer avec Apple",
     paywall: {
-      title: "Tu as utilisé tes messages gratuits",
+      title: "Ça te sert?",
       subtitle: "Clara est prête à continuer. Et toi?",
       premiumLabel: "Premium",
       premiumPrice: "18$/mois",
@@ -104,9 +102,8 @@
       proBadge: "Le plus populaire",
       proDesc: "4 500 messages/mois + report + réponses longues",
       proNote: "Sans limite quotidienne",
-      subscribe: "S'abonner",
-      maybeLater: "Peut-être plus tard"
-    },
+      subscribe: "Continuer à pratiquer",
+      maybeLater: "Peut-être plus tard",warning15: "Il te reste 5 messages aujourd'hui. Tu veux continuer sans limite?",postPayment: "C'est fait! Tu peux continuer à pratiquer"},
     error: {
       title: "Oups! Quelque chose s'est mal passé",
       message: "Clara a trébuché sur un câble. On la relève.",
@@ -125,7 +122,7 @@
       "Impara facendo"
     ],
     placeholder: "Scrivi quello che vuoi esercitare o correggere...",
-    inputPlaceholder: "Scrivi il tuo testo qui...",
+    inputPlaceholder: "Scrivi quello che vuoi, Clara ti aiuta a migliorarlo",
     send: "Invia",
     sending: "Invio...",
     messagesLeft: "Messaggi oggi",
@@ -133,7 +130,7 @@
     loginWithGoogle: "Continua con Google",
     loginWithApple: "Continua con Apple",
     paywall: {
-      title: "Hai usato i tuoi messaggi gratuiti",
+      title: "Ti sta servendo?",
       subtitle: "Clara è pronta a continuare. E tu?",
       premiumLabel: "Premium",
       premiumPrice: "18$/mese",
@@ -143,9 +140,8 @@
       proBadge: "Più popolare",
       proDesc: "4.500 messaggi/mese + rollover + risposte lunghe",
       proNote: "Senza limite giornaliero",
-      subscribe: "Abbonati",
-      maybeLater: "Forse dopo"
-    },
+      subscribe: "Continua a praticare",
+      maybeLater: "Forse dopo",warning15: "Ti restano 5 messaggi oggi. Vuoi continuare senza limiti?",postPayment: "Fatto! Puoi continuare a praticare"},
     error: {
       title: "Ops! Qualcosa è andato storto",
       message: "Clara è inciampata in un cavo. La stiamo rialzando.",
@@ -164,7 +160,7 @@
       "Lerne durch Tun"
     ],
     placeholder: "Schreib, was du üben oder korrigieren möchtest...",
-    inputPlaceholder: "Schreib hier deinen Text...",
+    inputPlaceholder: "Schreib was du willst, Clara hilft dir es zu verbessern",
     send: "Senden",
     sending: "Senden...",
     messagesLeft: "Nachrichten heute",
@@ -172,7 +168,7 @@
     loginWithGoogle: "Weiter mit Google",
     loginWithApple: "Weiter mit Apple",
     paywall: {
-      title: "Du hast deine kostenlosen Nachrichten verbraucht",
+      title: "Hilft es dir?",
       subtitle: "Clara ist bereit weiterzumachen. Du auch?",
       premiumLabel: "Premium",
       premiumPrice: "18$/Monat",
@@ -182,9 +178,8 @@
       proBadge: "Am beliebtesten",
       proDesc: "4.500 Nachrichten/Monat + Übertrag + längere Antworten",
       proNote: "Kein Tageslimit",
-      subscribe: "Abonnieren",
-      maybeLater: "Vielleicht später"
-    },
+      subscribe: "Weiter üben",
+      maybeLater: "Vielleicht später",warning15: "Du hast noch 5 Nachrichten heute. Willst du unbegrenzt weitermachen?",postPayment: "Fertig! Du kannst jetzt weiter üben"},
     error: {
       title: "Ups! Etwas ist schiefgelaufen",
       message: "Clara ist über ein Kabel gestolpert. Wir helfen ihr auf.",
@@ -203,7 +198,7 @@
       "Aprenda fazendo"
     ],
     placeholder: "Escreva o que quiser praticar ou corrigir...",
-    inputPlaceholder: "Escreva seu texto aqui...",
+    inputPlaceholder: "Escreva o que quiser, Clara te ajuda a melhorar",
     send: "Enviar",
     sending: "Enviando...",
     messagesLeft: "Mensagens hoje",
@@ -211,7 +206,7 @@
     loginWithGoogle: "Continuar com Google",
     loginWithApple: "Continuar com Apple",
     paywall: {
-      title: "Você usou suas mensagens grátis",
+      title: "Está te ajudando?",
       subtitle: "Clara está pronta para continuar. E você?",
       premiumLabel: "Premium",
       premiumPrice: "$18/mês",
@@ -221,9 +216,8 @@
       proBadge: "Mais popular",
       proDesc: "4.500 mensagens/mês + acúmulo + respostas longas",
       proNote: "Sem limite diário",
-      subscribe: "Assinar",
-      maybeLater: "Talvez depois"
-    },
+      subscribe: "Continuar praticando",
+      maybeLater: "Talvez depois",warning15: "Você tem 5 mensagens restantes hoje. Quer continuar sem limite?",postPayment: "Pronto! Você pode continuar praticando"},
     error: {
       title: "Ops! Algo deu errado",
       message: "Clara tropeçou em um cabo. Estamos levantando ela.",
