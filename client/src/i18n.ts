@@ -27,7 +27,10 @@
       proDesc: "4,500 mensajes/mes + rollover + respuestas largas",
       proNote: "Sin límite diario",
       subscribe: "Seguir practicando",
-      maybeLater: "Quizás después",warning15: "Te quedan 5 mensajes hoy. ¿Quieres seguir sin límite?",postPayment: "¡Listo! Ya puedes seguir practicando"},
+      maybeLater: "Quizás después",
+      warning15: "Te quedan 5 mensajes hoy. ¿Quieres seguir sin límite?",
+      postPayment: "¡Listo! Ya puedes seguir practicando"
+    },
     error: {
       title: "¡Ups! Algo salió mal",
       message: "Clara se tropezó con un cable. Ya la estamos levantando.",
@@ -35,7 +38,8 @@
       contact: "Si esto sigue pasando, escríbenos a soporte@polyglotpoint.com"
     },
     privacy: "Privacidad",
-    terms: "Términos"
+    terms: "Términos",
+    onboarding: "¡Hola! Soy Clara 👋 Escribe algo en el idioma que quieras practicar y te ayudo a mejorarlo. ¡Sin pena, aquí se vale equivocarse!"
   },
   en: {
     title: "Polyglot Point",
@@ -65,7 +69,10 @@
       proDesc: "4,500 messages/month + rollover + longer responses",
       proNote: "No daily limit",
       subscribe: "Keep practicing",
-      maybeLater: "Maybe later",warning15: "You have 5 messages left today. Want unlimited?",postPayment: "Done! You can keep practicing now"},
+      maybeLater: "Maybe later",
+      warning15: "You have 5 messages left today. Want unlimited?",
+      postPayment: "Done! You can keep practicing now"
+    },
     error: {
       title: "Oops! Something went wrong",
       message: "Clara tripped over a cable. We're picking her up.",
@@ -73,7 +80,8 @@
       contact: "If this keeps happening, drop us a line at soporte@polyglotpoint.com"
     },
     privacy: "Privacy",
-    terms: "Terms"
+    terms: "Terms",
+    onboarding: "Hi! I'm Clara 👋 Write something in the language you want to practice and I'll help you improve it. No judgment, mistakes are welcome here!"
   },
   fr: {
     title: "Polyglot Point",
@@ -103,7 +111,10 @@
       proDesc: "4 500 messages/mois + report + réponses longues",
       proNote: "Sans limite quotidienne",
       subscribe: "Continuer à pratiquer",
-      maybeLater: "Peut-être plus tard",warning15: "Il te reste 5 messages aujourd'hui. Tu veux continuer sans limite?",postPayment: "C'est fait! Tu peux continuer à pratiquer"},
+      maybeLater: "Peut-être plus tard",
+      warning15: "Il te reste 5 messages aujourd'hui. Tu veux continuer sans limite?",
+      postPayment: "C'est fait! Tu peux continuer à pratiquer"
+    },
     error: {
       title: "Oups! Quelque chose s'est mal passé",
       message: "Clara a trébuché sur un câble. On la relève.",
@@ -111,7 +122,8 @@
       contact: "Si ça continue, écris-nous à soporte@polyglotpoint.com"
     },
     privacy: "Confidentialité",
-    terms: "Conditions"
+    terms: "Conditions",
+    onboarding: "Salut! Je suis Clara 👋 Écris quelque chose dans la langue que tu veux pratiquer et je t'aide à l'améliorer. Sans gêne, ici on a le droit de se tromper!"
   },
   it: {
     title: "Polyglot Point",
@@ -141,7 +153,10 @@
       proDesc: "4.500 messaggi/mese + rollover + risposte lunghe",
       proNote: "Senza limite giornaliero",
       subscribe: "Continua a praticare",
-      maybeLater: "Forse dopo",warning15: "Ti restano 5 messaggi oggi. Vuoi continuare senza limiti?",postPayment: "Fatto! Puoi continuare a praticare"},
+      maybeLater: "Forse dopo",
+      warning15: "Ti restano 5 messaggi oggi. Vuoi continuare senza limiti?",
+      postPayment: "Fatto! Puoi continuare a praticare"
+    },
     error: {
       title: "Ops! Qualcosa è andato storto",
       message: "Clara è inciampata in un cavo. La stiamo rialzando.",
@@ -149,7 +164,8 @@
       contact: "Se continua, scrivici a soporte@polyglotpoint.com"
     },
     privacy: "Privacy",
-    terms: "Termini"
+    terms: "Termini",
+    onboarding: "Ciao! Sono Clara 👋 Scrivi qualcosa nella lingua che vuoi praticare e ti aiuto a migliorarlo. Senza vergogna, qui si può sbagliare!"
   },
   de: {
     title: "Polyglot Point",
@@ -179,7 +195,10 @@
       proDesc: "4.500 Nachrichten/Monat + Übertrag + längere Antworten",
       proNote: "Kein Tageslimit",
       subscribe: "Weiter üben",
-      maybeLater: "Vielleicht später",warning15: "Du hast noch 5 Nachrichten heute. Willst du unbegrenzt weitermachen?",postPayment: "Fertig! Du kannst jetzt weiter üben"},
+      maybeLater: "Vielleicht später",
+      warning15: "Du hast noch 5 Nachrichten heute. Willst du unbegrenzt weitermachen?",
+      postPayment: "Fertig! Du kannst jetzt weiter üben"
+    },
     error: {
       title: "Ups! Etwas ist schiefgelaufen",
       message: "Clara ist über ein Kabel gestolpert. Wir helfen ihr auf.",
@@ -187,7 +206,8 @@
       contact: "Wenn das weiterhin passiert, schreib uns an soporte@polyglotpoint.com"
     },
     privacy: "Datenschutz",
-    terms: "AGB"
+    terms: "AGB",
+    onboarding: "Hallo! Ich bin Clara 👋 Schreib etwas in der Sprache, die du üben möchtest, und ich helfe dir, es zu verbessern. Keine Scheu, hier darf man Fehler machen!"
   },
   pt: {
     title: "Polyglot Point",
@@ -217,7 +237,10 @@
       proDesc: "4.500 mensagens/mês + acúmulo + respostas longas",
       proNote: "Sem limite diário",
       subscribe: "Continuar praticando",
-      maybeLater: "Talvez depois",warning15: "Você tem 5 mensagens restantes hoje. Quer continuar sem limite?",postPayment: "Pronto! Você pode continuar praticando"},
+      maybeLater: "Talvez depois",
+      warning15: "Você tem 5 mensagens restantes hoje. Quer continuar sem limite?",
+      postPayment: "Pronto! Você pode continuar praticando"
+    },
     error: {
       title: "Ops! Algo deu errado",
       message: "Clara tropeçou em um cabo. Estamos levantando ela.",
@@ -225,7 +248,8 @@
       contact: "Se isso continuar, escreva para soporte@polyglotpoint.com"
     },
     privacy: "Privacidade",
-    terms: "Termos"
+    terms: "Termos",
+    onboarding: "Oi! Sou a Clara 👋 Escreva algo no idioma que você quer praticar e eu te ajudo a melhorar. Sem vergonha, aqui pode errar!"
   }
 };
 

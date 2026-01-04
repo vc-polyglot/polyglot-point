@@ -75,7 +75,20 @@ const App: React.FC = () => {
         console.warn("No se pudo cargar usage");
         setRemaining(MAX_MENSAJES_DIARIOS);
       });
-  }, [user?.id]);
+
+    // Onboarding: mostrar mensaje de bienvenida la primera vez
+    const hasSeenOnboarding = localStorage.getItem("polyglot_onboarding_seen");
+    if (!hasSeenOnboarding) {
+      const onboardingText = translations[uiLanguage].onboarding;
+      const welcomeMsg: Message = {
+        id: "onboarding",
+        userText: "",
+        response: { corrected: onboardingText }
+      };
+      setMessages([welcomeMsg]);
+      localStorage.setItem("polyglot_onboarding_seen", "true");
+    }
+  }, [user?.id, uiLanguage]);
 
   useEffect(() => {
     if (user && remaining <= 0) setShowPaywall(true);
@@ -345,7 +358,7 @@ const progress = Math.max(0, Math.min(100, (remaining / maxMessages) * 100));
                 <div className="response-content">
                   {messages.map((msg) => (
                     <div key={msg.id} className="message-pair">
-                      <div className="user-text">{msg.userText}</div>
+                      {msg.userText && <div className="user-text">{msg.userText}</div>}
 
                       {msg.response ? (
                         <div className="clara-response">
