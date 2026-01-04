@@ -4,12 +4,12 @@ import { translations, type Language } from "./i18n";
 import { useAuth } from "./auth/AuthContext";
 
 const IDIOMAS: { codigo: Language; nombre: string; flag: string }[] = [
-  { codigo: "es", nombre: "Español", flag: "🇪🇸" },
-  { codigo: "en", nombre: "English", flag: "🇬🇧" },
-  { codigo: "fr", nombre: "Français", flag: "🇫🇷" },
-  { codigo: "it", nombre: "Italiano", flag: "🇮🇹" },
-  { codigo: "de", nombre: "Deutsch", flag: "🇩🇪" },
-  { codigo: "pt", nombre: "Português", flag: "🇵🇹" },
+  { codigo: "es", nombre: "Español", flag: "????" },
+  { codigo: "en", nombre: "English", flag: "????" },
+  { codigo: "fr", nombre: "Français", flag: "????" },
+  { codigo: "it", nombre: "Italiano", flag: "????" },
+  { codigo: "de", nombre: "Deutsch", flag: "????" },
+  { codigo: "pt", nombre: "Português", flag: "????" },
 ];
 
 type Message = {
@@ -288,7 +288,7 @@ const App: React.FC = () => {
           <div className="header-right">
             <div className="header-stats">
               <span className="messages-count">
-                {uiT.messagesLeft}: {remaining}/{MAX_MENSAJES_DIARIOS}
+                {planType === "pro" ? <>Mensajes del mes: {remaining}</> : <>{uiT.messagesLeft}: {remaining}/{MAX_MENSAJES_DIARIOS}</>}
               </span>
               <div className="progress-bar">
                 <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
@@ -319,7 +319,7 @@ const App: React.FC = () => {
             <div className="response-card">
               {error ? (
                 <div className="error-state">
-                  <div className="error-icon">🤖</div>
+                  <div className="error-icon">??</div>
                   <h3>{uiT.error.title}</h3>
                   <p>{uiT.error.message}</p>
                   <button className="btn-retry" onClick={handleRetry}>
@@ -434,3 +434,5 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+
