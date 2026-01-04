@@ -4,12 +4,12 @@ import { translations, type Language } from "./i18n";
 import { useAuth } from "./auth/AuthContext";
 
 const IDIOMAS: { codigo: Language; nombre: string; flag: string }[] = [
-  { codigo: "es", nombre: "Español", flag: "????" },
-  { codigo: "en", nombre: "English", flag: "????" },
-  { codigo: "fr", nombre: "Français", flag: "????" },
-  { codigo: "it", nombre: "Italiano", flag: "????" },
-  { codigo: "de", nombre: "Deutsch", flag: "????" },
-  { codigo: "pt", nombre: "Português", flag: "????" },
+  { codigo: "es", nombre: "Español", flag: "🇪🇸" },
+  { codigo: "en", nombre: "English", flag: "🇬🇧" },
+  { codigo: "fr", nombre: "Français", flag: "🇫🇷" },
+  { codigo: "it", nombre: "Italiano", flag: "🇮🇹" },
+  { codigo: "de", nombre: "Deutsch", flag: "🇩🇪" },
+  { codigo: "pt", nombre: "Português", flag: "🇵🇹" },
 ];
 
 type Message = {
@@ -290,7 +290,7 @@ const progress = Math.max(0, Math.min(100, (remaining / maxMessages) * 100));
           <div className="header-right">
             <div className="header-stats">
               <span className="messages-count">
-                {planType === "pro" ? <>Mensajes del mes: {remaining}/{maxMessages}</> : <>{uiT.messagesLeft}: {remaining}/{maxMessages}</>}
+                {planType === "pro" ? <>Mensajes del mes: {remaining}</> : <>{uiT.messagesLeft}: {remaining}/{maxMessages}</>}
               </span>
               <div className="progress-bar">
                 <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
@@ -436,6 +436,7 @@ const progress = Math.max(0, Math.min(100, (remaining / maxMessages) * 100));
 };
 
 export default App;
+
 
 
 
