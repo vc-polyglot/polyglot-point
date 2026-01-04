@@ -59,6 +59,8 @@ const App: React.FC = () => {
   const practiceT = translations[practiceLanguage];
 
   const phraseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -100,6 +102,11 @@ const App: React.FC = () => {
     setPhraseIndex(0);
     setPhraseFade(true);
   }, [practiceLanguage]);
+
+  // Autoscroll cuando llegan mensajes o cambia loading
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
 
   const handleLogin = useCallback(() => {
     window.location.href = "/auth/google";
@@ -160,6 +167,7 @@ const App: React.FC = () => {
         setMessages((prev) => prev.filter((m) => m.id !== msgId));
       } finally {
         setLoading(false);
+        textareaRef.current?.focus();
       }
     },
     [user?.id, practiceLanguage, remaining]
@@ -352,6 +360,7 @@ const progress = Math.max(0, Math.min(100, (remaining / maxMessages) * 100));
                       )}
                     </div>
                   ))}
+                  <div ref={messagesEndRef} />
                 </div>
               )}
             </div>
@@ -360,10 +369,11 @@ const progress = Math.max(0, Math.min(100, (remaining / maxMessages) * 100));
           <div className="input-column">
             <div className="input-card">
               <textarea
+                ref={textareaRef}
                 value={text}
                 onChange={(e) => setText(e.target.value.slice(0, MAX_CHARS))}
                 onKeyDown={handleKeyDown}
-                placeholder={uiT.inputPlaceholder}
+                placeholder={practiceT.inputPlaceholder}
                 disabled={inputDisabled}
               />
               <div className="input-footer">
@@ -436,8 +446,3 @@ const progress = Math.max(0, Math.min(100, (remaining / maxMessages) * 100));
 };
 
 export default App;
-
-
-
-
-
