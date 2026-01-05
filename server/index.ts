@@ -252,25 +252,18 @@ function targetLanguageName(code: string): string {
 
 function buildClaraPrompt(language: string): string {
   const target = targetLanguageName(language);
-  return [
-    `Eres Clara, tutora de ${target} conversacional de Polyglot Point Write.`,
-    `Corriges ligero dentro del diálogo; enseñas por absorción como amiga culta.`,
-    `Siempre respondes en ${target}.`,
-    ``,
-    `REGLAS`,
-    `1) Si hay errores, integras la corrección dentro de tu respuesta de forma natural. Evitas explicaciones largas.`,
-    `2) SIEMPRE continúas la conversación: respondes al contenido y haces UNA pregunta natural o un comentario que invite a seguir.`,
-    `3) Tono cálido, paciente y directo. Sin emojis. Sin elogios vacíos. Sin moralizar.`,
-    `4) Si el usuario mezcla idiomas o insiste en hacerlo: "Noto que mezclas idiomas; quedémonos en ${target} para avanzar mejor."`,
-    ``,
-    `MEMORIA: usa el contexto de los últimos 3 intercambios para dar continuidad.`,
-    ``,
-    `SALIDA: Devuelve SOLO JSON válido con este esquema exacto:`,
-    `{"corrected":"Respuesta completa de Clara: corrección integrada + diálogo fluido + cierre natural"}`,
-    ``,
-    `INICIO: si no hay mensaje previo del usuario:`,
-    `{"corrected":"¡Hola! ¿En qué practicamos ${target} hoy?"}`,
-  ].join("\n");
+  return `Eres Clara, tutora de ${target}. Corriges ligero dentro del dialogo como amiga culta. SOLO respondes en ${target}.
+
+REGLAS:
+1. SIEMPRE continua conversacion (1 pregunta/comentario natural)
+2. Corrige TODOS los errores en el texto. Prioridad del peor al menos grave
+3. Cierres VARIAN: pregunta/comentario/invita elaborar
+4. Tono calido, directo. Sin emojis ni elogios vacios
+5. Si mezcla idiomas: senalalo EN ${target}, nunca en espanol
+6. NUNCA uses otro idioma para traducir. NUNCA inventes datos personales (edad, gustos)
+7. SOLO corrige si HAY error. Si esta bien, NO menciones correccion
+
+JSON: {"corrected":"respuesta 100% en ${target}"}`;
 }
 
 type ClaraParsed = { corrected: string };
@@ -445,19 +438,25 @@ async function chatHandler(req: Request, res: Response) {
   try {
     const client = getOpenAI();
 
-    const memoria = chatSession.ventana.slice(-3).map((m) => `${m.role}: ${m.content}`).join("\n");
-    const prompt = `${buildClaraPrompt(language)}\n[CONTEXTO_PREVIO]\n${memoria}\n[MENSAJE_USUARIO]\n${input}`;
+    const historial = chatSession.ventana.slice(-6);
+const messages: Array<{role: "system" | "user" | "assistant", content: string}> = [
+  { role: "system", content: buildClaraPrompt(language) }
+];
+for (const msg of historial) {
+  messages.push({ role: msg.role as "user" | "assistant", content: msg.content });
+}
+messages.push({ role: "user", content: input });
 
-    const completion = await timeout(
-      client.chat.completions.create({
-        model: "gpt-4o-mini",
-        temperature: 0.25,
-        max_tokens: 500,
-        messages: [{ role: "system", content: prompt } as any],
-        response_format: { type: "json_object" },
-      }),
-      10000
-    );
+const completion = await timeout(
+  client.chat.completions.create({
+    model: "gpt-4o-mini",
+    temperature: 0.5,
+    max_tokens: 600,
+    messages: messages,
+    response_format: { type: "json_object" },
+  }),
+  10000
+);
 
     rawResponse = completion.choices[0]?.message?.content || "";
     if (!rawResponse.trim() || rawResponse.length > 10000) throw new Error("Respuesta OpenAI inválida");
