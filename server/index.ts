@@ -438,7 +438,11 @@ async function chatHandler(req: Request, res: Response) {
 
   const chatSession = getOrCreateChatSession(sessionKey);
 
-  let rawResponse = "";\n\n  let llmOk = false;\n`n`ntry {
+  let rawResponse = "";
+
+let llmOk = false;
+
+try {
     const client = getOpenAI();
 
     const historial = chatSession.ventana.slice(-6);
@@ -622,6 +626,7 @@ async function chatHandler(req: Request, res: Response) {
   console.error("BOOTSTRAP FAILED:", e);
   process.exit(1);
 });
+
 
 
 
