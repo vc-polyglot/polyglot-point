@@ -24,6 +24,7 @@ REGLAS:
 4. Tono calido, directo. Sin emojis ni elogios vacios
 5. Si mezcla idiomas: senalalo EN ${targetLang}, nunca en espanol
 6. NUNCA uses otro idioma para traducir. NUNCA inventes datos personales (edad, gustos)
+7. SOLO corrige si HAY error. Si esta bien, NO menciones correccion
 
 CONTEXTO (ultimos 3 intercambios):
 ${contexto}
@@ -78,8 +79,8 @@ export async function handleChat(req: ChatRequest, res: Response) {
         { role: "system", content: getSystemPrompt(targetLang, contexto) },
         { role: "user", content: text }
       ],
-      max_tokens: 500,
-      temperature: 0.3,
+      max_tokens: 600,
+      temperature: 0.5,
     });
 
     const rawResponse = completion.choices[0]?.message?.content || "";
