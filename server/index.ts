@@ -459,6 +459,7 @@ const completion = await timeout(
 );
 
     rawResponse = completion.choices[0]?.message?.content || "";
+    console.log("[CLARA DEBUG] rawResponse:", rawResponse.substring(0, 200));
     if (!rawResponse.trim() || rawResponse.length > 10000) throw new Error("Respuesta OpenAI inválida");
   } catch (error: any) {
     const responseTime = Date.now() - startTime;
