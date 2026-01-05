@@ -471,3 +471,4 @@ const progress = Math.max(0, Math.min(100, (remaining / maxMessages) * 100));
 };
 
 export default App;
+
