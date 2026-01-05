@@ -12,6 +12,14 @@ const IDIOMAS: { codigo: Language; nombre: string; flag: string }[] = [
   { codigo: "pt", nombre: "Português", flag: "🇵🇹" },
 ];
 
+const PLACEHOLDER_BY_LANG: Record<Language, string> = {
+  es: "Inicia una conversación cotidiana: escribe y practica respuestas naturales…",
+  en: "Start an everyday conversation: write and practice natural replies…",
+  fr: "Commence une conversation du quotidien : écris et pratique des réponses naturelles…",
+  it: "Inizia una conversazione quotidiana: scrivi e fai pratica con risposte naturali…",
+  de: "Starte ein Alltagsgespräch: schreibe und übe natürliche Antworten…",
+  pt: "Inicia uma conversa do dia a dia: escreve e pratica respostas naturais…",
+};
 type Message = {
   id: string;
   userText: string;
@@ -390,7 +398,7 @@ const progress = Math.max(0, Math.min(100, (remaining / maxMessages) * 100));
                 value={text}
                 onChange={(e) => setText(e.target.value.slice(0, MAX_CHARS))}
                 onKeyDown={handleKeyDown}
-                placeholder={practiceT.inputPlaceholder}
+                placeholder={PLACEHOLDER_BY_LANG[practiceLanguage]}
                 disabled={inputDisabled}
               />
               <div className="input-footer">
