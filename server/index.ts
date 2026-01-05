@@ -224,10 +224,11 @@ function getOrCreateChatSession(key: string): ChatSession {
 
 function updateChatSession(key: string, userMsg: string, assistantMsg: string): void {
   const s = getOrCreateChatSession(key);
-  s.ventana = [
-    { role: "user", content: userMsg },
-    { role: "assistant", content: assistantMsg },
-  ];
+  function updateChatSession(key: string, userMsg: string, assistantMsg: string): void {
+  const s = getOrCreateChatSession(key);
+  s.ventana.push({ role: "user", content: userMsg });
+  s.ventana.push({ role: "assistant", content: assistantMsg });
+  if (s.ventana.length > 6) s.ventana.splice(0, 2);
   s.lastAccess = Date.now();
 }
 
