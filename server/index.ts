@@ -238,6 +238,18 @@ function timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   ]);
 }
 
+function targetLanguageName(code: string): string {
+  const LANG: Record<string, string> = {
+    es: "español",
+    en: "inglés",
+    fr: "francés",
+    it: "italiano",
+    de: "alemán",
+    pt: "portugués",
+  };
+  return LANG[code] || "español";
+}
+
 function buildClaraPrompt(language: string): string {
   const target = targetLanguageName(language);
   return `Eres Clara, tutora de ${target}. Corriges ligero dentro del dialogo como amiga culta. SOLO respondes en ${target}.
