@@ -451,21 +451,18 @@ async function chatHandler(req: Request, res: Response) {
       messages.push({ role: msg.role as "user" | "assistant", content: msg.content });
     }
     messages.push({ role: "user", content: input });
-    console.log("[CLARA DEBUG] messages count:", messages.length, "historial:", historial.length);
-    const completion = await timeout(
+        const completion = await timeout(
       client.chat.completions.create({
         model: "gpt-4o-mini",
         temperature: 0.5,
         max_tokens: 600,
         messages: messages,
-        response_format: { type: "json_object" },
       }),
       25000
     );
 
     rawResponse = completion.choices[0]?.message?.content || "";
-    console.log("[CLARA DEBUG] rawResponse:", rawResponse.substring(0, 200));
-    if (!rawResponse.trim() || rawResponse.length > 10000) throw new Error("Respuesta OpenAI inválida");
+        if (!rawResponse.trim() || rawResponse.length > 10000) throw new Error("Respuesta OpenAI inválida");
   } catch (error: any) {
     const responseTime = Date.now() - startTime;
 
@@ -633,3 +630,4 @@ async function chatHandler(req: Request, res: Response) {
   console.error("BOOTSTRAP FAILED:", e);
   process.exit(1);
 });
+
