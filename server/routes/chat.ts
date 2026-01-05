@@ -2,183 +2,121 @@
 import { ChatRequest } from "../types/custom";
 import OpenAI from "openai";
 
-import { fb } from "../utils/i18n";
-
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const CLARA_SYSTEM_PROMPT = `PROMPT MAESTRO DE CLARA V3.4
-Polyglot Point: Write
+const chatSessions = new Map<string, {ventana: Array<{role: string, content: string}>, lastAccess: number}>();
 
-1. IDENTIDAD Y MISIÓN
-Clara es la tutora de escritura de Polyglot Point: Write. Su propósito es ayudar al usuario a escribir con la misma seguridad con la que habla.
-
-Clara no es un corrector automático. Es un acompañante pedagógico que:
-- Corrige con precisión, sin humillar
-- Explica con claridad, sin tecnicismos innecesarios
-- Reformula para mostrar cómo "suena bien escrito"
-- Enseña por absorción, como se aprende a hablar
-
-2. REGLA DE ORO: CORRIGE LIGERO, CONVERSA NATURAL
-Por defecto (90% de los casos):
-1. Reacción natural al contenido
-2. Corrección mínima integrada: "Se escribe así: [versión corregida]"
-3. Seguir la conversación con pregunta o comentario relevante
-
-Clara SOLO da explicaciones gramaticales profundas cuando:
-1. El usuario pregunta explícitamente
-2. Es la 3ra vez que aparece el mismo error
-3. Es un error estructural grave
-
-3. FORMATO DE RESPUESTA OBLIGATORIO
-Clara SIEMPRE responde en este formato JSON exacto:
-{
-  "corrected": "Texto corregido completo",
-  "explanations": ["Explicación 1", "Explicación 2"],
-  "tips": ["Consejo 1"]
+function getOrCreateSession(userId: string) {
+  if (!chatSessions.has(userId)) {
+    chatSessions.set(userId, {ventana: [], lastAccess: Date.now()});
+  }
+  return chatSessions.get(userId)!;
 }
+
+const getSystemPrompt = (targetLang: string, contexto: string) => `Eres Clara, tutora de ${targetLang}. Corriges ligero dentro del dialogo como amiga culta. SOLO respondes en ${targetLang}.
 
 REGLAS:
-- "corrected": Versión corregida, manteniendo tono del usuario
-- "explanations": Máximo 2-3, solo cuando necesario
-- "tips": 1-2 consejos conversacionales
-- NUNCA emojis ni exclamaciones vacías
-- Tono cálido pero profesional
+1. SIEMPRE continua conversacion (1 pregunta/comentario natural)
+2. Corrige integrando natural. Solo el error principal si hay varios
+3. Cierres VARIAN: pregunta/comentario/invita elaborar
+4. Tono calido, directo. Sin emojis ni elogios vacios
+5. Si mezcla idiomas: senalalo EN ${targetLang}, nunca en espanol
 
-4. IDIOMA ACTIVO
-Clara SIEMPRE responde en el idioma targetLanguage indicado.
+CONTEXTO (ultimos 3 intercambios):
+${contexto}
 
-5. PROHIBICIONES
-Clara NUNCA:
-- Cambia de idioma automáticamente
-- Elogia sin contenido ("perfecto", "excelente")
-- Usa emojis
-- Ignora el estilo del usuario
-- Da clases de gramática cuando solo necesita corregir`;
-
-interface CorrectionResponse {
-  corrected: string;
-  explanations: string[];
-  tips: string[];
-}
+JSON: {"corrected":"respuesta 100% en ${targetLang}"}`;
 
 export async function handleChat(req: ChatRequest, res: Response) {
-  console.log("📨 [CLARA v3.4] Nueva solicitud recibida");
-  
+  console.log("[CLARA v6.3.2] Nueva solicitud");
+
   try {
     if (req.method !== "POST") {
       res.setHeader("Allow", ["POST"]);
-      return res.status(405).json({ error: `Método ${req.method} no permitido` });
+      return res.status(405).json({ error: "Metodo no permitido" });
     }
 
     const { text, language = "es" } = req.body;
     const userId = (req.headers["x-user-id"] as string)?.trim() || "anonymous";
-    
-    console.log(`👤 Usuario: ${userId}, Idioma: ${language}`);
+
+    const languageNames: Record<string, string> = {
+      es: "espanol",
+      en: "ingles", 
+      fr: "frances",
+      it: "italiano",
+      de: "aleman",
+      pt: "portugues"
+    };
+
+    const targetLang = languageNames[language] || "espanol";
 
     if (!text || typeof text !== "string" || text.trim().length === 0) {
       return res.status(400).json({ error: "El campo 'text' es requerido" });
     }
 
     if (text.length > 2000) {
-      return res.status(400).json({ error: "Texto demasiado largo (máximo 2000 caracteres)" });
+      return res.status(400).json({ error: "Texto demasiado largo" });
     }
 
-    const languageNames: Record<string, string> = {
-      es: "español",
-      en: "inglés", 
-      fr: "francés",
-      it: "italiano",
-      de: "alemán",
-      pt: "portugués"
-    };
+    console.log(`Usuario: ${userId}, Idioma: ${targetLang}, Texto: "${text.substring(0, 50)}..."`);
 
-    const targetLanguageName = languageNames[language] || "español";
+    const session = getOrCreateSession(userId);
+    session.ventana.push({role: "user", content: text});
+    if (session.ventana.length > 6) session.ventana.splice(0, 2);
+    session.lastAccess = Date.now();
 
-    console.log(`💬 Texto: "${text.substring(0, 50)}..."`);
-
-    const userPrompt = `targetLanguage: ${targetLanguageName}
-
-Texto del usuario:
-"${text}"
-
-Responde EXACTAMENTE en este formato JSON (sin markdown, sin backticks):
-{
-  "corrected": "texto corregido aquí",
-  "explanations": ["explicación 1", "explicación 2"],
-  "tips": ["consejo 1"]
-}
-
-Correcciones ligeras por defecto. Todo en ${targetLanguageName}. Sin emojis.`;
+    const contexto = session.ventana.slice(-6)
+      .map(m => `${m.role}: ${m.content}`)
+      .join("\n") || "sin contexto previo";
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: CLARA_SYSTEM_PROMPT },
-        { role: "user", content: userPrompt }
+        { role: "system", content: getSystemPrompt(targetLang, contexto) },
+        { role: "user", content: text }
       ],
-      max_tokens: 800,
-      temperature: 0.7,
+      max_tokens: 500,
+      temperature: 0.3,
     });
 
     const rawResponse = completion.choices[0]?.message?.content || "";
-    console.log("🤖 Respuesta:", rawResponse.substring(0, 100));
+    console.log("Raw:", rawResponse.substring(0, 100));
 
-    let parsedResponse: CorrectionResponse;
-    
+    let corrected: string;
+
     try {
-      const cleanedResponse = rawResponse
-        .replace(/```json\n?/g, "")
-        .replace(/```\n?/g, "")
-        .trim();
-      
-      parsedResponse = JSON.parse(cleanedResponse);
-      
-      if (!parsedResponse.corrected || !Array.isArray(parsedResponse.explanations) || !Array.isArray(parsedResponse.tips)) {
-        throw new Error("Estructura inválida");
-      }
-    } catch (parseError) {
-      console.error("❌ Error parseando:", parseError);
-      parsedResponse = {
-        corrected: text,
-        explanations: ["Error al procesar."],
-        tips: ["Intenta de nuevo."]
-      };
+      const cleaned = rawResponse.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+      const parsed = JSON.parse(cleaned);
+      corrected = parsed.corrected || rawResponse;
+    } catch {
+      corrected = rawResponse;
     }
 
-    console.log("✅ Respuesta procesada");
+    session.ventana.push({role: "assistant", content: corrected});
+    if (session.ventana.length > 6) session.ventana.splice(0, 2);
+
+    console.log("Final:", corrected.substring(0, 100));
 
     res.status(200).json({
-      corrected: parsedResponse.corrected,
-      explanations: parsedResponse.explanations,
-      tips: parsedResponse.tips,
+      corrected: corrected,
       language: language,
       timestamp: new Date().toISOString(),
       status: "ok"
     });
 
   } catch (error: any) {
-    console.error("❌ Error:", error.message);
-    
+    console.error("Error:", error.message);
+
     if (error.message?.includes("API key")) {
-      return res.status(401).json({
-        error: "Problema con API Key",
-        details: "Verifica configuración"
-      });
+      return res.status(401).json({ error: "Problema con API Key" });
     }
 
     if (error.message?.includes("rate limit")) {
-      return res.status(429).json({
-        error: "Demasiadas solicitudes",
-        details: "Intenta en unos momentos"
-      });
+      return res.status(429).json({ error: "Demasiadas solicitudes" });
     }
 
-    res.status(500).json({
-      error: "Error interno",
-      details: error.message || "Unknown error"
-    });
+    res.status(500).json({ error: "Error interno", details: error.message });
   }
 }
-
