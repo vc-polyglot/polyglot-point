@@ -6,7 +6,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const chatSessions = new Map<string, {ventana: Array<{role: string, content: string}>, lastAccess: number}>();
+const chatSessions = new Map<string, {ventana: Array<{role: "user" | "assistant", content: string}>, lastAccess: number}>();
 
 function getOrCreateSession(userId: string) {
   if (!chatSessions.has(userId)) {
@@ -15,7 +15,7 @@ function getOrCreateSession(userId: string) {
   return chatSessions.get(userId)!;
 }
 
-const getSystemPrompt = (targetLang: string, contexto: string) => `Eres Clara, tutora de ${targetLang}. Corriges ligero dentro del dialogo como amiga culta. SOLO respondes en ${targetLang}.
+const getSystemPrompt = (targetLang: string) => `Eres Clara, tutora de ${targetLang}. Corriges ligero dentro del dialogo como amiga culta. SOLO respondes en ${targetLang}.
 
 REGLAS:
 1. SIEMPRE continua conversacion (1 pregunta/comentario natural)
@@ -26,13 +26,10 @@ REGLAS:
 6. NUNCA uses otro idioma para traducir. NUNCA inventes datos personales (edad, gustos)
 7. SOLO corrige si HAY error. Si esta bien, NO menciones correccion
 
-CONTEXTO (ultimos 3 intercambios):
-${contexto}
-
 JSON: {"corrected":"respuesta 100% en ${targetLang}"}`;
 
 export async function handleChat(req: ChatRequest, res: Response) {
-  console.log("[CLARA v6.3.2] Nueva solicitud");
+  console.log("[CLARA v6.4] Nueva solicitud");
 
   try {
     if (req.method !== "POST") {
@@ -45,7 +42,7 @@ export async function handleChat(req: ChatRequest, res: Response) {
 
     const languageNames: Record<string, string> = {
       es: "espanol",
-      en: "ingles", 
+      en: "ingles",
       fr: "frances",
       it: "italiano",
       de: "aleman",
@@ -65,20 +62,27 @@ export async function handleChat(req: ChatRequest, res: Response) {
     console.log(`Usuario: ${userId}, Idioma: ${targetLang}, Texto: "${text.substring(0, 50)}..."`);
 
     const session = getOrCreateSession(userId);
-    session.ventana.push({role: "user", content: text});
-    if (session.ventana.length > 6) session.ventana.splice(0, 2);
     session.lastAccess = Date.now();
 
-    const contexto = session.ventana.slice(-6)
-      .map(m => `${m.role}: ${m.content}`)
-      .join("\n") || "sin contexto previo";
+    // Construir mensajes como array real
+    const messages: Array<{role: "system" | "user" | "assistant", content: string}> = [
+      { role: "system", content: getSystemPrompt(targetLang) }
+    ];
+
+    // Agregar historial (ultimos 6 mensajes = 3 intercambios)
+    const historial = session.ventana.slice(-6);
+    for (const msg of historial) {
+      messages.push({ role: msg.role, content: msg.content });
+    }
+
+    // Agregar mensaje actual
+    messages.push({ role: "user", content: text });
+
+    console.log(`Enviando ${messages.length} mensajes (1 system + ${historial.length} historial + 1 actual)`);
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: getSystemPrompt(targetLang, contexto) },
-        { role: "user", content: text }
-      ],
+      messages: messages,
       max_tokens: 600,
       temperature: 0.5,
     });
@@ -96,6 +100,8 @@ export async function handleChat(req: ChatRequest, res: Response) {
       corrected = rawResponse;
     }
 
+    // Guardar en historial
+    session.ventana.push({role: "user", content: text});
     session.ventana.push({role: "assistant", content: corrected});
     if (session.ventana.length > 6) session.ventana.splice(0, 2);
 
