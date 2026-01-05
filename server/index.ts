@@ -63,65 +63,71 @@ app.use(
 // Webhook Stripe - DEBE ir antes de express.json()
 app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), async (req: Request, res: Response) => {
   const sig = req.headers["stripe-signature"] as string;
-  
+
   if (!sig || !process.env.STRIPE_WEBHOOK_SECRET) {
     return res.status(400).json({ error: "Missing signature or secret" });
   }
-  
+
   try {
     const { stripeService } = await import("./services/stripe.service");
     const event = stripeService.verifyWebhookSignature(req.body, sig);
-    
+
     console.log(`[Stripe Webhook] Event: ${event.type}`);
-    
+
     // Manejar eventos
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as any;
         const userId = parseInt(session.metadata?.userId, 10);
         const plan = session.metadata?.plan as "premium" | "pro";
-        
+
         if (userId && plan) {
           const { db } = await import("./db");
           const { users, PLAN_CONFIG } = await import("../shared/schema");
           const { eq } = await import("drizzle-orm");
           console.log(`[Stripe Webhook] DEBUG: userId=${userId}, plan=${plan}, customer=${session.customer}, subscription=${session.subscription}`);
           const config = PLAN_CONFIG[plan];
-          
-          await db.update(users).set({
-            planType: plan,
-            stripeCustomerId: session.customer,
-            stripeSubscriptionId: session.subscription,
-            messagesBank: config.baseMessages,
-            messagesUsedThisPeriod: 0,
-            premiumMessagesToday: 0,
-            premiumLastResetDate: new Date().toISOString().split("T")[0],
-            updatedAt: new Date(),
-          }).where(eq(users.id, userId));
-          
+
+          await db
+            .update(users)
+            .set({
+              planType: plan,
+              stripeCustomerId: session.customer,
+              stripeSubscriptionId: session.subscription,
+              messagesBank: config.baseMessages,
+              messagesUsedThisPeriod: 0,
+              premiumMessagesToday: 0,
+              premiumLastResetDate: new Date().toISOString().split("T")[0],
+              updatedAt: new Date(),
+            })
+            .where(eq(users.id, userId));
+
           console.log(`[Stripe Webhook] User ${userId} upgraded to ${plan}`);
         }
         break;
       }
-      
+
       case "customer.subscription.deleted": {
         const subscription = event.data.object as any;
         const { db } = await import("./db");
         const { users } = await import("../shared/schema");
         const { eq } = await import("drizzle-orm");
-        
-        await db.update(users).set({
-          planType: "freemium",
-          stripeSubscriptionId: null,
-          messagesBank: 0,
-          updatedAt: new Date(),
-        }).where(eq(users.stripeSubscriptionId, subscription.id));
-        
+
+        await db
+          .update(users)
+          .set({
+            planType: "freemium",
+            stripeSubscriptionId: null,
+            messagesBank: 0,
+            updatedAt: new Date(),
+          })
+          .where(eq(users.stripeSubscriptionId, subscription.id));
+
         console.log(`[Stripe Webhook] Subscription ${subscription.id} deleted`);
         break;
       }
     }
-    
+
     res.json({ received: true });
   } catch (err: any) {
     console.error("[Stripe Webhook] Error:", err.message);
@@ -223,8 +229,6 @@ function getOrCreateChatSession(key: string): ChatSession {
 }
 
 function updateChatSession(key: string, userMsg: string, assistantMsg: string): void {
-  const s = getOrCreateChatSession(key);
-  function updateChatSession(key: string, userMsg: string, assistantMsg: string): void {
   const s = getOrCreateChatSession(key);
   s.ventana.push({ role: "user", content: userMsg });
   s.ventana.push({ role: "assistant", content: assistantMsg });
@@ -440,24 +444,24 @@ async function chatHandler(req: Request, res: Response) {
     const client = getOpenAI();
 
     const historial = chatSession.ventana.slice(-6);
-const messages: Array<{role: "system" | "user" | "assistant", content: string}> = [
-  { role: "system", content: buildClaraPrompt(language) }
-];
-for (const msg of historial) {
-  messages.push({ role: msg.role as "user" | "assistant", content: msg.content });
-}
-messages.push({ role: "user", content: input });
-console.log("[CLARA DEBUG] messages count:", messages.length, "historial:", historial.length);
-const completion = await timeout(
-  client.chat.completions.create({
-    model: "gpt-4o-mini",
-    temperature: 0.5,
-    max_tokens: 600,
-    messages: messages,
-    response_format: { type: "json_object" },
-  }),
-  25000
-);
+    const messages: Array<{ role: "system" | "user" | "assistant"; content: string }> = [
+      { role: "system", content: buildClaraPrompt(language) },
+    ];
+    for (const msg of historial) {
+      messages.push({ role: msg.role as "user" | "assistant", content: msg.content });
+    }
+    messages.push({ role: "user", content: input });
+    console.log("[CLARA DEBUG] messages count:", messages.length, "historial:", historial.length);
+    const completion = await timeout(
+      client.chat.completions.create({
+        model: "gpt-4o-mini",
+        temperature: 0.5,
+        max_tokens: 600,
+        messages: messages,
+        response_format: { type: "json_object" },
+      }),
+      25000
+    );
 
     rawResponse = completion.choices[0]?.message?.content || "";
     console.log("[CLARA DEBUG] rawResponse:", rawResponse.substring(0, 200));
@@ -629,4 +633,3 @@ const completion = await timeout(
   console.error("BOOTSTRAP FAILED:", e);
   process.exit(1);
 });
-

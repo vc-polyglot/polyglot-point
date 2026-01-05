@@ -59652,21 +59652,46 @@ var init_stripe_service = __esm({
         if (!priceId) {
           throw new Error(`No Stripe price configured for plan: ${params.plan}`);
         }
-        const session2 = await stripe.checkout.sessions.create({
+        const sessionConfig = {
           mode: "subscription",
           line_items: [{ price: priceId, quantity: 1 }],
           success_url: params.successUrl,
           cancel_url: params.cancelUrl,
-          customer_email: params.email,
           metadata: {
             userId: String(params.userId),
             plan: params.plan
           }
-        });
+        };
+        if (params.customerId) {
+          sessionConfig.customer = params.customerId;
+        } else {
+          sessionConfig.customer_email = params.email;
+        }
+        const session2 = await stripe.checkout.sessions.create(sessionConfig);
         if (!session2.url) {
           throw new Error("Stripe did not return a checkout URL");
         }
         return { url: session2.url };
+      }
+      async updateSubscription(params) {
+        const priceId = params.newPlan === "pro" ? process.env.STRIPE_PRICE_PRO : process.env.STRIPE_PRICE_PREMIUM;
+        if (!priceId) {
+          throw new Error(`No Stripe price configured for plan: ${params.newPlan}`);
+        }
+        const subscription = await stripe.subscriptions.retrieve(params.subscriptionId);
+        const itemId = subscription.items.data[0].id;
+        const updated = await stripe.subscriptions.update(params.subscriptionId, {
+          items: [{
+            id: itemId,
+            price: priceId
+          }],
+          proration_behavior: "create_prorations",
+          // Stripe calcula diferencia automáticamente
+          metadata: {
+            plan: params.newPlan
+          }
+        });
+        return updated;
       }
       verifyWebhookSignature(payload, signature) {
         return stripe.webhooks.constructEvent(
@@ -93595,9 +93620,18 @@ var authRoutes_default = router;
 // server/routes/billing.routes.ts
 var import_express3 = __toESM(require_express2(), 1);
 init_stripe_service();
+init_db2();
+init_schema2();
+init_drizzle_orm();
 var router2 = (0, import_express3.Router)();
 router2.post("/create-checkout-session", async (req, res) => {
   try {
+    console.log("[Checkout DEBUG PREAUTH]", {
+      hasIsAuth: typeof req.isAuthenticated === "function",
+      isAuth: typeof req.isAuthenticated === "function" ? req.isAuthenticated() : void 0,
+      hasUser: !!req.user,
+      user: req.user && { id: req.user.id, email: req.user.email }
+    });
     if (!req.isAuthenticated || !req.isAuthenticated() || !req.user) {
       return res.status(401).json({ error: "No autenticado" });
     }
@@ -93606,18 +93640,54 @@ router2.post("/create-checkout-session", async (req, res) => {
     if (plan !== "premium" && plan !== "pro") {
       return res.status(400).json({ error: 'Plan inv\xE1lido. Usa "premium" o "pro"' });
     }
+    const [dbUser] = await db.select().from(users).where(eq(users.id, user.id));
+    console.log("[Checkout DEBUG]", {
+      reqUserId: user?.id,
+      reqEmail: user?.email,
+      dbUserId: dbUser?.id,
+      dbEmail: dbUser?.email,
+      dbStripeCustomerId: dbUser?.stripeCustomerId,
+      dbStripeSubscriptionId: dbUser?.stripeSubscriptionId
+    });
+    if (!dbUser) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+    if (dbUser.stripeSubscriptionId) {
+      try {
+        await stripeService.updateSubscription({
+          subscriptionId: dbUser.stripeSubscriptionId,
+          newPlan: plan
+        });
+        const config2 = PLAN_CONFIG[plan];
+        await db.update(users).set({
+          planType: plan,
+          messagesBank: config2.baseMessages,
+          premiumMessagesToday: 0,
+          premiumLastResetDate: (/* @__PURE__ */ new Date()).toISOString().split("T")[0],
+          updatedAt: /* @__PURE__ */ new Date()
+        }).where(eq(users.id, user.id));
+        return res.json({
+          upgraded: true,
+          plan,
+          message: `Plan actualizado a ${plan}`
+        });
+      } catch (err) {
+        console.error("Error updating subscription:", err);
+      }
+    }
     const clientUrl = process.env.CLIENT_URL || "http://localhost:5173";
     const result = await stripeService.createCheckoutSession({
       userId: user.id,
       email: user.email,
       plan,
-      successUrl: `${clientUrl}/billing/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancelUrl: `${clientUrl}/billing/cancel`
+      customerId: dbUser.stripeCustomerId || void 0,
+      successUrl: `${clientUrl}/?upgraded=${plan}`,
+      cancelUrl: `${clientUrl}/?canceled=true`
     });
-    res.json(result);
+    return res.json(result);
   } catch (error40) {
     console.error("Checkout error:", error40);
-    res.status(500).json({ error: "Error al crear sesi\xF3n de pago" });
+    return res.status(500).json({ error: "Error al crear sesi\xF3n de pago" });
   }
 });
 var billing_routes_default = router2;
@@ -93718,6 +93788,7 @@ app.post("/api/stripe/webhook", import_express4.default.raw({ type: "application
           const { db: db2 } = await Promise.resolve().then(() => (init_db2(), db_exports));
           const { users: users2, PLAN_CONFIG: PLAN_CONFIG2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
           const { eq: eq2 } = await Promise.resolve().then(() => (init_drizzle_orm(), drizzle_orm_exports));
+          console.log(`[Stripe Webhook] DEBUG: userId=${userId}, plan=${plan}, customer=${session2.customer}, subscription=${session2.subscription}`);
           const config2 = PLAN_CONFIG2[plan];
           await db2.update(users2).set({
             planType: plan,
@@ -93827,10 +93898,9 @@ function getOrCreateChatSession(key) {
 }
 function updateChatSession(key, userMsg, assistantMsg) {
   const s = getOrCreateChatSession(key);
-  s.ventana = [
-    { role: "user", content: userMsg },
-    { role: "assistant", content: assistantMsg }
-  ];
+  s.ventana.push({ role: "user", content: userMsg });
+  s.ventana.push({ role: "assistant", content: assistantMsg });
+  if (s.ventana.length > 6) s.ventana.splice(0, 2);
   s.lastAccess = Date.now();
 }
 function timeout(promise2, ms) {
@@ -93852,25 +93922,18 @@ function targetLanguageName(code) {
 }
 function buildClaraPrompt(language) {
   const target = targetLanguageName(language);
-  return [
-    `Eres Clara, tutora de ${target} conversacional de Polyglot Point Write.`,
-    `Corriges ligero dentro del di\xE1logo; ense\xF1as por absorci\xF3n como amiga culta.`,
-    `Siempre respondes en ${target}.`,
-    ``,
-    `REGLAS`,
-    `1) Si hay errores, integras la correcci\xF3n dentro de tu respuesta de forma natural. Evitas explicaciones largas.`,
-    `2) SIEMPRE contin\xFAas la conversaci\xF3n: respondes al contenido y haces UNA pregunta natural o un comentario que invite a seguir.`,
-    `3) Tono c\xE1lido, paciente y directo. Sin emojis. Sin elogios vac\xEDos. Sin moralizar.`,
-    `4) Si el usuario mezcla idiomas o insiste en hacerlo: "Noto que mezclas idiomas; qued\xE9monos en ${target} para avanzar mejor."`,
-    ``,
-    `MEMORIA: usa el contexto de los \xFAltimos 3 intercambios para dar continuidad.`,
-    ``,
-    `SALIDA: Devuelve SOLO JSON v\xE1lido con este esquema exacto:`,
-    `{"corrected":"Respuesta completa de Clara: correcci\xF3n integrada + di\xE1logo fluido + cierre natural"}`,
-    ``,
-    `INICIO: si no hay mensaje previo del usuario:`,
-    `{"corrected":"\xA1Hola! \xBFEn qu\xE9 practicamos ${target} hoy?"}`
-  ].join("\n");
+  return `Eres Clara, tutora de ${target}. Corriges ligero dentro del dialogo como amiga culta. SOLO respondes en ${target}.
+
+REGLAS:
+1. SIEMPRE continua conversacion (1 pregunta/comentario natural)
+2. Corrige TODOS los errores en el texto. 
+3. Cierres VARIAN: pregunta/comentario/invita elaborar
+4. Tono calido, directo. Sin emojis ni elogios vacios
+5. Si mezcla idiomas: senalalo EN ${target}
+6. NUNCA uses otro idioma para traducir. NUNCA inventes datos personales (edad, gustos)
+7. Si NO hay errores, responde al contenido sin mencionar correcciones
+
+JSON: {"corrected":"tu respuesta conversacional completa en ${target}"}`;
 }
 function extractJsonCandidate(clean) {
   const direct = clean.match(/^\s*(\{[\s\S]*\})\s*$/)?.[1];
@@ -93998,23 +94061,27 @@ async function chatHandler(req, res) {
   let rawResponse = "";
   try {
     const client = getOpenAI();
-    const memoria = chatSession.ventana.slice(-3).map((m) => `${m.role}: ${m.content}`).join("\n");
-    const prompt = `${buildClaraPrompt(language)}
-[CONTEXTO_PREVIO]
-${memoria}
-[MENSAJE_USUARIO]
-${input}`;
+    const historial = chatSession.ventana.slice(-6);
+    const messages2 = [
+      { role: "system", content: buildClaraPrompt(language) }
+    ];
+    for (const msg of historial) {
+      messages2.push({ role: msg.role, content: msg.content });
+    }
+    messages2.push({ role: "user", content: input });
+    console.log("[CLARA DEBUG] messages count:", messages2.length, "historial:", historial.length);
     const completion = await timeout(
       client.chat.completions.create({
         model: "gpt-4o-mini",
-        temperature: 0.25,
-        max_tokens: 500,
-        messages: [{ role: "system", content: prompt }],
+        temperature: 0.5,
+        max_tokens: 600,
+        messages: messages2,
         response_format: { type: "json_object" }
       }),
-      1e4
+      25e3
     );
     rawResponse = completion.choices[0]?.message?.content || "";
+    console.log("[CLARA DEBUG] rawResponse:", rawResponse.substring(0, 200));
     if (!rawResponse.trim() || rawResponse.length > 1e4) throw new Error("Respuesta OpenAI inv\xE1lida");
   } catch (error40) {
     const responseTime2 = Date.now() - startTime;
@@ -94114,8 +94181,8 @@ ${input}`;
         email: user.email,
         name: user.name,
         planType: user.planType || "freemium",
-        messagesBank: user.messagesBank || 20,
-        remainingMessages: user.messagesBank || 20
+        messagesBank: user.messagesBank ?? 20,
+        remainingMessages: user.messagesBank ?? 20
       });
       return;
     }
