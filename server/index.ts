@@ -629,3 +629,4 @@ const completion = await timeout(
   console.error("BOOTSTRAP FAILED:", e);
   process.exit(1);
 });
+
