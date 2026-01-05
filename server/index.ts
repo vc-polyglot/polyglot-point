@@ -446,7 +446,7 @@ for (const msg of historial) {
   messages.push({ role: msg.role as "user" | "assistant", content: msg.content });
 }
 messages.push({ role: "user", content: input });
-
+console.log("[CLARA DEBUG] messages count:", messages.length, "historial:", historial.length);
 const completion = await timeout(
   client.chat.completions.create({
     model: "gpt-4o-mini",
