@@ -263,7 +263,7 @@ REGLAS:
 6. NUNCA uses otro idioma para traducir. NUNCA inventes datos personales (edad, gustos)
 7. Si NO hay errores, responde al contenido sin mencionar correcciones
 
-JSON: {"corrected":"respuesta 100% en ${target}"}`;
+JSON: {"corrected":"tu respuesta conversacional completa en ${target}"}`;
 }
 
 type ClaraParsed = { corrected: string };
