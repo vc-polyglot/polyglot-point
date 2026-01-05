@@ -261,7 +261,7 @@ REGLAS:
 4. Tono calido, directo. Sin emojis ni elogios vacios
 5. Si mezcla idiomas: senalalo EN ${target}, nunca en espanol
 6. NUNCA uses otro idioma para traducir. NUNCA inventes datos personales (edad, gustos)
-7. SOLO corrige si HAY error. Si esta bien, NO menciones correccion
+7. Si NO hay errores, responde al contenido sin mencionar correcciones
 
 JSON: {"corrected":"respuesta 100% en ${target}"}`;
 }
