@@ -455,7 +455,7 @@ const completion = await timeout(
     messages: messages,
     response_format: { type: "json_object" },
   }),
-  10000
+  25000
 );
 
     rawResponse = completion.choices[0]?.message?.content || "";
