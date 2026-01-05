@@ -438,7 +438,7 @@ async function chatHandler(req: Request, res: Response) {
 
   const chatSession = getOrCreateChatSession(sessionKey);
 
-  let rawResponse = "";\n\n  let llmOk = false;\n\n\n\n  let llmOk = false;\n\ntry {
+  let rawResponse = "";\n\n  let llmOk = false;\n`n`ntry {
     const client = getOpenAI();
 
     const historial = chatSession.ventana.slice(-6);
@@ -460,7 +460,7 @@ async function chatHandler(req: Request, res: Response) {
     );
 
     rawResponse = completion.choices[0]?.message?.content || "";
-        if (!rawResponse.trim() || rawResponse.length > 10000) throw new Error("Respuesta OpenAI inválida");\n    llmOk = true;\n    llmOk = true;
+        if (!rawResponse.trim() || rawResponse.length > 10000) throw new Error("Respuesta OpenAI inválida");    llmOk = true;    llmOk = true;
   } catch (error: any) {
     const responseTime = Date.now() - startTime;
 
@@ -501,7 +501,7 @@ async function chatHandler(req: Request, res: Response) {
     }
   }
 
-  if (llmOk) {\n  setImmediate(() => {\n    try {\n      updateChatSession(sessionKey, input, clara.corrected);\n    } catch {}\n  });\n}\nconst responseTime = Date.now() - startTime;
+  if (llmOk) {  setImmediate(() => {    try {      updateChatSession(sessionKey, input, clara.corrected);    } catch {}  });}const responseTime = Date.now() - startTime;
 
   const response: any = {
     corrected: clara.corrected,
@@ -622,6 +622,7 @@ async function chatHandler(req: Request, res: Response) {
   console.error("BOOTSTRAP FAILED:", e);
   process.exit(1);
 });
+
 
 
 
