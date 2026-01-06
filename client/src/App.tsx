@@ -323,9 +323,9 @@ const App: React.FC = () => {
   }
 
   return (
-  <div className="main-wrapper">
-    <div className="top-nav">
-      <header className="top-nav">
+    <div className="app">
+      <div className="app-container">
+        <header className="app-header">
           <div className="header-brand">
             <div className="brand-row"><img className="brand-logo" src="/brand/polyglot-point-logo.png" alt="Polyglot Point" /></div>
             <p className={`header-phrase ${phraseFade ? "fade-in" : "fade-out"}`}>
@@ -353,8 +353,6 @@ const App: React.FC = () => {
             </button>
           </div>
         </header>
-            <div className="content-area">
-
 
         <div className="language-selector">
           {IDIOMAS.map((idioma) => (
@@ -500,6 +498,4 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-
 
