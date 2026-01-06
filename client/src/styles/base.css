@@ -1,0 +1,36 @@
+﻿/* ============================================
+   POLYGLOT POINT — Base Styles
+   Reset y fundamentos
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  font-family: var(--pp-font-family);
+  font-size: var(--pp-font-size-base);
+  color: var(--pp-text);
+  background: var(--pp-bg);
+  overflow: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--pp-border);
+  border-radius: 999px;
+}
+
+.hide {
+  display: none !important;
+}
