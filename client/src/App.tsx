@@ -327,9 +327,7 @@ const App: React.FC = () => {
       <div className="app-container">
         <header className="app-header">
           <div className="header-brand">
-            <h1>
-              <span>Polyglot</span> Point
-            </h1>
+            <div className="brand-row"><img className="brand-logo" src="/brand/polyglot-point-logo.png" alt="Polyglot Point" /></div>
             <p className={`header-phrase ${phraseFade ? "fade-in" : "fade-out"}`}>
               {practiceT.phrases[phraseIndex]}
             </p>
@@ -500,3 +498,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+
