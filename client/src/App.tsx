@@ -323,8 +323,9 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="app">
-      <div className="app-container">
+  <div className="main-wrapper">
+    <div className="top-nav">
+      <header className="app-header">
         <header className="app-header">
           <div className="header-brand">
             <div className="brand-row"><img className="brand-logo" src="/brand/polyglot-point-logo.png" alt="Polyglot Point" /></div>
@@ -353,6 +354,9 @@ const App: React.FC = () => {
             </button>
           </div>
         </header>
+            </div>
+    <div className="content-area">
+
 
         <div className="language-selector">
           {IDIOMAS.map((idioma) => (
