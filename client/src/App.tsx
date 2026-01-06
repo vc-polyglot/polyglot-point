@@ -353,8 +353,7 @@ const App: React.FC = () => {
             </button>
           </div>
         </header>
-            </div>
-    <div className="content-area">
+            <div className="content-area">
 
 
         <div className="language-selector">
@@ -501,5 +500,6 @@ const App: React.FC = () => {
 };
 
 export default App;
+
 
 
