@@ -93744,7 +93744,9 @@ var isProduction = process.env.NODE_ENV === "production";
 app.set("trust proxy", 1);
 var SESSION_SECRET = process.env.SESSION_SECRET || (isProduction ? import_crypto.default.randomBytes(32).toString("hex") : "polyglot-dev-secret-change-in-prod");
 if (isProduction && !process.env.SESSION_SECRET) {
-  console.error("[WARN] SESSION_SECRET faltante en producci\xF3n; usando secreto ef\xEDmero. Configura SESSION_SECRET en Railway.");
+  console.error(
+    "[WARN] SESSION_SECRET faltante en producci\xF3n; usando secreto ef\xEDmero. Configura SESSION_SECRET en Railway."
+  );
 }
 var vercelProjectSlug = (process.env.VERCEL_PROJECT_SLUG || "polyglot-point").trim();
 var allowedExact = new Set(
@@ -93756,7 +93758,9 @@ var allowedExact = new Set(
     "https://polyglot-point-production.up.railway.app"
   ].filter(Boolean).map((s) => String(s).replace(/\/$/, ""))
 );
-var allowedPatterns = [new RegExp(`^https:\\/\\/${vercelProjectSlug}(?:-[a-z0-9-]+)?\\.vercel\\.app$`, "i")];
+var allowedPatterns = [
+  new RegExp(`^https:\\/\\/${vercelProjectSlug}(?:-[a-z0-9-]+)?\\.vercel\\.app$`, "i")
+];
 app.use(
   (0, import_cors.default)({
     origin: (origin, callback) => {
@@ -93781,19 +93785,21 @@ app.post("/api/stripe/webhook", import_express4.default.raw({ type: "application
     console.log(`[Stripe Webhook] Event: ${event.type}`);
     switch (event.type) {
       case "checkout.session.completed": {
-        const session2 = event.data.object;
-        const userId = parseInt(session2.metadata?.userId, 10);
-        const plan = session2.metadata?.plan;
+        const sessionObj = event.data.object;
+        const userId = parseInt(sessionObj.metadata?.userId, 10);
+        const plan = sessionObj.metadata?.plan;
         if (userId && plan) {
           const { db: db2 } = await Promise.resolve().then(() => (init_db2(), db_exports));
           const { users: users2, PLAN_CONFIG: PLAN_CONFIG2 } = await Promise.resolve().then(() => (init_schema2(), schema_exports));
           const { eq: eq2 } = await Promise.resolve().then(() => (init_drizzle_orm(), drizzle_orm_exports));
-          console.log(`[Stripe Webhook] DEBUG: userId=${userId}, plan=${plan}, customer=${session2.customer}, subscription=${session2.subscription}`);
+          console.log(
+            `[Stripe Webhook] DEBUG: userId=${userId}, plan=${plan}, customer=${sessionObj.customer}, subscription=${sessionObj.subscription}`
+          );
           const config2 = PLAN_CONFIG2[plan];
           await db2.update(users2).set({
             planType: plan,
-            stripeCustomerId: session2.customer,
-            stripeSubscriptionId: session2.subscription,
+            stripeCustomerId: sessionObj.customer,
+            stripeSubscriptionId: sessionObj.subscription,
             messagesBank: config2.baseMessages,
             messagesUsedThisPeriod: 0,
             premiumMessagesToday: 0,
@@ -93920,57 +93926,48 @@ function targetLanguageName(code) {
   };
   return LANG[code] || "espa\xF1ol";
 }
-function buildClaraPrompt(language) {
+function buildClaraPrompt(language, userMessage) {
   const target = targetLanguageName(language);
-  return `Eres Clara, tutora de ${target}. Corriges ligero dentro del dialogo como amiga culta. SOLO respondes en ${target}.
+  return `Eres Clara, una amiga nativa que ayuda a practicar ${target}.
 
-REGLAS:
-1. SIEMPRE continua conversacion (1 pregunta/comentario natural)
-2. Corrige TODOS los errores en el texto. 
-3. Cierres VARIAN: pregunta/comentario/invita elaborar
-4. Tono calido, directo. Sin emojis ni elogios vacios
-5. Si mezcla idiomas: senalalo EN ${target}
-6. NUNCA uses otro idioma para traducir. NUNCA inventes datos personales (edad, gustos)
-7. Si NO hay errores, responde al contenido sin mencionar correcciones
+ROL: Eres una amiga culta que corrige de forma natural mientras conversas.
 
-JSON: {"corrected":"tu respuesta conversacional completa en ${target}"}`;
+MENSAJE ACTUAL DEL USUARIO: "${userMessage}"
+
+C\xD3MO RESPONDER:
+1) EVAL\xDAA: \xBFEl mensaje tiene errores? (ortograf\xEDa, gram\xE1tica, vocabulario, estructura)
+2) SI HAY ERRORES: Explica brevemente qu\xE9 est\xE1 mal y corr\xEDgelos DENTRO de tu respuesta de forma natural.
+   - No dejes pasar tildes, may\xFAsculas ni signos obligatorios, aunque el mensaje sea comprensible.
+   - Si hay varios errores, menci\xF3nalos todos dentro de la correcci\xF3n, no solo uno.
+   - NO digas "corrijo", "te corrijo", "error", "correcci\xF3n", ni enumeres fallos.
+   - Integra la correcci\xF3n en el flujo conversacional.
+3) LUEGO: Contin\xFAa la conversaci\xF3n normalmente (incluye una pregunta o comentario natural).
+4) SI NO HAY ERRORES: Solo responde conversacionalmente (sin mencionar correcciones).
+
+ESTILO:
+- Tono c\xE1lido pero directo, como WhatsApp.
+- Sin elogios vac\xEDos.
+- Sin emojis.
+- Si el usuario mezcla idiomas, se\xF1\xE1lalo sutilmente EN ${target}.
+- Nunca inventes datos personales.
+
+IMPORTANTE:
+- Tu respuesta debe ser un solo mensaje unificado.
+- Responde siempre EN ${target}.
+
+AUTO-CHECK INTERNO (sin mencionarlo): antes de enviar, verifica que cumpliste idioma, un solo mensaje, sin meta-discurso, y que dejas continuidad.`;
 }
-function extractJsonCandidate(clean) {
-  const direct = clean.match(/^\s*(\{[\s\S]*\})\s*$/)?.[1];
-  if (direct) return direct;
-  const fenced = clean.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/)?.[1];
-  if (fenced) return fenced;
-  const start = clean.indexOf("{");
-  if (start !== -1) {
-    let depth = 0;
-    for (let i = start; i < clean.length; i++) {
-      const ch = clean[i];
-      if (ch === "{") depth++;
-      if (ch === "}") depth--;
-      if (depth === 0) return clean.slice(start, i + 1);
-    }
-  }
-  const matches = [...clean.matchAll(/\{[\s\S]*?\}/g)];
-  if (matches.length) {
-    let best = matches[0][0];
-    for (const m of matches) if (m[0].length > best.length) best = m[0];
-    return best;
-  }
-  return null;
+function parseClaraResponse(raw) {
+  return { response: (raw || "").trim() };
 }
-function parseClaraResponse(raw, fallback) {
-  const clean = (raw || "").trim();
-  const jsonStr = extractJsonCandidate(clean);
-  if (jsonStr) {
-    try {
-      const parsed = JSON.parse(jsonStr);
-      if (typeof parsed?.corrected === "string" && parsed.corrected.trim()) {
-        return { corrected: parsed.corrected.trim() };
-      }
-    } catch {
-    }
+function validateClaraRaw(raw) {
+  let cleaned = (raw || "").trim();
+  if (!cleaned) return { ok: false, cleaned: "" };
+  if (cleaned.startsWith('{"corrected":') || cleaned.startsWith("```json")) {
+    return { ok: false, cleaned: "" };
   }
-  return { corrected: fallback };
+  if (cleaned.length > 4e3) cleaned = cleaned.slice(0, 4e3).trim();
+  return { ok: true, cleaned };
 }
 function readLangFromBody(req) {
   const cand = typeof req.language === "string" && req.language || typeof req.activeLanguage === "string" && req.activeLanguage || "";
@@ -94011,7 +94008,7 @@ app.use((req, res, next) => {
   res.on("finish", () => {
     if (!path3.startsWith("/api") && path3 !== "/chat") return;
     const duration3 = Date.now() - start;
-    const preview = captured ? JSON.stringify(captured).slice(0, 80) : "";
+    const preview = captured ? JSON.stringify(captured).slice(0, 100) : "";
     log(`${req.method} ${path3} ${res.statusCode} in ${duration3}ms${preview ? " :: " + preview : ""}`);
   });
   next();
@@ -94024,6 +94021,7 @@ async function chatHandler(req, res) {
   if (!validation.valid) {
     const safeLang = req.body && typeof req.body === "object" ? readLangFromBody(req.body) : "es";
     return res.status(400).json({
+      claraResponse: "",
       corrected: "",
       explanations: [fb(safeLang).NO_TEXT],
       tips: [],
@@ -94043,6 +94041,7 @@ async function chatHandler(req, res) {
       billingState.remaining = usage.bank;
       if (usage.bank <= 0) {
         return res.status(403).json({
+          claraResponse: "",
           corrected: "",
           explanations: [fb(language).NO_MESSAGES],
           tips: [],
@@ -94059,30 +94058,31 @@ async function chatHandler(req, res) {
   }
   const chatSession = getOrCreateChatSession(sessionKey);
   let rawResponse = "";
+  let llmOk = false;
   try {
     const client = getOpenAI();
     const historial = chatSession.ventana.slice(-6);
     const messages2 = [
-      { role: "system", content: buildClaraPrompt(language) }
+      { role: "system", content: buildClaraPrompt(language, input) }
     ];
     for (const msg of historial) {
       messages2.push({ role: msg.role, content: msg.content });
     }
     messages2.push({ role: "user", content: input });
-    console.log("[CLARA DEBUG] messages count:", messages2.length, "historial:", historial.length);
     const completion = await timeout(
       client.chat.completions.create({
         model: "gpt-4o-mini",
-        temperature: 0.5,
-        max_tokens: 600,
-        messages: messages2,
-        response_format: { type: "json_object" }
+        temperature: 0.4,
+        max_tokens: 550,
+        messages: messages2
       }),
       25e3
     );
     rawResponse = completion.choices[0]?.message?.content || "";
-    console.log("[CLARA DEBUG] rawResponse:", rawResponse.substring(0, 200));
-    if (!rawResponse.trim() || rawResponse.length > 1e4) throw new Error("Respuesta OpenAI inv\xE1lida");
+    const v = validateClaraRaw(rawResponse);
+    if (!v.ok) throw new Error("Respuesta OpenAI inv\xE1lida");
+    rawResponse = v.cleaned;
+    llmOk = true;
   } catch (error40) {
     const responseTime2 = Date.now() - startTime;
     if (isProduction) {
@@ -94098,7 +94098,8 @@ async function chatHandler(req, res) {
       );
     }
     return res.status(200).json({
-      corrected: input,
+      claraResponse: "",
+      corrected: "",
       explanations: [fb(language).PROCESS_ERROR],
       tips: [],
       language,
@@ -94109,7 +94110,7 @@ async function chatHandler(req, res) {
       requestId
     });
   }
-  const clara = parseClaraResponse(rawResponse, input);
+  const clara = parseClaraResponse(rawResponse);
   if (authUser?.id && !billingState.dbFailed) {
     try {
       const result = await subscriptionManager.consumeMessage(authUser.id);
@@ -94118,15 +94119,18 @@ async function chatHandler(req, res) {
       billingState.dbFailed = true;
     }
   }
-  setImmediate(() => {
-    try {
-      updateChatSession(sessionKey, input, clara.corrected);
-    } catch {
-    }
-  });
+  if (llmOk) {
+    setImmediate(() => {
+      try {
+        updateChatSession(sessionKey, input, clara.response);
+      } catch {
+      }
+    });
+  }
   const responseTime = Date.now() - startTime;
   const response = {
-    corrected: clara.corrected,
+    claraResponse: clara.response,
+    corrected: "",
     explanations: [],
     tips: [],
     language,
