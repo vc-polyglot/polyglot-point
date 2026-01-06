@@ -797,3 +797,121 @@ body {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+:root{
+  --pp-blue:#0078F0;
+  --pp-green:#00E088;
+  --pp-ink:#1f1f1f;
+  --pp-bg:#efe7d7;
+  --pp-card:#ffffff;
+  --pp-line:rgba(0,0,0,.06);
+  --pp-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+html, body, #root{ height:100%; }
+
+.app{
+  min-height:100dvh;
+  background:
+    radial-gradient(circle at 12px 12px, rgba(0,0,0,.035) 2px, transparent 2px) 0 0/36px 36px,
+    radial-gradient(circle at 30px 30px, rgba(0,0,0,.02) 2px, transparent 2px) 0 0/36px 36px,
+    var(--pp-bg);
+  color:var(--pp-ink);
+}
+
+.app-container{
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+}
+
+.chat-layout{
+  flex:1;
+  display:flex;
+  gap:16px;
+  align-items:stretch;
+  min-height:0;
+}
+
+.response-column,
+.input-column{
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+}
+
+.response-card{
+  flex:1;
+  min-height:0;
+  background:var(--pp-card);
+  border:1px solid var(--pp-line);
+  border-radius:18px;
+  box-shadow:var(--pp-shadow);
+  overflow:hidden;
+}
+
+.response-content{
+  height:100%;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+}
+
+.input-card{
+  background:var(--pp-card);
+  border:1px solid var(--pp-line);
+  border-radius:18px;
+  box-shadow:var(--pp-shadow);
+}
+
+.lang-btn.active{
+  border-color:rgba(0,224,136,.55);
+  box-shadow:0 0 0 3px rgba(0,224,136,.15);
+}
+
+.progress-bar-fill{
+  background:linear-gradient(90deg, var(--pp-blue), var(--pp-green));
+}
+
+.btn-send.active{
+  background:linear-gradient(90deg, var(--pp-green), rgba(0,224,136,.85));
+}
+
+@media (max-width: 900px){
+  .app-header{
+    padding:14px 14px 8px;
+  }
+
+  .header-right{
+    gap:10px;
+  }
+
+  .language-selector{
+    padding:0 14px 10px;
+  }
+
+  .chat-layout{
+    flex-direction:column;
+    padding:0 14px 14px;
+    gap:12px;
+  }
+
+  .response-column{
+    flex:1;
+  }
+
+  .input-column{
+    flex:0 0 auto;
+    margin-top:0;
+  }
+
+  .input-card{
+    position:sticky;
+    bottom:10px;
+    z-index:5;
+  }
+
+  textarea{
+    min-height:84px;
+    max-height:140px;
+  }
+}
