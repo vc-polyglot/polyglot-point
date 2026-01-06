@@ -273,11 +273,9 @@ MENSAJE ACTUAL DEL USUARIO: "${userMessage}"
 
 CÓMO RESPONDER:
 1) EVALÚA: ¿El mensaje tiene errores? (ortografía, gramática, vocabulario, estructura)
-2) SI HAY ERRORES:
-   - Enuncia qué está mal.
-   - Los errores ortográficos evidentes siempre deben señalarse, aunque el mensaje se entienda.
-   - Corrígelos DENTRO de tu respuesta de forma natural.
-   - NO digas "corrijo", "te corrijo", "error", "corrección".
+2) SI HAY ERRORES: Explica brevemente qué está mal y corrígelos DENTRO de tu respuesta de forma natural.
+   - No dejes pasar tildes, mayúsculas ni signos obligatorios, aunque el mensaje sea comprensible.
+   - NO digas "corrijo", "te corrijo", "error", "corrección", ni enumeres fallos.
    - Integra la corrección en el flujo conversacional.
 3) LUEGO: Continúa la conversación normalmente (incluye una pregunta o comentario natural).
 4) SI NO HAY ERRORES: Solo responde conversacionalmente (sin mencionar correcciones).
