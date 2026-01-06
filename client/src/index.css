@@ -719,3 +719,7 @@ body{
   }
 }
 
+
+/* Progress bar (barra de vida) */
+.progress-bar{width:120px;height:6px;background:rgba(0,0,0,.12);border-radius:999px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--pp-blue),var(--pp-green));transition:width .25s ease;}
