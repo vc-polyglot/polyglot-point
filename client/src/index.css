@@ -20,7 +20,7 @@
   --pp-light:#7a7a7a;
 
   /* Fondo tipo tapete */
-  --pp-bg:#efe7d7;
+  --pp-bg:#f7f9fc;
 
   /* Superficies */
   --pp-card:#ffffff;
@@ -718,3 +718,4 @@ body{
     max-height: 180px;
   }
 }
+
