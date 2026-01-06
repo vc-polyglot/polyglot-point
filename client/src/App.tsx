@@ -325,8 +325,7 @@ const App: React.FC = () => {
   return (
   <div className="main-wrapper">
     <div className="top-nav">
-      <header className="app-header">
-        <header className="app-header">
+      <header className="top-nav">
           <div className="header-brand">
             <div className="brand-row"><img className="brand-logo" src="/brand/polyglot-point-logo.png" alt="Polyglot Point" /></div>
             <p className={`header-phrase ${phraseFade ? "fade-in" : "fade-out"}`}>
@@ -502,4 +501,5 @@ const App: React.FC = () => {
 };
 
 export default App;
+
 
