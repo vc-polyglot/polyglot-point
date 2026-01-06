@@ -1,0 +1,65 @@
+﻿/* ============================================
+   POLYGLOT POINT — Layout System
+   Shell estructural de la app
+   ============================================ */
+
+.main-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  background: var(--pp-bg);
+}
+
+/* Top navigation */
+.top-nav {
+  background: var(--pp-surface);
+  padding: var(--pp-space-4) var(--pp-space-8);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--pp-shadow-sm);
+  z-index: var(--pp-z-nav);
+  flex-shrink: 0;
+}
+
+/* Content */
+.content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--pp-space-6) var(--pp-space-8);
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Footer */
+.bottom-bar {
+  background: var(--pp-surface);
+  padding: var(--pp-space-4) var(--pp-space-8);
+  border-top: 1px solid var(--pp-border);
+  flex-shrink: 0;
+}
+
+.footer-navigation {
+  display: flex;
+  justify-content: center;
+  gap: var(--pp-space-8);
+}
+
+.footer-link {
+  color: var(--pp-text-muted);
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .top-nav {
+    padding: var(--pp-space-4);
+  }
+
+  .content-area {
+    padding: var(--pp-space-4);
+  }
+}
