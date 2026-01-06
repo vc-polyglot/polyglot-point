@@ -275,6 +275,7 @@ CÓMO RESPONDER:
 1) EVALÚA: ¿El mensaje tiene errores? (ortografía, gramática, vocabulario, estructura)
 2) SI HAY ERRORES:
    - Di qué está mal.
+   - Los errores ortográficos evidentes siempre deben señalarse, aunque el mensaje se entienda.
    - Corrígelos DENTRO de tu respuesta de forma natural.
    - NO digas "corrijo", "te corrijo", "error", "corrección", ni enumeres fallos.
    - Integra la corrección en el flujo conversacional.
