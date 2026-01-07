@@ -1,0 +1,96 @@
+﻿/* ============================================
+   POLYGLOT POINT — Input System
+   Textarea, botón enviar, contador
+   ============================================ */
+
+.input-card {
+  padding: 16px;
+  box-shadow: var(--pp-shadow-soft);
+}
+
+.input-card textarea {
+  width: 100%;
+  min-height: 120px;
+  max-height: 240px;
+  padding: 14px;
+  border: 2px solid rgba(0,0,0,.10);
+  border-radius: var(--radius-md);
+  font-size: 1.06rem;
+  font-family: var(--font-serif);
+  color: var(--pp-ink);
+  background: #fff;
+  resize: none;
+  outline: none;
+  line-height: 1.55;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+.input-card textarea:focus {
+  border-color: rgba(0,224,136,.70);
+  box-shadow: 0 0 0 3px rgba(0,224,136,.14);
+}
+
+.input-card textarea::placeholder {
+  color: var(--pp-light);
+  font-style: italic;
+}
+
+.input-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.char-count {
+  font-size: .85rem;
+  color: var(--pp-light);
+  font-weight: 600;
+}
+
+.char-count.warning {
+  color: var(--pp-warning);
+}
+
+.btn-send {
+  border: none;
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-size: .95rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  cursor: not-allowed;
+  background: rgba(0,0,0,.10);
+  color: #fff;
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+
+.btn-send.active {
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--pp-green), rgba(0,224,136,.82));
+  box-shadow: 0 10px 24px rgba(0,224,136,.22);
+}
+
+.btn-send.active:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(0,224,136,.26);
+}
+
+.btn-send:active {
+  transform: scale(.99);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .input-card {
+    position: sticky;
+    bottom: 10px;
+    z-index: 5;
+  }
+
+  .input-card textarea {
+    min-height: 110px;
+    max-height: 180px;
+  }
+}

@@ -3,37 +3,42 @@
    Fuente única de verdad para todo el diseño
    ============================================ */
 
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap");
+
 :root {
-  /* Colores */
-  --pp-primary: #0078F0;
-  --pp-secondary: #00E088;
-  --pp-bg: #f5f5f5;
-  --pp-surface: #ffffff;
+  /* Brand */
+  --pp-blue: #0078F0;
+  --pp-green: #00E088;
 
-  /* Texto */
-  --pp-text: #1f1f1f;
-  --pp-text-muted: #718096;
+  /* Neutrales */
+  --pp-ink: #1f1f1f;
+  --pp-muted: #4b4b4b;
+  --pp-light: #7a7a7a;
 
-  /* Bordes y sombras */
-  --pp-border: #e2e8f0;
-  --pp-shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  /* Fondo */
+  --pp-bg: #f7f9fc;
 
-  /* Radios */
-  --pp-radius-sm: 8px;
-  --pp-radius-md: 12px;
-  --pp-radius-lg: 16px;
+  /* Superficies */
+  --pp-card: #ffffff;
+  --pp-line: rgba(0,0,0,.08);
+  --pp-shadow: 0 10px 30px rgba(0,0,0,.08);
+  --pp-shadow-soft: 0 4px 18px rgba(0,0,0,.08);
 
-  /* Tipografía */
-  --pp-font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --pp-font-size-base: 0.9375rem;
+  /* Acentos */
+  --pp-accent: var(--pp-green);
+  --pp-accent-2: var(--pp-blue);
+  --pp-accent-bg: rgba(0,224,136,.12);
 
-  /* Espaciado */
-  --pp-space-2: 0.5rem;
-  --pp-space-4: 1rem;
-  --pp-space-6: 1.5rem;
-  --pp-space-8: 2rem;
+  /* Estados */
+  --pp-warning: #b45309;
 
-  /* Z */
-  --pp-z-nav: 10;
-  --pp-z-modal: 100;
+  /* Tipografías */
+  --font-sans: "DM Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+
+  /* Layout */
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --container: 980px;
+  --pad: 16px;
 }

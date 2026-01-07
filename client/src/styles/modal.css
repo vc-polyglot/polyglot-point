@@ -1,0 +1,135 @@
+﻿/* ============================================
+   POLYGLOT POINT — Modals
+   Paywall y overlays
+   ============================================ */
+
+.paywall-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 24px;
+  backdrop-filter: blur(4px);
+}
+
+.paywall-card {
+  background: var(--pp-card);
+  border-radius: 24px;
+  padding: 34px 28px;
+  max-width: 520px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 26px 80px rgba(0,0,0,.25);
+}
+
+.paywall-card h2 {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.paywall-card > p {
+  color: var(--pp-muted);
+  margin-bottom: 22px;
+}
+
+.plan-option {
+  border: 2px solid rgba(0,0,0,.10);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  text-align: left;
+}
+
+.plan-option:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(0,0,0,.10);
+  border-color: rgba(0,224,136,.45);
+}
+
+.plan-option.featured {
+  border-color: rgba(0,224,136,.55);
+  background: rgba(0,224,136,.10);
+  position: relative;
+}
+
+.plan-badge {
+  position: absolute;
+  top: -10px;
+  right: 16px;
+  background: var(--pp-accent);
+  color: #fff;
+  font-size: .75rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+.plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.plan-name {
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.plan-price {
+  font-weight: 900;
+  color: var(--pp-accent);
+}
+
+.plan-desc {
+  font-size: .92rem;
+  color: var(--pp-muted);
+}
+
+.plan-note {
+  font-size: .85rem;
+  color: var(--pp-light);
+  margin-top: 4px;
+}
+
+.btn-subscribe {
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 20px;
+  font-weight: 900;
+  cursor: pointer;
+  margin-top: 14px;
+  background: linear-gradient(135deg, var(--pp-green), rgba(0,224,136,.82));
+  color: #fff;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.btn-subscribe:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 40px rgba(0,224,136,.22);
+}
+
+.paywall-footer {
+  margin-top: 14px;
+}
+
+.btn-later {
+  background: none;
+  border: none;
+  color: var(--pp-muted);
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.btn-later:hover {
+  color: var(--pp-ink);
+}

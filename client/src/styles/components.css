@@ -1,0 +1,80 @@
+﻿/* ============================================
+   POLYGLOT POINT — Components
+   Botones, selectores, elementos reutilizables
+   ============================================ */
+
+/* Logout button */
+.btn-logout {
+  border: 1px solid rgba(0,0,0,.10);
+  background: rgba(255,255,255,.65);
+  padding: 9px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--pp-ink);
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+
+.btn-logout:hover {
+  box-shadow: 0 8px 18px rgba(0,0,0,.10);
+  transform: translateY(-1px);
+}
+
+/* Language selector */
+.language-selector {
+  width: min(var(--container), 100%);
+  margin: 10px auto 10px;
+  padding: 0 var(--pad);
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.10);
+  background: rgba(255,255,255,.70);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: .92rem;
+  transition: box-shadow .12s ease, transform .12s ease, border-color .12s ease;
+}
+
+.lang-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(0,0,0,.10);
+}
+
+.lang-btn.active {
+  border-color: rgba(0,224,136,.55);
+  box-shadow: 0 0 0 3px rgba(0,224,136,.14);
+}
+
+/* Retry button */
+.btn-retry {
+  background: var(--pp-accent);
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.btn-retry:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(0,0,0,.12);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .language-selector {
+    margin-top: 8px;
+    padding: 0 var(--pad);
+  }
+}
