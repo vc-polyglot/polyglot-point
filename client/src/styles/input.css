@@ -1,96 +1,95 @@
 ﻿/* ============================================
-   POLYGLOT POINT — Input System
-   Textarea, botón enviar, contador
+   POLYGLOT POINT — Input V7
    ============================================ */
 
 .input-card {
-  padding: 16px;
-  box-shadow: var(--pp-shadow-soft);
+  background: linear-gradient(to bottom, var(--pp-card) 0%, rgba(0, 120, 240, 0.03) 50%, rgba(0, 224, 136, 0.03) 100%);
+  border-radius: var(--pp-radius-xl);
+  padding: 1.25rem 1.5rem 1.5rem;
+  box-shadow: var(--pp-shadow-sm);
 }
 
 .input-card textarea {
   width: 100%;
-  min-height: 120px;
-  max-height: 240px;
-  padding: 14px;
-  border: 2px solid rgba(0,0,0,.10);
-  border-radius: var(--radius-md);
-  font-size: 1.06rem;
-  font-family: var(--font-serif);
+  min-height: 100px;
+  max-height: 200px;
+  border: 2px solid var(--pp-border);
+  border-radius: var(--pp-radius-lg);
+  padding: 1rem;
+  font-size: 0.9375rem;
+  font-family: var(--pp-font);
   color: var(--pp-ink);
-  background: #fff;
-  resize: none;
+  background: white;
+  resize: vertical;
   outline: none;
-  line-height: 1.55;
-  transition: border-color .18s ease, box-shadow .18s ease;
+  line-height: 1.5;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .input-card textarea:focus {
-  border-color: rgba(0,224,136,.70);
-  box-shadow: 0 0 0 3px rgba(0,224,136,.14);
+  border-color: var(--pp-primary);
+  box-shadow: 0 0 0 3px rgba(0, 120, 240, 0.1);
 }
 
 .input-card textarea::placeholder {
   color: var(--pp-light);
-  font-style: italic;
+}
+
+.input-card textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: var(--pp-surface-hover);
 }
 
 .input-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
-  gap: 10px;
+  margin-top: 0.75rem;
 }
 
 .char-count {
-  font-size: .85rem;
+  font-size: 0.8125rem;
   color: var(--pp-light);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .char-count.warning {
   color: var(--pp-warning);
+  font-weight: 600;
 }
 
 .btn-send {
+  padding: 0.75rem 2rem;
+  background: #cbd5e0;
+  color: var(--pp-light);
   border: none;
-  padding: 12px 24px;
-  border-radius: 999px;
-  font-size: .95rem;
-  font-weight: 700;
-  font-family: var(--font-sans);
+  border-radius: var(--pp-radius-md);
+  font-size: 0.9375rem;
+  font-weight: 600;
   cursor: not-allowed;
-  background: rgba(0,0,0,.10);
-  color: #fff;
-  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+  transition: all 0.2s;
 }
 
 .btn-send.active {
+  background: var(--pp-gradient);
+  color: white;
   cursor: pointer;
-  background: linear-gradient(135deg, var(--pp-green), rgba(0,224,136,.82));
-  box-shadow: 0 10px 24px rgba(0,224,136,.22);
+  box-shadow: var(--pp-shadow-md);
 }
 
 .btn-send.active:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 14px 30px rgba(0,224,136,.26);
-}
-
-.btn-send:active {
-  transform: scale(.99);
+  transform: translateY(-2px);
+  box-shadow: var(--pp-shadow-lg);
 }
 
 /* Responsive */
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .input-card {
-    position: sticky;
-    bottom: 10px;
-    z-index: 5;
+    padding: 1rem;
   }
 
   .input-card textarea {
-    min-height: 110px;
-    max-height: 180px;
+    min-height: 80px;
   }
 }

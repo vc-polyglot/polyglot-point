@@ -1,6 +1,5 @@
 ﻿/* ============================================
-   POLYGLOT POINT — Base Styles
-   Reset y fundamentos
+   POLYGLOT POINT — Base Styles V7
    ============================================ */
 
 * {
@@ -14,10 +13,32 @@ html, body, #root {
 }
 
 body {
-  font-family: var(--font-sans);
+  font-family: var(--pp-font);
+  font-size: 0.9375rem;
   color: var(--pp-ink);
-  background:
-    radial-gradient(circle at 14px 14px, rgba(0,0,0,.030) 2px, transparent 2px) 0 0/38px 38px,
-    radial-gradient(circle at 30px 30px, rgba(0,0,0,.018) 2px, transparent 2px) 0 0/38px 38px,
-    var(--pp-bg);
+  background: var(--pp-bg);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--pp-border);
+  border-radius: var(--pp-radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--pp-light);
+}
+
+.hide {
+  display: none !important;
 }
