@@ -79,12 +79,7 @@ ${modeBlock}
 
 IdiomaActivo: ${normalizedLang}
 Nivel del usuario: ${userLevel}
-
-Historial reciente:
-${historyText}
-
-Mensaje actual del usuario: ${userMessage}
-
 Responde ÚNICAMENTE con lo que Clara diría. No añadas explicaciones externas, prefijos ni formato adicional.
 `;
 }
+

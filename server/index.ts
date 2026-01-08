@@ -1,10 +1,10 @@
-﻿process.on("uncaughtException", (err) => console.error("UNCAUGHT EXCEPTION:", err));
+﻿import "dotenv/config";
+process.on("uncaughtException", (err) => console.error("UNCAUGHT EXCEPTION:", err));
 process.on("unhandledRejection", (reason) => console.error("UNHANDLED REJECTION:", reason));
 
 import crypto from "crypto";
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
-import OpenAI from "openai";
 import session from "express-session";
 
 import { registerRoutes } from "./routes";
@@ -15,7 +15,8 @@ import authRoutes from "./authRoutes";
 import billingRoutes from "./routes/billing.routes";
 import { fb } from "./utils/i18n";
 import { subscriptionManager } from "./services/subscriptionManager";
-
+import { ChatResponseSchema } from "@shared/contracts/chat";
+import { runClaraEngine } from "./clara/runClaraEngine";
 const app = express();
 app.set("etag", false);
 const isProduction = process.env.NODE_ENV === "production";
@@ -28,7 +29,7 @@ const SESSION_SECRET =
 
 if (isProduction && !process.env.SESSION_SECRET) {
   console.error(
-    "[WARN] SESSION_SECRET faltante en producción; usando secreto efímero. Configura SESSION_SECRET en Railway."
+    "[WARN] SESSION_SECRET faltante en producciÃ³n; usando secreto efÃ­mero. Configura SESSION_SECRET en Railway."
   );
 }
 
@@ -158,7 +159,7 @@ const sessionOptions: session.SessionOptions = {
 
 async function initRedisSessionStore(): Promise<void> {
   if (!process.env.REDIS_URL) {
-    if (isProduction) console.warn("REDIS_URL no configurado en producción (MemoryStore no recomendado)");
+    if (isProduction) console.warn("REDIS_URL no configurado en producciÃ³n (MemoryStore no recomendado)");
     return;
   }
 
@@ -186,6 +187,9 @@ app.get("/health", (_req: Request, res: Response) => {
     environment: process.env.NODE_ENV || "development",
     sessionConfigured: !!process.env.SESSION_SECRET,
     redisConfigured: !!process.env.REDIS_URL,
+      googleOAuthEnabled: Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET),
+      googleClientIdLength: process.env.GOOGLE_CLIENT_ID?.length || 0,
+      googleClientSecretLength: process.env.GOOGLE_CLIENT_SECRET?.length || 0,
   });
 });
 
@@ -252,68 +256,15 @@ function timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 
 function targetLanguageName(code: string): string {
   const LANG: Record<string, string> = {
-    es: "español",
-    en: "inglés",
-    fr: "francés",
+    es: "espaÃ±ol",
+    en: "inglÃ©s",
+    fr: "francÃ©s",
     it: "italiano",
-    de: "alemán",
-    pt: "portugués",
+    de: "alemÃ¡n",
+    pt: "portuguÃ©s",
   };
-  return LANG[code] || "español";
-}
-
-function buildClaraPrompt(language: string, userMessage: string): string {
-  const target = targetLanguageName(language);
-
-  return `Eres Clara, una amiga nativa que ayuda a practicar ${target}.
-
-ROL: Eres una amiga culta que corrige de forma natural mientras conversas.
-
-MENSAJE ACTUAL DEL USUARIO: "${userMessage}"
-
-CÓMO RESPONDER:
-1) EVALÚA: ¿El mensaje tiene errores? (ortografía, gramática, vocabulario, estructura)
-2) SI HAY ERRORES: Explica brevemente qué está mal y corrígelos DENTRO de tu respuesta de forma natural.
-   - No dejes pasar tildes, mayúsculas ni signos obligatorios, aunque el mensaje sea comprensible.
-   - Si hay varios errores, menciónalos todos dentro de la corrección, no solo uno.
-   - NO digas "corrijo", "te corrijo", "error", "corrección", ni enumeres fallos.
-   - Integra la corrección en el flujo conversacional.
-3) LUEGO: Continúa la conversación normalmente (incluye una pregunta o comentario natural).
-4) SI NO HAY ERRORES: Solo responde conversacionalmente (sin mencionar correcciones).
-
-ESTILO:
-- Tono cálido pero directo, como WhatsApp.
-- Sin elogios vacíos.
-- Sin emojis.
-- Si el usuario mezcla idiomas, señálalo sutilmente EN ${target}.
-- Nunca inventes datos personales.
-
-IMPORTANTE:
-- Tu respuesta debe ser un solo mensaje unificado.
-- Responde siempre EN ${target}.
-
-AUTO-CHECK INTERNO (sin mencionarlo): antes de enviar, verifica que cumpliste idioma, un solo mensaje, sin meta-discurso, y que dejas continuidad.`;
-}
-
-type ClaraParsed = { response: string };
-
-function parseClaraResponse(raw: string): ClaraParsed {
-  return { response: (raw || "").trim() };
-}
-
-function validateClaraRaw(raw: string): { ok: boolean; cleaned: string } {
-  let cleaned = (raw || "").trim();
-  if (!cleaned) return { ok: false, cleaned: "" };
-
-  if (cleaned.startsWith('{"corrected":') || cleaned.startsWith("```json")) {
-    return { ok: false, cleaned: "" };
-  }
-
-  if (cleaned.length > 4000) cleaned = cleaned.slice(0, 4000).trim();
-  return { ok: true, cleaned };
-}
-
-function readLangFromBody(req: Record<string, unknown>): string {
+  return LANG[code] || "espaÃ±ol";
+}function readLangFromBody(req: Record<string, unknown>): string {
   const cand =
     (typeof (req as any).language === "string" && (req as any).language) ||
     (typeof (req as any).activeLanguage === "string" && (req as any).activeLanguage) ||
@@ -333,9 +284,10 @@ function validateChatRequest(body: unknown): {
 
   const language = readLangFromBody(req);
 
+  const inputFromBody = typeof (req as any).input === "string" ? String((req as any).input).trim() : "";
   const message = typeof (req as any).message === "string" ? String((req as any).message).trim() : "";
   const text = typeof (req as any).text === "string" ? String((req as any).text).trim() : "";
-  const inputRaw = message || text;
+  const inputRaw = inputFromBody || message || text;
 
   if (!inputRaw) return { valid: false, error: "no_text" };
 
@@ -349,19 +301,7 @@ function validateChatRequest(body: unknown): {
       : "anonymous";
 
   return { valid: true, data: { input, language, clientUserId, wasTrimmed, originalLength } };
-}
-
-let openaiClient: OpenAI | null = null;
-
-function getOpenAI(): OpenAI {
-  if (openaiClient) return openaiClient;
-  const key = process.env.OPENAI_API_KEY || process.env.POLYGLOT_OPENAI_KEY;
-  if (!key) throw new Error("OPENAI_API_KEY no configurada");
-  openaiClient = new OpenAI({ apiKey: key });
-  return openaiClient;
-}
-
-app.use((req, res, next) => {
+}app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
 
@@ -436,37 +376,20 @@ async function chatHandler(req: Request, res: Response) {
   const chatSession = getOrCreateChatSession(sessionKey);
 
   let rawResponse = "";
+
+  let claraText = "";
   let llmOk = false;
-
   try {
-    const client = getOpenAI();
+    const historial = chatSession.ventana;
 
-    const historial = chatSession.ventana.slice(-6);
-    const messages: Array<{ role: "system" | "user" | "assistant"; content: string }> = [
-      { role: "system", content: buildClaraPrompt(language, input) },
-    ];
+    const engineOut = await runClaraEngine({
+      input,
+      language,
+      history: historial,
+    });
 
-    for (const msg of historial) {
-      messages.push({ role: msg.role as "user" | "assistant", content: msg.content });
-    }
-
-    messages.push({ role: "user", content: input });
-
-    const completion = await timeout(
-      client.chat.completions.create({
-        model: "gpt-4o-mini",
-        temperature: 0.4,
-        max_tokens: 550,
-        messages,
-      }),
-      25000
-    );
-
-    rawResponse = completion.choices[0]?.message?.content || "";
-
-    const v = validateClaraRaw(rawResponse);
-    if (!v.ok) throw new Error("Respuesta OpenAI inválida");
-    rawResponse = v.cleaned;
+    rawResponse = engineOut.cleaned;
+    claraText = engineOut.response;
 
     llmOk = true;
   } catch (error: any) {
@@ -498,9 +421,7 @@ async function chatHandler(req: Request, res: Response) {
       requestId,
     });
   }
-
-  const clara = parseClaraResponse(rawResponse);
-
+  const clara = { response: claraText };
   if (authUser?.id && !billingState.dbFailed) {
     try {
       const result = await subscriptionManager.consumeMessage(authUser.id);
@@ -558,15 +479,53 @@ async function chatHandler(req: Request, res: Response) {
     );
   }
 
-  return res.status(200).json(response);
+  const parsedOut = ChatResponseSchema.safeParse(response);
+  if (!parsedOut.success) {
+    const responseTime = Date.now() - startTime;
+    if (isProduction) {
+      console.error(JSON.stringify({ type: "contract_violation", requestId, sessionKey, language, time: responseTime, issues: parsedOut.error.issues }));
+    } else {
+      console.error("[CONTRACT] ChatResponse inválido", parsedOut.error.issues);
+    }
+    return res.status(500).json({
+      claraResponse: "",
+      corrected: "",
+      explanations: [fb(language).PROCESS_ERROR],
+      tips: [],
+      language,
+      status: "openai_error",
+      timestamp: new Date().toISOString(),
+      requestId,
+    });
+  }
+
+  return res.status(200).json(parsedOut.data);
 }
 
 (async () => {
   await initRedisSessionStore();
 
+    const devBypass = !isProduction && process.env.DEV_BYPASS_AUTH === "1";
+
   app.use(session(sessionOptions));
   app.use(passport.initialize());
-  app.use(passport.session());
+
+  if (!devBypass) {
+    app.use(passport.session());
+  } else {
+    console.log("[DEV] DEV_BYPASS_AUTH activo: inyectando usuario mock y desactivando passport.session()");
+    app.use((req: Request, _res: Response, next: NextFunction) => {
+      // Usuario mock SOLO para desarrollo local. Sin id para evitar billing/DB.
+      (req as any).user = {
+        isDevMock: true,
+        email: "dev@local",
+        name: "Dev User",
+        planType: "pro",
+        messagesBank: 999999,
+      };
+      next();
+    });
+  }
 
   app.post("/api/chat", chatHandler);
 
@@ -598,16 +557,16 @@ async function chatHandler(req: Request, res: Response) {
 
   app.post("/api/logout", (req: Request, res: Response) => {
     req.logout((err) => {
-      if (err) return res.status(500).json({ error: "Error al cerrar sesión" });
+      if (err) return res.status(500).json({ error: "Error al cerrar sesiÃ³n" });
       req.session.destroy((err2) => {
-        if (err2) return res.status(500).json({ error: "Error destruyendo sesión" });
+        if (err2) return res.status(500).json({ error: "Error destruyendo sesiÃ³n" });
         res.clearCookie("connect.sid", {
           path: "/",
           secure: isProduction,
           sameSite: isProduction ? "none" : "lax",
           httpOnly: true,
         });
-        res.json({ message: "Sesión cerrada" });
+        res.json({ message: "SesiÃ³n cerrada" });
       });
     });
   });
@@ -640,3 +599,13 @@ async function chatHandler(req: Request, res: Response) {
   console.error("BOOTSTRAP FAILED:", e);
   process.exit(1);
 });
+
+
+
+
+
+
+
+
+
+
