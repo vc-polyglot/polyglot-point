@@ -1,0 +1,133 @@
+/* POLYGLOT POINT - Layout V8 */
+.app-background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(155deg, #f8fafc 0%, #f1f5f9 25%, #e8f4fc 50%, rgba(0, 115, 255, 0.04) 75%, rgba(0, 196, 140, 0.03) 100%);
+}
+
+.app { 
+  min-height: 100dvh; 
+  max-height: 100dvh; 
+  display: flex; 
+  flex-direction: column; 
+  overflow: hidden; 
+}
+
+.app-container { 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  min-height: 0; 
+  padding-top: 90px; 
+  padding-bottom: 0px; 
+}
+
+.app-header {
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px); 
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 20px rgba(0, 0, 0, 0.03);
+  padding: 0.875rem 2rem; 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  gap: 1rem;
+}
+
+.header-brand { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 0.125rem; 
+}
+
+.brand-row { 
+  display: flex; 
+  align-items: center; 
+  gap: 0.75rem; 
+}
+
+.brand-logo { 
+  height: 48px; 
+  width: auto; 
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08)); 
+}
+
+.header-phrase { 
+  font-size: 0.75rem; 
+  color: var(--pp-muted); 
+  font-weight: 400; 
+  max-width: 280px; 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+}
+
+.header-right { 
+  display: flex; 
+  align-items: center; 
+  gap: 1.25rem; 
+}
+
+.header-stats { 
+  display: flex; 
+  align-items: center; 
+  gap: 0.75rem; 
+  padding: 0.5rem 1rem; 
+  background: rgba(255, 255, 255, 0.6); 
+  border: 1px solid rgba(0, 0, 0, 0.04); 
+  border-radius: var(--pp-radius-md); 
+}
+
+.messages-count { 
+  font-size: 0.8125rem; 
+  font-weight: 600; 
+  color: var(--pp-text-secondary); 
+}
+
+.progress-bar { 
+  width: 100px; 
+  height: 5px; 
+  background: rgba(0, 0, 0, 0.06); 
+  border-radius: var(--pp-radius-full); 
+  overflow: hidden; 
+}
+
+.progress-bar-fill { 
+  height: 100%; 
+  background: var(--pp-gradient); 
+  border-radius: var(--pp-radius-full); 
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+}
+
+/* Espacio para input flotante */
+.chat-layout,
+.response-card {
+  padding-bottom: 90px;
+}
+
+@media (max-width: 768px) {
+  .app-container { 
+    padding-top: 70px; 
+    padding-bottom: 32px; 
+  }
+  
+  .app-header { 
+    padding: 0.75rem 1rem; 
+  }
+  
+  .brand-logo { 
+    height: 40px; 
+  }
+  
+  .header-stats, 
+  .header-phrase { 
+    display: none; 
+  }
+}

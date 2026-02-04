@@ -1,0 +1,133 @@
+﻿/* ============================================
+   POLYGLOT POINT — Login V7
+   ============================================ */
+
+.login-screen {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, rgba(0, 120, 240, 0.08) 100%);
+  position: relative;
+  overflow: hidden;
+}
+.login-screen::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -30%;
+  width: 80%;
+  height: 150%;
+  background: radial-gradient(circle, rgba(0, 120, 240, 0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+.login-screen::after {
+  content: "";
+  position: absolute;
+  bottom: -30%;
+  left: -20%;
+  width: 60%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(0, 224, 136, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.login-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.login-card h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--pp-ink);
+  margin-bottom: 0.5rem;
+}
+
+.login-card h1 span {
+  font-weight: 400;
+}
+
+.login-phrase {
+  font-size: 1rem;
+  color: var(--pp-muted);
+  margin-bottom: 2rem;
+}
+
+.login-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.btn-oauth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1rem;
+  border-radius: var(--pp-radius-lg);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--pp-font);
+}
+
+/* ===== MODIFICACIÓN: BOTÓN GOOGLE ACTUALIZADO ===== */
+.btn-google {
+  /* Gradient eléctrico - Alta saturación para acción */
+  background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+  border: none; /* Quitamos el borde original */
+  color: white; /* Texto blanco para contraste */
+  box-shadow: 
+    0 6px 20px rgba(66, 133, 244, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  
+  /* Transición más suave */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Texto con sombra suave */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.btn-google:hover {
+  /* Efecto hover más pronunciado */
+  transform: translateY(-3px);
+  box-shadow: 
+    0 10px 25px rgba(66, 133, 244, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.15);
+  
+  /* Gradient más oscuro al hover */
+  background: linear-gradient(135deg, #3367D6 0%, #2E8B57 100%);
+  border-color: transparent; /* Aseguramos que no haya borde */
+}
+
+/* ===== BOTÓN APPLE (SIN CAMBIOS) ===== */
+.btn-apple {
+  background: #1f1f1f;
+  border: 2px solid #1f1f1f;
+  color: white;
+}
+
+.btn-apple:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(0,0,0,.16);
+}
+
+.oauth-icon {
+  width: 20px;
+  height: 20px;
+}

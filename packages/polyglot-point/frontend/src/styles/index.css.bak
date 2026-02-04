@@ -1,0 +1,14 @@
+/* ============================================
+   POLYGLOT POINT — Style Index
+   Solo imports, en orden de dependencia
+   ============================================ */
+
+@import './variables.css';
+@import './base.css';
+@import './layout.css';
+@import './components.css';
+@import './chat.css';
+@import './input.css';
+@import './login.css';
+@import './modal.css';
+@import './login-artistic.css';

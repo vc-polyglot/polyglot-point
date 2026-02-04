@@ -1,0 +1,209 @@
+/* ============================================
+   POLYGLOT POINT Ã¢â‚¬â€ Modal V7
+   ============================================ */
+
+.paywall-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 2rem;
+}
+
+.paywall-card {
+  width: min(520px, calc(100vw - 2.5rem));
+  padding: 2rem 2rem 1.5rem;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,0,0,0.10);
+  box-shadow:
+    0 24px 48px rgba(0,0,0,0.28),
+    0 10px 18px rgba(0,0,0,0.14);
+}
+
+.paywall-card h2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--pp-ink);
+  margin-bottom: 0.5rem;
+}
+
+.paywall-card > p {
+  color: var(--pp-muted);
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+.plan-option {
+  border: 2px solid var(--pp-border);
+  border-radius: var(--pp-radius-xl);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  position: relative;
+}
+
+.plan-option:hover {
+  border-color: var(--pp-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--pp-shadow-md);
+}
+
+.plan-option.featured {
+  border-color: var(--pp-primary);
+  background: linear-gradient(135deg, rgba(0, 120, 240, 0.05) 0%, rgba(0, 224, 136, 0.05) 100%);
+}
+
+.plan-badge {
+  position: absolute;
+  top: -10px;
+  right: 1.5rem;
+  background: var(--pp-gradient);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.875rem;
+  border-radius: var(--pp-radius-full);
+}
+
+.plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.plan-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--pp-ink);
+}
+
+.plan-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--pp-primary);
+}
+
+.plan-desc {
+  color: var(--pp-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.plan-note {
+  margin-top: 0.5rem;
+  color: var(--pp-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.btn-subscribe {
+  width: 100%;
+  padding: 1rem;
+  background: var(--pp-gradient);
+  color: white;
+  border: none;
+  border-radius: var(--pp-radius-lg);
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 0.5rem;
+  box-shadow: var(--pp-shadow-md);
+}
+
+.btn-subscribe:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--pp-shadow-lg);
+}
+
+.paywall-footer {
+  margin-top: 1rem;
+}
+
+.btn-later {
+  background: none;
+  border: none;
+  color: var(--pp-muted);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0.5rem;
+}
+
+.btn-later:hover {
+  color: var(--pp-ink);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .paywall-card {
+  width: min(520px, calc(100vw - 2.5rem));
+  padding: 2rem 2rem 1.5rem;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,0,0,0.10);
+  box-shadow:
+    0 24px 48px rgba(0,0,0,0.28),
+    0 10px 18px rgba(0,0,0,0.14);
+}
+
+  .paywall-card h2 {
+    font-size: 1.5rem;
+  }
+}
+
+
+/* PAYWALL LEGIBILIDAD OVERRIDE (DEV/PROD) */
+.paywall-card{
+  /* Fondo sÃ³lido suficiente para leer, sin matar el look */
+  background: rgba(255,255,255,0.92) !important;
+  border: 1px solid rgba(0,0,0,0.10);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+
+  /* Recalibrar variables dentro del modal (solo afecta a hijos del paywall) */
+  --pp-ink: rgba(0,0,0,0.90);
+  --pp-muted: rgba(0,0,0,0.64);
+  --pp-border: rgba(0,0,0,0.12);
+}
+.plan-price{ color: rgba(0,0,0,0.88) !important; }
+.btn-later:hover{ color: rgba(0,0,0,0.88) !important; }
+
+
+/* ===============================
+   PAYWALL — Final polish
+   =============================== */
+
+/* Modal un poco más ancho: deja de verse como alerta */
+.paywall-card{
+  max-width: 640px;
+}
+
+/* Premium respira más */
+.plan-option.featured{
+  padding: 1.75rem;
+  border-radius: 16px;
+}
+
+/* Header con más presencia */
+.paywall-card h2{
+  margin-top: 0.25rem;
+}
+.paywall-card > p{
+  margin-bottom: 2.25rem;
+}
+
+/* ===============================
+   PAYWALL — Remove 'Recomendado' badge
+   =============================== */
+
+.plan-badge{
+  display: none;
+}

@@ -1,0 +1,9 @@
+﻿{
+  "name": "@platform/api-gateway",
+  "version": "1.0.0",
+  "dependencies": {
+    "@platform/core": "workspace:*",
+    "@platform/polyglot-point": "workspace:*",
+    "@platform/lexipop-math": "workspace:*"
+  }
+}

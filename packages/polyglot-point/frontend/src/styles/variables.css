@@ -1,0 +1,22 @@
+﻿/* POLYGLOT POINT - Design Tokens V8 */
+:root {
+  --pp-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --pp-primary: #0078f0;
+  --pp-success: #00e088;
+  --pp-warning: #ff9500;
+  --pp-error: #ff3b30;
+  --pp-ink: #1a202c;
+  --pp-text-secondary: #4a5568;
+  --pp-muted: #718096;
+  --pp-light: #a0aec0;
+  --pp-border: #e2e8f0;
+  --pp-surface: #f8fafc;
+  --pp-gradient: linear-gradient(135deg, #0078f0 0%, #00e088 100%);
+  --pp-gradient-subtle: linear-gradient(135deg, rgba(0, 120, 240, 0.08) 0%, rgba(0, 224, 136, 0.08) 100%);
+  --pp-radius-sm: 4px;
+  --pp-radius-md: 8px;
+  --pp-radius-lg: 12px;
+  --pp-radius-xl: 16px;
+  --pp-radius-full: 9999px;
+  --pp-container: 1200px;
+}

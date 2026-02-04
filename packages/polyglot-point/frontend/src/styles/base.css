@@ -1,0 +1,17 @@
+﻿/* POLYGLOT POINT - Base Styles */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body, #root { height: 100%; height: 100dvh; }
+body {
+  font-family: var(--pp-font);
+  font-size: 0.9375rem;
+  color: var(--pp-ink);
+  background: #f8fafc;
+  overflow: visible;  /* ← CAMBIADO */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.12); border-radius: var(--pp-radius-full); }
+::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.2); }
+* { scrollbar-width: thin; scrollbar-color: rgba(0, 0, 0, 0.12) transparent; }
