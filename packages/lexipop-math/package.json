@@ -1,7 +1,9 @@
-﻿{
+{
   "name": "@platform/lexipop-math",
   "version": "1.0.0",
+  "type": "module",
   "dependencies": {
-    "@platform/core": "workspace:*"
+    "@platform/core": "workspace:*",
+    "express": "^4.21.1"
   }
 }
