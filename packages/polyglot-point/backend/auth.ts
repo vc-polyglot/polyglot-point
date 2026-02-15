@@ -4,13 +4,12 @@ import { db } from "./db-new";
 import { users } from "../shared/schema";
 import { eq } from "drizzle-orm";
 
-// Configuraci�n de Google OAuth
 passport.use(
   new GoogleStrategy(
     {
-      clientID: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      callbackURL: process.env.GOOGLE_CALLBACK_URL || "http://localhost:3000/api/auth/google/callback",
+      clientID: process.env.GOOGLE_CLIENT_ID_X!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET_X!,
+      callbackURL: process.env.GOOGLE_CALLBACK_URL_X || "http://localhost:3000/api/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -18,9 +17,7 @@ passport.use(
         if (!email) {
           return done(new Error("No email found in Google profile"));
         }
-
         let [user] = await db.select().from(users).where(eq(users.email, email));
-
         if (!user) {
           [user] = await db.insert(users).values({
             email,
@@ -29,7 +26,6 @@ passport.use(
             avatar: profile.photos?.[0]?.value,
           }).returning();
         }
-
         done(null, user);
       } catch (error) {
         done(error as Error);
