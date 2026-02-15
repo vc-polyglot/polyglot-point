@@ -117,23 +117,13 @@ If a method is suboptimal for the given operation, do not include it.
 Respond in the same language as instructed.`;
 
 async function fetchHelpFromAPI(question: string, answer: number, lang: Language): Promise<string> {
-  const langNames: Record<Language, string> = {
-    es: 'Spanish', en: 'English', fr: 'French', de: 'German', pt: 'Portuguese', it: 'Italian'
-  };
-  const response = await fetch('/api/openai/v1/chat/completions', {
+  const response = await fetch('/api/help', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'gpt-4o',
-      max_tokens: 1000,
-      messages: [
-        { role: 'system', content: HELP_SYSTEM_PROMPT },
-        { role: 'user', content: `Problem: ${question}\nCorrect answer: ${answer}\nRespond in ${langNames[lang]}.` }
-      ]
-    })
+    body: JSON.stringify({ question, answer, lang })
   });
   const data = await response.json();
-  return data.choices?.[0]?.message?.content || '-';
+  return data.help || '-';
 }
 
 // Renderiza markdown basico: **negrita**, *italica*, `codigo`, saltos de linea
