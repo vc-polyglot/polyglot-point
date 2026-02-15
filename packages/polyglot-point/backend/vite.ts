@@ -23,46 +23,44 @@ export function setupVite(app: express.Express, _server?: any) {
  * Sirve archivos estáticos y maneja fallback SPA correctamente
  */
 export function serveStatic(app: express.Express) {
-  const publicPath = path.resolve(process.cwd(), "dist/public");
+  // 🔥 CORREGIDO: usar __dirname para que funcione en monorepo Railway
+  const publicPath = path.resolve(__dirname, "../dist/public");
+
   console.log("Sirviendo estáticos desde:", publicPath);
 
-  // 1) Servir archivos estáticos (assets reales)
+  // 1) Servir archivos estáticos reales
   app.use(
     express.static(publicPath, {
-      fallthrough: true, // IMPORTANTE: si no existe, sigue al siguiente middleware
+      fallthrough: true,
     })
   );
 
-  // 2) Catch-all SOLO para rutas de la SPA
+  // 2) Catch-all SOLO para rutas SPA
   app.get("*", (req: Request, res: Response) => {
     const p = req.path || "";
 
-    // Rutas de backend / sistema que NO deben caer al frontend
     const isBackendRoute =
       p.startsWith("/api") ||
       p.startsWith("/chat") ||
       p.startsWith("/auth") ||
       p.startsWith("/health");
 
-    // Cualquier cosa que "huela" a archivo estático
     const looksLikeStatic =
       p.startsWith("/assets/") ||
       /\.(js|mjs|cjs|css|map|png|jpg|jpeg|gif|svg|webp|ico|txt|json|woff|woff2|ttf|eot)$/.test(
         p
       );
 
-    // 🚫 JAMÁS devolver index.html para backend o estáticos
     if (isBackendRoute || looksLikeStatic) {
       return res.status(404).end();
     }
 
-    // ✅ Solo aquí devolvemos el index.html de la SPA
     return res.sendFile(path.join(publicPath, "index.html"));
   });
 }
 
 /**
- * Helper de log (se deja intacto)
+ * Helper de log
  */
 export function log(message: string) {
   console.log(message);
