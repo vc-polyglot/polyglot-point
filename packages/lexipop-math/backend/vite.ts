@@ -2,10 +2,9 @@ import type { Express, Request, Response, NextFunction } from "express";
 import type { Server } from "http";
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname  = path.dirname(__filename);
+// En CJS __dirname existe nativamente — no necesitamos import.meta
+const ROOT = path.resolve(__dirname, "../..");
 
 export function log(message: string, source = "lexipop-math") {
   const time = new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true });
@@ -16,9 +15,9 @@ export async function setupVite(app: Express, server: Server) {
   const { createServer: createViteServer } = await import("vite");
 
   const vite = await createViteServer({
-    root:    path.resolve(__dirname, "../../frontend"),
-    server:  { middlewareMode: true },
-    appType: "spa",
+    root:     path.resolve(ROOT, "frontend"),
+    server:   { middlewareMode: true },
+    appType:  "spa",
     logLevel: "info",
   });
 
@@ -29,10 +28,7 @@ export async function setupVite(app: Express, server: Server) {
       return next();
     }
     try {
-      const template = fs.readFileSync(
-        path.resolve(__dirname, "../../frontend/index.html"),
-        "utf-8"
-      );
+      const template = fs.readFileSync(path.resolve(ROOT, "frontend/index.html"), "utf-8");
       const html = await vite.transformIndexHtml(req.originalUrl, template);
       res.status(200).set({ "Content-Type": "text/html" }).end(html);
     } catch (e) {
@@ -45,22 +41,14 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(__dirname, "../../frontend/dist");
+  const distPath = path.resolve(ROOT, "frontend/dist");
 
   if (!fs.existsSync(distPath)) {
-    console.warn(`[serveStatic] WARN: ${distPath} no existe. Ejecuta 'pnpm build' primero.`);
+    console.warn(`[serveStatic] WARN: ${distPath} no existe.`);
     return;
   }
 
-  const expressStatic = require("express").static;
-
-  app.use(
-    expressStatic(distPath, {
-      maxAge: "1y",
-      etag:   false,
-      index:  false,
-    })
-  );
+  app.use(require("express").static(distPath, { maxAge: "1y", etag: false, index: false }));
 
   app.use("*", (req: Request, res: Response, next: NextFunction) => {
     if (req.originalUrl.startsWith("/api") || req.originalUrl.startsWith("/auth")) {
