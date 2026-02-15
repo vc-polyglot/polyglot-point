@@ -56,6 +56,7 @@ RUN pnpm install --frozen-lockfile --prod
 COPY --from=builder /app/packages/core/         ./packages/core/
 COPY --from=builder /app/packages/lexipop-core/ ./packages/lexipop-core/
 COPY --from=builder /app/packages/lexipop-math/dist/          ./packages/lexipop-math/dist/
+COPY --from=builder /app/packages/lexipop-math/frontend/dist/ ./packages/lexipop-math/frontend/dist/
 
 ENV NODE_ENV=production
 ENV PORT=3001
