@@ -29,8 +29,6 @@ interface Stats {
   masteredReflexes: Set<ReflexId>;
   sessionExercises: number;
 }
-interface MenuPos { top: number; left?: number; right?: number; }
-
 const SECTION_REFLEXES: Record<Section, ReflexId[]> = {
   aritmetica: ['ARIT_SUMA','ARIT_MULT','ARIT_DIV','ARIT_NEG','ARIT_MULTIPLOS','ARIT_POTENCIAS','ARIT_RAICES','ARIT_FRACCIONES','ARIT_PORCENTAJES','ARIT_REGLA3'],
   algebra:    ['ALG_EVAL','ALG_EC_SIMPLE','ALG_EC_AVZ','ALG_PRODUCTOS'],
@@ -277,39 +275,18 @@ function gen(reflexId: ReflexId, level: number): Exercise {
   }
 }
 
-// ─── Dropdown con posición calculada ─────────────────────────────────────────
-interface FloatingMenuProps {
+// ─── Dropdown simple — position:absolute dentro de wrapper con z-index alto ──
+// NO usamos position:fixed + getBoundingClientRect porque backdrop-filter en
+// ancestros rompe fixed positioning en Chrome/mobile.
+interface DropdownMenuProps {
   open: boolean;
-  anchorRef: React.RefObject<HTMLButtonElement>;
   align: 'left' | 'right';
   children: React.ReactNode;
 }
-function FloatingMenu({ open, anchorRef, align, children }: FloatingMenuProps) {
-  const [pos, setPos] = useState<MenuPos>({ top: 0 });
-
-  useEffect(() => {
-    if (open && anchorRef.current) {
-      const r = anchorRef.current.getBoundingClientRect();
-      const menuPos: MenuPos = { top: r.bottom + 6 };
-      if (align === 'right') menuPos.right = window.innerWidth - r.right;
-      else menuPos.left = r.left;
-      setPos(menuPos);
-    }
-  }, [open, anchorRef, align]);
-
+function DropdownMenu({ open, align, children }: DropdownMenuProps) {
   if (!open) return null;
-
   return (
-    <div
-      className="floating-menu"
-      style={{
-        position: 'fixed',
-        top:   pos.top,
-        left:  pos.left  !== undefined ? pos.left  : undefined,
-        right: pos.right !== undefined ? pos.right : undefined,
-        zIndex: 99999,
-      }}
-    >
+    <div className={`dropdown-menu dropdown-menu--${align}`}>
       {children}
     </div>
   );
@@ -387,12 +364,9 @@ export default function MathExercise() {
   const [helpContent, setHelpContent]       = useState<string | null>(null);
   const [helpLoading, setHelpLoading]       = useState(false);
 
-  // Refs apuntan al wrapper div (botón + menú flotante) para que
-  // mousedown.contains() devuelva true al hacer click en una opción
+  // Wrapper refs para cerrar al click afuera
   const langWrapRef  = useRef<HTMLDivElement>(null);
   const themeWrapRef = useRef<HTMLDivElement>(null);
-  const langBtnRef   = useRef<HTMLButtonElement>(null);
-  const themeBtnRef  = useRef<HTMLButtonElement>(null);
 
   const [stats, setStats] = useState<Stats>(() => {
     try {
@@ -520,35 +494,35 @@ export default function MathExercise() {
 
       <header className="app-header">
         {/* Tema — izquierda */}
-        <div ref={themeWrapRef} style={{position:'relative'}}>
-          <button ref={themeBtnRef} className="theme-toggle" onClick={() => setThemeOpen(o => !o)}>
+        <div ref={themeWrapRef} style={{position:'relative', zIndex:99999}}>
+          <button className="theme-toggle" onClick={() => setThemeOpen(o => !o)}>
             {THEME_ICONS[theme]} <span className="chevron-sm">{themeOpen?'▲':'▼'}</span>
           </button>
-          <FloatingMenu open={themeOpen} anchorRef={themeBtnRef} align="left">
+          <DropdownMenu open={themeOpen} align="left">
             {(Object.keys(THEME_ICONS) as Theme[]).map(th => (
-              <button key={th} className={`floating-option ${theme===th?'active':''}`}
+              <button key={th} className={`dropdown-option ${theme===th?'active':''}`}
                 onClick={() => { setTheme(th); setThemeOpen(false); }}>
                 {THEME_ICONS[th]} {th.charAt(0).toUpperCase()+th.slice(1)}
               </button>
             ))}
-          </FloatingMenu>
+          </DropdownMenu>
         </div>
 
         <img src="/lexipop-logo.png" alt="LexiPop Math" className="app-logo" />
 
         {/* Idioma — derecha */}
-        <div ref={langWrapRef} style={{position:'relative'}}>
-          <button ref={langBtnRef} className="lang-toggle" onClick={() => setLangOpen(o => !o)}>
+        <div ref={langWrapRef} style={{position:'relative', zIndex:99999}}>
+          <button className="lang-toggle" onClick={() => setLangOpen(o => !o)}>
             🌐 {lang.toUpperCase()} <span className="chevron-sm">{langOpen?'▲':'▼'}</span>
           </button>
-          <FloatingMenu open={langOpen} anchorRef={langBtnRef} align="right">
+          <DropdownMenu open={langOpen} align="right">
             {(['es','en','fr','de','pt','it'] as Language[]).map(l => (
-              <button key={l} className={`floating-option ${lang===l?'active':''}`}
+              <button key={l} className={`dropdown-option ${lang===l?'active':''}`}
                 onClick={() => { setLang(l); setLangOpen(false); }}>
                 {l.toUpperCase()}
               </button>
             ))}
-          </FloatingMenu>
+          </DropdownMenu>
         </div>
       </header>
 

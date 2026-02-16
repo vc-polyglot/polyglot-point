@@ -14,7 +14,8 @@
   background: linear-gradient(135deg, var(--bg-from) 0%, var(--bg-mid) 40%, var(--bg-to) 100%);
   padding: 1rem;
   display: flex; flex-direction: column; gap: 0.7rem; align-items: center;
-  position: relative; overflow: hidden;
+  position: relative;
+  /* SIN overflow:hidden — los blobs se recortan con clip en sus propios pseudo-elementos */
 }
 .lexipop-container::before, .lexipop-container::after {
   content:''; position:absolute; border-radius:50%; pointer-events:none;
@@ -49,19 +50,30 @@
 .lang-toggle:hover, .theme-toggle:hover { background:rgba(var(--surface),0.4); }
 .chevron-sm { font-size:0.6rem; opacity:0.65; }
 
-/* ── FLOATING MENU (portaled, position:fixed desde JS) ───────────────────── */
-.floating-menu {
+/* ── DROPDOWN MENU — position:absolute dentro del wrapper ────────────────── */
+/* El wrapper tiene position:relative + z-index:99999 (inline style).        */
+/* Así el menú flota sobre TODO el contenido sin depender de fixed.          */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
   background: rgba(255,255,255,0.98);
   border: 1.5px solid rgba(var(--accent),0.3);
   border-radius: 13px;
-  box-shadow: 0 10px 36px rgba(0,0,0,0.2);
-  overflow: hidden;
+  box-shadow: 0 10px 36px rgba(0,0,0,0.22);
+  overflow: visible;
   min-width: 140px;
   animation: dropIn 0.14s ease;
+  /* El z-index del menú se hereda del wrapper, pero forzamos también aquí */
+  z-index: 99999;
 }
+/* Alinear por izquierda (botón tema) */
+.dropdown-menu--left  { left: 0; }
+/* Alinear por derecha (botón idioma) */
+.dropdown-menu--right { right: 0; }
+
 @keyframes dropIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
 
-.floating-option {
+.dropdown-option {
   display:flex; align-items:center; gap:0.55rem;
   width:100%; padding:0.6rem 1.1rem;
   background:transparent; border:none;
@@ -69,8 +81,8 @@
   cursor:pointer; text-align:left; transition:background 0.13s ease;
   white-space:nowrap;
 }
-.floating-option:hover  { background:rgba(var(--accent),0.1); }
-.floating-option.active { background:rgba(var(--accent),0.2); font-weight:800; }
+.dropdown-option:hover  { background:rgba(var(--accent),0.1); }
+.dropdown-option.active { background:rgba(var(--accent),0.2); font-weight:800; }
 
 /* ── SECTION TABS ────────────────────────────────────────────────────────── */
 .section-tabs {
