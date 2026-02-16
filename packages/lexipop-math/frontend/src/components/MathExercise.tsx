@@ -2,14 +2,15 @@
 import './MathExercise.css';
 
 type Language = 'es' | 'en' | 'fr' | 'de' | 'pt' | 'it';
-type Section = 'aritmetica' | 'algebra' | 'funciones';
+type Section   = 'aritmetica' | 'algebra' | 'funciones';
+type Theme     = 'neutro' | 'oscuro' | 'rojo' | 'azul' | 'gris' | 'oro';
 
 type ReflexId =
   | 'ARIT_SUMA' | 'ARIT_MULT' | 'ARIT_DIV'
-  | 'ARIT_NEG' | 'ARIT_MULTIPLOS'
+  | 'ARIT_NEG'  | 'ARIT_MULTIPLOS'
   | 'ARIT_POTENCIAS' | 'ARIT_RAICES'
   | 'ARIT_FRACCIONES' | 'ARIT_PORCENTAJES' | 'ARIT_REGLA3'
-  | 'ALG_EVAL' | 'ALG_EC_SIMPLE' | 'ALG_EC_AVZ' | 'ALG_PRODUCTOS'
+  | 'ALG_EVAL'  | 'ALG_EC_SIMPLE' | 'ALG_EC_AVZ' | 'ALG_PRODUCTOS'
   | 'FUNC_LINEAL' | 'FUNC_CUAD';
 
 interface Exercise {
@@ -18,16 +19,10 @@ interface Exercise {
   reflexId: ReflexId;
   isEquation?: boolean;
 }
-
 interface ReflexProgress {
-  reflexId: ReflexId;
-  correct: number;
-  total: number;
-  lastAttempts: boolean[];
-  mastered: boolean;
-  level: number;
+  reflexId: ReflexId; correct: number; total: number;
+  lastAttempts: boolean[]; mastered: boolean; level: number;
 }
-
 interface Stats {
   currentReflex: ReflexId;
   reflexes: Map<ReflexId, ReflexProgress>;
@@ -36,33 +31,28 @@ interface Stats {
 }
 
 const SECTION_REFLEXES: Record<Section, ReflexId[]> = {
-  aritmetica: [
-    'ARIT_SUMA', 'ARIT_MULT', 'ARIT_DIV',
-    'ARIT_NEG', 'ARIT_MULTIPLOS',
-    'ARIT_POTENCIAS', 'ARIT_RAICES',
-    'ARIT_FRACCIONES', 'ARIT_PORCENTAJES', 'ARIT_REGLA3'
-  ],
-  algebra: ['ALG_EVAL', 'ALG_EC_SIMPLE', 'ALG_EC_AVZ', 'ALG_PRODUCTOS'],
-  funciones: ['FUNC_LINEAL', 'FUNC_CUAD'],
+  aritmetica: ['ARIT_SUMA','ARIT_MULT','ARIT_DIV','ARIT_NEG','ARIT_MULTIPLOS','ARIT_POTENCIAS','ARIT_RAICES','ARIT_FRACCIONES','ARIT_PORCENTAJES','ARIT_REGLA3'],
+  algebra:    ['ALG_EVAL','ALG_EC_SIMPLE','ALG_EC_AVZ','ALG_PRODUCTOS'],
+  funciones:  ['FUNC_LINEAL','FUNC_CUAD'],
 };
 
 const REFLEX_NAMES: Record<ReflexId, Record<Language, string>> = {
-  ARIT_SUMA:       { es:'Sumas y restas',        en:'Addition & subtraction', fr:'Additions/soustractions', de:'Addition & Subtraktion', pt:'Somas e subtrações',    it:'Addizioni e sottrazioni' },
-  ARIT_MULT:       { es:'Multiplicación',         en:'Multiplication',         fr:'Multiplication',          de:'Multiplikation',         pt:'Multiplicação',          it:'Moltiplicazione' },
-  ARIT_DIV:        { es:'División',               en:'Division',               fr:'Division',                de:'Division',               pt:'Divisão',                it:'Divisione' },
-  ARIT_NEG:        { es:'Números negativos',      en:'Negative numbers',       fr:'Nombres négatifs',        de:'Negative Zahlen',        pt:'Números negativos',      it:'Numeri negativi' },
-  ARIT_MULTIPLOS:  { es:'Múltiplos y primos',     en:'Multiples & primes',     fr:'Multiples et premiers',   de:'Vielfache & Primzahlen', pt:'Múltiplos e primos',     it:'Multipli e primi' },
-  ARIT_POTENCIAS:  { es:'Potencias',              en:'Powers',                 fr:'Puissances',              de:'Potenzen',               pt:'Potências',              it:'Potenze' },
-  ARIT_RAICES:     { es:'Raíces cuadradas',       en:'Square roots',           fr:'Racines carrées',         de:'Quadratwurzeln',         pt:'Raízes quadradas',       it:'Radici quadrate' },
-  ARIT_FRACCIONES: { es:'Fracciones',             en:'Fractions',              fr:'Fractions',               de:'Brüche',                 pt:'Frações',                it:'Frazioni' },
-  ARIT_PORCENTAJES:{ es:'Porcentajes',            en:'Percentages',            fr:'Pourcentages',            de:'Prozentrechnungen',      pt:'Porcentagens',           it:'Percentuali' },
-  ARIT_REGLA3:     { es:'Regla de tres',          en:'Rule of three',          fr:'Règle de trois',          de:'Dreisatz',               pt:'Regra de três',          it:'Regola del tre' },
-  ALG_EVAL:        { es:'Evaluar expresiones',    en:'Evaluate expressions',   fr:'Evaluer expressions',     de:'Ausdruecke auswerten',   pt:'Avaliar expressoes',     it:'Valutare espressioni' },
-  ALG_EC_SIMPLE:   { es:'Ecuaciones simples',     en:'Simple equations',       fr:'Equations simples',       de:'Einfache Gleichungen',   pt:'Equacoes simples',       it:'Equazioni semplici' },
-  ALG_EC_AVZ:      { es:'Ecuaciones avanzadas',   en:'Advanced equations',     fr:'Equations avancees',      de:'Erweiterte Gleichungen', pt:'Equacoes avancadas',     it:'Equazioni avanzate' },
-  ALG_PRODUCTOS:   { es:'Productos notables',     en:'Notable products',       fr:'Produits notables',       de:'Bemerkenswerte Produkte',pt:'Produtos notaveis',      it:'Prodotti notevoli' },
-  FUNC_LINEAL:     { es:'Funcion lineal',         en:'Linear function',        fr:'Fonction lineaire',       de:'Lineare Funktion',       pt:'Funcao linear',          it:'Funzione lineare' },
-  FUNC_CUAD:       { es:'Funcion cuadratica',     en:'Quadratic function',     fr:'Fonction quadratique',    de:'Quadratische Funktion',  pt:'Funcao quadratica',      it:'Funzione quadratica' },
+  ARIT_SUMA:       { es:'Sumas y restas',      en:'Addition & subtraction', fr:'Additions/soustractions', de:'Addition & Subtraktion', pt:'Somas e subtrações',   it:'Addizioni e sottrazioni' },
+  ARIT_MULT:       { es:'Multiplicación',       en:'Multiplication',         fr:'Multiplication',          de:'Multiplikation',         pt:'Multiplicação',         it:'Moltiplicazione' },
+  ARIT_DIV:        { es:'División',             en:'Division',               fr:'Division',                de:'Division',               pt:'Divisão',               it:'Divisione' },
+  ARIT_NEG:        { es:'Números negativos',    en:'Negative numbers',       fr:'Nombres négatifs',        de:'Negative Zahlen',        pt:'Números negativos',     it:'Numeri negativi' },
+  ARIT_MULTIPLOS:  { es:'Múltiplos y primos',   en:'Multiples & primes',     fr:'Multiples et premiers',   de:'Vielfache & Primzahlen', pt:'Múltiplos e primos',    it:'Multipli e primi' },
+  ARIT_POTENCIAS:  { es:'Potencias',            en:'Powers',                 fr:'Puissances',              de:'Potenzen',               pt:'Potências',             it:'Potenze' },
+  ARIT_RAICES:     { es:'Raíces cuadradas',     en:'Square roots',           fr:'Racines carrées',         de:'Quadratwurzeln',         pt:'Raízes quadradas',      it:'Radici quadrate' },
+  ARIT_FRACCIONES: { es:'Fracciones',           en:'Fractions',              fr:'Fractions',               de:'Brüche',                 pt:'Frações',               it:'Frazioni' },
+  ARIT_PORCENTAJES:{ es:'Porcentajes',          en:'Percentages',            fr:'Pourcentages',            de:'Prozentrechnungen',      pt:'Porcentagens',          it:'Percentuali' },
+  ARIT_REGLA3:     { es:'Regla de tres',        en:'Rule of three',          fr:'Règle de trois',          de:'Dreisatz',               pt:'Regra de três',         it:'Regola del tre' },
+  ALG_EVAL:        { es:'Evaluar expresiones',  en:'Evaluate expressions',   fr:'Evaluer expressions',     de:'Ausdruecke auswerten',   pt:'Avaliar expressoes',    it:'Valutare espressioni' },
+  ALG_EC_SIMPLE:   { es:'Ecuaciones simples',   en:'Simple equations',       fr:'Equations simples',       de:'Einfache Gleichungen',   pt:'Equacoes simples',      it:'Equazioni semplici' },
+  ALG_EC_AVZ:      { es:'Ecuaciones avanzadas', en:'Advanced equations',     fr:'Equations avancees',      de:'Erweiterte Gleichungen', pt:'Equacoes avancadas',    it:'Equazioni avanzate' },
+  ALG_PRODUCTOS:   { es:'Productos notables',   en:'Notable products',       fr:'Produits notables',       de:'Bemerkenswerte Produkte',pt:'Produtos notaveis',     it:'Prodotti notevoli' },
+  FUNC_LINEAL:     { es:'Funcion lineal',       en:'Linear function',        fr:'Fonction lineaire',       de:'Lineare Funktion',       pt:'Funcao linear',         it:'Funzione lineare' },
+  FUNC_CUAD:       { es:'Funcion cuadratica',   en:'Quadratic function',     fr:'Fonction quadratique',    de:'Quadratische Funktion',  pt:'Funcao quadratica',     it:'Funzione quadratica' },
 };
 
 const T = {
@@ -74,56 +64,100 @@ const T = {
   it: { sections:{ aritmetica:'Aritmetica', algebra:'Algebra', funciones:'Funzioni' }, ui:{ level:'Livello', placeholder:'?', lexi:'Lexi:', help:'Aiuto', resultado:'R:', loading:'Analisi...' }, lexi:{ correct:'Corretto.', incorrect:'Non corretto.', helpOffer:'Vuoi un suggerimento?' } },
 };
 
+// ─── Temas ───────────────────────────────────────────────────────────────────
+const THEME_VARS: Record<Theme, Record<string, string>> = {
+  neutro: {
+    '--bg-from':'#5DADE2','--bg-mid':'#85C1E9','--bg-to':'#AED6F1',
+    '--accent':'93,173,226','--surface':'255,255,255',
+    '--text':'27,58,82','--blob1':'255,255,255','--blob2':'27,58,82',
+  },
+  oscuro: {
+    '--bg-from':'#1a1a2e','--bg-mid':'#16213e','--bg-to':'#0f3460',
+    '--accent':'100,149,237','--surface':'255,255,255',
+    '--text':'210,230,255','--blob1':'100,149,237','--blob2':'15,52,96',
+  },
+  rojo: {
+    '--bg-from':'#c0392b','--bg-mid':'#e74c3c','--bg-to':'#f1948a',
+    '--accent':'231,76,60','--surface':'255,255,255',
+    '--text':'80,10,10','--blob1':'255,200,200','--blob2':'80,10,10',
+  },
+  azul: {
+    '--bg-from':'#1B2631','--bg-mid':'#2E4057','--bg-to':'#4A6FA5',
+    '--accent':'74,111,165','--surface':'255,255,255',
+    '--text':'200,220,255','--blob1':'74,111,165','--blob2':'10,20,40',
+  },
+  gris: {
+    '--bg-from':'#2C3E50','--bg-mid':'#546E7A','--bg-to':'#90A4AE',
+    '--accent':'144,164,174','--surface':'255,255,255',
+    '--text':'30,40,50','--blob1':'200,210,215','--blob2':'30,40,50',
+  },
+  oro: {
+    '--bg-from':'#7D5A0A','--bg-mid':'#C49A27','--bg-to':'#F0D060',
+    '--accent':'196,154,39','--surface':'255,255,255',
+    '--text':'60,40,5','--blob1':'255,240,180','--blob2':'60,40,5',
+  },
+};
+
+const THEME_ICONS: Record<Theme, string> = {
+  neutro:'🔵', oscuro:'🌑', rojo:'🔴', azul:'🔷', gris:'⬜', oro:'🟡',
+};
+
+function applyTheme(theme: Theme) {
+  const vars = THEME_VARS[theme];
+  const root = document.documentElement;
+  Object.entries(vars).forEach(([k, v]) => root.style.setProperty(k, v));
+}
+
 // ─── Unicode Mathematical Italic ─────────────────────────────────────────────
 const ITALIC_MAP: Record<string, string> = {
   a:'𝑎',b:'𝑏',c:'𝑐',d:'𝑑',e:'𝑒',f:'𝑓',g:'𝑔',h:'ℎ',i:'𝑖',j:'𝑗',
   k:'𝑘',l:'𝑙',m:'𝑚',n:'𝑛',o:'𝑜',p:'𝑝',q:'𝑞',r:'𝑟',s:'𝑠',t:'𝑡',
   u:'𝑢',v:'𝑣',w:'𝑤',x:'𝑥',y:'𝑦',z:'𝑧',
 };
-
 function italicizeVars(str: string): string {
-  // Solo letras sueltas (variables), no palabras
-  return str.replace(/\b([a-z])\b/gi, (_, letter) => ITALIC_MAP[letter.toLowerCase()] ?? letter);
+  return str.replace(/\b([a-z])\b/gi, (_, l) => ITALIC_MAP[l.toLowerCase()] ?? l);
 }
 
 // ─── LaTeX sanitizer + renderHelp ────────────────────────────────────────────
 async function fetchHelpFromAPI(question: string, answer: number, lang: Language): Promise<string> {
-  const response = await fetch('/api/help', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ question, answer, lang })
-  });
-  const data = await response.json();
+  const res  = await fetch('/api/help', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({question, answer, lang}) });
+  const data = await res.json();
   return data.help || '-';
 }
 
 function sanitizeLatex(text: string): string {
   return text
-    .replace(/\\\(|\\\)/g, '')
-    .replace(/\\\[|\\\]/g, '')
-    .replace(/\$\$/g, '').replace(/\$/g, '')
-    .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '$1/$2')
-    .replace(/\\sqrt\{([^}]+)\}/g, '√($1)')
+    .replace(/\\\(|\\\)/g,'').replace(/\\\[|\\\]/g,'')
+    .replace(/\$\$/g,'').replace(/\$/g,'')
+    .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g,'$1/$2')
+    .replace(/\\sqrt\{([^}]+)\}/g,'√($1)')
     .replace(/\\cdot/g,'·').replace(/\\times/g,'×').replace(/\\div/g,'÷')
     .replace(/\\pm/g,'±').replace(/\\infty/g,'∞').replace(/\\approx/g,'≈')
     .replace(/\\neq/g,'≠').replace(/\\leq/g,'≤').replace(/\\geq/g,'≥')
     .replace(/\\text\{([^}]+)\}/g,'$1')
     .replace(/\\[a-zA-Z]+\{([^}]*)\}/g,'$1')
-    .replace(/\\[a-zA-Z]+/g,'')
-    .replace(/[{}]/g,'');
+    .replace(/\\[a-zA-Z]+/g,'').replace(/[{}]/g,'');
 }
 
 function renderHelp(text: string) {
-  const html = sanitizeLatex(text)
+  const clean = sanitizeLatex(text);
+  const html = clean
+    // Detectar títulos tipo "Método 1:", "Method 1:", "Méthode 1:", etc → negrita
+    .replace(/^(M[eéè]todo\s+\d+[:\.]|Method\s+\d+[:\.]|Methode\s+\d+[:\.]|Metodo\s+\d+[:\.]|Méthode\s+\d+[:\.])/gm, '<strong>$1</strong>')
+    // Markdown negrita
     .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
     .replace(/\*(.*?)\*/g,'<em>$1</em>')
     .replace(/`(.*?)`/g,'<code>$1</code>')
-    .split('\n').map(line => `<p>${line}</p>`).join('');
+    .split('\n').map(line => {
+      // Italicizar variables dentro de la ayuda
+      const withItalic = line.replace(/\b([a-z])\b/gi, (_, l) => ITALIC_MAP[l.toLowerCase()] ?? l);
+      return `<p>${withItalic}</p>`;
+    }).join('');
   return <div className="help-text" dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
 // ─── Generadores ──────────────────────────────────────────────────────────────
-const rnd = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
+const rnd  = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
 const pick = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 function gcd(a: number, b: number): number { return b === 0 ? a : gcd(b, a % b); }
 function smallestPrimeFactor(n: number): number {
@@ -203,7 +237,7 @@ function gen(reflexId: ReflexId, level: number): Exercise {
     case 'ARIT_RAICES': {
       const groups=[[4,9,16],[25,36,49],[64,81,100],[121,144,169,196,225]];
       const g=groups[Math.min(level-1,groups.length-1)];
-      const n=pick(g);return{question:`√${n}`,correctAnswer:Math.sqrt(n),reflexId};
+      return{question:`√${pick(g)}`,correctAnswer:Math.sqrt(pick(g)),reflexId};
     }
     case 'ARIT_FRACCIONES': {
       const configs:Array<[number,number,number]>=[[1,2,20],[1,4,16],[1,3,15],[2,3,12],[3,4,20],[1,5,25],[2,5,30],[3,5,25],[5,6,24],[7,8,32]];
@@ -220,7 +254,6 @@ function gen(reflexId: ReflexId, level: number): Exercise {
       const w=rnd(2,4),h=rnd(4,12),nw=w*rnd(2,3);
       return{question:`${w} obreros tardan ${h}h\n¿Cuánto tardan ${nw} obreros?`,correctAnswer:(w*h)/nw,reflexId};
     }
-    // ALG_EVAL: primero el valor, luego la expresión → sin ambigüedad
     case 'ALG_EVAL': {
       if (level===1){const c=rnd(1,9),x=rnd(1,8);return{question:`x = ${x}\nx + ${c}`,correctAnswer:x+c,reflexId,isEquation:true};}
       if (level===2){const a=rnd(2,5),c=rnd(1,8),x=rnd(2,8);return{question:`x = ${x}\n${a}x − ${c}`,correctAnswer:a*x-c,reflexId,isEquation:true};}
@@ -263,8 +296,7 @@ function gen(reflexId: ReflexId, level: number): Exercise {
       const configs:Array<[number,number,number]>=[[2,1,3],[3,-4,2],[3,-4,-1],[1,2,6],[1,3,4],[-2,5,3],[-1,4,-2]];
       const[m,b,x]=configs[Math.min(level-1,configs.length-1)]??[rnd(1,5),rnd(-5,5),rnd(-4,6)];
       const bStr=b>=0?`+ ${b}`:`− ${Math.abs(b)}`;
-      const result=Math.round((m*x+b)*100)/100;
-      return{question:`f(x) = ${m}x ${bStr}\nf(${x}) = ?`,correctAnswer:result,reflexId,isEquation:true};
+      return{question:`f(x) = ${m}x ${bStr}\nf(${x}) = ?`,correctAnswer:Math.round((m*x+b)*100)/100,reflexId,isEquation:true};
     }
     case 'FUNC_CUAD': {
       if (level===1){const x=rnd(2,7);return{question:`f(x) = x²\nf(${x}) = ?`,correctAnswer:x*x,reflexId,isEquation:true};}
@@ -282,16 +314,15 @@ function gen(reflexId: ReflexId, level: number): Exercise {
 
 // ─── Numeric Keypad ───────────────────────────────────────────────────────────
 interface NumericKeypadProps {
-  onDigit:      (d: string) => void;
-  onBackspace:  () => void;
-  onSubmit:     () => void;
+  onDigit: (d: string) => void;
+  onBackspace: () => void;
+  onSubmit: () => void;
   onToggleSign: () => void;
-  onSymbol:     (s: string) => void;
+  onSymbol: (s: string) => void;
 }
 
 function NumericKeypad({ onDigit, onBackspace, onSubmit, onToggleSign, onSymbol }: NumericKeypadProps) {
   const [showSymbols, setShowSymbols] = useState(false);
-
   return (
     <div className="numeric-keypad">
       <div className="keypad-grid">
@@ -335,6 +366,8 @@ function NumericKeypad({ onDigit, onBackspace, onSubmit, onToggleSign, onSymbol 
 export default function MathExercise() {
   const [lang, setLang]                     = useState<Language>('es');
   const [langOpen, setLangOpen]             = useState(false);
+  const [theme, setTheme]                   = useState<Theme>(() => (localStorage.getItem('lexipop-theme') as Theme) || 'neutro');
+  const [themeOpen, setThemeOpen]           = useState(false);
   const [activeSection, setActiveSection]   = useState<Section>('aritmetica');
   const [showReflexList, setShowReflexList] = useState(false);
   const [exercise, setExercise]             = useState<Exercise | null>(null);
@@ -343,7 +376,9 @@ export default function MathExercise() {
   const [lexiMsg, setLexiMsg]               = useState<string | null>(null);
   const [helpContent, setHelpContent]       = useState<string | null>(null);
   const [helpLoading, setHelpLoading]       = useState(false);
-  const langRef                             = useRef<HTMLDivElement>(null);
+
+  const langRef  = useRef<HTMLDivElement>(null);
+  const themeRef = useRef<HTMLDivElement>(null);
 
   const [stats, setStats] = useState<Stats>(() => {
     try {
@@ -355,8 +390,18 @@ export default function MathExercise() {
 
   const t = T[lang];
 
+  // Aplicar tema al montar y al cambiar
   useEffect(() => {
-    const h = (e: MouseEvent) => { if (langRef.current && !langRef.current.contains(e.target as Node)) setLangOpen(false); };
+    applyTheme(theme);
+    localStorage.setItem('lexipop-theme', theme);
+  }, [theme]);
+
+  // Cerrar dropdowns al click afuera
+  useEffect(() => {
+    const h = (e: MouseEvent) => {
+      if (langRef.current  && !langRef.current.contains(e.target as Node))  setLangOpen(false);
+      if (themeRef.current && !themeRef.current.contains(e.target as Node)) setThemeOpen(false);
+    };
     document.addEventListener('mousedown', h);
     return () => document.removeEventListener('mousedown', h);
   }, []);
@@ -437,7 +482,7 @@ export default function MathExercise() {
     }
   };
 
-  // Teclado físico en desktop
+  // Teclado físico
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key >= '0' && e.key <= '9') setInput(p => p + e.key);
@@ -462,8 +507,29 @@ export default function MathExercise() {
   return (
     <div className="lexipop-container">
 
+      {/* HEADER */}
       <header className="app-header">
+
+        {/* Selector de tema — izquierda */}
+        <div className="theme-dropdown" ref={themeRef}>
+          <button className="theme-toggle" onClick={() => setThemeOpen(o => !o)}>
+            {THEME_ICONS[theme]} <span className="lang-chevron">{themeOpen ? '▲' : '▼'}</span>
+          </button>
+          {themeOpen && (
+            <div className="theme-menu">
+              {(Object.keys(THEME_ICONS) as Theme[]).map(th => (
+                <button key={th} className={`theme-option ${theme === th ? 'active' : ''}`}
+                  onClick={() => { setTheme(th); setThemeOpen(false); }}>
+                  {THEME_ICONS[th]} {th.charAt(0).toUpperCase() + th.slice(1)}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
         <img src="/lexipop-logo.png" alt="LexiPop Math" className="app-logo" />
+
+        {/* Selector de idioma — derecha */}
         <div className="lang-dropdown" ref={langRef}>
           <button className="lang-toggle" onClick={() => setLangOpen(o => !o)}>
             🌐 {lang.toUpperCase()} <span className="lang-chevron">{langOpen ? '▲' : '▼'}</span>
@@ -471,7 +537,7 @@ export default function MathExercise() {
           {langOpen && (
             <div className="lang-menu">
               {(['es','en','fr','de','pt','it'] as Language[]).map(l => (
-                <button key={l} className={`lang-option ${lang===l?'active':''}`}
+                <button key={l} className={`lang-option ${lang === l ? 'active' : ''}`}
                   onClick={() => { setLang(l); setLangOpen(false); }}>
                   {l.toUpperCase()}
                 </button>
@@ -479,8 +545,10 @@ export default function MathExercise() {
             </div>
           )}
         </div>
+
       </header>
 
+      {/* TABS */}
       <div className="section-tabs">
         {(Object.keys(SECTION_REFLEXES) as Section[]).map(sec => (
           <button key={sec} className={`section-tab ${activeSection===sec?'active':''}`}
@@ -491,6 +559,7 @@ export default function MathExercise() {
         ))}
       </div>
 
+      {/* REFLEX LIST */}
       <div className={`reflex-list ${showReflexList?'open':'closed'}`}>
         {SECTION_REFLEXES[activeSection].map(id => {
           const p=getProgress(id),lv=getLevel(id),isA=stats.currentReflex===id,isM=stats.masteredReflexes.has(id);
@@ -503,15 +572,22 @@ export default function MathExercise() {
         })}
       </div>
 
+      {/* TARJETA */}
       <div className="challenge-card">
         <div className="challenge-reflex-label">{reflexName} — {t.ui.level} {level} · {progress.correct}/{progress.total}</div>
+
         <div className="challenge-equation">{displayQ}</div>
+
+        {/* Display de respuesta + botón ↵ chico */}
         <div className="answer-display-wrapper">
           <span className="answer-label">{t.ui.resultado}</span>
           <div className={`answer-display ${input?'has-value':''} ${isCorrectState?'correct':''} ${isWrongState?'incorrect':''}`}>
             {input || <span className="answer-placeholder">{t.ui.placeholder}</span>}
           </div>
+          <button className="submit-inline" onClick={handleSubmit} title="Enviar">↵</button>
         </div>
+
+        {/* Feedback + Ayuda */}
         <div className="card-footer">
           {lexiMsg && (
             <div className="lexi-feedback">
@@ -523,6 +599,7 @@ export default function MathExercise() {
             {helpLoading ? t.ui.loading : t.ui.help}
           </button>
         </div>
+
         {(helpContent || helpLoading) && (
           <div className="help-box">
             {helpLoading
@@ -533,6 +610,7 @@ export default function MathExercise() {
         )}
       </div>
 
+      {/* TECLADO */}
       <NumericKeypad
         onDigit={d => setInput(p => p + d)}
         onBackspace={() => setInput(p => p.slice(0,-1))}
