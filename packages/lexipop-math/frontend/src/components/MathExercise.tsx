@@ -29,6 +29,7 @@ interface Stats {
   masteredReflexes: Set<ReflexId>;
   sessionExercises: number;
 }
+interface MenuPos { top: number; left?: number; right?: number; }
 
 const SECTION_REFLEXES: Record<Section, ReflexId[]> = {
   aritmetica: ['ARIT_SUMA','ARIT_MULT','ARIT_DIV','ARIT_NEG','ARIT_MULTIPLOS','ARIT_POTENCIAS','ARIT_RAICES','ARIT_FRACCIONES','ARIT_PORCENTAJES','ARIT_REGLA3'],
@@ -64,51 +65,23 @@ const T = {
   it: { sections:{ aritmetica:'Aritmetica', algebra:'Algebra', funciones:'Funzioni' }, ui:{ level:'Livello', placeholder:'?', lexi:'Lexi:', help:'Aiuto', resultado:'R:', loading:'Analisi...' }, lexi:{ correct:'Corretto.', incorrect:'Non corretto.', helpOffer:'Vuoi un suggerimento?' } },
 };
 
-// ─── Temas ───────────────────────────────────────────────────────────────────
+// ─── Temas ────────────────────────────────────────────────────────────────────
 const THEME_VARS: Record<Theme, Record<string, string>> = {
-  neutro: {
-    '--bg-from':'#5DADE2','--bg-mid':'#85C1E9','--bg-to':'#AED6F1',
-    '--accent':'93,173,226','--surface':'255,255,255',
-    '--text':'27,58,82','--blob1':'255,255,255','--blob2':'27,58,82',
-  },
-  oscuro: {
-    '--bg-from':'#1a1a2e','--bg-mid':'#16213e','--bg-to':'#0f3460',
-    '--accent':'100,149,237','--surface':'255,255,255',
-    '--text':'210,230,255','--blob1':'100,149,237','--blob2':'15,52,96',
-  },
-  rojo: {
-    '--bg-from':'#c0392b','--bg-mid':'#e74c3c','--bg-to':'#f1948a',
-    '--accent':'231,76,60','--surface':'255,255,255',
-    '--text':'80,10,10','--blob1':'255,200,200','--blob2':'80,10,10',
-  },
-  azul: {
-    '--bg-from':'#1B2631','--bg-mid':'#2E4057','--bg-to':'#4A6FA5',
-    '--accent':'74,111,165','--surface':'255,255,255',
-    '--text':'200,220,255','--blob1':'74,111,165','--blob2':'10,20,40',
-  },
-  gris: {
-    '--bg-from':'#2C3E50','--bg-mid':'#546E7A','--bg-to':'#90A4AE',
-    '--accent':'144,164,174','--surface':'255,255,255',
-    '--text':'30,40,50','--blob1':'200,210,215','--blob2':'30,40,50',
-  },
-  oro: {
-    '--bg-from':'#7D5A0A','--bg-mid':'#C49A27','--bg-to':'#F0D060',
-    '--accent':'196,154,39','--surface':'255,255,255',
-    '--text':'60,40,5','--blob1':'255,240,180','--blob2':'60,40,5',
-  },
+  neutro: { '--bg-from':'#5DADE2','--bg-mid':'#85C1E9','--bg-to':'#AED6F1','--accent':'93,173,226','--surface':'255,255,255','--text':'27,58,82' },
+  oscuro: { '--bg-from':'#1a1a2e','--bg-mid':'#16213e','--bg-to':'#0f3460','--accent':'100,149,237','--surface':'200,220,255','--text':'200,220,255' },
+  rojo:   { '--bg-from':'#c0392b','--bg-mid':'#e74c3c','--bg-to':'#f1948a','--accent':'231,76,60','--surface':'255,255,255','--text':'70,5,5' },
+  azul:   { '--bg-from':'#1B2631','--bg-mid':'#2E4057','--bg-to':'#4A6FA5','--accent':'74,111,165','--surface':'200,220,255','--text':'200,220,255' },
+  gris:   { '--bg-from':'#2C3E50','--bg-mid':'#546E7A','--bg-to':'#90A4AE','--accent':'144,164,174','--surface':'255,255,255','--text':'25,35,45' },
+  oro:    { '--bg-from':'#7D5A0A','--bg-mid':'#C49A27','--bg-to':'#F0D060','--accent':'196,154,39','--surface':'255,255,255','--text':'55,35,5' },
 };
-
-const THEME_ICONS: Record<Theme, string> = {
-  neutro:'🔵', oscuro:'🌑', rojo:'🔴', azul:'🔷', gris:'⬜', oro:'🟡',
-};
+const THEME_ICONS: Record<Theme, string> = { neutro:'🔵', oscuro:'🌑', rojo:'🔴', azul:'🔷', gris:'⬜', oro:'🟡' };
 
 function applyTheme(theme: Theme) {
-  const vars = THEME_VARS[theme];
   const root = document.documentElement;
-  Object.entries(vars).forEach(([k, v]) => root.style.setProperty(k, v));
+  Object.entries(THEME_VARS[theme]).forEach(([k, v]) => root.style.setProperty(k, v));
 }
 
-// ─── Unicode Mathematical Italic ─────────────────────────────────────────────
+// ─── Unicode italic ───────────────────────────────────────────────────────────
 const ITALIC_MAP: Record<string, string> = {
   a:'𝑎',b:'𝑏',c:'𝑐',d:'𝑑',e:'𝑒',f:'𝑓',g:'𝑔',h:'ℎ',i:'𝑖',j:'𝑗',
   k:'𝑘',l:'𝑙',m:'𝑚',n:'𝑛',o:'𝑜',p:'𝑝',q:'𝑞',r:'𝑟',s:'𝑠',t:'𝑡',
@@ -118,13 +91,12 @@ function italicizeVars(str: string): string {
   return str.replace(/\b([a-z])\b/gi, (_, l) => ITALIC_MAP[l.toLowerCase()] ?? l);
 }
 
-// ─── LaTeX sanitizer + renderHelp ────────────────────────────────────────────
+// ─── Help ─────────────────────────────────────────────────────────────────────
 async function fetchHelpFromAPI(question: string, answer: number, lang: Language): Promise<string> {
   const res  = await fetch('/api/help', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({question, answer, lang}) });
   const data = await res.json();
   return data.help || '-';
 }
-
 function sanitizeLatex(text: string): string {
   return text
     .replace(/\\\(|\\\)/g,'').replace(/\\\[|\\\]/g,'')
@@ -132,24 +104,17 @@ function sanitizeLatex(text: string): string {
     .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g,'$1/$2')
     .replace(/\\sqrt\{([^}]+)\}/g,'√($1)')
     .replace(/\\cdot/g,'·').replace(/\\times/g,'×').replace(/\\div/g,'÷')
-    .replace(/\\pm/g,'±').replace(/\\infty/g,'∞').replace(/\\approx/g,'≈')
-    .replace(/\\neq/g,'≠').replace(/\\leq/g,'≤').replace(/\\geq/g,'≥')
-    .replace(/\\text\{([^}]+)\}/g,'$1')
+    .replace(/\\pm/g,'±').replace(/\\text\{([^}]+)\}/g,'$1')
     .replace(/\\[a-zA-Z]+\{([^}]*)\}/g,'$1')
     .replace(/\\[a-zA-Z]+/g,'').replace(/[{}]/g,'');
 }
-
 function renderHelp(text: string) {
-  const clean = sanitizeLatex(text);
-  const html = clean
-    // Detectar títulos tipo "Método 1:", "Method 1:", "Méthode 1:", etc → negrita
-    .replace(/^(M[eéè]todo\s+\d+[:\.]|Method\s+\d+[:\.]|Methode\s+\d+[:\.]|Metodo\s+\d+[:\.]|Méthode\s+\d+[:\.])/gm, '<strong>$1</strong>')
-    // Markdown negrita
+  const html = sanitizeLatex(text)
+    .replace(/^(M[eéè]todo\s+\d+[:.:]|Method\s+\d+[:.:]|M[eé]thode\s+\d+[:.:]|Metodo\s+\d+[:.:])/gm,'<strong>$1</strong>')
     .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
     .replace(/\*(.*?)\*/g,'<em>$1</em>')
     .replace(/`(.*?)`/g,'<code>$1</code>')
     .split('\n').map(line => {
-      // Italicizar variables dentro de la ayuda
       const withItalic = line.replace(/\b([a-z])\b/gi, (_, l) => ITALIC_MAP[l.toLowerCase()] ?? l);
       return `<p>${withItalic}</p>`;
     }).join('');
@@ -237,7 +202,7 @@ function gen(reflexId: ReflexId, level: number): Exercise {
     case 'ARIT_RAICES': {
       const groups=[[4,9,16],[25,36,49],[64,81,100],[121,144,169,196,225]];
       const g=groups[Math.min(level-1,groups.length-1)];
-      return{question:`√${pick(g)}`,correctAnswer:Math.sqrt(pick(g)),reflexId};
+      const n=pick(g);return{question:`√${n}`,correctAnswer:Math.sqrt(n),reflexId};
     }
     case 'ARIT_FRACCIONES': {
       const configs:Array<[number,number,number]>=[[1,2,20],[1,4,16],[1,3,15],[2,3,12],[3,4,20],[1,5,25],[2,5,30],[3,5,25],[5,6,24],[7,8,32]];
@@ -312,6 +277,44 @@ function gen(reflexId: ReflexId, level: number): Exercise {
   }
 }
 
+// ─── Dropdown con posición calculada ─────────────────────────────────────────
+interface FloatingMenuProps {
+  open: boolean;
+  anchorRef: React.RefObject<HTMLButtonElement>;
+  align: 'left' | 'right';
+  children: React.ReactNode;
+}
+function FloatingMenu({ open, anchorRef, align, children }: FloatingMenuProps) {
+  const [pos, setPos] = useState<MenuPos>({ top: 0 });
+
+  useEffect(() => {
+    if (open && anchorRef.current) {
+      const r = anchorRef.current.getBoundingClientRect();
+      const menuPos: MenuPos = { top: r.bottom + 6 };
+      if (align === 'right') menuPos.right = window.innerWidth - r.right;
+      else menuPos.left = r.left;
+      setPos(menuPos);
+    }
+  }, [open, anchorRef, align]);
+
+  if (!open) return null;
+
+  return (
+    <div
+      className="floating-menu"
+      style={{
+        position: 'fixed',
+        top:   pos.top,
+        left:  pos.left  !== undefined ? pos.left  : undefined,
+        right: pos.right !== undefined ? pos.right : undefined,
+        zIndex: 99999,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 // ─── Numeric Keypad ───────────────────────────────────────────────────────────
 interface NumericKeypadProps {
   onDigit: (d: string) => void;
@@ -320,16 +323,16 @@ interface NumericKeypadProps {
   onToggleSign: () => void;
   onSymbol: (s: string) => void;
 }
-
 function NumericKeypad({ onDigit, onBackspace, onSubmit, onToggleSign, onSymbol }: NumericKeypadProps) {
   const [showSymbols, setShowSymbols] = useState(false);
+
   return (
     <div className="numeric-keypad">
       <div className="keypad-grid">
         {['7','8','9','4','5','6','1','2','3'].map(d => (
           <button key={d} className="key-btn" onClick={() => onDigit(d)}>{d}</button>
         ))}
-        <button className="key-btn key-sign" onClick={onToggleSign}>±</button>
+        <button className="key-btn" onClick={onToggleSign}>±</button>
         <button className="key-btn" onClick={() => onDigit('0')}>0</button>
         <button className="key-btn" onClick={onBackspace}>⌫</button>
       </div>
@@ -338,12 +341,19 @@ function NumericKeypad({ onDigit, onBackspace, onSubmit, onToggleSign, onSymbol 
         <div className="symbol-panel">
           <div className="symbol-row">
             {['√','²','³','^'].map(s => (
-              <button key={s} className="key-btn key-sym" onClick={() => onSymbol(s)}>{s}</button>
+              <button key={s} className="key-btn" onClick={() => onSymbol(s)}>{s}</button>
             ))}
           </div>
           <div className="symbol-row">
             {['(',')','.','/'].map(s => (
-              <button key={s} className="key-btn key-sym" onClick={() => onSymbol(s)}>{s}</button>
+              <button key={s} className="key-btn" onClick={() => onSymbol(s)}>{s}</button>
+            ))}
+          </div>
+          <div className="symbol-row">
+            {['x','a','y','b'].map(s => (
+              <button key={s} className="key-btn key-var" onClick={() => onSymbol(ITALIC_MAP[s] ?? s)}>
+                {ITALIC_MAP[s] ?? s}
+              </button>
             ))}
           </div>
         </div>
@@ -377,8 +387,12 @@ export default function MathExercise() {
   const [helpContent, setHelpContent]       = useState<string | null>(null);
   const [helpLoading, setHelpLoading]       = useState(false);
 
-  const langRef  = useRef<HTMLDivElement>(null);
-  const themeRef = useRef<HTMLDivElement>(null);
+  // Refs apuntan al wrapper div (botón + menú flotante) para que
+  // mousedown.contains() devuelva true al hacer click en una opción
+  const langWrapRef  = useRef<HTMLDivElement>(null);
+  const themeWrapRef = useRef<HTMLDivElement>(null);
+  const langBtnRef   = useRef<HTMLButtonElement>(null);
+  const themeBtnRef  = useRef<HTMLButtonElement>(null);
 
   const [stats, setStats] = useState<Stats>(() => {
     try {
@@ -390,17 +404,15 @@ export default function MathExercise() {
 
   const t = T[lang];
 
-  // Aplicar tema al montar y al cambiar
-  useEffect(() => {
-    applyTheme(theme);
-    localStorage.setItem('lexipop-theme', theme);
-  }, [theme]);
+  useEffect(() => { applyTheme(theme); localStorage.setItem('lexipop-theme', theme); }, [theme]);
 
-  // Cerrar dropdowns al click afuera
+  // Cerrar dropdowns al click afuera — usar wrapRef para que
+  // clicks en las opciones del menú no lo cierren prematuramente
   useEffect(() => {
     const h = (e: MouseEvent) => {
-      if (langRef.current  && !langRef.current.contains(e.target as Node))  setLangOpen(false);
-      if (themeRef.current && !themeRef.current.contains(e.target as Node)) setThemeOpen(false);
+      const target = e.target as Node;
+      if (langWrapRef.current  && !langWrapRef.current.contains(target))  setLangOpen(false);
+      if (themeWrapRef.current && !themeWrapRef.current.contains(target)) setThemeOpen(false);
     };
     document.addEventListener('mousedown', h);
     return () => document.removeEventListener('mousedown', h);
@@ -482,7 +494,6 @@ export default function MathExercise() {
     }
   };
 
-  // Teclado físico
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key >= '0' && e.key <= '9') setInput(p => p + e.key);
@@ -507,48 +518,40 @@ export default function MathExercise() {
   return (
     <div className="lexipop-container">
 
-      {/* HEADER */}
       <header className="app-header">
-
-        {/* Selector de tema — izquierda */}
-        <div className="theme-dropdown" ref={themeRef}>
-          <button className="theme-toggle" onClick={() => setThemeOpen(o => !o)}>
-            {THEME_ICONS[theme]} <span className="lang-chevron">{themeOpen ? '▲' : '▼'}</span>
+        {/* Tema — izquierda */}
+        <div ref={themeWrapRef} style={{position:'relative'}}>
+          <button ref={themeBtnRef} className="theme-toggle" onClick={() => setThemeOpen(o => !o)}>
+            {THEME_ICONS[theme]} <span className="chevron-sm">{themeOpen?'▲':'▼'}</span>
           </button>
-          {themeOpen && (
-            <div className="theme-menu">
-              {(Object.keys(THEME_ICONS) as Theme[]).map(th => (
-                <button key={th} className={`theme-option ${theme === th ? 'active' : ''}`}
-                  onClick={() => { setTheme(th); setThemeOpen(false); }}>
-                  {THEME_ICONS[th]} {th.charAt(0).toUpperCase() + th.slice(1)}
-                </button>
-              ))}
-            </div>
-          )}
+          <FloatingMenu open={themeOpen} anchorRef={themeBtnRef} align="left">
+            {(Object.keys(THEME_ICONS) as Theme[]).map(th => (
+              <button key={th} className={`floating-option ${theme===th?'active':''}`}
+                onClick={() => { setTheme(th); setThemeOpen(false); }}>
+                {THEME_ICONS[th]} {th.charAt(0).toUpperCase()+th.slice(1)}
+              </button>
+            ))}
+          </FloatingMenu>
         </div>
 
         <img src="/lexipop-logo.png" alt="LexiPop Math" className="app-logo" />
 
-        {/* Selector de idioma — derecha */}
-        <div className="lang-dropdown" ref={langRef}>
-          <button className="lang-toggle" onClick={() => setLangOpen(o => !o)}>
-            🌐 {lang.toUpperCase()} <span className="lang-chevron">{langOpen ? '▲' : '▼'}</span>
+        {/* Idioma — derecha */}
+        <div ref={langWrapRef} style={{position:'relative'}}>
+          <button ref={langBtnRef} className="lang-toggle" onClick={() => setLangOpen(o => !o)}>
+            🌐 {lang.toUpperCase()} <span className="chevron-sm">{langOpen?'▲':'▼'}</span>
           </button>
-          {langOpen && (
-            <div className="lang-menu">
-              {(['es','en','fr','de','pt','it'] as Language[]).map(l => (
-                <button key={l} className={`lang-option ${lang === l ? 'active' : ''}`}
-                  onClick={() => { setLang(l); setLangOpen(false); }}>
-                  {l.toUpperCase()}
-                </button>
-              ))}
-            </div>
-          )}
+          <FloatingMenu open={langOpen} anchorRef={langBtnRef} align="right">
+            {(['es','en','fr','de','pt','it'] as Language[]).map(l => (
+              <button key={l} className={`floating-option ${lang===l?'active':''}`}
+                onClick={() => { setLang(l); setLangOpen(false); }}>
+                {l.toUpperCase()}
+              </button>
+            ))}
+          </FloatingMenu>
         </div>
-
       </header>
 
-      {/* TABS */}
       <div className="section-tabs">
         {(Object.keys(SECTION_REFLEXES) as Section[]).map(sec => (
           <button key={sec} className={`section-tab ${activeSection===sec?'active':''}`}
@@ -559,7 +562,6 @@ export default function MathExercise() {
         ))}
       </div>
 
-      {/* REFLEX LIST */}
       <div className={`reflex-list ${showReflexList?'open':'closed'}`}>
         {SECTION_REFLEXES[activeSection].map(id => {
           const p=getProgress(id),lv=getLevel(id),isA=stats.currentReflex===id,isM=stats.masteredReflexes.has(id);
@@ -572,22 +574,18 @@ export default function MathExercise() {
         })}
       </div>
 
-      {/* TARJETA */}
       <div className="challenge-card">
         <div className="challenge-reflex-label">{reflexName} — {t.ui.level} {level} · {progress.correct}/{progress.total}</div>
-
         <div className="challenge-equation">{displayQ}</div>
 
-        {/* Display de respuesta + botón ↵ chico */}
         <div className="answer-display-wrapper">
           <span className="answer-label">{t.ui.resultado}</span>
           <div className={`answer-display ${input?'has-value':''} ${isCorrectState?'correct':''} ${isWrongState?'incorrect':''}`}>
             {input || <span className="answer-placeholder">{t.ui.placeholder}</span>}
           </div>
-          <button className="submit-inline" onClick={handleSubmit} title="Enviar">↵</button>
+          <button className="submit-inline" onClick={handleSubmit}>↵</button>
         </div>
 
-        {/* Feedback + Ayuda */}
         <div className="card-footer">
           {lexiMsg && (
             <div className="lexi-feedback">
@@ -610,7 +608,6 @@ export default function MathExercise() {
         )}
       </div>
 
-      {/* TECLADO */}
       <NumericKeypad
         onDigit={d => setInput(p => p + d)}
         onBackspace={() => setInput(p => p.slice(0,-1))}
