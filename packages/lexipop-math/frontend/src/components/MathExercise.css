@@ -14,8 +14,7 @@
   background: linear-gradient(135deg, var(--bg-from) 0%, var(--bg-mid) 40%, var(--bg-to) 100%);
   padding: 1rem;
   display: flex; flex-direction: column; gap: 0.7rem; align-items: center;
-  position: relative;
-  /* SIN overflow:hidden — los blobs se recortan con clip en sus propios pseudo-elementos */
+  position: relative; overflow: hidden;
 }
 .lexipop-container::before, .lexipop-container::after {
   content:''; position:absolute; border-radius:50%; pointer-events:none;
