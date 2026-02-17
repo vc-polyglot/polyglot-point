@@ -33,6 +33,11 @@ app.set("trust proxy", 1);
 // Canonical domain (force www in production)
 const CANONICAL_HOST = "www.polyglotpoint.com";
 app.use((req, res, next) => {
+  // EXCEPCIÓN: Stripe webhooks no deben redirigirse (Stripe no sigue redirects)
+  if (req.path === "/api/stripe/webhook") {
+    return next();
+  }
+
   const host = String(req.headers.host || "");
   const proto = String(req.headers["x-forwarded-proto"] || "https");
 
