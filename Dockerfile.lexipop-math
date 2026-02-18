@@ -28,7 +28,7 @@ COPY packages/lexipop-core/  ./packages/lexipop-core/
 COPY packages/lexipop-math/  ./packages/lexipop-math/
 
 # Build with VITE_API_URL
-ARG VITE_API_URL
+ARG VITE_API_URL=https://lexipop-math-production.up.railway.app/api/math
 ENV VITE_API_URL=${VITE_API_URL}
 WORKDIR /app/packages/lexipop-math
 RUN pnpm run build
