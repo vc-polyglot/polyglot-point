@@ -140,7 +140,7 @@ app.use(express.urlencoded({ extended: true, limit: "1mb" }));
   app.use("/auth", authRoutes);
 
   // ── Math API routes  (/api/health, /api/help)
-  app.use("/api", mathRoutes);
+  app.use("/api/math", mathRoutes);
 
   // ── Me endpoint
   app.get("/api/me", (req: Request, res: Response) => {
