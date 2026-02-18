@@ -1,5 +1,148 @@
 import { Router } from 'express';
+import passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import Stripe from 'stripe';
+
 const router = Router();
+
+// Stripe
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-11-20.acacia' });
+
+// Configurar Google OAuth para LexiPop Math
+passport.use('lexipop-google', new GoogleStrategy(
+  {
+    clientID: process.env.GOOGLE_CLIENT_ID!,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    callbackURL: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:3000/api/math/auth/google/callback',
+  },
+  async (accessToken, refreshToken, profile, done) => {
+    try {
+      const email = profile.emails?.[0]?.value;
+      if (!email) {
+        return done(new Error('No email found in Google profile'));
+      }
+      
+      // TODO: Guardar usuario en DB si no existe
+      // Por ahora solo devuelvo el perfil
+      const user = {
+        id: profile.id,
+        email,
+        displayName: profile.displayName,
+        avatar: profile.photos?.[0]?.value,
+      };
+      
+      done(null, user);
+    } catch (error) {
+      done(error as Error);
+    }
+  }
+));
+
+// Serialización
+passport.serializeUser((user: any, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user: any, done) => {
+  done(null, user);
+});
+
+// ========== RUTAS AUTH ==========
+
+// Iniciar login con Google
+router.get('/auth/google', passport.authenticate('lexipop-google', {
+  scope: ['profile', 'email']
+}));
+
+// Callback de Google
+router.get('/auth/google/callback',
+  passport.authenticate('lexipop-google', { failureRedirect: '/login' }),
+  (req, res) => {
+    // Redirigir al frontend con éxito
+    res.redirect(process.env.CLIENT_URL || 'http://localhost:5174');
+  }
+);
+
+// Logout
+router.post('/auth/logout', (req, res) => {
+  req.logout((err) => {
+    if (err) return res.status(500).json({ error: 'Logout failed' });
+    res.json({ success: true });
+  });
+});
+
+// Usuario actual
+router.get('/auth/me', (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ error: 'Not authenticated' });
+  }
+  res.json({ user: req.user });
+});
+
+// ========== RUTAS STRIPE ==========
+
+// Crear checkout session
+router.post('/checkout', async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ error: 'Not authenticated' });
+  }
+
+  const { priceId } = req.body;
+  
+  if (!priceId) {
+    return res.status(400).json({ error: 'priceId is required' });
+  }
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [{ price: priceId, quantity: 1 }],
+      mode: 'subscription',
+      success_url: `${process.env.CLIENT_URL || 'http://localhost:5174'}?success=true`,
+      cancel_url: `${process.env.CLIENT_URL || 'http://localhost:5174'}?canceled=true`,
+      customer_email: (req.user as any).email,
+    });
+
+    res.json({ url: session.url });
+  } catch (err: any) {
+    console.error('Stripe checkout error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Webhook de Stripe
+router.post('/stripe/webhook', async (req, res) => {
+  const sig = req.headers['stripe-signature'] as string;
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+
+  let event: Stripe.Event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+  } catch (err: any) {
+    console.error('Webhook signature verification failed:', err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  // Manejar eventos
+  switch (event.type) {
+    case 'checkout.session.completed':
+      const session = event.data.object as Stripe.Checkout.Session;
+      console.log('Checkout completed:', session.id);
+      // TODO: Actualizar DB con subscripción activa
+      break;
+    
+    case 'customer.subscription.deleted':
+      const subscription = event.data.object as Stripe.Subscription;
+      console.log('Subscription canceled:', subscription.id);
+      // TODO: Actualizar DB
+      break;
+  }
+
+  res.json({ received: true });
+});
+
+// ========== HELP ENDPOINT (ya existente) ==========
 
 const HELP_SYSTEM_PROMPT = `You are a mental math strategy engine.
 Given a mathematical operation, you must:
@@ -22,12 +165,6 @@ const LANG_NAMES: Record<string, string> = {
   de: 'German',  pt: 'Portuguese', it: 'Italian'
 };
 
-// Health check
-router.get('/health', (req, res) => {
-  res.json({ status: 'ok', app: 'lexipop-math' });
-});
-
-// Ayuda con método mental — llama a OpenAI desde el servidor
 router.post('/help', async (req, res) => {
   const { question, answer, lang = 'es' } = req.body;
 
@@ -73,6 +210,11 @@ router.post('/help', async (req, res) => {
     console.error('OpenAI error:', err);
     return res.status(500).json({ error: 'Error al contactar OpenAI' });
   }
+});
+
+// Health check
+router.get('/health', (req, res) => {
+  res.json({ status: 'ok', app: 'lexipop-math' });
 });
 
 export default router;
