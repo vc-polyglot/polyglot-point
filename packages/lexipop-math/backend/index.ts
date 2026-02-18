@@ -21,7 +21,7 @@ const isProduction = process.env.NODE_ENV === "production";
 app.set("trust proxy", 1);
 
 // ─── Canonical redirect ───────────────────────────────────────────────────────
-const CANONICAL_HOST = process.env.CANONICAL_HOST || "www.lexipopmath.com";
+const CANONICAL_HOST = process.env.CANONICAL_HOST || "lexipop-math-production.up.railway.app";
 app.use((req, res, next) => {
   const host  = String(req.headers.host || "");
   const proto = String(req.headers["x-forwarded-proto"] || "https");
