@@ -1,6 +1,6 @@
-# ─────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────────
 # Stage 1: Build
-# ─────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────────
 FROM node:20-alpine AS builder
 
 # pnpm
@@ -27,13 +27,15 @@ COPY packages/core/          ./packages/core/
 COPY packages/lexipop-core/  ./packages/lexipop-core/
 COPY packages/lexipop-math/  ./packages/lexipop-math/
 
-# Build
+# Build with VITE_API_URL
+ARG VITE_API_URL
+ENV VITE_API_URL=${VITE_API_URL}
 WORKDIR /app/packages/lexipop-math
 RUN pnpm run build
 
-# ─────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────────
 # Stage 2: Production image
-# ─────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────────
 FROM node:20-alpine AS runner
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
