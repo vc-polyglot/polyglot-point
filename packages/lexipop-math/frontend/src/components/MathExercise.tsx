@@ -148,7 +148,7 @@ function Paywall({ onUpgrade }: { onUpgrade: () => void }) {
       }}>
         {/* Logo */}
         <div style={{ marginBottom:'32px' }}>
-          <img src="/lexipop-logo.png" alt="LexiPop Math" style={{ height:'40px', opacity:0.95 }} />
+          <img src="/lexipop-logo.png" alt="LexiPop Math" style={{ height:'80px', opacity:0.95 }} />
         </div>
 
         {/* Social proof */}
@@ -161,7 +161,7 @@ function Paywall({ onUpgrade }: { onUpgrade: () => void }) {
           color:'#7EC8E3', letterSpacing:'0.08em', textTransform:'uppercase',
           marginBottom:'24px',
         }}>
-          Top 17% de usuarios nuevos
+          Eres del top 17% de usuarios nuevos
         </div>
 
         {/* Headline */}
