@@ -91,7 +91,7 @@ function italicizeVars(str: string): string {
 
 // ─── Help ─────────────────────────────────────────────────────────────────────
 async function fetchHelpFromAPI(question: string, answer: number, lang: Language): Promise<string> {
-  const res  = await fetch('/api/help', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({question, answer, lang}) });
+  const res  = await fetch('/api/math/help', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({question, answer, lang}) });
   const data = await res.json();
   return data.help || '-';
 }
@@ -117,6 +117,41 @@ function renderHelp(text: string) {
       return `<p>${withItalic}</p>`;
     }).join('');
   return <div className="help-text" dangerouslySetInnerHTML={{ __html: html }} />;
+}
+
+// ─── Paywall ──────────────────────────────────────────────────────────────────
+function Paywall({ onUpgrade }: { onUpgrade: () => void }) {
+  return (
+    <div style={{
+      position:'fixed', inset:0, background:'rgba(0,0,0,0.85)',
+      display:'flex', alignItems:'center', justifyContent:'center',
+      zIndex:999999, padding:'24px'
+    }}>
+      <div style={{
+        background:'#fff', borderRadius:'20px', padding:'40px 32px',
+        maxWidth:'360px', width:'100%', textAlign:'center',
+        boxShadow:'0 20px 60px rgba(0,0,0,0.4)'
+      }}>
+        <div style={{fontSize:'48px', marginBottom:'16px'}}>🧠</div>
+        <h2 style={{fontSize:'22px', fontWeight:700, color:'#1B2631', marginBottom:'12px'}}>
+          Ya completaste 40 ejercicios.
+        </h2>
+        <p style={{fontSize:'16px', color:'#546E7A', marginBottom:'8px', lineHeight:1.5}}>
+          Tu mente ya está cambiando.
+        </p>
+        <p style={{fontSize:'15px', color:'#546E7A', marginBottom:'32px', lineHeight:1.5}}>
+          Desbloquea entrenamiento ilimitado.
+        </p>
+        <button onClick={onUpgrade} style={{
+          background:'#5DADE2', color:'#fff', border:'none',
+          borderRadius:'12px', padding:'14px 32px',
+          fontSize:'16px', fontWeight:700, cursor:'pointer', width:'100%'
+        }}>
+          Continuar por $9.90 / mes
+        </button>
+      </div>
+    </div>
+  );
 }
 
 // ─── Generadores ──────────────────────────────────────────────────────────────
@@ -275,9 +310,7 @@ function gen(reflexId: ReflexId, level: number): Exercise {
   }
 }
 
-// ─── Dropdown simple — position:absolute dentro de wrapper con z-index alto ──
-// NO usamos position:fixed + getBoundingClientRect porque backdrop-filter en
-// ancestros rompe fixed positioning en Chrome/mobile.
+// ─── Dropdown ─────────────────────────────────────────────────────────────────
 interface DropdownMenuProps {
   open: boolean;
   align: 'left' | 'right';
@@ -302,7 +335,6 @@ interface NumericKeypadProps {
 }
 function NumericKeypad({ onDigit, onBackspace, onSubmit, onToggleSign, onSymbol }: NumericKeypadProps) {
   const [showSymbols, setShowSymbols] = useState(false);
-
   return (
     <div className="numeric-keypad">
       <div className="keypad-grid">
@@ -313,7 +345,6 @@ function NumericKeypad({ onDigit, onBackspace, onSubmit, onToggleSign, onSymbol 
         <button className="key-btn" onClick={() => onDigit('0')}>0</button>
         <button className="key-btn" onClick={onBackspace}>⌫</button>
       </div>
-
       {showSymbols && (
         <div className="symbol-panel">
           <div className="symbol-row">
@@ -335,7 +366,6 @@ function NumericKeypad({ onDigit, onBackspace, onSubmit, onToggleSign, onSymbol 
           </div>
         </div>
       )}
-
       <div className="keypad-bottom">
         <button
           className={`key-btn key-sym-toggle ${showSymbols ? 'open' : ''}`}
@@ -363,8 +393,8 @@ export default function MathExercise() {
   const [lexiMsg, setLexiMsg]               = useState<string | null>(null);
   const [helpContent, setHelpContent]       = useState<string | null>(null);
   const [helpLoading, setHelpLoading]       = useState(false);
+  const [blocked, setBlocked]               = useState(false);
 
-  // Wrapper refs para cerrar al click afuera
   const langWrapRef  = useRef<HTMLDivElement>(null);
   const themeWrapRef = useRef<HTMLDivElement>(null);
 
@@ -380,8 +410,6 @@ export default function MathExercise() {
 
   useEffect(() => { applyTheme(theme); localStorage.setItem('lexipop-theme', theme); }, [theme]);
 
-  // Cerrar dropdowns al click afuera — usar wrapRef para que
-  // clicks en las opciones del menú no lo cierren prematuramente
   useEffect(() => {
     const h = (e: MouseEvent) => {
       const target = e.target as Node;
@@ -445,6 +473,16 @@ export default function MathExercise() {
     });
   };
 
+  const notifyCorrect = async () => {
+    try {
+      const res  = await fetch('/api/math/exercise/complete', { method:'POST', credentials:'include' });
+      const data = await res.json();
+      if (data.blocked) setBlocked(true);
+    } catch {
+      // silencioso — no bloqueamos el juego si falla la red
+    }
+  };
+
   const handleHelp = async () => {
     if (!exercise || helpLoading) return;
     if (helpContent) { setHelpContent(null); return; }
@@ -460,16 +498,35 @@ export default function MathExercise() {
     if (isNaN(num)) { setLexiMsg(t.lexi.incorrect); setInput(''); return; }
     const correct = Math.abs(num - exercise.correctAnswer) < 0.001;
     updateProgress(exercise.reflexId, correct);
-    if (correct) { setLexiMsg(t.lexi.correct); setTimeout(() => { generateNext(); }, 900); }
-    else {
+    if (correct) {
+      setLexiMsg(t.lexi.correct);
+      notifyCorrect();
+      setTimeout(() => { generateNext(); }, 900);
+    } else {
       const nw = wrongCount + 1; setWrongCount(nw);
       setLexiMsg(nw >= 3 ? `${t.lexi.incorrect} ${t.lexi.helpOffer}` : t.lexi.incorrect);
       setTimeout(() => { setInput(''); }, 800);
     }
   };
 
+  const handleUpgrade = async () => {
+    try {
+      const res  = await fetch('/api/math/checkout', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId: import.meta.env.VITE_STRIPE_PRICE_ID || '' }),
+      });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+    } catch {
+      alert('Error al conectar con el servidor de pagos.');
+    }
+  };
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (blocked) return;
       if (e.key >= '0' && e.key <= '9') setInput(p => p + e.key);
       else if (e.key === '-') setInput(p => p.startsWith('-') ? p.slice(1) : '-' + p);
       else if (e.key === '.') setInput(p => p.includes('.') ? p : p + '.');
@@ -478,7 +535,7 @@ export default function MathExercise() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [input, exercise]);
+  }, [input, exercise, blocked]);
 
   if (!exercise) return <div className="loading">Cargando...</div>;
 
@@ -492,8 +549,9 @@ export default function MathExercise() {
   return (
     <div className="lexipop-container">
 
+      {blocked && <Paywall onUpgrade={handleUpgrade} />}
+
       <header className="app-header">
-        {/* Tema — izquierda */}
         <div ref={themeWrapRef} style={{position:'relative', zIndex:99999}}>
           <button className="theme-toggle" onClick={() => setThemeOpen(o => !o)}>
             {THEME_ICONS[theme]} <span className="chevron-sm">{themeOpen?'▲':'▼'}</span>
@@ -510,7 +568,6 @@ export default function MathExercise() {
 
         <img src="/lexipop-logo.png" alt="LexiPop Math" className="app-logo" />
 
-        {/* Idioma — derecha */}
         <div ref={langWrapRef} style={{position:'relative', zIndex:99999}}>
           <button className="lang-toggle" onClick={() => setLangOpen(o => !o)}>
             🌐 {lang.toUpperCase()} <span className="chevron-sm">{langOpen?'▲':'▼'}</span>

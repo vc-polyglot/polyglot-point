@@ -67,6 +67,28 @@ router.get('/auth/me', (req, res) => {
   res.json({ user: req.user });
 });
 
+// ========== EJERCICIOS ==========
+
+router.post('/exercise/complete', async (req, res) => {
+  if (!req.user) return res.status(401).json({ error: 'Not authenticated' });
+
+  const user = req.user as any;
+
+  if (user.isPro) return res.json({ blocked: false, count: user.exercisesCount });
+
+  const newCount = (user.exercisesCount || 0) + 1;
+
+  await db.update(users)
+    .set({ exercisesCount: newCount, updatedAt: new Date() })
+    .where(eq(users.id, user.id));
+
+  if (newCount >= 40) {
+    return res.json({ blocked: true, count: newCount });
+  }
+
+  return res.json({ blocked: false, count: newCount });
+});
+
 // ========== RUTAS STRIPE ==========
 
 router.post('/checkout', async (req, res) => {
