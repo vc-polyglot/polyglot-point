@@ -123,32 +123,124 @@ function renderHelp(text: string) {
 function Paywall({ onUpgrade }: { onUpgrade: () => void }) {
   return (
     <div style={{
-      position:'fixed', inset:0, background:'rgba(0,0,0,0.85)',
+      position:'fixed', inset:0, zIndex:999999,
+      background:'linear-gradient(135deg, #0a0a0f 0%, #0d1117 50%, #0a0f1a 100%)',
       display:'flex', alignItems:'center', justifyContent:'center',
-      zIndex:999999, padding:'24px'
+      padding:'24px', fontFamily:"'Georgia', 'Times New Roman', serif",
     }}>
+      {/* Glow ambiental */}
       <div style={{
-        background:'#fff', borderRadius:'20px', padding:'40px 32px',
-        maxWidth:'360px', width:'100%', textAlign:'center',
-        boxShadow:'0 20px 60px rgba(0,0,0,0.4)'
+        position:'absolute', top:'20%', left:'50%', transform:'translateX(-50%)',
+        width:'600px', height:'600px', borderRadius:'50%',
+        background:'radial-gradient(circle, rgba(93,173,226,0.08) 0%, transparent 70%)',
+        pointerEvents:'none',
+      }}/>
+
+      <div style={{
+        position:'relative', maxWidth:'420px', width:'100%',
+        background:'rgba(255,255,255,0.03)',
+        border:'1px solid rgba(255,255,255,0.1)',
+        borderRadius:'24px',
+        backdropFilter:'blur(40px)',
+        boxShadow:'0 0 0 1px rgba(93,173,226,0.15), 0 40px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)',
+        padding:'48px 40px 40px',
+        textAlign:'center',
       }}>
-        <div style={{fontSize:'48px', marginBottom:'16px'}}>🧠</div>
-        <h2 style={{fontSize:'22px', fontWeight:700, color:'#1B2631', marginBottom:'12px'}}>
-          Ya completaste 40 ejercicios.
-        </h2>
-        <p style={{fontSize:'16px', color:'#546E7A', marginBottom:'8px', lineHeight:1.5}}>
-          Tu mente ya está cambiando.
-        </p>
-        <p style={{fontSize:'15px', color:'#546E7A', marginBottom:'32px', lineHeight:1.5}}>
-          Desbloquea entrenamiento ilimitado.
-        </p>
-        <button onClick={onUpgrade} style={{
-          background:'#5DADE2', color:'#fff', border:'none',
-          borderRadius:'12px', padding:'14px 32px',
-          fontSize:'16px', fontWeight:700, cursor:'pointer', width:'100%'
+        {/* Logo */}
+        <div style={{ marginBottom:'32px' }}>
+          <img src="/lexipop-logo.png" alt="LexiPop Math" style={{ height:'40px', opacity:0.95 }} />
+        </div>
+
+        {/* Social proof */}
+        <div style={{
+          display:'inline-block',
+          background:'rgba(93,173,226,0.1)',
+          border:'1px solid rgba(93,173,226,0.25)',
+          borderRadius:'100px', padding:'6px 16px',
+          fontSize:'12px', fontFamily:"'Helvetica Neue', sans-serif",
+          color:'#7EC8E3', letterSpacing:'0.08em', textTransform:'uppercase',
+          marginBottom:'24px',
         }}>
-          Continuar por $9.90 / mes
+          Top 17% de usuarios nuevos
+        </div>
+
+        {/* Headline */}
+        <h2 style={{
+          fontSize:'28px', fontWeight:400, color:'#f0f4f8',
+          lineHeight:1.3, margin:'0 0 12px',
+          fontFamily:"'Georgia', serif",
+          letterSpacing:'-0.02em',
+        }}>
+          Tu mente ya está<br/>
+          <span style={{ fontStyle:'italic', color:'#5DADE2' }}>cambiando.</span>
+        </h2>
+
+        <p style={{
+          fontSize:'16px', color:'rgba(255,255,255,0.5)',
+          fontFamily:"'Helvetica Neue', sans-serif",
+          fontWeight:300, margin:'0 0 36px', lineHeight:1.6,
+        }}>
+          No te detengas ahora.
+        </p>
+
+        {/* Features */}
+        <div style={{
+          textAlign:'left', marginBottom:'36px',
+          display:'flex', flexDirection:'column', gap:'12px',
+        }}>
+          {[
+            'Ejercicios ilimitados',
+            'Adaptación inteligente a tus errores',
+            'Métodos mentales explicados con IA',
+            'Entrenamiento progresivo real',
+          ].map((f, i) => (
+            <div key={i} style={{
+              display:'flex', alignItems:'center', gap:'12px',
+              fontFamily:"'Helvetica Neue', sans-serif",
+              fontSize:'14px', color:'rgba(255,255,255,0.75)',
+            }}>
+              <span style={{
+                width:'20px', height:'20px', borderRadius:'50%',
+                background:'rgba(93,173,226,0.15)',
+                border:'1px solid rgba(93,173,226,0.3)',
+                display:'flex', alignItems:'center', justifyContent:'center',
+                fontSize:'10px', color:'#5DADE2', flexShrink:0,
+              }}>✓</span>
+              {f}
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <button onClick={onUpgrade} style={{
+          width:'100%', padding:'16px',
+          background:'linear-gradient(135deg, #5DADE2 0%, #3498DB 100%)',
+          border:'none', borderRadius:'14px',
+          fontSize:'16px', fontWeight:600,
+          fontFamily:"'Helvetica Neue', sans-serif",
+          color:'#fff', cursor:'pointer', marginBottom:'12px',
+          boxShadow:'0 4px 24px rgba(93,173,226,0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+          letterSpacing:'0.01em',
+        }}>
+          Continuar — $9.90 USD / mes
         </button>
+
+        <p style={{
+          fontSize:'12px', color:'rgba(255,255,255,0.3)',
+          fontFamily:"'Helvetica Neue', sans-serif",
+          margin:'0 0 20px',
+        }}>
+          Cancela cuando quieras.
+        </p>
+
+        {/* Exit */}
+        <a href="https://lexipopmath.com" style={{
+          fontSize:'12px', color:'rgba(255,255,255,0.25)',
+          fontFamily:"'Helvetica Neue', sans-serif",
+          textDecoration:'none', letterSpacing:'0.05em',
+        }}>
+          Volver al inicio
+        </a>
       </div>
     </div>
   );
