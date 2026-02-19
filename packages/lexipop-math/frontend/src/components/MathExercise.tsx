@@ -607,7 +607,7 @@ export default function MathExercise() {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId: import.meta.env.VITE_STRIPE_PRICE_ID || '' }),
+        body: JSON.stringify({ priceId: 'price_1RcyfaDWSg24TpJZcwVaRgiO' }),
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
