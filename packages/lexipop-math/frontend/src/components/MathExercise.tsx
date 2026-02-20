@@ -607,7 +607,7 @@ export default function MathExercise() {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId: 'price_1RcyfaDWSg24TpJZcwVaRgiO' }),
+        body: JSON.stringify({ priceId: 'price_1T2mdVACz5T2yxYQJuDYmgq0' }),
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
