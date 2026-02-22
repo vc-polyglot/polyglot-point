@@ -28,6 +28,7 @@ function App() {
     if (!confirm('¿Reiniciar tu contador de ejercicios desde cero?')) return;
     await fetch(`${API}/api/math/exercise/reset`, { method: 'POST', credentials: 'include' });
     // Forzar reload para que MathExercise arranque limpio
+    localStorage.removeItem('lexipop-v4');
     window.location.reload();
   };
 
