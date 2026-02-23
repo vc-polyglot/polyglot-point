@@ -20,13 +20,13 @@ function App() {
   const [lang, setLang] = useState<Language>('es');
 
   const handleLogout = async () => {
-    await fetch(`${API}/api/math/auth/logout`, { method: 'POST', credentials: 'include' });
+    await fetch('/api/math/auth/logout', { method: 'POST', credentials: 'include' });
     setUser(null);
   };
 
   const handleReset = async () => {
     if (!confirm('¿Reiniciar tu contador de ejercicios desde cero?')) return;
-    await fetch(`${API}/api/math/exercise/reset`, { method: 'POST', credentials: 'include' });
+    await fetch('/api/math/exercise/reset', { method: 'POST', credentials: 'include' });
     // Forzar reload para que MathExercise arranque limpio
     localStorage.removeItem('lexipop-v4');
     window.location.reload();
