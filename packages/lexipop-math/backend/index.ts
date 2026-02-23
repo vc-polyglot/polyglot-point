@@ -87,7 +87,7 @@ async function initRedisSessionStore(): Promise<void> {
     return;
   }
   try {
-    const { RedisStore } = require("connect-redis");
+    const RedisStore = require("connect-redis").default;
     const { createClient } = require("redis");
     const redisClient = createClient({ url: process.env.REDIS_URL });
     redisClient.on("error", (e: any) => console.error("[Redis]", e));
