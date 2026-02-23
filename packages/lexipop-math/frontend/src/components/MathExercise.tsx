@@ -222,7 +222,7 @@ function Paywall({ onUpgrade }: { onUpgrade: () => void }) {
           boxShadow:'0 4px 24px rgba(93,173,226,0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
           letterSpacing:'0.01em',
         }}>
-          Continuar — $9.90 USD / mes
+          Continuar — $199 MXN / mes
         </button>
 
         <p style={{
