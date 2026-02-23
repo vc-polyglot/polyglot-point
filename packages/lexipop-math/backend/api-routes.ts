@@ -81,7 +81,7 @@ router.post('/exercise/complete', async (req, res) => {
     .set({ exercisesCount: newCount, updatedAt: new Date() })
     .where(eq(users.id, user.id));
 
-  if (newCount >= 40) {
+  if (newCount >=100) {
     return res.json({ blocked: true, count: newCount });
   }
 
