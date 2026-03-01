@@ -1,20 +1,19 @@
 ﻿FROM node:20-alpine
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
 WORKDIR /app
 
-COPY packages/organ-project/package.json ./packages/organ-project/
+COPY packages/organ-project/package.json ./
 
-RUN cd packages/organ-project && pnpm install
+RUN npm install
 
-COPY packages/organ-project/ ./packages/organ-project/
+COPY packages/organ-project/backend/ ./backend/
+COPY packages/organ-project/public/ ./public/
 
-RUN cd packages/organ-project && npx tsc backend/index.ts --outDir backend/dist --module nodenext --moduleResolution nodenext --esModuleInterop true --skipLibCheck true || true
+RUN npx tsc backend/index.ts --outDir backend/dist --module nodenext --moduleResolution nodenext --esModuleInterop true --skipLibCheck true
 
 ENV NODE_ENV=production
 ENV PORT=3002
 
 EXPOSE 3002
 
-CMD ["node", "packages/organ-project/backend/dist/index.js"]
+CMD ["node", "backend/dist/index.js"]
