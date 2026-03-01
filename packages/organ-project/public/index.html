@@ -15,48 +15,48 @@
       --warm-white: #FDF8F0; --stone: #A8997A;
     }
     html { scroll-behavior: smooth; }
-    body { background: var(--ink); color: var(--parchment); font-family: 'Crimson Pro', Georgia, serif; overflow-x: hidden; }
-    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 1000; opacity: 0.5; }
+    body { background: var(--ink); color: var(--parchment); font-family: "Crimson Pro", Georgia, serif; overflow-x: hidden; }
+    body::before { content: ""; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 1000; opacity: 0.5; }
 
     /* NAV */
     nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.5rem 6vw; display: flex; align-items: center; justify-content: space-between; background: linear-gradient(to bottom, rgba(13,9,6,0.85), transparent); backdrop-filter: blur(2px); }
-    .nav-logo { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--warm-white); text-decoration: none; display: flex; align-items: center; gap: 0.75rem; }
+    .nav-logo { font-family: "Playfair Display", serif; font-size: 1.3rem; font-weight: 700; color: var(--warm-white); text-decoration: none; display: flex; align-items: center; gap: 0.75rem; }
     .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-    .nav-links a { font-family: 'EB Garamond', serif; font-size: 0.9rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--parchment); text-decoration: none; opacity: 0.8; transition: opacity 0.2s, color 0.2s; }
+    .nav-links a { font-family: "EB Garamond", serif; font-size: 0.9rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--parchment); text-decoration: none; opacity: 0.8; transition: opacity 0.2s, color 0.2s; }
     .nav-links a:hover { opacity: 1; color: var(--gold-light); }
 
     /* HERO */
     .hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; }
-    .hero-bg { position: absolute; inset: 0; background-image: url('RENDER_tamano_40_.jpg'); background-size: cover; background-position: center top; transform: scale(1.05); animation: subtle-zoom 20s ease-in-out infinite alternate; }
+    .hero-bg { position: absolute; inset: 0; background-image: url("RENDER_tamano_40_.jpg"); background-size: cover; background-position: center top; transform: scale(1.05); animation: subtle-zoom 20s ease-in-out infinite alternate; }
     @keyframes subtle-zoom { from { transform: scale(1.05); } to { transform: scale(1.12); } }
     .hero-gradient { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(13,9,6,0.2) 0%, rgba(13,9,6,0.0) 30%, rgba(80,10,10,0.3) 60%, rgba(13,9,6,0.97) 100%); }
     .hero-content { position: relative; z-index: 2; padding: 12vh 6vw 8vh; max-width: 900px; }
-    .hero-eyebrow { font-family: 'EB Garamond', serif; font-size: clamp(0.75rem, 1.5vw, 0.95rem); letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; opacity: 0; animation: fade-up 1s ease 0.3s forwards; }
-    .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 8vw, 7rem); line-height: 0.95; font-weight: 900; color: var(--warm-white); margin-bottom: 0.3em; opacity: 0; animation: fade-up 1s ease 0.6s forwards; }
+    .hero-eyebrow { font-family: "EB Garamond", serif; font-size: clamp(0.75rem, 1.5vw, 0.95rem); letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; opacity: 0; animation: fade-up 1s ease 0.3s forwards; }
+    .hero-title { font-family: "Playfair Display", serif; font-size: clamp(3rem, 8vw, 7rem); line-height: 0.95; font-weight: 900; color: var(--warm-white); margin-bottom: 0.3em; opacity: 0; animation: fade-up 1s ease 0.6s forwards; }
     .hero-title em { font-style: italic; color: var(--gold-light); }
-    .hero-subtitle { font-family: 'Crimson Pro', serif; font-size: clamp(1.1rem, 2.5vw, 1.5rem); font-weight: 300; color: var(--parchment); max-width: 560px; line-height: 1.6; margin-bottom: 2.5rem; opacity: 0; animation: fade-up 1s ease 0.9s forwards; }
+    .hero-subtitle { font-family: "Crimson Pro", serif; font-size: clamp(1.1rem, 2.5vw, 1.5rem); font-weight: 300; color: var(--parchment); max-width: 560px; line-height: 1.6; margin-bottom: 2.5rem; opacity: 0; animation: fade-up 1s ease 0.9s forwards; }
     .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; opacity: 0; animation: fade-up 1s ease 1.2s forwards; }
 
     /* BUTTONS */
-    .btn-primary { display: inline-block; background: var(--crimson); color: var(--warm-white); font-family: 'EB Garamond', serif; font-size: 1rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 1rem 2.5rem; text-decoration: none; transition: background 0.3s, transform 0.2s; border: none; cursor: pointer; }
+    .btn-primary { display: inline-block; background: var(--crimson); color: var(--warm-white); font-family: "EB Garamond", serif; font-size: 1rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 1rem 2.5rem; text-decoration: none; transition: background 0.3s, transform 0.2s; border: none; cursor: pointer; }
     .btn-primary:hover { background: var(--crimson-light); transform: translateY(-2px); }
-    .btn-outline { display: inline-block; background: transparent; color: var(--parchment); font-family: 'EB Garamond', serif; font-size: 1rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 1rem 2.5rem; text-decoration: none; border: 1px solid rgba(245,237,216,0.4); transition: border-color 0.3s, transform 0.2s; cursor: pointer; }
+    .btn-outline { display: inline-block; background: transparent; color: var(--parchment); font-family: "EB Garamond", serif; font-size: 1rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 1rem 2.5rem; text-decoration: none; border: 1px solid rgba(245,237,216,0.4); transition: border-color 0.3s, transform 0.2s; cursor: pointer; }
     .btn-outline:hover { border-color: var(--gold); color: var(--gold-light); transform: translateY(-2px); }
 
     /* COUNTDOWN */
     .countdown-bar { background: rgba(0,0,0,0.4); padding: 1.5rem 6vw; display: flex; align-items: center; justify-content: center; gap: 3rem; border-top: 1px solid rgba(185,28,28,0.3); }
-    .countdown-label { font-family: 'EB Garamond', serif; font-size: 0.8rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--crimson-light); text-align: center; }
+    .countdown-label { font-family: "EB Garamond", serif; font-size: 0.8rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--crimson-light); text-align: center; }
     .countdown-units { display: flex; gap: 2rem; }
     .countdown-unit { text-align: center; }
-    .countdown-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--warm-white); display: block; line-height: 1; }
-    .countdown-unit-label { font-family: 'EB Garamond', serif; font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--stone); }
+    .countdown-num { font-family: "Playfair Display", serif; font-size: 2rem; font-weight: 700; color: var(--warm-white); display: block; line-height: 1; }
+    .countdown-unit-label { font-family: "EB Garamond", serif; font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--stone); }
 
     /* SECTIONS */
     .section-inner { max-width: 1200px; margin: 0 auto; padding: 0 6vw; }
-    .section-label { font-family: 'EB Garamond', serif; font-size: 0.8rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; display: block; }
-    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.1; font-weight: 700; color: var(--warm-white); margin-bottom: 2rem; }
+    .section-label { font-family: "EB Garamond", serif; font-size: 0.8rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; display: block; }
+    .section-title { font-family: "Playfair Display", serif; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.1; font-weight: 700; color: var(--warm-white); margin-bottom: 2rem; }
     .section-title em { font-style: italic; color: var(--gold-light); }
-    .body-text { font-family: 'Crimson Pro', serif; font-size: clamp(1.1rem, 1.5vw, 1.25rem); line-height: 1.8; color: var(--stone); margin-bottom: 1.5rem; }
+    .body-text { font-family: "Crimson Pro", serif; font-size: clamp(1.1rem, 1.5vw, 1.25rem); line-height: 1.8; color: var(--stone); margin-bottom: 1.5rem; }
     .body-text strong { color: var(--parchment); font-weight: 600; }
 
     /* HISTORIA */
@@ -65,25 +65,25 @@
     .historia-img-stack img { position: absolute; object-fit: cover; border: 3px solid rgba(201,168,76,0.15); }
     .historia-img-stack .img-back { width: 75%; height: 75%; bottom: 0; left: 0; filter: brightness(0.7); }
     .historia-img-stack .img-front { width: 65%; height: 65%; top: 0; right: 0; filter: brightness(0.85); box-shadow: -20px 20px 60px rgba(0,0,0,0.6); }
-    .historia-img-stack .img-label { position: absolute; bottom: 1rem; right: 1rem; background: var(--crimson); color: var(--warm-white); font-family: 'EB Garamond', serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.4rem 0.8rem; }
+    .historia-img-stack .img-label { position: absolute; bottom: 1rem; right: 1rem; background: var(--crimson); color: var(--warm-white); font-family: "EB Garamond", serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.4rem 0.8rem; }
 
     /* QUOTE */
     .quote-block { position: relative; padding: 10vh 0; overflow: hidden; background: var(--crimson-dark); }
-    .quote-bg { position: absolute; inset: 0; background-image: url('Actualidad.jpeg'); background-size: cover; background-position: center; opacity: 0.12; }
+    .quote-bg { position: absolute; inset: 0; background-image: url("Actualidad.jpeg"); background-size: cover; background-position: center; opacity: 0.12; }
     .quote-inner { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; padding: 0 6vw; text-align: center; }
-    .quote-mark { font-family: 'Playfair Display', serif; font-size: 8rem; line-height: 0.5; color: var(--gold); opacity: 0.4; display: block; margin-bottom: 1rem; }
-    .quote-text { font-family: 'Playfair Display', serif; font-size: clamp(1.5rem, 3.5vw, 2.5rem); font-style: italic; line-height: 1.4; color: var(--warm-white); margin-bottom: 2rem; }
-    .quote-attr { font-family: 'EB Garamond', serif; font-size: 0.85rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); }
+    .quote-mark { font-family: "Playfair Display", serif; font-size: 8rem; line-height: 0.5; color: var(--gold); opacity: 0.4; display: block; margin-bottom: 1rem; }
+    .quote-text { font-family: "Playfair Display", serif; font-size: clamp(1.5rem, 3.5vw, 2.5rem); font-style: italic; line-height: 1.4; color: var(--warm-white); margin-bottom: 2rem; }
+    .quote-attr { font-family: "EB Garamond", serif; font-size: 0.85rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); }
 
     /* FASES */
     .fases-header { text-align: center; margin-bottom: 6rem; }
     .fases-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; position: relative; }
-    .fases-grid::before { content: ''; position: absolute; top: 2rem; left: calc(10% + 1rem); right: calc(10% + 1rem); height: 1px; background: linear-gradient(to right, var(--gold), var(--crimson), var(--gold)); opacity: 0.3; z-index: 0; }
+    .fases-grid::before { content: ""; position: absolute; top: 2rem; left: calc(10% + 1rem); right: calc(10% + 1rem); height: 1px; background: linear-gradient(to right, var(--gold), var(--crimson), var(--gold)); opacity: 0.3; z-index: 0; }
     .fase-item { text-align: center; padding: 0 1rem; position: relative; z-index: 1; }
-    .fase-num { width: 4rem; height: 4rem; background: var(--crimson-dark); border: 1px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--gold-light); transition: background 0.3s, transform 0.3s; }
+    .fase-num { width: 4rem; height: 4rem; background: var(--crimson-dark); border: 1px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-family: "Playfair Display", serif; font-size: 1.3rem; font-weight: 700; color: var(--gold-light); transition: background 0.3s, transform 0.3s; }
     .fase-item:hover .fase-num { background: var(--crimson); transform: scale(1.1); }
-    .fase-title { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; color: var(--warm-white); margin-bottom: 0.75rem; line-height: 1.3; }
-    .fase-desc { font-family: 'Crimson Pro', serif; font-size: 0.9rem; color: var(--stone); line-height: 1.6; }
+    .fase-title { font-family: "Playfair Display", serif; font-size: 0.95rem; font-weight: 700; color: var(--warm-white); margin-bottom: 0.75rem; line-height: 1.3; }
+    .fase-desc { font-family: "Crimson Pro", serif; font-size: 0.9rem; color: var(--stone); line-height: 1.6; }
 
     /* GALERIA */
     .galeria-header { text-align: center; margin-bottom: 4rem; }
@@ -94,56 +94,56 @@
     .gallery-item:hover img { transform: scale(1.05); filter: brightness(0.9) saturate(1.1); }
     .gallery-item .overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(13,9,6,0.7), transparent); opacity: 0; transition: opacity 0.3s; display: flex; align-items: flex-end; padding: 1.5rem; }
     .gallery-item:hover .overlay { opacity: 1; }
-    .overlay-text { font-family: 'EB Garamond', serif; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-light); }
+    .overlay-text { font-family: "EB Garamond", serif; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-light); }
 
     /* DONAR */
     #donar { position: relative; overflow: hidden; }
-    #donar::before { content: ''; position: absolute; top: -200px; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(185,28,28,0.15), transparent 70%); pointer-events: none; }
+    #donar::before { content: ""; position: absolute; top: -200px; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(185,28,28,0.15), transparent 70%); pointer-events: none; }
     .donar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
     .donar-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(201,168,76,0.2); padding: 3rem; position: relative; }
-    .donar-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--crimson); }
-    .donar-card-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--warm-white); margin-bottom: 0.5rem; }
-    .donar-card-sub { font-family: 'EB Garamond', serif; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 2rem; }
+    .donar-card::before { content: ""; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--crimson); }
+    .donar-card-title { font-family: "Playfair Display", serif; font-size: 1.3rem; font-weight: 700; color: var(--warm-white); margin-bottom: 0.5rem; }
+    .donar-card-sub { font-family: "EB Garamond", serif; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 2rem; }
     .bank-detail { margin-bottom: 1.5rem; }
-    .bank-label { font-family: 'EB Garamond', serif; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--stone); margin-bottom: 0.3rem; }
-    .bank-value { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--warm-white); }
-    .clabe-highlight { font-family: 'Crimson Pro', serif; font-size: 1.4rem; font-weight: 600; color: var(--gold-light); letter-spacing: 0.15em; display: block; margin-top: 0.25rem; }
+    .bank-label { font-family: "EB Garamond", serif; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--stone); margin-bottom: 0.3rem; }
+    .bank-value { font-family: "Playfair Display", serif; font-size: 1.05rem; color: var(--warm-white); }
+    .clabe-highlight { font-family: "Crimson Pro", serif; font-size: 1.4rem; font-weight: 600; color: var(--gold-light); letter-spacing: 0.15em; display: block; margin-top: 0.25rem; }
     .donar-separator { height: 1px; background: rgba(201,168,76,0.15); margin: 2rem 0; }
     .donar-steps { counter-reset: steps; }
-    .donar-step { counter-increment: steps; display: flex; gap: 1rem; margin-bottom: 1.25rem; font-family: 'Crimson Pro', serif; font-size: 1rem; color: var(--stone); line-height: 1.6; }
-    .donar-step::before { content: counter(steps); font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--crimson); font-weight: 700; min-width: 1.5rem; margin-top: 0.1rem; }
+    .donar-step { counter-increment: steps; display: flex; gap: 1rem; margin-bottom: 1.25rem; font-family: "Crimson Pro", serif; font-size: 1rem; color: var(--stone); line-height: 1.6; }
+    .donar-step::before { content: counter(steps); font-family: "Playfair Display", serif; font-size: 1.1rem; color: var(--crimson); font-weight: 700; min-width: 1.5rem; margin-top: 0.1rem; }
     .donar-step strong { color: var(--parchment); }
-    .donar-note { margin-top: 2rem; padding: 1rem; background: rgba(127,29,29,0.15); border-left: 2px solid var(--crimson); font-family: 'Crimson Pro', serif; font-size: 0.95rem; color: var(--stone); line-height: 1.6; }
-    .urgencia-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--crimson); padding: 0.4rem 1rem; margin-bottom: 1.5rem; font-family: 'EB Garamond', serif; font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--warm-white); }
+    .donar-note { margin-top: 2rem; padding: 1rem; background: rgba(127,29,29,0.15); border-left: 2px solid var(--crimson); font-family: "Crimson Pro", serif; font-size: 0.95rem; color: var(--stone); line-height: 1.6; }
+    .urgencia-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--crimson); padding: 0.4rem 1rem; margin-bottom: 1.5rem; font-family: "EB Garamond", serif; font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--warm-white); }
     .urgencia-dot { width: 6px; height: 6px; background: var(--warm-white); border-radius: 50%; animation: pulse-dot 1.5s ease-in-out infinite; }
     @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.7); } }
 
     /* QUIENES */
     .quienes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-    .quienes-card { padding: 2.5rem; border: 1px solid rgba(201,168,76,0.1); background: rgba(255,255,255,0.02); transition: border-color 0.3s; }
+    .quienes-card { padding: 2.5rem; border: 1px solid rgba(201,168,76,0.1); background: rgba(255,255,255,0.02); transition: border-color 0.3s, background 0.3s; }
     .quienes-card:hover { border-color: rgba(201,168,76,0.3); background: rgba(255,255,255,0.05); }
     .quienes-logo { height: 70px; display: flex; align-items: center; margin-bottom: 1.25rem; }
     .quienes-logo img { max-height: 70px; max-width: 160px; object-fit: contain; }
-    .quienes-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--warm-white); margin-bottom: 0.25rem; }
-    .quienes-role { font-family: 'EB Garamond', serif; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
-    .quienes-text { font-family: 'Crimson Pro', serif; font-size: 1rem; color: var(--stone); line-height: 1.7; }
+    .quienes-name { font-family: "Playfair Display", serif; font-size: 1.1rem; font-weight: 700; color: var(--warm-white); margin-bottom: 0.25rem; }
+    .quienes-role { font-family: "EB Garamond", serif; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+    .quienes-text { font-family: "Crimson Pro", serif; font-size: 1rem; color: var(--stone); line-height: 1.7; }
     .quienes-flag { font-size: 2.5rem; line-height: 1; margin-bottom: 1rem; display: block; }
 
     /* CONTACTO */
     #contacto { position: relative; overflow: hidden; }
-    .contacto-bg { position: absolute; inset: 0; background-image: url('San_Ignacio__actualiad_.jpeg'); background-size: cover; background-position: center; opacity: 0.08; }
+    .contacto-bg { position: absolute; inset: 0; background-image: url("San_Ignacio__actualiad_.jpeg"); background-size: cover; background-position: center; opacity: 0.08; }
     .contacto-inner { position: relative; z-index: 2; text-align: center; }
     .contacto-links { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; margin-bottom: 4rem; }
     .contacto-link-item { text-align: center; }
-    .contacto-link-label { font-family: 'EB Garamond', serif; font-size: 0.75rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 0.5rem; }
-    .contacto-link-val { font-family: 'Crimson Pro', serif; font-size: 1.1rem; color: var(--warm-white); text-decoration: none; transition: color 0.2s; }
+    .contacto-link-label { font-family: "EB Garamond", serif; font-size: 0.75rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 0.5rem; }
+    .contacto-link-val { font-family: "Crimson Pro", serif; font-size: 1.1rem; color: var(--warm-white); text-decoration: none; transition: color 0.2s; }
     .contacto-link-val:hover { color: var(--gold-light); }
 
     /* FOOTER */
     footer { background: #060402; padding: 3vh 6vw; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; border-top: 1px solid rgba(201,168,76,0.1); }
-    .footer-logo { font-family: 'Playfair Display', serif; font-size: 0.95rem; color: var(--stone); }
+    .footer-logo { font-family: "Playfair Display", serif; font-size: 0.95rem; color: var(--stone); }
     .footer-logo span { color: var(--crimson); font-style: italic; }
-    .footer-legal { font-family: 'Crimson Pro', serif; font-size: 0.85rem; color: rgba(168,153,122,0.5); text-align: right; max-width: 400px; line-height: 1.6; }
+    .footer-legal { font-family: "Crimson Pro", serif; font-size: 0.85rem; color: rgba(168,153,122,0.5); text-align: right; max-width: 400px; line-height: 1.6; }
 
     /* ANIMATIONS */
     @keyframes fade-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -183,7 +183,7 @@
   <ul class="nav-links">
     <li><a href="#historia">La Historia</a></li>
     <li><a href="#fases">El Proyecto</a></li>
-    <li><a href="#galeria">ImÃ¡genes</a></li>
+    <li><a href="#galeria">Imágenes</a></li>
     <li><a href="#donar">Donar</a></li>
     <li><a href="#contacto">Contacto</a></li>
   </ul>
@@ -194,19 +194,19 @@
   <div class="hero-bg"></div>
   <div class="hero-gradient"></div>
   <div class="hero-content">
-    <p class="hero-eyebrow">Un proyecto cultural y espiritual Â· Suiza â†’ MÃ©xico</p>
+    <p class="hero-eyebrow">Un proyecto cultural y espiritual · Suiza → México</p>
     <h1 class="hero-title">La nueva voz<br>de San Ignacio<br><em>de Loyola</em></h1>
-    <p class="hero-subtitle">Un magnÃ­fico Ã³rgano tubular suizo busca hogar. Su templo en Ginebra serÃ¡ demolido. MÃ©xico tiene la oportunidad Ãºnica de rescatarlo.</p>
+    <p class="hero-subtitle">Un magnífico órgano tubular suizo busca hogar. Su templo en Ginebra será demolido. México tiene la oportunidad única de rescatarlo.</p>
     <div class="hero-ctas">
       <a href="#donar" class="btn-primary">Donar ahora</a>
       <a href="#historia" class="btn-outline">Conocer la historia</a>
     </div>
   </div>
   <div class="countdown-bar">
-    <span class="countdown-label">Fecha lÃ­mite para el desmontaje en Ginebra</span>
+    <span class="countdown-label">Fecha límite para el desmontaje en Ginebra</span>
     <div class="countdown-units">
       <div class="countdown-unit"><span class="countdown-num" id="cd-months">--</span><span class="countdown-unit-label">Meses</span></div>
-      <div class="countdown-unit"><span class="countdown-num" id="cd-days">--</span><span class="countdown-unit-label">DÃ­as</span></div>
+      <div class="countdown-unit"><span class="countdown-num" id="cd-days">--</span><span class="countdown-unit-label">Días</span></div>
       <div class="countdown-unit"><span class="countdown-num" id="cd-hours">--</span><span class="countdown-unit-label">Horas</span></div>
     </div>
     <span class="countdown-label">Junio 2026</span>
@@ -220,14 +220,14 @@
       <div class="historia-img-stack reveal">
         <img class="img-back" src="Organo_de_la_Servette.jpg" alt="Organo en La Servette, Ginebra" />
         <img class="img-front" src="RENDER_tamano_40_.jpg" alt="Render de LeO en San Ignacio" />
-        <span class="img-label">VisualizaciÃ³n Â· San Ignacio de Loyola</span>
+        <span class="img-label">Visualización · San Ignacio de Loyola</span>
       </div>
       <div class="reveal">
         <span class="section-label">La Historia de LeO</span>
         <h2 class="section-title">Una voz<br>que merece<br><em>volver a escucharse</em></h2>
-        <p class="body-text"><strong>LeO</strong> es un magnÃ­fico Ã³rgano tubular suizo, con tres teclados y miles de tubos, que durante dÃ©cadas llenÃ³ de mÃºsica y vida el templo de <strong>La Servette, en Ginebra</strong>. Hoy, ese templo estÃ¡ por ser demolidoâ€¦ y LeO necesita un nuevo hogar.</p>
-        <p class="body-text">El maestro <strong>Diego Innocenzi</strong>, organista en Ginebra, visitÃ³ MÃ©xico y quedÃ³ impresionado por los alumnos del Conservatorio Nacional de MÃºsica. Fue Ã©l quien invitÃ³ a nuestro comitÃ© a participar en el concurso internacional de selecciÃ³n. Tras ese concurso, <strong>nuestro proyecto fue elegido</strong>.</p>
-        <p class="body-text">Nuestra meta: traer a LeO a MÃ©xico y darle una nueva vida en la <strong>Iglesia de San Ignacio de Loyola</strong>, en Polanco, donde el arte, la mÃºsica y la fe vuelvan a encontrarse.</p>
+        <p class="body-text"><strong>LeO</strong> es un magnífico órgano tubular suizo, con tres teclados y miles de tubos, que durante décadas llenó de música y vida el templo de <strong>La Servette, en Ginebra</strong>. Hoy, ese templo está por ser demolido… y LeO necesita un nuevo hogar.</p>
+        <p class="body-text">El maestro <strong>Diego Innocenzi</strong>, organista en Ginebra, visitó México y quedó impresionado por los alumnos del Conservatorio Nacional de Música. Fue él quien invitó a nuestro comité a participar en el concurso internacional de selección. Tras ese concurso, <strong>nuestro proyecto fue elegido</strong>.</p>
+        <p class="body-text">Nuestra meta: traer a LeO a México y darle una nueva vida en la <strong>Iglesia de San Ignacio de Loyola</strong>, en Polanco, donde el arte, la música y la fe vuelvan a encontrarse.</p>
       </div>
     </div>
   </div>
@@ -238,8 +238,8 @@
   <div class="quote-bg"></div>
   <div class="quote-inner">
     <span class="quote-mark">"</span>
-    <p class="quote-text">Tu donativo no se va en gastos:<br>se transforma en mÃºsica.<br>Haz que LeO vuelva a sonar.</p>
-    <span class="quote-attr">Un Nuevo Hogar para LeO Â· nuevohogarparaleo.com</span>
+    <p class="quote-text">Tu donativo se transforma en música.</p>
+    <span class="quote-attr">Un Nuevo Hogar para LeO · nuevohogarparaleo.com</span>
   </div>
 </div>
 
@@ -248,14 +248,14 @@
   <div class="section-inner">
     <div class="fases-header reveal">
       <span class="section-label">El Proyecto</span>
-      <h2 class="section-title">Cinco fases<br>para <em>una sinfonÃ­a</em></h2>
+      <h2 class="section-title">Cinco fases<br>para <em>una sinfonía</em></h2>
     </div>
     <div class="fases-grid reveal">
-      <div class="fase-item"><div class="fase-num">I</div><p class="fase-title">Adecuaciones estructurales</p><p class="fase-desc">Reforzar el coro de San Ignacio: estructura, acÃºstica, condiciones elÃ©ctricas y climÃ¡ticas.</p></div>
-      <div class="fase-item"><div class="fase-num">II</div><p class="fase-title">Desmontaje en Ginebra</p><p class="fase-desc">EjecuciÃ³n especializada pieza por pieza. Fecha lÃ­mite: junio de 2026.</p></div>
-      <div class="fase-item"><div class="fase-num">III</div><p class="fase-title">Transporte internacional</p><p class="fase-desc">LogÃ­stica y gestiÃ³n aduanal para un traslado integral y seguro a MÃ©xico.</p></div>
-      <div class="fase-item"><div class="fase-num">IV</div><p class="fase-title">InstalaciÃ³n y restauraciÃ³n</p><p class="fase-desc">Ensamblaje, reentonaciÃ³n y adaptaciÃ³n al nuevo espacio con organeros certificados.</p></div>
-      <div class="fase-item"><div class="fase-num">V</div><p class="fase-title">InauguraciÃ³n</p><p class="fase-desc">Conciertos inaugurales, actividades acadÃ©micas y memoria documental del proyecto.</p></div>
+      <div class="fase-item"><div class="fase-num">I</div><p class="fase-title">Adecuaciones estructurales</p><p class="fase-desc">Reforzar el coro de San Ignacio: estructura, acústica, condiciones eléctricas y climáticas.</p></div>
+      <div class="fase-item"><div class="fase-num">II</div><p class="fase-title">Desmontaje en Ginebra</p><p class="fase-desc">Ejecución especializada pieza por pieza. Fecha límite: junio de 2026.</p></div>
+      <div class="fase-item"><div class="fase-num">III</div><p class="fase-title">Transporte internacional</p><p class="fase-desc">Logística y gestión aduanal para un traslado integral y seguro a México.</p></div>
+      <div class="fase-item"><div class="fase-num">IV</div><p class="fase-title">Instalación y restauración</p><p class="fase-desc">Ensamblaje, reentonación y adaptación al nuevo espacio con organeros certificados.</p></div>
+      <div class="fase-item"><div class="fase-num">V</div><p class="fase-title">Inauguración</p><p class="fase-desc">Conciertos inaugurales, actividades académicas y memoria documental del proyecto.</p></div>
     </div>
   </div>
 </section>
@@ -264,15 +264,15 @@
 <section id="galeria" style="padding: 10vh 0; background: #0A0604;">
   <div class="section-inner">
     <div class="galeria-header reveal">
-      <span class="section-label">Las ImÃ¡genes</span>
+      <span class="section-label">Las Imágenes</span>
       <h2 class="section-title">Dos mundos,<br><em>un instrumento</em></h2>
     </div>
     <div class="gallery-mosaic reveal">
-      <div class="gallery-item"><img src="Actualidad.jpeg" alt="Interior Iglesia San Ignacio" /><div class="overlay"><span class="overlay-text">San Ignacio Â· Polanco, CDMX</span></div></div>
-      <div class="gallery-item"><img src="Organo_de_la_Servette.jpg" alt="LeO en La Servette" /><div class="overlay"><span class="overlay-text">LeO en La Servette Â· Ginebra</span></div></div>
-      <div class="gallery-item"><img src="RENDER_tamano_40_.jpg" alt="Render LeO en San Ignacio" /><div class="overlay"><span class="overlay-text">VisualizaciÃ³n futura Â· LeO en San Ignacio</span></div></div>
+      <div class="gallery-item"><img src="Actualidad.jpeg" alt="Interior Iglesia San Ignacio" /><div class="overlay"><span class="overlay-text">San Ignacio · Polanco, CDMX</span></div></div>
+      <div class="gallery-item"><img src="Organo_de_la_Servette.jpg" alt="LeO en La Servette" /><div class="overlay"><span class="overlay-text">LeO en La Servette · Ginebra</span></div></div>
+      <div class="gallery-item"><img src="RENDER_tamano_40_.jpg" alt="Render LeO en San Ignacio" /><div class="overlay"><span class="overlay-text">Visualización futura · LeO en San Ignacio</span></div></div>
       <div class="gallery-item"><img src="image.jpg" alt="Comunidad San Ignacio" /><div class="overlay"><span class="overlay-text">La comunidad de San Ignacio</span></div></div>
-      <div class="gallery-item"><img src="San_Ignacio__actualiad_.jpeg" alt="San Ignacio interior" /><div class="overlay"><span class="overlay-text">Interior Â· San Ignacio de Loyola</span></div></div>
+      <div class="gallery-item"><img src="San_Ignacio__actualiad_.jpeg" alt="San Ignacio interior" /><div class="overlay"><span class="overlay-text">Interior · San Ignacio de Loyola</span></div></div>
     </div>
   </div>
 </section>
@@ -283,25 +283,25 @@
     <div class="donar-grid">
       <div class="reveal">
         <div class="urgencia-badge"><span class="urgencia-dot"></span>Tiempo limitado</div>
-        <span class="section-label">CÃ³mo contribuir</span>
-        <h2 class="section-title">Tu donativo<br>se convierte<br>en <em>mÃºsica</em></h2>
-        <p class="body-text">El Ã³rgano ya ha sido donado. Ahora, nuestro desafÃ­o es financiar su <strong>traslado, restauraciÃ³n e instalaciÃ³n</strong>, un proceso minucioso que requiere cuidado artesanal y amor por el detalle.</p>
-        <p class="body-text">Cada aportaciÃ³n ayuda a que LeO llegue y cobre vida en su nuevo hogar. Puedes contribuir con donativos, servicios, materiales, o simplemente <strong>compartiendo este mensaje</strong> con quienes puedan hacerlo posible.</p>
-        <p class="body-text" style="color: var(--stone); font-size: 1rem;">Proyecto administrado por <strong style="color:var(--parchment)">Arte, EducaciÃ³n y EcologÃ­a A.C.</strong><br>AutorizaciÃ³n SAT No. 700-02-05-2017-03718</p>
+        <span class="section-label">Cómo contribuir</span>
+        <h2 class="section-title">Tu donativo<br>se convierte<br>en <em>música</em></h2>
+        <p class="body-text">El órgano ya ha sido donado. Ahora, nuestro desafío es financiar su <strong>traslado, restauración e instalación</strong>, un proceso minucioso que requiere cuidado artesanal y amor por el detalle.</p>
+        <p class="body-text">Cada aportación ayuda a que LeO llegue y cobre vida en su nuevo hogar. Puedes contribuir con donativos, servicios, materiales, o simplemente <strong>compartiendo este mensaje</strong> con quienes puedan hacerlo posible.</p>
+        <p class="body-text" style="color: var(--stone); font-size: 1rem;">Proyecto administrado por <strong style="color:var(--parchment)">Arte, Educación y Ecología A.C.</strong><br>Autorización SAT No. 700-02-05-2017-03718</p>
       </div>
       <div class="reveal">
         <div class="donar-card">
           <p class="donar-card-title">Realiza tu donativo</p>
-          <p class="donar-card-sub">Transferencia bancaria Â· Deducible de impuestos</p>
-          <div class="bank-detail"><p class="bank-label">Beneficiario</p><p class="bank-value">Arte, EducaciÃ³n y EcologÃ­a A.C.</p></div>
+          <p class="donar-card-sub">Transferencia bancaria · Deducible de impuestos</p>
+          <div class="bank-detail"><p class="bank-label">Beneficiario</p><p class="bank-value">Arte, Educación y Ecología A.C.</p></div>
           <div class="bank-detail"><p class="bank-label">Banco</p><p class="bank-value">Banamex</p></div>
           <div class="bank-detail"><p class="bank-label">CLABE interbancaria</p><span class="clabe-highlight">002290701634071732</span></div>
           <div class="donar-separator"></div>
-          <p class="donar-card-title" style="font-size:1.1rem; margin-bottom:1.5rem;">DespuÃ©s de tu transferencia:</p>
+          <p class="donar-card-title" style="font-size:1.1rem; margin-bottom:1.5rem;">Después de tu transferencia:</p>
           <div class="donar-steps">
-            <div class="donar-step">EnvÃ­a tu comprobante a <strong>dona@nuevohogarparaleo.com</strong></div>
-            <div class="donar-step">Adjunta tu Constancia de SituaciÃ³n Fiscal si deseas tu <strong>CFDI deducible</strong></div>
-            <div class="donar-step">En mÃ¡ximo <strong>5 dÃ­as hÃ¡biles</strong> recibirÃ¡s tu comprobante fiscal</div>
+            <div class="donar-step">Envía tu comprobante a <strong>dona@nuevohogarparaleo.com</strong></div>
+            <div class="donar-step">Adjunta tu Constancia de Situación Fiscal si deseas tu <strong>CFDI deducible</strong></div>
+            <div class="donar-step">En máximo <strong>5 días hábiles</strong> recibirás tu comprobante fiscal</div>
           </div>
           <div class="donar-note">Si no necesitas CFDI, basta con enviarnos tu comprobante. Registraremos tu donativo y te enviaremos un recibo con nuestro agradecimiento.</div>
           <br>
@@ -317,16 +317,16 @@
   <div class="section-inner">
     <div class="reveal" style="text-align:center; margin-bottom: 5rem;">
       <span class="section-label">El Equipo</span>
-      <h2 class="section-title">QuiÃ©nes hacen<br><em>posible esto</em></h2>
+      <h2 class="section-title">Quiénes hacen<br><em>posible esto</em></h2>
     </div>
     <div class="quienes-grid reveal">
 
       <!-- Paroisse Protestante -->
       <div class="quienes-card">
-        <span class="quienes-flag">ðŸ‡¨ðŸ‡­</span>
+        <span class="quienes-flag">🇨🇭</span>
         <p class="quienes-name">Paroisse Protestante Rive Droite</p>
-        <p class="quienes-role">Donantes originales Â· Ginebra, Suiza</p>
-        <p class="quienes-text">En sesiÃ³n del 11 de junio de 2025, el Consejo de la Parroquia eligiÃ³ oficialmente a nuestra propuesta como ganadora del concurso internacional para recibir el Ã³rgano.</p>
+        <p class="quienes-role">Donantes originales · Ginebra, Suiza</p>
+        <p class="quienes-text">En sesión del 11 de junio de 2025, el Consejo de la Parroquia eligió oficialmente a nuestra propuesta como ganadora del concurso internacional para recibir el órgano.</p>
       </div>
 
       <!-- San Ignacio -->
@@ -335,18 +335,18 @@
           <img src="Iglesia_de_san_ignacio_logotipo.png" alt="Iglesia San Ignacio de Loyola" style="" />
         </div>
         <p class="quienes-name">Iglesia de San Ignacio de Loyola</p>
-        <p class="quienes-role">Hogar receptor Â· Polanco, CDMX</p>
-        <p class="quienes-text">El P. Luis GonzÃ¡lez-CosÃ­o Elcoro, SJ, Rector de la parroquia, ha aceptado oficialmente el instrumento con "espÃ­ritu de responsabilidad, gratitud y esperanza".</p>
+        <p class="quienes-role">Hogar receptor · Polanco, CDMX</p>
+        <p class="quienes-text">El P. Luis González-Cosío Elcoro, SJ, Rector de la parroquia, ha aceptado oficialmente el instrumento con "espíritu de responsabilidad, gratitud y esperanza".</p>
       </div>
 
-      <!-- ComitÃ© -->
+      <!-- Comité -->
       <div class="quienes-card">
         <div class="quienes-logo">
           <img src="LeO_73_grados.png" alt="Un Nuevo Hogar para LeO" />
         </div>
-        <p class="quienes-name">ComitÃ© "Un Nuevo Hogar para LeO"</p>
-        <p class="quienes-role">CoordinaciÃ³n del proyecto Â· Ciudad de MÃ©xico</p>
-        <p class="quienes-text">El comitÃ© ciudadano gestiona la planeaciÃ³n integral del proyecto, encabezado por el maestro VÃ­ctor Contreras, concertista y profesor del Conservatorio Nacional de MÃºsica, designado organista titular del instrumento.</p>
+        <p class="quienes-name">Comité "Un Nuevo Hogar para LeO"</p>
+        <p class="quienes-role">Coordinación del proyecto · Ciudad de México</p>
+        <p class="quienes-text">El comité ciudadano gestiona la planeación integral del proyecto, encabezado por el maestro Víctor Contreras, concertista y profesor del Conservatorio Nacional de Música, designado organista titular del instrumento.</p>
       </div>
 
       <!-- AC -->
@@ -354,9 +354,9 @@
         <div class="quienes-logo">
           <img src="WhatsApp_Image_2026-02-28_at_1_15_45_PM.jpeg" alt="Arte Educacion y Ecologia AC" />
         </div>
-        <p class="quienes-name">Arte, EducaciÃ³n y EcologÃ­a A.C.</p>
-        <p class="quienes-role">AdministraciÃ³n transparente de fondos</p>
-        <p class="quienes-text">Organismo responsable de la administraciÃ³n de los fondos y la emisiÃ³n de recibos fiscales deducibles de impuestos. AutorizaciÃ³n SAT No. 700-02-05-2017-03718.</p>
+        <p class="quienes-name">Arte, Educación y Ecología A.C.</p>
+        <p class="quienes-role">Administración transparente de fondos</p>
+        <p class="quienes-text">Organismo responsable de la administración de los fondos y la emisión de recibos fiscales deducibles de impuestos. Autorización SAT No. 700-02-05-2017-03718.</p>
       </div>
 
     </div>
@@ -368,8 +368,8 @@
   <div class="contacto-bg"></div>
   <div class="section-inner">
     <div class="contacto-inner reveal">
-      <span class="section-label">Ãšnete al proyecto</span>
-      <h2 class="section-title">Â¿Quieres sumarte<br>a esta <em>historia</em>?</h2>
+      <span class="section-label">Únete al proyecto</span>
+      <h2 class="section-title">¿Quieres sumarte<br>a esta <em>historia</em>?</h2>
       <p class="body-text" style="max-width:600px; margin: 0 auto 3rem;">Puedes ayudar con donativos, servicios, materiales, o simplemente compartiendo este mensaje con quienes puedan hacerlo posible.</p>
       <div class="contacto-links">
         <div class="contacto-link-item">
@@ -385,44 +385,39 @@
           <a href="mailto:amdg1@prodigy.net.mx" class="contacto-link-val">amdg1@prodigy.net.mx</a>
         </div>
       </div>
-      <a href="mailto:dona@nuevohogarparaleo.com" class="btn-primary">ContÃ¡ctanos</a>
+      <a href="mailto:dona@nuevohogarparaleo.com" class="btn-primary">Contáctanos</a>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">Un Nuevo Hogar para <span>LeO</span> Â· nuevohogarparaleo.com</div>
-  <p class="footer-legal">Proyecto administrado por Arte, EducaciÃ³n y EcologÃ­a A.C.<br>AutorizaciÃ³n SAT No. 700-02-05-2017-03718 Â· Donativos deducibles de impuestos.</p>
+  <div class="footer-logo">Un Nuevo Hogar para <span>LeO</span> · nuevohogarparaleo.com</div>
+  <p class="footer-legal">Proyecto administrado por Arte, Educación y Ecología A.C.<br>Autorización SAT No. 700-02-05-2017-03718 · Donativos deducibles de impuestos.</p>
 </footer>
 
 <script>
   function updateCountdown() {
-    const target = new Date('2026-06-30T00:00:00');
+    const target = new Date("2026-06-30T00:00:00");
     const now = new Date();
     const diff = target - now;
     if (diff <= 0) return;
     const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30.44));
     const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 30.44)) / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    document.getElementById('cd-months').textContent = String(months).padStart(2, '0');
-    document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
-    document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+    document.getElementById("cd-months").textContent = String(months).padStart(2, "0");
+    document.getElementById("cd-days").textContent = String(days).padStart(2, "0");
+    document.getElementById("cd-hours").textContent = String(hours).padStart(2, "0");
   }
   updateCountdown();
   setInterval(updateCountdown, 60000);
 
-  const revealEls = document.querySelectorAll('.reveal');
+  const revealEls = document.querySelectorAll(".reveal");
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); observer.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: "0px 0px -60px 0px" });
   revealEls.forEach(el => observer.observe(el));
 </script>
 
 </body>
 </html>
-
-
-
-
-
