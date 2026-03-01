@@ -1,5 +1,7 @@
 ﻿FROM node:20-alpine
 
+RUN apk add --no-cache vips-dev fftw-dev build-base python3
+
 WORKDIR /app
 
 COPY packages/organ-project/package.json ./
