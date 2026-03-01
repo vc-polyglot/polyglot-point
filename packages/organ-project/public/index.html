@@ -99,7 +99,7 @@
     /* DONAR */
     #donar { position: relative; overflow: hidden; }
     #donar::before { content: ""; position: absolute; top: -200px; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(185,28,28,0.15), transparent 70%); pointer-events: none; }
-    .donar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
+    .donar-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; align-items: start; }
     .donar-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(201,168,76,0.2); padding: 3rem; position: relative; }
     .donar-card::before { content: ""; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--crimson); }
     .donar-card-title { font-family: "Playfair Display", serif; font-size: 1.3rem; font-weight: 700; color: var(--warm-white); margin-bottom: 0.5rem; }
@@ -152,7 +152,8 @@
 
     /* RESPONSIVE */
     @media (max-width: 900px) {
-      nav .nav-links { display: none; }
+      nav { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1rem 6vw; }
+      nav .nav-links { display: flex; flex-direction: column; gap: 0.75rem; width: 100%; }
       .historia-grid, .donar-grid, .quienes-grid { grid-template-columns: 1fr; gap: 3rem; }
       .fases-grid { grid-template-columns: 1fr 1fr; gap: 3rem; }
       .fases-grid::before { display: none; }
@@ -268,11 +269,11 @@
       <h2 class="section-title">Dos mundos,<br><em>un instrumento</em></h2>
     </div>
     <div class="gallery-mosaic reveal">
-      <div class="gallery-item"><img src="Actualidad.jpeg" alt="Interior Iglesia San Ignacio" /><div class="overlay"><span class="overlay-text">San Ignacio · Polanco, CDMX</span></div></div>
-      <div class="gallery-item"><img src="Organo_de_la_Servette.jpg" alt="LeO en La Servette" /><div class="overlay"><span class="overlay-text">LeO en La Servette · Ginebra</span></div></div>
-      <div class="gallery-item"><img src="RENDER_tamano_40_.jpg" alt="Render LeO en San Ignacio" /><div class="overlay"><span class="overlay-text">Visualización futura · LeO en San Ignacio</span></div></div>
-      <div class="gallery-item"><img src="image.jpg" alt="Comunidad San Ignacio" /><div class="overlay"><span class="overlay-text">La comunidad de San Ignacio</span></div></div>
-      <div class="gallery-item"><img src="San_Ignacio__actualiad_.jpeg" alt="San Ignacio interior" /><div class="overlay"><span class="overlay-text">Interior · San Ignacio de Loyola</span></div></div>
+      <div class="gallery-item"><a href="Actualidad.jpeg" target="_blank"><img src="Actualidad.jpeg" alt="Interior Iglesia San Ignacio" /></a><div class="overlay"><span class="overlay-text">San Ignacio · Polanco, CDMX</span></div></div>
+      <div class="gallery-item"><a href="Organo_de_la_Servette.jpg" target="_blank"><img src="Organo_de_la_Servette.jpg" alt="LeO en La Servette" /></a><div class="overlay"><span class="overlay-text">LeO en La Servette · Ginebra</span></div></div>
+      <div class="gallery-item"><a href="RENDER_tamano_40_.jpg" target="_blank"><img src="RENDER_tamano_40_.jpg" alt="Render LeO en San Ignacio" /></a><div class="overlay"><span class="overlay-text">Visualización futura · LeO en San Ignacio</span></div></div>
+      <div class="gallery-item"><a href="image.jpg" target="_blank"><img src="image.jpg" alt="Comunidad San Ignacio" /></a><div class="overlay"><span class="overlay-text">La comunidad de San Ignacio</span></div></div>
+      <div class="gallery-item"><a href="San_Ignacio__actualiad_.jpeg" target="_blank"><img src="San_Ignacio__actualiad_.jpeg" alt="San Ignacio interior" /></a><div class="overlay"><span class="overlay-text">Interior · San Ignacio de Loyola</span></div></div>
     </div>
   </div>
 </section>
@@ -417,10 +418,18 @@
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); observer.unobserve(e.target); } });
   }, { threshold: 0.1, rootMargin: "0px 0px -60px 0px" });
   revealEls.forEach(el => observer.observe(el));
+  document.querySelectorAll(".gallery-item img").forEach(function(img){img.style.cursor="pointer";img.addEventListener("click",function(){window.open(img.getAttribute("src"),"_blank");});});
+
+
 </script>
 
 </body>
 </html>
+
+
+
+
+
 
 
 
