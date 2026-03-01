@@ -152,8 +152,11 @@
 
     /* RESPONSIVE */
     @media (max-width: 900px) {
-      nav { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1rem 6vw; }
-      nav .nav-links { display: flex; flex-direction: column; gap: 0.75rem; width: 100%; }
+      nav { flex-direction: row; align-items: center; padding: 1rem 6vw; }
+      nav .nav-links { display: none; flex-direction: column; gap: 0.75rem; width: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(13,9,6,0.97); z-index: 200; justify-content: center; align-items: center; padding: 2rem; }
+      nav .nav-links.open { display: flex; }
+      .hamburger { display: flex; flex-direction: column; gap: 5px; cursor: pointer; z-index: 300; }
+      .hamburger span { width: 24px; height: 2px; background: var(--warm-white); display: block; transition: 0.3s; }
       .historia-grid, .donar-grid, .quienes-grid { grid-template-columns: 1fr; gap: 3rem; }
       .fases-grid { grid-template-columns: 1fr 1fr; gap: 3rem; }
       .fases-grid::before { display: none; }
@@ -188,6 +191,7 @@
     <li><a href="#donar">Donar</a></li>
     <li><a href="#contacto">Contacto</a></li>
   </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
 </nav>
 
 <!-- HERO -->
@@ -418,6 +422,8 @@
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); observer.unobserve(e.target); } });
   }, { threshold: 0.1, rootMargin: "0px 0px -60px 0px" });
   revealEls.forEach(el => observer.observe(el));
+  function toggleMenu(){var m=document.querySelector(".nav-links");var h=document.getElementById("hamburger");m.classList.toggle("open");h.classList.toggle("open");}
+  document.querySelectorAll(".nav-links a").forEach(function(a){a.addEventListener("click",function(){document.querySelector(".nav-links").classList.remove("open");document.getElementById("hamburger").classList.remove("open");});});
   document.querySelectorAll(".gallery-click").forEach(function(img){img.style.cursor="zoom-in";img.addEventListener("click",function(e){e.stopPropagation();var lb=document.getElementById("lightbox");document.getElementById("lightbox-img").src=img.src;lb.style.display="flex";});});document.addEventListener("keydown",function(e){if(e.key==="Escape")document.getElementById("lightbox").style.display="none";});
 
 
@@ -425,6 +431,7 @@
 
 <div id="lightbox" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out;" onclick="this.style.display=`none`"><img id="lightbox-img" src="" style="max-width:92vw;max-height:92vh;object-fit:contain;pointer-events:none;user-select:none;-webkit-user-drag:none;animation:lb-zoom 1.2s ease;" ondragstart="return false" oncontextmenu="return false" /></div></body>
 </html>
+
 
 
 
