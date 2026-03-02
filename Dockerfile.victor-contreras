@@ -1,0 +1,13 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY packages/victor-contreras/package.json ./
+
+RUN npm install --production
+
+COPY packages/victor-contreras/ ./
+
+EXPOSE 3003
+
+CMD ["node", "backend/index.js"]

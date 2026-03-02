@@ -1,0 +1,16 @@
+{
+  "name": "victor-contreras",
+  "version": "1.0.0",
+  "description": "Víctor Contreras - Organista, Clavecinista y Director de Orquesta",
+  "main": "backend/index.js",
+  "scripts": {
+    "start": "node backend/index.js",
+    "dev": "nodemon backend/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
+}

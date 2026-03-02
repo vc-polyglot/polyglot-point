@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Víctor Contreras — Organista · Clavecinista · Director</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=IM+Fell+English:ital@0;1&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ══ PALETA: LAPISLÁZULI ══
+       Azul medianoche · Plata acerada · Cobre tenue
+       Evoca: piedra de catedral, tubos de plata, cielo antes del alba */
+    :root {
+      --silver:       #9eb8d0;   /* acento principal — plata acerada */
+      --silver-light: #c8dcea;   /* plata clara */
+      --silver-dim:   #4e6f88;   /* plata profunda */
+      --copper:       #b07040;   /* cobre — toque cálido puntual */
+      --copper-light: #d09060;
+      --bg:           #07090f;   /* azul medianoche casi negro */
+      --bg2:          #0b0e16;
+      --bg3:          #10141e;
+      --cream:        #e2ddd8;   /* blanco marfil cálido */
+      --cream-dim:    #a09890;
+      --text:         #d0ccc6;
+      --text-dim:     #606870;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 1000; opacity: 0.7;
+    }
+
+    /* ── LANG BAR ── */
+    #lang-bar {
+      position: fixed; top: 0; right: 0; z-index: 900;
+      display: flex; padding: 14px 22px;
+      background: rgba(7,9,15,0.85); backdrop-filter: blur(12px);
+      border-bottom-left-radius: 2px;
+    }
+    #lang-bar button {
+      background: none; border: none; color: var(--text-dim);
+      font-family: 'Jost', sans-serif; font-size: 0.68rem; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer;
+      padding: 4px 9px; transition: color 0.3s;
+      border-right: 1px solid rgba(78,111,136,0.35);
+    }
+    #lang-bar button:last-child { border-right: none; }
+    #lang-bar button:hover, #lang-bar button.active { color: var(--silver-light); }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 800;
+      display: flex; justify-content: center; gap: 2px; padding: 0 0 2px;
+      background: linear-gradient(to top, rgba(7,9,15,0.97) 75%, transparent);
+      backdrop-filter: blur(12px);
+    }
+    nav a {
+      color: var(--text-dim); text-decoration: none;
+      font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 11px 11px; transition: color 0.3s; white-space: nowrap;
+    }
+    nav a:hover { color: var(--silver); }
+
+    /* ── DIVIDERS ── */
+    .silver-rule { display: block; width: 56px; height: 1px;
+      background: linear-gradient(to right, transparent, var(--silver), transparent);
+      margin: 0 auto; }
+    .silver-rule-full { display: block; width: 100%; height: 1px;
+      background: linear-gradient(to right, transparent, var(--silver-dim), transparent);
+      opacity: 0.3; }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative; min-height: 100svh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 0 0 100px; overflow: hidden;
+    }
+    #hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 65% 35%, rgba(100,150,200,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 15% 75%, rgba(80,120,180,0.04) 0%, transparent 45%),
+        radial-gradient(ellipse at 40% 100%, rgba(176,112,64,0.04) 0%, transparent 40%),
+        linear-gradient(175deg, #07090f 0%, #0b0e18 60%, #07090f 100%);
+    }
+
+    /* Decorative — vertical pipe silhouettes */
+    #hero-pipes {
+      position: absolute; right: 0; top: 0; bottom: 0; width: 54%;
+      display: flex; align-items: flex-start; justify-content: flex-end;
+      padding: 0 3vw; gap: 4px; pointer-events: none;
+    }
+    .pipe {
+      border-radius: 2px 2px 0 0; flex-shrink: 0;
+      background: linear-gradient(to bottom,
+        rgba(158,184,208,0.18) 0%,
+        rgba(78,111,136,0.08) 60%,
+        transparent 100%);
+    }
+
+    .hero-content { position: relative; z-index: 2; padding: 0 6vw; max-width: 680px; }
+    .hero-overline {
+      font-size: 0.67rem; letter-spacing: 0.38em; text-transform: uppercase;
+      color: var(--silver); margin-bottom: 20px;
+      opacity: 0; animation: fadeUp 1s 0.2s forwards;
+    }
+    .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 8vw, 7rem); font-weight: 300;
+      line-height: 0.93; color: var(--cream); margin-bottom: 8px;
+      opacity: 0; animation: fadeUp 1s 0.4s forwards;
+    }
+    .hero-name em { font-style: italic; color: var(--silver-light); }
+    .hero-tagline {
+      font-family: 'IM Fell English', serif; font-style: italic;
+      font-size: clamp(0.95rem, 1.8vw, 1.25rem); color: var(--cream-dim);
+      letter-spacing: 0.06em; margin-top: 18px; margin-bottom: 36px;
+      opacity: 0; animation: fadeUp 1s 0.6s forwards;
+    }
+    .hero-cta {
+      display: inline-block;
+      border: 1px solid var(--silver-dim);
+      color: var(--silver); text-decoration: none; font-size: 0.68rem;
+      letter-spacing: 0.28em; text-transform: uppercase; padding: 13px 30px;
+      transition: all 0.35s; opacity: 0; animation: fadeUp 1s 0.8s forwards;
+    }
+    .hero-cta:hover { background: var(--silver); color: var(--bg); border-color: var(--silver); }
+
+    /* ── SECTIONS ── */
+    section { position: relative; padding: 100px 6vw; max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.63rem; letter-spacing: 0.42em; text-transform: uppercase;
+      color: var(--silver-dim); margin-bottom: 12px; }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 300;
+      line-height: 1.1; color: var(--cream); margin-bottom: 32px;
+    }
+    .section-title em { font-style: italic; color: var(--silver-light); }
+
+    /* ── BIO ── */
+    .bio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .bio-text { font-size: 1.02rem; line-height: 1.88; color: var(--cream-dim); }
+    .bio-text p + p { margin-top: 1.2em; }
+    .bio-img { position: relative; }
+    .bio-img::before {
+      content: ''; position: absolute; inset: -10px -10px 10px 10px;
+      border: 1px solid var(--silver-dim); opacity: 0.25; pointer-events: none;
+    }
+    .bio-img-placeholder {
+      width: 100%; aspect-ratio: 3/4;
+      background: linear-gradient(160deg, #10141e 0%, #07090f 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      border: 1px solid rgba(78,111,136,0.2); gap: 16px;
+    }
+    .bio-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+      margin-top: 60px; background: var(--silver-dim); opacity: 0.6; }
+    .bio-fact { background: var(--bg); padding: 28px 24px; text-align: center; }
+    .bio-fact-num { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem;
+      font-weight: 300; color: var(--silver); display: block; line-height: 1; }
+    .bio-fact-label { font-size: 0.67rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--text-dim); margin-top: 6px; display: block; }
+
+    /* ── ACTIVITIES ── */
+    .activities-wrap { background: var(--bg2); }
+    .activities-inner { max-width: 1200px; margin: 0 auto; padding: 100px 6vw; }
+    .activities-grid { display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; margin-top: 60px; background: rgba(78,111,136,0.25); }
+    .activity-card {
+      background: var(--bg3); padding: 48px 36px;
+      position: relative; overflow: hidden; transition: background 0.4s;
+    }
+    .activity-card:hover { background: #141824; }
+    .activity-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, var(--silver), var(--copper-light), transparent);
+      transform: scaleX(0); transform-origin: left; transition: transform 0.45s;
+    }
+    .activity-card:hover::after { transform: scaleX(1); }
+    .activity-icon { font-size: 1.6rem; margin-bottom: 20px; display: block; color: var(--silver-dim); }
+    .activity-title { font-family: 'Cormorant Garamond', serif; font-size: 1.55rem;
+      font-weight: 400; color: var(--cream); margin-bottom: 16px; }
+    .activity-text { font-size: 0.88rem; color: var(--text-dim); line-height: 1.78; }
+
+    /* ── VIDEOS ── */
+    .videos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 48px; }
+    .video-wrapper { position: relative; padding-bottom: 56.25%; background: var(--bg3); overflow: hidden; }
+    .video-wrapper::before {
+      content: ''; position: absolute; inset: 0;
+      border: 1px solid rgba(78,111,136,0.2); z-index: 1; pointer-events: none;
+    }
+    .video-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+
+    /* ── ORCHESTRA ── */
+    .orch-wrap { background: var(--bg2); }
+    .orch-inner { max-width: 1200px; margin: 0 auto; padding: 100px 6vw; }
+    .orchestra-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px;
+      align-items: center; margin-top: 48px; }
+    .orchestra-img-placeholder {
+      width: 100%; aspect-ratio: 4/3;
+      background: linear-gradient(135deg, #10141e 0%, #07090f 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      border: 1px solid rgba(78,111,136,0.15);
+    }
+
+    /* ── CONCERTS ── */
+    .concerts-list { margin-top: 48px; }
+    .concert-item {
+      display: grid; grid-template-columns: 90px 1fr auto;
+      gap: 24px; align-items: center; padding: 20px 0;
+      border-bottom: 1px solid rgba(78,111,136,0.15);
+      transition: padding-left 0.3s;
+    }
+    .concert-item:first-child { border-top: 1px solid rgba(78,111,136,0.15); }
+    .concert-item:hover { padding-left: 8px; }
+    .concert-date {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.25rem;
+      font-weight: 300; color: var(--silver); line-height: 1.2; text-align: center;
+    }
+    .concert-date span { display: block; font-size: 0.63rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--text-dim); font-family: 'Jost', sans-serif; }
+    .concert-info h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 400; color: var(--cream); }
+    .concert-info p { font-size: 0.78rem; color: var(--text-dim); margin-top: 2px; }
+    .concert-flag { font-size: 1.1rem; }
+
+    /* ── DISCOGRAPHY ── */
+    .disc-wrap { background: var(--bg2); }
+    .disc-inner { max-width: 1200px; margin: 0 auto; padding: 100px 6vw; }
+    .disc-layout { display: grid; grid-template-columns: 280px 1fr; gap: 64px;
+      align-items: center; margin-top: 48px; }
+    .disc-cover {
+      background: linear-gradient(145deg, #10141e, #07090f);
+      border: 1px solid rgba(158,184,208,0.22);
+      aspect-ratio: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 30px; text-align: center;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.9), 0 0 0 1px rgba(78,111,136,0.15);
+      position: relative;
+    }
+    .disc-cover::before {
+      content: ''; position: absolute; inset: 6px;
+      border: 1px solid rgba(78,111,136,0.1); pointer-events: none;
+    }
+    .disc-title { font-family: 'Cormorant Garamond', serif; font-size: 1.75rem;
+      font-weight: 300; color: var(--cream); line-height: 1.25; margin-bottom: 12px; }
+    .disc-composer { font-family: 'IM Fell English', serif; font-style: italic;
+      color: var(--silver); margin-bottom: 24px; font-size: 0.95rem; }
+    .disc-text { font-size: 0.9rem; color: var(--cream-dim); line-height: 1.85; }
+    .disc-text p + p { margin-top: 1em; }
+
+    /* ── CONTACT ── */
+    .contact-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; margin-top: 48px; }
+    .contact-info h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.45rem;
+      font-weight: 300; color: var(--cream); margin-bottom: 28px; line-height: 1.3; }
+    .contact-detail { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+    .contact-detail-icon { font-size: 0.95rem; margin-top: 3px; color: var(--silver); flex-shrink: 0; }
+    .contact-detail a { color: var(--cream-dim); text-decoration: none; font-size: 0.88rem; transition: color 0.3s; }
+    .contact-detail a:hover { color: var(--silver-light); }
+    .social-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+    .social-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid rgba(78,111,136,0.35); color: var(--silver-dim);
+      text-decoration: none; font-size: 0.67rem; letter-spacing: 0.22em;
+      text-transform: uppercase; padding: 9px 14px; transition: all 0.3s;
+    }
+    .social-link:hover { border-color: var(--silver); color: var(--silver-light);
+      background: rgba(158,184,208,0.05); }
+    .social-link svg { width: 13px; height: 13px; fill: currentColor; flex-shrink: 0; }
+
+    .form-group { margin-bottom: 22px; }
+    .form-group label { display: block; font-size: 0.63rem; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--silver-dim); margin-bottom: 8px; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(78,111,136,0.25); color: var(--text);
+      font-family: 'Jost', sans-serif; font-size: 0.88rem; font-weight: 300;
+      padding: 13px 15px; outline: none; transition: border-color 0.3s; appearance: none;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color: var(--silver); background: rgba(158,184,208,0.03);
+    }
+    .form-group textarea { resize: vertical; min-height: 130px; }
+    .form-group select { cursor: pointer; }
+    .form-group select option { background: var(--bg3); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .btn-send {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--silver-dim), var(--silver));
+      color: var(--bg); border: none; font-family: 'Jost', sans-serif;
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.28em;
+      text-transform: uppercase; padding: 15px 38px; cursor: pointer;
+      transition: opacity 0.3s, transform 0.2s;
+    }
+    .btn-send:hover { opacity: 0.88; transform: translateY(-1px); }
+    .form-success {
+      display: none; padding: 18px; border: 1px solid var(--silver-dim);
+      color: var(--silver); font-family: 'IM Fell English', serif;
+      font-style: italic; font-size: 0.95rem; text-align: center; margin-top: 16px;
+    }
+
+    footer { text-align: center; padding: 40px 6vw 100px; border-top: 1px solid rgba(78,111,136,0.12); }
+    footer p { font-size: 0.68rem; color: var(--text-dim); letter-spacing: 0.12em; }
+    .footer-name { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem;
+      color: var(--silver-dim); margin-bottom: 14px; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal { opacity: 0; transform: translateY(28px);
+      transition: opacity 0.85s ease, transform 0.85s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .bio-grid, .orchestra-layout, .contact-layout { grid-template-columns: 1fr; gap: 40px; }
+      .activities-grid, .videos-grid { grid-template-columns: 1fr; }
+      .disc-layout { grid-template-columns: 200px 1fr; gap: 40px; }
+      .form-row { grid-template-columns: 1fr; }
+      nav a { font-size: 0.54rem; padding: 11px 5px; }
+    }
+    @media (max-width: 600px) {
+      .bio-facts { grid-template-columns: 1fr; }
+      .disc-layout { grid-template-columns: 1fr; }
+      section { padding: 70px 5vw; }
+      .concert-item { grid-template-columns: 70px 1fr; }
+      .concert-flag { display: none; }
+    }
+
+    [data-lang] { display: none; }
+    [data-lang].lang-active { display: block; }
+    .inline-lang { display: none; }
+    .inline-lang.lang-active { display: inline; }
+  </style>
+</head>
+<body>
+
+<!-- LANG BAR -->
+<div id="lang-bar">
+  <button onclick="setLang('es')" class="active" id="btn-es">ES</button>
+  <button onclick="setLang('en')" id="btn-en">EN</button>
+  <button onclick="setLang('fr')" id="btn-fr">FR</button>
+  <button onclick="setLang('it')" id="btn-it">IT</button>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#bio"><span class="inline-lang lang-active">Biografía</span><span class="inline-lang">Biography</span><span class="inline-lang">Biographie</span><span class="inline-lang">Biografia</span></a>
+  <a href="#activities"><span class="inline-lang lang-active">Actividades</span><span class="inline-lang">Activities</span><span class="inline-lang">Activités</span><span class="inline-lang">Attività</span></a>
+  <a href="#videos">Videos</a>
+  <a href="#orchestra"><span class="inline-lang lang-active">Orquesta</span><span class="inline-lang">Orchestra</span><span class="inline-lang">Orchestre</span><span class="inline-lang">Orchestra</span></a>
+  <a href="#concerts"><span class="inline-lang lang-active">Conciertos</span><span class="inline-lang">Concerts</span><span class="inline-lang">Concerts</span><span class="inline-lang">Concerti</span></a>
+  <a href="#discography"><span class="inline-lang lang-active">Discografía</span><span class="inline-lang">Discography</span><span class="inline-lang">Discographie</span><span class="inline-lang">Discografia</span></a>
+  <a href="#contact"><span class="inline-lang lang-active">Contacto</span><span class="inline-lang">Contact</span><span class="inline-lang">Contact</span><span class="inline-lang">Contatto</span></a>
+</nav>
+
+<!-- ════════════════════════ HERO ════════════════════════ -->
+<section id="hero" style="padding:0; max-width:100%;">
+  <div id="hero-bg"></div>
+  <div id="hero-pipes" id="pipesEl"></div>
+  <div class="hero-content">
+    <p class="hero-overline">
+      <span class="inline-lang lang-active">Organista · Clavecinista · Director</span>
+      <span class="inline-lang">Organist · Harpsichordist · Conductor</span>
+      <span class="inline-lang">Organiste · Claveciniste · Chef d'orchestre</span>
+      <span class="inline-lang">Organista · Clavicembalista · Direttore</span>
+    </p>
+    <h1 class="hero-name"><em>Víctor</em><br>Contreras</h1>
+    <p class="hero-tagline">
+      <span class="inline-lang lang-active">México · Europa · Mundo</span>
+      <span class="inline-lang">Mexico · Europe · The World</span>
+      <span class="inline-lang">Mexique · Europe · Le Monde</span>
+      <span class="inline-lang">Messico · Europa · Il Mondo</span>
+    </p>
+    <a href="#bio" class="hero-cta">
+      <span class="inline-lang lang-active">Descubrir</span>
+      <span class="inline-lang">Discover</span>
+      <span class="inline-lang">Découvrir</span>
+      <span class="inline-lang">Scoprire</span>
+    </a>
+  </div>
+</section>
+
+<span class="silver-rule-full"></span>
+
+<!-- ════════════════════════ BIO ════════════════════════ -->
+<section id="bio">
+  <div class="reveal">
+    <p class="section-label"><span class="inline-lang lang-active">Tultepec, Estado de México</span><span class="inline-lang">Tultepec, State of Mexico</span><span class="inline-lang">Tultepec, État de Mexico</span><span class="inline-lang">Tultepec, Stato del Messico</span></p>
+    <h2 class="section-title"><span class="inline-lang lang-active">Trayectoria</span><span class="inline-lang">Career</span><span class="inline-lang">Parcours</span><span class="inline-lang">Carriera</span></h2>
+  </div>
+  <div class="bio-grid reveal">
+    <div class="bio-text">
+      <div data-lang="es" class="lang-active">
+        <p>Víctor Contreras es ampliamente reconocido como uno de los organistas mexicanos de mayor proyección internacional. Nacido en Tultepec, Estado de México, cursó sus estudios superiores en el Conservatorio de Saint-Maur-des-Fossés, en Francia, donde obtuvo diplomas de excelencia en órgano bajo la guía del maestro Eric Lebrun, y en clavecín con Richard Siegel y Élisabeth Joyé.</p>
+        <p>A lo largo de décadas de carrera intensa, ha ofrecido recitales en México, Europa, Asia y América, ganándose el reconocimiento internacional por su virtuosismo y profundidad interpretativa. En 2019 grabó el disco <em>Cuaderno de tonos de maitines de Sor María Clara del Santísimo Sacramento</em> para el sello italiano Linae Occultae, rescatando el legado de esta compositora novohispana.</p>
+        <p>Es fundador de festivales de órgano que han posicionado a México en el mapa de la música antigua: el Festival Internacional de Órgano de la Ciudad de México, el Festival Nacional de Órgano de Santa Prisca en Taxco y el Festival Internacional del Santuario Guadalupano de Zamora. Su labor docente en el Conservatorio Nacional de Música forma a la siguiente generación de organistas del país.</p>
+      </div>
+      <div data-lang="en">
+        <p>Víctor Contreras is widely recognized as one of Mexico's most internationally prominent organists. Born in Tultepec, State of Mexico, he studied at the Conservatoire de Saint-Maur-des-Fossés in France, earning diplomas of excellence in organ under Eric Lebrun, and in harpsichord with Richard Siegel and Élisabeth Joyé.</p>
+        <p>Over decades of intensive career, he has performed recitals across Mexico, Europe, Asia and the Americas. In 2019 he recorded <em>Cuaderno de tonos de maitines by Sor María Clara del Santísimo Sacramento</em> for the Italian label Linae Occultae, rescuing the legacy of this New Spanish composer.</p>
+        <p>He is founder of organ festivals that placed Mexico on the map of early music: the International Organ Festival of Mexico City, the National Festival of Santa Prisca in Taxco, and the Guadalupan Sanctuary Festival in Zamora. He teaches at the National Conservatory of Music and the Escuela Superior de Música.</p>
+      </div>
+      <div data-lang="fr">
+        <p>Víctor Contreras est largement reconnu comme l'un des organistes mexicains les plus importants sur la scène internationale. Il a étudié au Conservatoire de Saint-Maur-des-Fossés en France, où il a obtenu des diplômes en orgue avec Eric Lebrun et en clavecin avec Richard Siegel et Élisabeth Joyé.</p>
+        <p>Au cours de décennies de carrière intense, il a donné des récitals au Mexique, en Europe, en Asie et dans les Amériques. En 2019, il a enregistré le disque <em>Cuaderno de tonos de maitines de Sor María Clara del Santísimo Sacramento</em> pour le label italien Linae Occultae.</p>
+      </div>
+      <div data-lang="it">
+        <p>Víctor Contreras è ampiamente riconosciuto come uno degli organisti messicani di maggiore proiezione internazionale. Ha studiato al Conservatorio di Saint-Maur-des-Fossés in Francia, ottenendo diplomi in organo con Eric Lebrun e in clavicembalo con Richard Siegel ed Élisabeth Joyé.</p>
+        <p>Nel corso di decenni di intensa carriera, ha tenuto recital in Messico, Europa, Asia e nelle Americhe. Nel 2019 ha inciso il disco <em>Cuaderno de tonos de maitines di Sor María Clara</em> per l'etichetta italiana Linae Occultae.</p>
+      </div>
+    </div>
+    <div class="bio-img">
+      <div class="bio-img-placeholder">
+        <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+          <rect x="20" y="8"  width="5" height="56" rx="2.5" fill="rgba(158,184,208,0.2)"/>
+          <rect x="29" y="16" width="5" height="48" rx="2.5" fill="rgba(158,184,208,0.2)"/>
+          <rect x="38" y="10" width="6" height="54" rx="3"   fill="rgba(158,184,208,0.2)"/>
+          <rect x="48" y="20" width="4" height="44" rx="2"   fill="rgba(158,184,208,0.15)"/>
+          <rect x="56" y="14" width="4" height="50" rx="2"   fill="rgba(158,184,208,0.12)"/>
+        </svg>
+        <p style="font-family:'IM Fell English',serif; font-style:italic; font-size:0.72rem; color:rgba(158,184,208,0.3); text-align:center;">Foto · Víctor Contreras</p>
+      </div>
+    </div>
+  </div>
+  <div class="bio-facts reveal">
+    <div class="bio-fact"><span class="bio-fact-num">25+</span><span class="bio-fact-label"><span class="inline-lang lang-active">Años de carrera</span><span class="inline-lang">Years of career</span><span class="inline-lang">Années de carrière</span><span class="inline-lang">Anni di carriera</span></span></div>
+    <div class="bio-fact"><span class="bio-fact-num">3</span><span class="bio-fact-label"><span class="inline-lang lang-active">Festivales fundados</span><span class="inline-lang">Founded festivals</span><span class="inline-lang">Festivals fondés</span><span class="inline-lang">Festival fondati</span></span></div>
+    <div class="bio-fact"><span class="bio-fact-num">4</span><span class="bio-fact-label"><span class="inline-lang lang-active">Continentes</span><span class="inline-lang">Continents</span><span class="inline-lang">Continents</span><span class="inline-lang">Continenti</span></span></div>
+  </div>
+</section>
+
+<span class="silver-rule-full"></span>
+
+<!-- ════════════════════════ ACTIVITIES ════════════════════════ -->
+<div class="activities-wrap">
+  <div class="activities-inner" id="activities">
+    <div class="reveal">
+      <p class="section-label"><span class="inline-lang lang-active">Tres vocaciones</span><span class="inline-lang">Three vocations</span><span class="inline-lang">Trois vocations</span><span class="inline-lang">Tre vocazioni</span></p>
+      <h2 class="section-title"><span class="inline-lang lang-active"><em>Arte</em> y Oficio</span><span class="inline-lang"><em>Art</em> and Craft</span><span class="inline-lang"><em>Art</em> et Métier</span><span class="inline-lang"><em>Arte</em> e Mestiere</span></h2>
+    </div>
+    <div class="activities-grid reveal">
+      <div class="activity-card">
+        <span class="activity-icon">♪</span>
+        <h3 class="activity-title"><span class="inline-lang lang-active">Órgano</span><span class="inline-lang">Organ</span><span class="inline-lang">Orgue</span><span class="inline-lang">Organo</span></h3>
+        <p class="activity-text"><span class="inline-lang lang-active">Solista de vocación, intérprete de órganos históricos en catedrales y festivales de Europa, México y América. Primer lugar en el Concurso de Órgano Barroco "Guillermo Pinto" y laureado en el "José Nazarre" (2008). Estudió con Eric Lebrun en Saint-Maur-des-Fossés, Francia.</span><span class="inline-lang">A dedicated soloist and interpreter of historic organs in cathedrals and festivals throughout Europe, Mexico and the Americas. First prize at the "Guillermo Pinto" Baroque Organ Competition (2008). Studied with Eric Lebrun in France.</span><span class="inline-lang">Soliste et interprète d'orgues historiques en cathédrales et festivals en Europe, Mexique et Amériques. Premier prix au Concours "Guillermo Pinto" (2008).</span><span class="inline-lang">Solista e interprete di organi storici in cattedrali e festival in Europa, Messico e Americhe. Primo premio al Concorso "Guillermo Pinto" (2008).</span></p>
+      </div>
+      <div class="activity-card">
+        <span class="activity-icon">♫</span>
+        <h3 class="activity-title"><span class="inline-lang lang-active">Clavecín</span><span class="inline-lang">Harpsichord</span><span class="inline-lang">Clavecin</span><span class="inline-lang">Clavicembalo</span></h3>
+        <p class="activity-text"><span class="inline-lang lang-active">Formado con Richard Siegel y Élisabeth Joyé en Saint-Maur-des-Fossés. Profesor de Clavecín del Conservatorio Nacional de Música (INBAL) desde 2023. Especialista en música de tecla del Barroco europeo y novohispano.</span><span class="inline-lang">Trained with Richard Siegel and Élisabeth Joyé. Harpsichord Professor at the National Conservatory of Music (INBAL) since 2023. Specialist in European and New Spanish Baroque keyboard music.</span><span class="inline-lang">Formé avec Richard Siegel et Élisabeth Joyé. Professeur de clavecin au Conservatoire National de Musique (INBAL) depuis 2023.</span><span class="inline-lang">Formatosi con Richard Siegel ed Élisabeth Joyé. Professore di Clavicembalo al Conservatorio Nazionale di Musica (INBAL) dal 2023.</span></p>
+      </div>
+      <div class="activity-card">
+        <span class="activity-icon">♬</span>
+        <h3 class="activity-title"><span class="inline-lang lang-active">Dirección</span><span class="inline-lang">Conducting</span><span class="inline-lang">Direction</span><span class="inline-lang">Direzione</span></h3>
+        <p class="activity-text"><span class="inline-lang lang-active">Fundador y director de la Orquesta Barroca del Conservatorio Nacional de Música (2017) y de la Orquesta Sinfónica Juvenil de Tultepec (2022). Ha dirigido la Sinfónica 5 de Mayo de Puebla y la Orquesta Estanislao Mejía de la FAM UNAM.</span><span class="inline-lang">Founder and director of the Baroque Orchestra of the National Conservatory of Music (2017) and the Youth Symphony Orchestra of Tultepec (2022). Has conducted major Mexican orchestras.</span><span class="inline-lang">Fondateur et directeur de l'Orchestre Baroque du Conservatoire National de Musique (2017) et de l'Orchestre Symphonique de Jeunes de Tultepec (2022).</span><span class="inline-lang">Fondatore e direttore dell'Orchestra Barocca del Conservatorio Nazionale di Musica (2017) e dell'Orchestra Sinfonica Giovanile di Tultepec (2022).</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<span class="silver-rule-full"></span>
+
+<!-- ════════════════════════ VIDEOS ════════════════════════ -->
+<section id="videos">
+  <div class="reveal">
+    <p class="section-label">@victororganum</p>
+    <h2 class="section-title"><span class="inline-lang lang-active"><em>En</em> Concierto</span><span class="inline-lang"><em>In</em> Concert</span><span class="inline-lang"><em>En</em> Concert</span><span class="inline-lang"><em>In</em> Concerto</span></h2>
+  </div>
+  <div class="videos-grid reveal">
+    <div><div class="video-wrapper"><iframe src="https://www.youtube.com/embed/cai7zmwvKxo" allowfullscreen loading="lazy"></iframe></div></div>
+    <div><div class="video-wrapper"><iframe src="https://www.youtube.com/embed/j8nBsC_h_Kc" allowfullscreen loading="lazy"></iframe></div></div>
+    <div><div class="video-wrapper"><iframe src="https://www.youtube.com/embed/DNiyH3ausA4" allowfullscreen loading="lazy"></iframe></div></div>
+    <div><div class="video-wrapper"><iframe src="https://www.youtube.com/embed/XLhfAS1Q9nM" allowfullscreen loading="lazy"></iframe></div></div>
+  </div>
+  <div style="text-align:center; margin-top:40px;" class="reveal">
+    <a href="https://www.youtube.com/@victororganum" target="_blank" class="hero-cta" style="animation:none; opacity:1;">
+      <span class="inline-lang lang-active">Ver más en YouTube</span><span class="inline-lang">Watch more on YouTube</span><span class="inline-lang">Voir plus sur YouTube</span><span class="inline-lang">Guarda altri su YouTube</span>
+    </a>
+  </div>
+</section>
+
+<span class="silver-rule-full"></span>
+
+<!-- ════════════════════════ ORCHESTRA ════════════════════════ -->
+<div class="orch-wrap">
+  <div class="orch-inner" id="orchestra">
+    <div class="reveal">
+      <p class="section-label">Conservatorio Nacional de Música · INBAL</p>
+      <h2 class="section-title"><span class="inline-lang lang-active">Orquesta <em>Barroca</em></span><span class="inline-lang"><em>Baroque</em> Orchestra</span><span class="inline-lang">Orchestre <em>Baroque</em></span><span class="inline-lang">Orchestra <em>Barocca</em></span></h2>
+    </div>
+    <div class="orchestra-layout reveal">
+      <div>
+        <div class="orchestra-img-placeholder">
+          <svg width="54" height="54" viewBox="0 0 54 54" fill="none">
+            <circle cx="27" cy="27" r="25" stroke="rgba(158,184,208,0.18)" stroke-width="1"/>
+            <path d="M12 42 Q27 12 42 42" stroke="rgba(158,184,208,0.25)" stroke-width="1.5" fill="none"/>
+            <circle cx="27" cy="20" r="2.5" fill="rgba(158,184,208,0.18)"/>
+          </svg>
+          <p style="font-family:'IM Fell English',serif; font-style:italic; font-size:0.72rem; color:rgba(158,184,208,0.28); margin-top:10px;">Orquesta Barroca · CNM</p>
+        </div>
+      </div>
+      <div>
+        <div data-lang="es" class="lang-active" style="font-size:1rem; color:var(--cream-dim); line-height:1.88;">
+          <p>Fundada en 2017 por Víctor Contreras, la Orquesta Barroca del Conservatorio Nacional de Música interpreta el repertorio del Barroco y el Clasicismo con criterios de interpretación históricamente informada, utilizando instrumentos de época o copias.</p>
+          <p style="margin-top:1em;">El ensemble se ha presentado en los foros más importantes de México, acercando el patrimonio musical de los siglos XVII y XVIII a nuevas audiencias y formando intérpretes especializados en la práctica histórica.</p>
+        </div>
+        <div data-lang="en" style="font-size:1rem; color:var(--cream-dim); line-height:1.88;">
+          <p>Founded in 2017 by Víctor Contreras, the Baroque Orchestra of the National Conservatory performs Baroque and Classical repertoire with historically informed practice, using period instruments or copies.</p>
+          <p style="margin-top:1em;">The ensemble has appeared at Mexico's most important venues, bringing the musical heritage of the 17th and 18th centuries to new audiences.</p>
+        </div>
+        <div data-lang="fr" style="font-size:1rem; color:var(--cream-dim); line-height:1.88;"><p>Fondé en 2017 par Víctor Contreras, l'Orchestre Baroque interprète le répertoire baroque et classique selon des pratiques historiquement informées, en utilisant des instruments d'époque ou des copies.</p></div>
+        <div data-lang="it" style="font-size:1rem; color:var(--cream-dim); line-height:1.88;"><p>Fondata nel 2017 da Víctor Contreras, l'Orchestra Barocca esegue il repertorio barocco e classico con prassi esecutiva storicamente informata, utilizzando strumenti d'epoca o copie.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<span class="silver-rule-full"></span>
+
+<!-- ════════════════════════ CONCERTS ════════════════════════ -->
+<section id="concerts">
+  <div class="reveal">
+    <p class="section-label">Agenda 2025</p>
+    <h2 class="section-title"><span class="inline-lang lang-active"><em>Próximos</em> Conciertos</span><span class="inline-lang"><em>Upcoming</em> Concerts</span><span class="inline-lang"><em>Prochains</em> Concerts</span><span class="inline-lang"><em>Prossimi</em> Concerti</span></h2>
+  </div>
+  <div class="concerts-list reveal">
+    <div class="concert-item">
+      <div class="concert-date">APR<span>2025</span></div>
+      <div class="concert-info"><h4>Festival Internacional de Órgano Siciliano</h4><p>Catedral de Messina, Italia</p></div>
+      <div class="concert-flag">🇮🇹</div>
+    </div>
+    <div class="concert-item">
+      <div class="concert-date">9 ABR<span>2025</span></div>
+      <div class="concert-info"><h4>Iglesia de San Maximiliano Kolbe</h4><p>Płońsk, Polonia</p></div>
+      <div class="concert-flag">🇵🇱</div>
+    </div>
+    <div class="concert-item">
+      <div class="concert-date">APR<span>2025</span></div>
+      <div class="concert-info"><h4>Concierto de Órgano</h4><p>Joensuu, Finlandia</p></div>
+      <div class="concert-flag">🇫🇮</div>
+    </div>
+    <div class="concert-item">
+      <div class="concert-date">11 ABR<span>2025</span></div>
+      <div class="concert-info"><h4>Rogoredo in Musica · Iglesia de la Sagrada Familia</h4><p>Milán, Italia</p></div>
+      <div class="concert-flag">🇮🇹</div>
+    </div>
+    <div class="concert-item">
+      <div class="concert-date">7 JUN<span>2024</span></div>
+      <div class="concert-info"><h4>18° Festival Internazionale di Arona</h4><p>Chiesa di Santa Maria, Arona, Italia</p></div>
+      <div class="concert-flag">🇮🇹</div>
+    </div>
+  </div>
+</section>
+
+<span class="silver-rule-full"></span>
+
+<!-- ════════════════════════ DISCOGRAPHY ════════════════════════ -->
+<div class="disc-wrap">
+  <div class="disc-inner" id="discography">
+    <div class="reveal">
+      <p class="section-label">Linae Occultae · 2019</p>
+      <h2 class="section-title"><span class="inline-lang lang-active"><em>Disco</em>grafía</span><span class="inline-lang"><em>Disco</em>graphy</span><span class="inline-lang"><em>Disco</em>graphie</span><span class="inline-lang"><em>Disco</em>grafia</span></h2>
+    </div>
+    <div class="disc-layout reveal">
+      <div class="disc-cover">
+        <span style="font-family:'Cormorant Garamond',serif; font-size:0.63rem; letter-spacing:0.32em; text-transform:uppercase; color:var(--silver-dim); display:block; margin-bottom:18px;">Linae Occultae</span>
+        <div style="width:36px; height:1px; background:var(--silver-dim); margin:0 auto 18px;"></div>
+        <span style="font-family:'IM Fell English',serif; font-style:italic; font-size:0.95rem; color:var(--cream); line-height:1.45; display:block;">Cuaderno de tonos de maitines</span>
+        <div style="width:36px; height:1px; background:var(--silver-dim); margin:18px auto;"></div>
+        <span style="font-size:0.62rem; letter-spacing:0.14em; color:var(--text-dim); display:block; line-height:1.6;">SOR MARÍA CLARA<br>DEL SANTÍSIMO SACRAMENTO</span>
+        <div style="width:36px; height:1px; background:var(--silver-dim); margin:18px auto 14px;"></div>
+        <span style="font-size:0.58rem; letter-spacing:0.2em; color:var(--silver-dim); display:block;">VÍCTOR CONTRERAS, órgano</span>
+      </div>
+      <div>
+        <h3 class="disc-title">Cuaderno de tonos de maitines de Sor María Clara del Santísimo Sacramento</h3>
+        <p class="disc-composer">Sor María Clara del Santísimo Sacramento</p>
+        <div class="disc-text">
+          <div data-lang="es" class="lang-active">
+            <p>Grabado en 2019 para el sello discográfico italiano Linae Occultae, este álbum supone la primera grabación integral de una obra única en la historia de la música novohispana. Víctor Contreras rescató y dio vida al legado de la compositora Sor María Clara del Santísimo Sacramento, cuyas obras habían permanecido inéditas durante siglos.</p>
+            <p>En 2017, Víctor interpretó por primera vez de manera integral este Cuaderno en el Santuario de Nuestra Señora del Soviore, Monterosso al Mare, Liguria, Italia.</p>
+          </div>
+          <div data-lang="en">
+            <p>Recorded in 2019 for the Italian label Linae Occultae, this album represents the first complete recording of a unique work in the history of New Spanish music. Víctor Contreras rescued and brought to life the legacy of composer Sor María Clara del Santísimo Sacramento, whose works had remained unrecorded for centuries.</p>
+            <p>In 2017, Víctor gave the world premiere of the complete Cuaderno at the Sanctuary of Our Lady of Soviore in Monterosso al Mare, Liguria, Italy.</p>
+          </div>
+          <div data-lang="fr"><p>Enregistré en 2019 pour le label italien Linae Occultae, cet album constitue le premier enregistrement intégral d'une œuvre unique dans l'histoire de la musique néo-hispanique. Víctor Contreras a sauvé et donné vie au legs de la compositrice Sor María Clara del Santísimo Sacramento, dont les œuvres étaient restées inédites pendant des siècles.</p></div>
+          <div data-lang="it"><p>Registrato nel 2019 per l'etichetta italiana Linae Occultae, questo album costituisce la prima registrazione integrale di un'opera unica nella storia della musica neoispana di Sor María Clara del Santísimo Sacramento, le cui opere erano rimaste inedite per secoli.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<span class="silver-rule-full"></span>
+
+<!-- ════════════════════════ CONTACT ════════════════════════ -->
+<section id="contact">
+  <div class="reveal">
+    <p class="section-label">Tultepec, México</p>
+    <h2 class="section-title"><span class="inline-lang lang-active"><em>Contacto</em></span><span class="inline-lang"><em>Contact</em></span><span class="inline-lang"><em>Contact</em></span><span class="inline-lang"><em>Contatto</em></span></h2>
+  </div>
+  <div class="contact-layout reveal">
+    <div class="contact-info">
+      <h3>
+        <span class="inline-lang lang-active">Conciertos, masterclasses,<br>festivales y prensa</span>
+        <span class="inline-lang">Concerts, masterclasses,<br>festivals and press</span>
+        <span class="inline-lang">Concerts, masterclasses,<br>festivals et presse</span>
+        <span class="inline-lang">Concerti, masterclass,<br>festival e stampa</span>
+      </h3>
+      <div class="contact-detail">
+        <span class="contact-detail-icon">✉</span>
+        <div><a href="mailto:victoropus24@yahoo.com.mx">victoropus24@yahoo.com.mx</a></div>
+      </div>
+      <div class="contact-detail">
+        <span class="contact-detail-icon">☏</span>
+        <div><a href="tel:+5255321740801">+52 55 3217 4080</a></div>
+      </div>
+
+      <!-- SOCIAL LINKS — YouTube + Facebook + Instagram -->
+      <div class="social-links">
+        <a href="https://www.youtube.com/@victororganum" target="_blank" class="social-link">
+          <!-- YouTube icon -->
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.5v-7l6.5 3.5-6.5 3.5z"/></svg>
+          YouTube
+        </a>
+        <a href="https://www.facebook.com/victororganist" target="_blank" class="social-link">
+          <!-- Facebook icon -->
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.95.93-1.95 1.88v2.27h3.32l-.53 3.49h-2.79V24C19.61 23.1 24 18.1 24 12.07z"/></svg>
+          Facebook
+        </a>
+        <a href="https://www.instagram.com/victororganist/" target="_blank" class="social-link">
+          <!-- Instagram icon -->
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+          Instagram
+        </a>
+      </div>
+    </div>
+
+    <div>
+      <form id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label><span class="inline-lang lang-active">Nombre</span><span class="inline-lang">Name</span><span class="inline-lang">Nom</span><span class="inline-lang">Nome</span></label>
+            <input type="text" name="name" required />
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label><span class="inline-lang lang-active">Asunto</span><span class="inline-lang">Subject</span><span class="inline-lang">Sujet</span><span class="inline-lang">Oggetto</span></label>
+          <select name="subject">
+            <option value="">—</option>
+            <option value="concert">Concierto / Recital</option>
+            <option value="masterclass">Masterclass</option>
+            <option value="festival">Festival</option>
+            <option value="media">Press / Media</option>
+            <option value="other"><span class="inline-lang lang-active">Otro</span><span class="inline-lang">Other</span><span class="inline-lang">Autre</span><span class="inline-lang">Altro</span></option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label><span class="inline-lang lang-active">Mensaje</span><span class="inline-lang">Message</span><span class="inline-lang">Message</span><span class="inline-lang">Messaggio</span></label>
+          <textarea name="message" required></textarea>
+        </div>
+        <button type="submit" class="btn-send">
+          <span class="inline-lang lang-active">Enviar</span><span class="inline-lang">Send</span><span class="inline-lang">Envoyer</span><span class="inline-lang">Invia</span>
+        </button>
+        <div class="form-success" id="formSuccess">
+          <span class="inline-lang lang-active">Mensaje enviado. ¡Gracias!</span><span class="inline-lang">Message sent. Thank you!</span><span class="inline-lang">Message envoyé. Merci !</span><span class="inline-lang">Messaggio inviato. Grazie!</span>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p class="footer-name">Víctor Contreras</p>
+  <span class="silver-rule" style="margin-bottom:16px; display:block;"></span>
+  <p>
+    <span class="inline-lang lang-active">© 2025 · Organista · Clavecinista · Director de Orquesta · México</span>
+    <span class="inline-lang">© 2025 · Organist · Harpsichordist · Conductor · Mexico</span>
+    <span class="inline-lang">© 2025 · Organiste · Claveciniste · Chef d'orchestre · Mexique</span>
+    <span class="inline-lang">© 2025 · Organista · Clavicembalista · Direttore · Messico</span>
+  </p>
+</footer>
+
+<script>
+  let currentLang = 'es';
+
+  // Organ pipes in hero
+  (function() {
+    const container = document.getElementById('hero-pipes');
+    if (!container) return;
+    const pipes = [
+      {h:480,w:24},{h:360,w:18},{h:520,w:28},{h:300,w:14},{h:560,w:30},
+      {h:320,w:16},{h:500,w:26},{h:380,w:20},{h:460,w:22},{h:280,w:13},
+      {h:540,w:28},{h:340,w:17},{h:490,w:24},{h:310,w:15},{h:550,w:26},
+      {h:270,w:12},{h:430,w:20}
+    ];
+    pipes.forEach(p => {
+      const el = document.createElement('div');
+      el.className = 'pipe';
+      el.style.cssText = `width:${p.w}px; height:${p.h}px; flex-shrink:0;`;
+      container.appendChild(el);
+    });
+  })();
+
+  function setLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll('#lang-bar button').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn-' + lang).classList.add('active');
+    document.querySelectorAll('[data-lang]').forEach(el => {
+      el.classList.toggle('lang-active', el.dataset.lang === lang);
+    });
+    const langOrder = ['es', 'en', 'fr', 'it'];
+    const idx = langOrder.indexOf(lang);
+    const parentSet = new Set();
+    document.querySelectorAll('.inline-lang').forEach(el => parentSet.add(el.parentElement));
+    parentSet.forEach(parent => {
+      if (!parent) return;
+      const spans = parent.querySelectorAll(':scope > .inline-lang');
+      spans.forEach((s, i) => s.classList.toggle('lang-active', i === idx));
+    });
+    document.documentElement.lang = lang;
+  }
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Contact form (preview — shows success locally)
+  document.getElementById('contactForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    e.target.reset();
+    const success = document.getElementById('formSuccess');
+    success.style.display = 'block';
+    const langOrder = ['es', 'en', 'fr', 'it'];
+    const idx = langOrder.indexOf(currentLang);
+    success.querySelectorAll('.inline-lang').forEach((s, i) => s.classList.toggle('lang-active', i === idx));
+  });
+</script>
+</body>
+</html>
