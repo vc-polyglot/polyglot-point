@@ -1,0 +1,12 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY packages/orquesta-tultepec/package.json ./
+RUN npm install --omit=dev
+
+COPY packages/orquesta-tultepec/ ./
+
+EXPOSE 3004
+
+CMD ["node", "backend/index.js"]

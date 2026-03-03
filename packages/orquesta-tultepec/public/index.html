@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orquesta Sinfónica Juvenil de Tultepec</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --negro:   #0a0a0a;
+      --blanco:  #f5f4f0;
+      --gris-f:  #f0eeea;
+      --gris-m:  #888480;
+      --gris-t:  #c8c4be;
+      --ff-t:    'Playfair Display',Georgia,serif;
+      --ff-b:    'Montserrat',sans-serif;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--negro);color:var(--blanco);font-family:var(--ff-b);font-weight:300;line-height:1.7;overflow-x:hidden}
+
+    /* ─── NAV ─────────────────────────────────────────── */
+    nav{
+      position:fixed;top:0;left:0;right:0;z-index:200;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:1.1rem 4vw;
+      mix-blend-mode:normal;
+      transition:background .4s,border-color .4s;
+    }
+    nav.light{background:rgba(245,244,240,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,0,0,.08)}
+    nav.dark {background:rgba(10,10,10,.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06)}
+    .nav-logo{display:flex;align-items:center;gap:.8rem;text-decoration:none}
+    .nav-logo img{height:36px;width:auto;transition:filter .4s}
+    nav.light .nav-logo img{filter:none}
+    nav.dark  .nav-logo img{filter:invert(1)}
+    .nav-logo-text{font-family:var(--ff-t);font-size:.9rem;font-weight:600;line-height:1.2;transition:color .4s}
+    nav.light .nav-logo-text{color:var(--negro)}
+    nav.dark  .nav-logo-text{color:var(--blanco)}
+    .nav-logo-text span{display:block;font-size:.52rem;letter-spacing:.22em;font-family:var(--ff-b);font-weight:400;text-transform:uppercase;margin-top:.1rem;transition:color .4s}
+    nav.light .nav-logo-text span{color:#888}
+    nav.dark  .nav-logo-text span{color:var(--gris-t)}
+    .nav-links{display:flex;gap:2.2rem;list-style:none}
+    .nav-links a{text-decoration:none;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;font-weight:500;transition:color .25s,opacity .25s}
+    nav.light .nav-links a{color:#555}
+    nav.dark  .nav-links a{color:var(--gris-t)}
+    .nav-links a:hover{opacity:1 !important;color:inherit}
+    nav.light .nav-links a:hover{color:var(--negro)}
+    nav.dark  .nav-links a:hover{color:var(--blanco)}
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+    .hamburger span{display:block;width:22px;height:1.5px;transition:.3s}
+    nav.light .hamburger span{background:var(--negro)}
+    nav.dark  .hamburger span{background:var(--blanco)}
+
+    /* ─── HERO — negro ────────────────────────────────── */
+    #hero{
+      position:relative;min-height:100vh;
+      display:flex;align-items:flex-end;
+      background:var(--negro);overflow:hidden;
+      padding:0 4vw 5rem;
+    }
+    .hero-photo{
+      position:absolute;inset:0;
+      background-image:url('galeria-sinfonica/hero.jpg');
+      background-size:cover;background-position:center top;
+      opacity:.22;filter:grayscale(60%);
+    }
+    .hero-overlay{
+      position:absolute;inset:0;
+      background:linear-gradient(to top, rgba(10,10,10,1) 0%, rgba(10,10,10,.6) 40%, rgba(10,10,10,.1) 100%);
+    }
+    .hero-inner{position:relative;z-index:2;max-width:1100px;width:100%}
+    .hero-pretag{
+      display:inline-block;font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;
+      color:var(--gris-t);border-top:1px solid rgba(255,255,255,.2);
+      padding-top:.7rem;margin-bottom:1.8rem;font-weight:500;
+      animation:fadeUp .9s .2s both;
+    }
+    .hero-logo-img{
+      display:block;max-height:72px;width:auto;
+      margin-bottom:2rem;filter:invert(0);
+      animation:fadeUp .9s .3s both;
+    }
+    .hero-title{
+      font-family:var(--ff-t);
+      font-size:clamp(3.5rem,9vw,8.5rem);
+      font-weight:700;line-height:.98;
+      letter-spacing:-.02em;
+      color:var(--blanco);
+      animation:fadeUp .9s .35s both;
+    }
+    .hero-title em{display:block;font-style:italic;font-weight:400;color:var(--gris-t)}
+    .hero-bottom{
+      display:flex;align-items:flex-end;justify-content:space-between;
+      flex-wrap:wrap;gap:1.5rem;
+      margin-top:3rem;
+      animation:fadeUp .9s .55s both;
+    }
+    .hero-frase{
+      font-family:var(--ff-t);font-style:italic;
+      font-size:clamp(.9rem,1.8vw,1.15rem);
+      color:var(--gris-t);max-width:480px;line-height:1.6;
+    }
+    .hero-ctas{display:flex;gap:.8rem;flex-wrap:wrap;align-items:center}
+    .btn-blanco{
+      background:var(--blanco);color:var(--negro);
+      padding:.8rem 2.2rem;font-family:var(--ff-b);
+      font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
+      text-decoration:none;border:none;cursor:pointer;
+      transition:background .3s,transform .2s;
+    }
+    .btn-blanco:hover{background:var(--gris-f);transform:translateY(-2px)}
+    .btn-ghost-blanco{
+      background:transparent;color:var(--blanco);
+      padding:.8rem 2.2rem;border:1px solid rgba(255,255,255,.3);
+      font-family:var(--ff-b);font-size:.68rem;letter-spacing:.14em;
+      text-transform:uppercase;font-weight:400;text-decoration:none;
+      transition:border-color .3s,transform .2s;cursor:pointer;
+    }
+    .btn-ghost-blanco:hover{border-color:var(--blanco);transform:translateY(-2px)}
+
+    /* número de sección decorativo */
+    .sec-num{
+      font-family:var(--ff-t);font-size:clamp(5rem,12vw,10rem);
+      font-weight:700;line-height:1;letter-spacing:-.04em;
+      opacity:.06;position:absolute;top:-1.5rem;right:4vw;
+      pointer-events:none;user-select:none;
+    }
+
+    /* ─── QUIÉNES — blanco ────────────────────────────── */
+    #quienes{
+      position:relative;background:var(--blanco);
+      padding:8rem 4vw;color:var(--negro);overflow:hidden;
+    }
+    .quienes-grid{display:grid;grid-template-columns:5fr 4fr;gap:6rem;align-items:start;max-width:1200px;margin:0 auto}
+    .sec-label{font-size:.58rem;letter-spacing:.36em;text-transform:uppercase;font-weight:600;margin-bottom:1rem;opacity:.5}
+    .sec-title{font-family:var(--ff-t);font-size:clamp(2.4rem,4.5vw,4rem);font-weight:700;line-height:1.06;margin-bottom:.4rem;letter-spacing:-.01em}
+    .sec-title em{font-style:italic;font-weight:400}
+    .line{width:40px;height:1.5px;margin:2rem 0;opacity:.25}
+    .quienes-texto p{font-size:.9rem;color:#444;margin-bottom:1.4rem;line-height:1.95;max-width:520px}
+    .firma-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:2.5rem}
+    .firma-item{border-left:1.5px solid rgba(0,0,0,.15);padding-left:.9rem}
+    .firma-item strong{display:block;font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;opacity:.5;margin-bottom:.2rem;font-weight:600}
+    .firma-item span{font-family:var(--ff-t);font-style:italic;font-size:.95rem;color:var(--negro)}
+    .escenarios{margin-top:2.5rem}
+    .escenarios strong{font-size:.58rem;letter-spacing:.26em;text-transform:uppercase;opacity:.4}
+    .escenarios ul{margin-top:.6rem;list-style:none;display:flex;flex-wrap:wrap;gap:.35rem}
+    .escenarios ul li{font-size:.72rem;background:rgba(0,0,0,.05);padding:.24rem .65rem;color:#444}
+    /* foto lateral */
+    .quienes-foto-col{position:relative;padding-top:4rem}
+    .quienes-foto{
+      width:100%;aspect-ratio:3/4;overflow:hidden;
+      box-shadow:20px 20px 0 rgba(0,0,0,.08);
+    }
+    .quienes-foto img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+    .quienes-foto:hover img{transform:scale(1.03)}
+    .foto-placeholder{width:100%;height:100%;background:var(--gris-f);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.8rem;color:var(--gris-m)}
+    .foto-placeholder .ic{font-size:3rem;opacity:.25}
+    .foto-placeholder p{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;opacity:.35}
+    /* big quote decorativo */
+    .quienes-quote{
+      position:absolute;bottom:-2rem;left:-1rem;
+      font-family:var(--ff-t);font-size:10rem;line-height:1;
+      color:rgba(0,0,0,.04);pointer-events:none;user-select:none;
+    }
+
+    /* ─── REPERTORIO — negro ──────────────────────────── */
+    #repertorio{
+      position:relative;background:var(--negro);
+      padding:8rem 4vw;color:var(--blanco);overflow:hidden;
+    }
+    .rep-header{max-width:1200px;margin:0 auto 4rem}
+    .rep-foto{width:100%;max-width:1200px;margin:0 auto 4rem;position:relative;overflow:hidden;height:420px}
+    .rep-foto img{width:100%;height:100%;object-fit:cover;filter:grayscale(30%);transition:transform .8s}
+    .rep-foto:hover img{transform:scale(1.02)}
+    .rep-foto-ph{height:100%;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.8rem;color:rgba(255,255,255,.2)}
+    .rep-foto::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,rgba(10,10,10,.5) 0%,transparent 20%,transparent 80%,rgba(10,10,10,.5) 100%)}
+    .rep-grid{display:grid;grid-template-columns:repeat(4,1fr);max-width:1200px;margin:0 auto;border-top:1px solid rgba(255,255,255,.1)}
+    .rep-item{
+      padding:2.5rem 2rem;border-right:1px solid rgba(255,255,255,.07);
+      border-bottom:1px solid rgba(255,255,255,.07);
+      transition:background .3s;
+    }
+    .rep-item:last-child{border-right:none}
+    .rep-item:hover{background:rgba(255,255,255,.03)}
+    .rep-num{font-family:var(--ff-t);font-size:3rem;font-weight:700;color:rgba(255,255,255,.08);line-height:1;margin-bottom:1rem}
+    .rep-item h3{font-family:var(--ff-t);font-size:1.15rem;font-weight:600;color:var(--blanco);margin-bottom:1.2rem}
+    .rep-item ul{list-style:none}
+    .rep-item ul li{font-size:.76rem;color:var(--gris-t);padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
+    .rep-item ul li::before{content:'/ ';opacity:.3}
+
+    /* ─── SOLISTAS — blanco ───────────────────────────── */
+    #solistas{
+      position:relative;background:var(--blanco);
+      padding:8rem 4vw;color:var(--negro);overflow:hidden;
+    }
+    .sol-header{max-width:1200px;margin:0 auto 4rem;display:flex;justify-content:space-between;align-items:flex-end;gap:2rem}
+    .sol-intro{max-width:420px;font-size:.88rem;color:#555;line-height:1.9;margin-top:1.5rem}
+    .solistas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));max-width:1200px;margin:0 auto;border:1px solid rgba(0,0,0,.08)}
+    .solista-card{
+      padding:2.2rem 2rem;border-right:1px solid rgba(0,0,0,.08);
+      position:relative;overflow:hidden;
+      transition:background .3s;
+    }
+    .solista-card:hover{background:var(--negro);color:var(--blanco)}
+    .solista-card:hover .sol-instrumento{color:var(--gris-t)}
+    .solista-card:hover p{color:var(--gris-t)}
+    .solista-card:last-child{border-right:none}
+    .solista-flag{font-size:1.2rem;margin-bottom:.8rem;display:block}
+    .solista-card h3{font-family:var(--ff-t);font-size:1.1rem;font-weight:600;margin-bottom:.25rem;transition:color .3s}
+    .sol-instrumento{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;opacity:.5;transition:color .3s}
+    .solista-card p{font-size:.76rem;color:#666;margin-top:.8rem;line-height:1.8;transition:color .3s}
+
+    /* ─── GALERÍA — negro ─────────────────────────────── */
+    #galeria{
+      background:var(--negro);
+      padding:8rem 4vw;color:var(--blanco);
+    }
+    .gal-header{max-width:1200px;margin:0 auto 4rem}
+    .galeria-grid{
+      display:grid;max-width:1200px;margin:0 auto;
+      grid-template-columns:repeat(12,1fr);
+      grid-auto-rows:220px;gap:4px;
+    }
+    .galeria-item{position:relative;overflow:hidden;cursor:pointer;background:rgba(255,255,255,.04)}
+    /* layout editorial: distintos tamaños */
+    .galeria-item:nth-child(1){grid-column:span 7;grid-row:span 2}
+    .galeria-item:nth-child(2){grid-column:span 5}
+    .galeria-item:nth-child(3){grid-column:span 5}
+    .galeria-item:nth-child(4){grid-column:span 4}
+    .galeria-item:nth-child(5){grid-column:span 4}
+    .galeria-item:nth-child(6){grid-column:span 4}
+    .galeria-item:nth-child(n+7){grid-column:span 4}
+    .galeria-item img{width:100%;height:100%;object-fit:cover;transition:transform .7s,filter .4s;filter:grayscale(25%)}
+    .galeria-item:hover img{transform:scale(1.06);filter:grayscale(0%)}
+    .gal-overlay{position:absolute;inset:0;background:rgba(10,10,10,0);transition:background .4s;display:flex;align-items:flex-end;padding:1rem}
+    .galeria-item:hover .gal-overlay{background:rgba(10,10,10,.45)}
+    .gal-overlay span{color:#fff;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;opacity:0;transition:opacity .3s .1s}
+    .galeria-item:hover .gal-overlay span{opacity:1}
+    .gal-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.5rem;color:rgba(255,255,255,.15)}
+    .gal-ph .ic{font-size:1.5rem;opacity:.4}
+    .gal-ph p{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;opacity:.5}
+
+    /* LIGHTBOX */
+    #lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(10,10,10,.97);align-items:center;justify-content:center}
+    #lightbox.active{display:flex}
+    #lightbox img{max-width:92vw;max-height:90vh;object-fit:contain}
+    #lb-close{position:absolute;top:1.8rem;right:2.5rem;color:var(--gris-t);font-size:1.6rem;cursor:pointer;background:none;border:none;font-family:var(--ff-b);font-weight:300;transition:color .2s}
+    #lb-close:hover{color:var(--blanco)}
+    #lb-prev,#lb-next{position:absolute;top:50%;transform:translateY(-50%);background:none;border:1px solid rgba(255,255,255,.15);color:var(--gris-t);font-size:1.2rem;padding:.7rem 1rem;cursor:pointer;transition:all .2s;font-family:var(--ff-b)}
+    #lb-prev{left:2rem}#lb-next{right:2rem}
+    #lb-prev:hover,#lb-next:hover{background:var(--blanco);color:var(--negro);border-color:var(--blanco)}
+
+    /* ─── FOOTER — negro ──────────────────────────────── */
+    footer{background:var(--negro);border-top:1px solid rgba(255,255,255,.08);padding:5rem 4vw 3rem}
+    .footer-inner{max-width:1200px;margin:0 auto}
+    .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:4rem;margin-bottom:4rem}
+    .footer-brand .f-logo-wrap{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+    .footer-brand .f-logo-wrap img{height:32px;width:auto;filter:invert(1);opacity:.7}
+    .footer-brand .f-logo-name{font-family:var(--ff-t);font-size:.95rem;color:rgba(255,255,255,.7);font-weight:600}
+    .footer-brand p{color:var(--gris-m);font-size:.76rem;line-height:1.85;max-width:260px}
+    .redes{display:flex;gap:.5rem;margin-top:1.6rem}
+    .red-link{width:30px;height:30px;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;color:var(--gris-m);font-size:.75rem;text-decoration:none;transition:all .3s}
+    .red-link:hover{background:var(--blanco);color:var(--negro);border-color:var(--blanco)}
+    .footer-col h4{font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:1.2rem;font-weight:600}
+    .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+    .footer-col ul li a,
+    .footer-col ul li span{color:var(--gris-m);font-size:.76rem;text-decoration:none;transition:color .3s}
+    .footer-col ul li a:hover{color:var(--blanco)}
+    .footer-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+    .footer-bottom p{font-size:.68rem;color:rgba(255,255,255,.2)}
+    .footer-frase{font-family:var(--ff-t);font-style:italic;font-size:.78rem;color:rgba(255,255,255,.2)}
+
+    /* ─── MOBILE NAV ─────────────────────────────────── */
+    .nav-mobile{display:none;position:fixed;inset:0;background:var(--negro);z-index:190;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem}
+    .nav-mobile.open{display:flex}
+    .nav-mobile a{font-size:clamp(1.6rem,5vw,2.5rem);font-family:var(--ff-t);color:var(--blanco);text-decoration:none;letter-spacing:-.01em;transition:opacity .2s}
+    .nav-mobile a:hover{opacity:.5}
+    .nm-close{position:absolute;top:1.5rem;right:2rem;background:none;border:none;color:var(--gris-t);font-size:1.5rem;cursor:pointer;font-family:var(--ff-b)}
+
+    /* ─── ANIMACIONES ────────────────────────────────── */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    .reveal-delay-1{transition-delay:.1s}
+    .reveal-delay-2{transition-delay:.2s}
+    .reveal-delay-3{transition-delay:.3s}
+
+    /* ─── RESPONSIVE ─────────────────────────────────── */
+    @media(max-width:1024px){
+      .rep-grid{grid-template-columns:1fr 1fr}
+      .quienes-grid{grid-template-columns:1fr;gap:4rem}
+      .quienes-foto{aspect-ratio:16/9}
+      .sol-header{flex-direction:column;align-items:flex-start}
+    }
+    @media(max-width:900px){
+      .nav-links{display:none}.hamburger{display:flex}
+      .galeria-grid{grid-template-columns:1fr 1fr;grid-auto-rows:200px}
+      .galeria-item:nth-child(n){grid-column:span 1;grid-row:span 1}
+      .galeria-item:nth-child(1){grid-column:span 2;grid-row:span 1}
+      .footer-top{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:600px){
+      #hero{padding:0 6vw 4rem}
+      .hero-title{font-size:clamp(2.8rem,11vw,5rem)}
+      #quienes,#repertorio,#solistas,#galeria,footer{padding:6rem 6vw}
+      .rep-grid{grid-template-columns:1fr}
+      .solistas-grid{grid-template-columns:1fr}
+      .galeria-grid{grid-template-columns:1fr;grid-auto-rows:240px}
+      .galeria-item:nth-child(n){grid-column:span 1}
+      .footer-top{grid-template-columns:1fr}
+      .footer-bottom{flex-direction:column;text-align:center}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav" class="dark">
+  <a href="#hero" class="nav-logo">
+    <img src="logo-osjut.png" alt="OSJT" id="navLogoImg"
+         onerror="this.style.display='none';document.getElementById('nlf').style.display='block';" />
+    <div class="nav-logo-text" id="nlf" style="display:none;">
+      OSJT <span>Orquesta Sinfónica Juvenil de Tultepec</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#quienes">Quiénes somos</a></li>
+    <li><a href="#repertorio">Repertorio</a></li>
+    <li><a href="#solistas">Solistas</a></li>
+    <li><a href="#galeria">Galería</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MENÚ MÓVIL -->
+<nav class="nav-mobile" id="navMobile">
+  <button class="nm-close" id="nmClose">✕</button>
+  <a href="#quienes" onclick="cerrarMenu()">Quiénes somos</a>
+  <a href="#repertorio" onclick="cerrarMenu()">Repertorio</a>
+  <a href="#solistas" onclick="cerrarMenu()">Solistas</a>
+  <a href="#galeria" onclick="cerrarMenu()">Galería</a>
+</nav>
+
+<!-- HERO — negro -->
+<section id="hero">
+  <div class="hero-photo"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-inner">
+    <div class="hero-pretag">Tultepec · Estado de México · Est. 2010</div>
+    <img src="logo-osjut.png" alt="Orquesta Sinfónica Juvenil de Tultepec"
+         class="hero-logo-img" onerror="this.style.display='none';" />
+    <h1 class="hero-title">
+      Orquesta<br>Sinfónica<br><em>Juvenil de Tultepec</em>
+    </h1>
+    <div class="hero-bottom">
+      <p class="hero-frase">Excelencia sinfónica desde Tultepec para el mundo</p>
+      <div class="hero-ctas">
+        <a href="#quienes" class="btn-blanco">Conócenos</a>
+        <a href="#galeria" class="btn-ghost-blanco">Ver galería</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUIÉNES SOMOS — blanco -->
+<section id="quienes">
+  <div class="sec-num">01</div>
+  <div class="quienes-grid">
+    <div class="quienes-texto">
+      <p class="sec-label reveal">Identidad</p>
+      <h2 class="sec-title reveal">Quiénes<br><em>somos</em></h2>
+      <div class="line reveal" style="background:var(--negro)"></div>
+      <p class="reveal">La Orquesta Sinfónica Juvenil de Tultepec nació de la convicción de que el municipio de Tultepec puede y debe tener una presencia en el más alto nivel de la vida musical de México y del mundo.</p>
+      <p class="reveal">Fundada por el maestro <strong>Gilberto Arzola</strong>, reúne a jóvenes instrumentistas con formación sólida y disciplina artística que se refleja en cada actuación. Bajo la dirección del maestro <strong>Víctor Contreras</strong>, la orquesta ha consolidado un lenguaje interpretativo propio: riguroso, expresivo y contemporáneo.</p>
+      <p class="reveal">Nuestra misión es doble: formar músicos de excelencia y llevar la música sinfónica a públicos diversos, rompiendo la distancia entre la tradición orquestal y las nuevas generaciones.</p>
+      <div class="firma-grid reveal">
+        <div class="firma-item"><strong>Director artístico</strong><span>Víctor Contreras</span></div>
+        <div class="firma-item"><strong>Fundador</strong><span>Gilberto Arzola</span></div>
+      </div>
+      <div class="escenarios reveal">
+        <strong>Escenarios destacados</strong>
+        <ul>
+          <li>Museo Soumaya</li>
+          <li>Foro Cultural Tultepec</li>
+          <li>Teatro del Estado de México</li>
+          <li>Palacio Municipal de Tultepec</li>
+        </ul>
+      </div>
+    </div>
+    <div class="quienes-foto-col reveal reveal-delay-2">
+      <div class="quienes-foto" id="quienesFoto">
+        <div class="foto-placeholder"><div class="ic">🎻</div><p>Orquesta en escena</p></div>
+      </div>
+      <div class="quienes-quote">"</div>
+    </div>
+  </div>
+</section>
+
+<!-- REPERTORIO — negro -->
+<section id="repertorio">
+  <div class="sec-num" style="color:rgba(255,255,255,1)">02</div>
+  <div class="rep-header">
+    <p class="sec-label reveal" style="color:var(--gris-t)">Programación</p>
+    <h2 class="sec-title reveal" style="color:var(--blanco)">Nuestro<br><em>repertorio</em></h2>
+    <div class="line reveal" style="background:var(--blanco)"></div>
+  </div>
+  <div class="rep-foto reveal" id="repFoto">
+    <div class="rep-foto-ph">
+      <div style="font-size:2rem;opacity:.25">🎼</div>
+      <p style="font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;opacity:.4">Foto: concierto destacado</p>
+    </div>
+  </div>
+  <div class="rep-grid">
+    <div class="rep-item reveal">
+      <div class="rep-num">01</div>
+      <h3>Clásico</h3>
+      <ul>
+        <li>Mozart · Sinfonías</li>
+        <li>Haydn · Cuartetos orquestados</li>
+        <li>Beethoven · Ciclos sinfónicos</li>
+        <li>Schubert · Obras de cámara</li>
+      </ul>
+    </div>
+    <div class="rep-item reveal reveal-delay-1">
+      <div class="rep-num">02</div>
+      <h3>Sinfónico Coral</h3>
+      <ul>
+        <li>Oratorio y cantata</li>
+        <li>Verdi · Réquiem</li>
+        <li>Beethoven · Novena Sinfonía</li>
+        <li>Música sacra contemporánea</li>
+      </ul>
+    </div>
+    <div class="rep-item reveal reveal-delay-2">
+      <div class="rep-num">03</div>
+      <h3>Conciertos con Solistas</h3>
+      <ul>
+        <li>Violín · Piano · Cello</li>
+        <li>Repertorio italiano y alemán</li>
+        <li>Estrenos con artistas invitados</li>
+        <li>Cruces con música de cámara</li>
+      </ul>
+    </div>
+    <div class="rep-item reveal reveal-delay-3">
+      <div class="rep-num">04</div>
+      <h3>Contemporáneo</h3>
+      <ul>
+        <li>Compositores mexicanos</li>
+        <li>Estrenos latinoamericanos</li>
+        <li>Fusión con géneros urbanos</li>
+        <li>Encargos y comisiones</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SOLISTAS — blanco -->
+<section id="solistas">
+  <div class="sec-num">03</div>
+  <div class="sol-header">
+    <div>
+      <p class="sec-label reveal">Colaboraciones artísticas</p>
+      <h2 class="sec-title reveal">Solistas<br><em>invitados</em></h2>
+      <div class="line reveal" style="background:var(--negro)"></div>
+    </div>
+    <p class="sol-intro reveal">La orquesta ha compartido escena con artistas internacionales de primer nivel, consolidando una proyección global desde Tultepec.</p>
+  </div>
+  <div class="solistas-grid">
+    <div class="solista-card reveal">
+      <span class="solista-flag">🇮🇹</span>
+      <h3>Raffaele Bertolini</h3>
+      <p class="sol-instrumento">Violín</p>
+      <p>Violinista italiano reconocido en la escena europea, con trayectoria en las principales salas de Italia.</p>
+    </div>
+    <div class="solista-card reveal reveal-delay-1">
+      <span class="solista-flag">🇮🇹</span>
+      <h3>Nicola Bertolini</h3>
+      <p class="sol-instrumento">Piano</p>
+      <p>Pianista de formación clásica italiana, amplia experiencia en música de cámara y repertorio romántico.</p>
+    </div>
+    <div class="solista-card reveal reveal-delay-2">
+      <span class="solista-flag">🇮🇹</span>
+      <h3>Ángela Ignachitti</h3>
+      <p class="sol-instrumento">Soprano</p>
+      <p>Soprano de voz lírica especialista en repertorio italiano y contemporáneo, con presencia en ópera y concierto.</p>
+    </div>
+    <div class="solista-card reveal reveal-delay-3">
+      <span class="solista-flag">🇮🇹</span>
+      <h3>Silvia Di Falco</h3>
+      <p class="sol-instrumento">Mezzosoprano</p>
+      <p>Voz de gran profundidad expresiva con formación en los conservatorios más reconocidos de Italia.</p>
+    </div>
+    <div class="solista-card reveal" style="display:flex;align-items:center;justify-content:center;text-align:center">
+      <p style="font-family:var(--ff-t);font-style:italic;color:var(--gris-m);font-size:.92rem;line-height:1.9">Y otros artistas<br>de talla internacional</p>
+    </div>
+  </div>
+</section>
+
+<!-- GALERÍA — negro -->
+<section id="galeria">
+  <div class="gal-header">
+    <p class="sec-label reveal" style="color:var(--gris-t)">Imágenes</p>
+    <h2 class="sec-title reveal" style="color:var(--blanco)">Galería<br><em>sinfónica</em></h2>
+    <div class="line reveal" style="background:var(--blanco)"></div>
+  </div>
+  <div class="galeria-grid" id="galeriaGrid"></div>
+</section>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" role="dialog">
+  <button id="lb-close">✕</button>
+  <button id="lb-prev">‹</button>
+  <img src="" id="lb-img" alt="Imagen galería" />
+  <button id="lb-next">›</button>
+</div>
+
+<!-- FOOTER — negro -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="f-logo-wrap">
+          <img src="logo-osjut.png" alt="OSJT" onerror="this.style.display='none';" />
+          <span class="f-logo-name">Orquesta Sinfónica Juvenil de Tultepec</span>
+        </div>
+        <p>Jóvenes músicos comprometidos con la excelencia interpretativa y el desarrollo cultural de México.</p>
+        <div class="redes">
+          <a href="#" class="red-link" aria-label="Facebook">f</a>
+          <a href="#" class="red-link" aria-label="Instagram">✦</a>
+          <a href="#" class="red-link" aria-label="YouTube">▶</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="#quienes">Quiénes somos</a></li>
+          <li><a href="#repertorio">Repertorio</a></li>
+          <li><a href="#solistas">Solistas invitados</a></li>
+          <li><a href="#galeria">Galería</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="mailto:contacto@orquestatultepec.mx">contacto@orquestatultepec.mx</a></li>
+          <li><a href="tel:+525500000000">+52 55 0000 0000</a></li>
+          <li><span>Tultepec, Estado de México</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Orquesta Sinfónica Juvenil de Tultepec. Todos los derechos reservados.</p>
+      <p class="footer-frase">"La música es el lenguaje universal de la humanidad"</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── NAV adaptativo según sección ── */
+  const mainNav = document.getElementById('mainNav');
+  const lightSections = ['quienes','solistas'];
+  const darkSections  = ['hero','repertorio','galeria'];
+  function updateNav(){
+    const mid = window.innerHeight / 2;
+    let current = 'hero';
+    ['hero','quienes','repertorio','solistas','galeria'].forEach(id=>{
+      const el = document.getElementById(id);
+      if(el){
+        const rect = el.getBoundingClientRect();
+        if(rect.top <= mid) current = id;
+      }
+    });
+    mainNav.classList.toggle('light', lightSections.includes(current));
+    mainNav.classList.toggle('dark',  !lightSections.includes(current));
+  }
+  window.addEventListener('scroll', updateNav, {passive:true});
+  updateNav();
+
+  /* ── Menú móvil ── */
+  document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('navMobile').classList.add('open'));
+  document.getElementById('nmClose').addEventListener('click',()=>document.getElementById('navMobile').classList.remove('open'));
+  function cerrarMenu(){document.getElementById('navMobile').classList.remove('open')}
+
+  /* ── Scroll reveal ── */
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible') });
+  },{threshold:.08,rootMargin:'0px 0px -30px 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+  /* ── Galería ── */
+  const FOTOS_DIR = 'galeria-sinfonica/';
+  const FOTOS = window.__FOTOS__ || [];
+  const galeriaGrid = document.getElementById('galeriaGrid');
+
+  function buildGaleria(fotos){
+    galeriaGrid.innerHTML='';
+    const placeholders = ['Concierto en el Soumaya','Ensayo general','Temporada 2024','Solistas invitados','Presentación especial','Concierto de gala'];
+    if(!fotos.length){
+      placeholders.forEach(label=>{
+        const d=document.createElement('div');d.className='galeria-item';
+        d.innerHTML=`<div class="gal-ph"><div class="ic">🎵</div><p>${label}</p></div>`;
+        galeriaGrid.appendChild(d);
+      });
+    }else{
+      fotos.forEach((src,i)=>{
+        const d=document.createElement('div');d.className='galeria-item';d.dataset.index=i;
+        d.innerHTML=`<img src="${FOTOS_DIR}${src}" alt="Foto ${i+1}" loading="lazy"/><div class="gal-overlay"><span>Ver imagen</span></div>`;
+        d.addEventListener('click',()=>abrirLb(i));
+        galeriaGrid.appendChild(d);
+      });
+    }
+  }
+  buildGaleria(FOTOS);
+
+  if(FOTOS.length){
+    document.getElementById('quienesFoto').innerHTML=
+      `<img src="${FOTOS_DIR}${FOTOS[0]}" alt="Orquesta" loading="lazy" style="width:100%;height:100%;object-fit:cover;">`;
+  }
+  if(FOTOS.length>1){
+    document.getElementById('repFoto').innerHTML=
+      `<img src="${FOTOS_DIR}${FOTOS[1]}" alt="Concierto" loading="lazy" style="width:100%;height:100%;object-fit:cover;filter:grayscale(30%);">`;
+  }
+
+  /* ── Lightbox ── */
+  const lb    = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lb-img');
+  let lbIdx = 0;
+  function abrirLb(i){if(!FOTOS.length)return;lbIdx=i;lbImg.src=FOTOS_DIR+FOTOS[lbIdx];lb.classList.add('active');document.body.style.overflow='hidden'}
+  document.getElementById('lb-close').onclick=()=>{lb.classList.remove('active');document.body.style.overflow=''};
+  document.getElementById('lb-prev').onclick=()=>{lbIdx=(lbIdx-1+FOTOS.length)%FOTOS.length;lbImg.src=FOTOS_DIR+FOTOS[lbIdx]};
+  document.getElementById('lb-next').onclick=()=>{lbIdx=(lbIdx+1)%FOTOS.length;lbImg.src=FOTOS_DIR+FOTOS[lbIdx]};
+  lb.addEventListener('click',e=>{if(e.target===lb){lb.classList.remove('active');document.body.style.overflow=''}});
+  document.addEventListener('keydown',e=>{
+    if(!lb.classList.contains('active'))return;
+    if(e.key==='Escape'){lb.classList.remove('active');document.body.style.overflow=''}
+    if(e.key==='ArrowLeft') document.getElementById('lb-prev').click();
+    if(e.key==='ArrowRight')document.getElementById('lb-next').click();
+  });
+</script>
+</body>
+</html>

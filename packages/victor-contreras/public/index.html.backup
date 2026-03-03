@@ -27,13 +27,13 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; font-size: 18px; }
+    html { scroll-behavior: smooth; font-size: 16px; }
     body {
       background: var(--bg);
       color: var(--text);
       font-family: 'Jost', sans-serif;
       font-weight: 300;
-      line-height: 1.8;
+      line-height: 1.7;
       overflow-x: hidden;
     }
 
@@ -154,7 +154,7 @@
 
     /* ── BIO ── */
     .bio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-    .bio-text { line-height: 1.9; color: var(--cream-dim); }
+    .bio-text { font-size: 1.02rem; line-height: 1.88; color: var(--cream-dim); }
     .bio-text p + p { margin-top: 1.2em; }
     .bio-img { position: relative; }
     .bio-img::before {
@@ -195,7 +195,7 @@
     .activity-icon { font-size: 1.6rem; margin-bottom: 20px; display: block; color: var(--silver-dim); }
     .activity-title { font-family: 'Cormorant Garamond', serif; font-size: 1.55rem;
       font-weight: 400; color: var(--cream); margin-bottom: 16px; }
-    .activity-text { line-height: 1.85; }
+    .activity-text { font-size: 0.88rem; color: var(--text-dim); line-height: 1.78; }
 
     /* ── VIDEOS ── */
     .videos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 48px; }
@@ -235,7 +235,7 @@
     .concert-date span { display: block; font-size: 0.63rem; letter-spacing: 0.2em;
       text-transform: uppercase; color: var(--text-dim); font-family: 'Jost', sans-serif; }
     .concert-info h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 400; color: var(--cream); }
-    .concert-info p { font-size: 1rem; color: var(--text-dim); margin-top: 2px; }
+    .concert-info p { font-size: 0.78rem; color: var(--text-dim); margin-top: 2px; }
     .concert-flag { font-size: 1.1rem; }
 
     /* ── DISCOGRAPHY ── */
@@ -259,7 +259,7 @@
       font-weight: 300; color: var(--cream); line-height: 1.25; margin-bottom: 12px; }
     .disc-composer { font-family: 'IM Fell English', serif; font-style: italic;
       color: var(--silver); margin-bottom: 24px; font-size: 0.95rem; }
-    .disc-text { line-height: 1.9; }
+    .disc-text { font-size: 0.9rem; color: var(--cream-dim); line-height: 1.85; }
     .disc-text p + p { margin-top: 1em; }
 
     /* ── CONTACT ── */
@@ -313,7 +313,7 @@
     }
 
     footer { text-align: center; padding: 40px 6vw 100px; border-top: 1px solid rgba(78,111,136,0.12); }
-    footer p { font-size: 0.9rem; color: var(--text-dim); letter-spacing: 0.12em; }
+    footer p { font-size: 0.68rem; color: var(--text-dim); letter-spacing: 0.12em; }
     .footer-name { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem;
       color: var(--silver-dim); margin-bottom: 14px; }
 
@@ -510,16 +510,16 @@
         </div>
       </div>
       <div>
-        <div data-lang="es" class="lang-active" style="font-size:1.2rem; color:var(--cream-dim); line-height:1.88;">
+        <div data-lang="es" class="lang-active" style="font-size:1rem; color:var(--cream-dim); line-height:1.88;">
           <p>Fundada en 2017 por Víctor Contreras, la Orquesta Barroca del Conservatorio Nacional de Música interpreta el repertorio del Barroco y el Clasicismo con criterios de interpretación históricamente informada, utilizando instrumentos de época o copias.</p>
           <p style="margin-top:1em;">El ensemble se ha presentado en los foros más importantes de México, acercando el patrimonio musical de los siglos XVII y XVIII a nuevas audiencias y formando intérpretes especializados en la práctica histórica.</p>
         </div>
-        <div data-lang="en" style="font-size:1.2rem; color:var(--cream-dim); line-height:1.88;">
+        <div data-lang="en" style="font-size:1rem; color:var(--cream-dim); line-height:1.88;">
           <p>Founded in 2017 by Víctor Contreras, the Baroque Orchestra of the National Conservatory performs Baroque and Classical repertoire with historically informed practice, using period instruments or copies.</p>
           <p style="margin-top:1em;">The ensemble has appeared at Mexico's most important venues, bringing the musical heritage of the 17th and 18th centuries to new audiences.</p>
         </div>
-        <div data-lang="fr" style="font-size:1.2rem; color:var(--cream-dim); line-height:1.88;"><p>Fondé en 2017 par Víctor Contreras, l'Orchestre Baroque interprète le répertoire baroque et classique selon des pratiques historiquement informées, en utilisant des instruments d'époque ou des copies.</p></div>
-        <div data-lang="it" style="font-size:1.2rem; color:var(--cream-dim); line-height:1.88;"><p>Fondata nel 2017 da Víctor Contreras, l'Orchestra Barocca esegue il repertorio barocco e classico con prassi esecutiva storicamente informata, utilizzando strumenti d'epoca o copie.</p></div>
+        <div data-lang="fr" style="font-size:1rem; color:var(--cream-dim); line-height:1.88;"><p>Fondé en 2017 par Víctor Contreras, l'Orchestre Baroque interprète le répertoire baroque et classique selon des pratiques historiquement informées, en utilisant des instruments d'époque ou des copies.</p></div>
+        <div data-lang="it" style="font-size:1rem; color:var(--cream-dim); line-height:1.88;"><p>Fondata nel 2017 da Víctor Contreras, l'Orchestra Barocca esegue il repertorio barocco e classico con prassi esecutiva storicamente informata, utilizzando strumenti d'epoca o copie.</p></div>
       </div>
     </div>
   </div>

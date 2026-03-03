@@ -1,0 +1,15 @@
+{
+  "name": "orquesta-tultepec",
+  "version": "1.0.0",
+  "description": "Orquesta Sinfónica Juvenil de Tultepec — sitio institucional",
+  "main": "backend/index.js",
+  "scripts": {
+    "start": "node backend/index.js",
+    "dev": "node backend/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "nodemailer": "^6.9.7"
+  }
+}
