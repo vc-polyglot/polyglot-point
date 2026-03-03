@@ -17,9 +17,9 @@
       --silver-dim:   #4e6f88;   /* plata profunda */
       --copper:       #b07040;   /* cobre — toque cálido puntual */
       --copper-light: #d09060;
-      --bg:           #07090f;   /* azul medianoche casi negro */
-      --bg2:          #0b0e16;
-      --bg3:          #10141e;
+      --bg:           #1e2024;   /* azul medianoche casi negro */
+      --bg2:          #1f2330;
+      --bg3:          #252932;
       --cream:        #e2ddd8;   /* blanco marfil cálido */
       --cream-dim:    #a09890;
       --text:         #d0ccc6;
@@ -96,7 +96,7 @@
         radial-gradient(ellipse at 65% 35%, rgba(100,150,200,0.07) 0%, transparent 55%),
         radial-gradient(ellipse at 15% 75%, rgba(80,120,180,0.04) 0%, transparent 45%),
         radial-gradient(ellipse at 40% 100%, rgba(176,112,64,0.04) 0%, transparent 40%),
-        linear-gradient(175deg, #07090f 0%, #0b0e18 60%, #07090f 100%);
+        linear-gradient(175deg, #1e2024 0%, #0b0e18 60%, #1e2024 100%);
     }
 
     /* Decorative — vertical pipe silhouettes */
@@ -163,7 +163,7 @@
     }
     .bio-img-placeholder {
       width: 100%; aspect-ratio: 3/4;
-      background: linear-gradient(160deg, #10141e 0%, #07090f 100%);
+      background: linear-gradient(160deg, #252932 0%, #1e2024 100%);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       border: 1px solid rgba(78,111,136,0.2); gap: 16px;
     }
@@ -213,7 +213,7 @@
       align-items: center; margin-top: 48px; }
     .orchestra-img-placeholder {
       width: 100%; aspect-ratio: 4/3;
-      background: linear-gradient(135deg, #10141e 0%, #07090f 100%);
+      background: linear-gradient(135deg, #252932 0%, #1e2024 100%);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       border: 1px solid rgba(78,111,136,0.15);
     }
@@ -244,7 +244,7 @@
     .disc-layout { display: grid; grid-template-columns: 280px 1fr; gap: 64px;
       align-items: center; margin-top: 48px; }
     .disc-cover {
-      background: linear-gradient(145deg, #10141e, #07090f);
+      background: linear-gradient(145deg, #252932, #1e2024);
       border: 1px solid rgba(158,184,208,0.22);
       aspect-ratio: 1; display: flex; flex-direction: column;
       align-items: center; justify-content: center; padding: 30px; text-align: center;
@@ -370,10 +370,20 @@
 </nav>
 
 <!-- ════════════════════════ HERO ════════════════════════ -->
-<section id="hero" style="padding:0; max-width:100%;">
-  <div id="hero-bg"></div>
-  <div id="hero-pipes" id="pipesEl"></div>
-  <div class="hero-content">
+<section id="hero" style="padding:0; max-width:100%; position:relative; overflow:hidden;">
+  <!-- Foto de fondo con opacidad baja -->
+  <div style="position:absolute; inset:0; z-index:1;">
+    <img src="arriba_abajo_barroca_2023.jpg" alt="Órgano" style="width:100%; height:100%; object-fit:cover; opacity:0.90;">
+  </div>
+  
+  <!-- Gradiente oscuro sobre la foto para que se lea el texto -->
+  <div id="hero-bg" style="position:absolute; inset:0; z-index:2; background:linear-gradient(to right, rgba(7,9,15,0.95) 0%, rgba(7,9,15,0.7) 50%, rgba(7,9,15,0.4) 100%);"></div>
+  
+  <!-- Tubos de órgano (decoración) -->
+  <div id="hero-pipes" style="position:absolute; right:0; top:0; bottom:0; width:54%; display:flex; align-items:flex-start; justify-content:flex-end; padding:0 3vw; gap:4px; pointer-events:none; z-index:3;"></div>
+  
+  <!-- Contenido de texto -->
+  <div class="hero-content" style="position:relative; z-index:4; padding:0 6vw; max-width:680px;">
     <p class="hero-overline">
       <span class="inline-lang lang-active">Organista · Clavecinista · Director</span>
       <span class="inline-lang">Organist · Harpsichordist · Conductor</span>
@@ -426,26 +436,15 @@
       </div>
     </div>
     <div class="bio-img">
-      <div class="bio-img-placeholder">
-        <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
-          <rect x="20" y="8"  width="5" height="56" rx="2.5" fill="rgba(158,184,208,0.2)"/>
-          <rect x="29" y="16" width="5" height="48" rx="2.5" fill="rgba(158,184,208,0.2)"/>
-          <rect x="38" y="10" width="6" height="54" rx="3"   fill="rgba(158,184,208,0.2)"/>
-          <rect x="48" y="20" width="4" height="44" rx="2"   fill="rgba(158,184,208,0.15)"/>
-          <rect x="56" y="14" width="4" height="50" rx="2"   fill="rgba(158,184,208,0.12)"/>
-        </svg>
-        <p style="font-family:'IM Fell English',serif; font-style:italic; font-size:0.72rem; color:rgba(158,184,208,0.3); text-align:center;">Foto · Víctor Contreras</p>
-      </div>
+      <img src="Víctor_Contreras_foto.jpg" alt="Víctor Contreras" style="width:100%; height:auto; display:block; aspect-ratio:3/4; object-fit:cover; border:1px solid rgba(158,184,208,0.2);">
     </div>
   </div>
   <div class="bio-facts reveal">
     <div class="bio-fact"><span class="bio-fact-num">25+</span><span class="bio-fact-label"><span class="inline-lang lang-active">Años de carrera</span><span class="inline-lang">Years of career</span><span class="inline-lang">Années de carrière</span><span class="inline-lang">Anni di carriera</span></span></div>
-    <div class="bio-fact"><span class="bio-fact-num">3</span><span class="bio-fact-label"><span class="inline-lang lang-active">Festivales fundados</span><span class="inline-lang">Founded festivals</span><span class="inline-lang">Festivals fondés</span><span class="inline-lang">Festival fondati</span></span></div>
+    <div class="bio-fact"><span class="bio-fact-num">4</span><span class="bio-fact-label"><span class="inline-lang lang-active">Festivales fundados</span><span class="inline-lang">Founded festivals</span><span class="inline-lang">Festivals fondés</span><span class="inline-lang">Festival fondati</span></span></div>
     <div class="bio-fact"><span class="bio-fact-num">4</span><span class="bio-fact-label"><span class="inline-lang lang-active">Continentes</span><span class="inline-lang">Continents</span><span class="inline-lang">Continents</span><span class="inline-lang">Continenti</span></span></div>
   </div>
 </section>
-
-<span class="silver-rule-full"></span>
 
 <!-- ════════════════════════ ACTIVITIES ════════════════════════ -->
 <div class="activities-wrap">
@@ -506,13 +505,8 @@
     </div>
     <div class="orchestra-layout reveal">
       <div>
-        <div class="orchestra-img-placeholder">
-          <svg width="54" height="54" viewBox="0 0 54 54" fill="none">
-            <circle cx="27" cy="27" r="25" stroke="rgba(158,184,208,0.18)" stroke-width="1"/>
-            <path d="M12 42 Q27 12 42 42" stroke="rgba(158,184,208,0.25)" stroke-width="1.5" fill="none"/>
-            <circle cx="27" cy="20" r="2.5" fill="rgba(158,184,208,0.18)"/>
-          </svg>
-          <p style="font-family:'IM Fell English',serif; font-style:italic; font-size:0.72rem; color:rgba(158,184,208,0.28); margin-top:10px;">Orquesta Barroca · CNM</p>
+        <div class="orchestra-img-placeholder" style="padding:0; overflow:hidden;">
+          <img src="Orquesta_Barroca_2025.jpg" alt="Orquesta Barroca del Conservatorio Nacional de Música" style="width:100%; height:auto; display:block; aspect-ratio:4/3; object-fit:cover; border:1px solid rgba(158,184,208,0.2);">
         </div>
       </div>
       <div>
@@ -578,14 +572,8 @@
       <h2 class="section-title"><span class="inline-lang lang-active"><em>Disco</em>grafía</span><span class="inline-lang"><em>Disco</em>graphy</span><span class="inline-lang"><em>Disco</em>graphie</span><span class="inline-lang"><em>Disco</em>grafia</span></h2>
     </div>
     <div class="disc-layout reveal">
-      <div class="disc-cover">
-        <span style="font-family:'Cormorant Garamond',serif; font-size:0.63rem; letter-spacing:0.32em; text-transform:uppercase; color:var(--silver-dim); display:block; margin-bottom:18px;">Linae Occultae</span>
-        <div style="width:36px; height:1px; background:var(--silver-dim); margin:0 auto 18px;"></div>
-        <span style="font-family:'IM Fell English',serif; font-style:italic; font-size:0.95rem; color:var(--cream); line-height:1.45; display:block;">Cuaderno de tonos de maitines</span>
-        <div style="width:36px; height:1px; background:var(--silver-dim); margin:18px auto;"></div>
-        <span style="font-size:0.62rem; letter-spacing:0.14em; color:var(--text-dim); display:block; line-height:1.6;">SOR MARÍA CLARA<br>DEL SANTÍSIMO SACRAMENTO</span>
-        <div style="width:36px; height:1px; background:var(--silver-dim); margin:18px auto 14px;"></div>
-        <span style="font-size:0.58rem; letter-spacing:0.2em; color:var(--silver-dim); display:block;">VÍCTOR CONTRERAS, órgano</span>
+      <div class="disc-cover" style="padding:0; overflow:hidden; aspect-ratio:1/1;">
+        <img src="Victor_foto_paris_saint__antoine.jpg" alt="Cuaderno de tonos de maitines - Víctor Contreras" style="width:100%; height:100%; object-fit:cover;">
       </div>
       <div>
         <h3 class="disc-title">Cuaderno de tonos de maitines de Sor María Clara del Santísimo Sacramento</h3>
