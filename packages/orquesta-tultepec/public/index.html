@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -32,19 +32,19 @@
     nav.light{background:rgba(245,244,240,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,0,0,.08)}
     nav.dark {background:rgba(10,10,10,.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06)}
     .nav-logo{display:flex;align-items:center;gap:.8rem;text-decoration:none}
-    .nav-logo img{height:36px;width:auto;transition:filter .4s}
-    nav.light .nav-logo img{filter:none}
-    nav.dark  .nav-logo img{filter:invert(1)}
-    .nav-logo-text{font-family:var(--ff-t);font-size:.9rem;font-weight:600;line-height:1.2;transition:color .4s}
+    .nav-logo img{height:56px;width:auto;transition:filter .4s}
+    nav.light .nav-logo img{filter:brightness(0);opacity:1}
+    nav.dark .nav-logo img{filter:invert(1) brightness(10);opacity:1}
+    .nav-logo-text{font-family:var(--ff-t);font-size:1.05rem;font-weight:600;line-height:1.2;transition:color .4s}
     nav.light .nav-logo-text{color:var(--negro)}
     nav.dark  .nav-logo-text{color:var(--blanco)}
     .nav-logo-text span{display:block;font-size:.52rem;letter-spacing:.22em;font-family:var(--ff-b);font-weight:400;text-transform:uppercase;margin-top:.1rem;transition:color .4s}
-    nav.light .nav-logo-text span{color:#888}
-    nav.dark  .nav-logo-text span{color:var(--gris-t)}
+    nav.light .nav-logo-text span{color:#bbb}
+    nav.dark  .nav-logo-text span{color:#bbb}
     .nav-links{display:flex;gap:2.2rem;list-style:none}
-    .nav-links a{text-decoration:none;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;font-weight:500;transition:color .25s,opacity .25s}
-    nav.light .nav-links a{color:#555}
-    nav.dark  .nav-links a{color:var(--gris-t)}
+    .nav-links a{text-decoration:none;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;font-weight:500;transition:color .25s,opacity .25s}
+    nav.light .nav-links a{color:#333}
+    nav.dark  .nav-links a{color:#bbb}
     .nav-links a:hover{opacity:1 !important;color:inherit}
     nav.light .nav-links a:hover{color:var(--negro)}
     nav.dark  .nav-links a:hover{color:var(--blanco)}
@@ -64,7 +64,7 @@
       position:absolute;inset:0;
       background-image:url('galeria-sinfonica/hero.jpg');
       background-size:cover;background-position:center top;
-      opacity:.22;filter:grayscale(60%);
+      opacity:.80;filter:grayscale(60%);
     }
     .hero-overlay{
       position:absolute;inset:0;
@@ -72,13 +72,13 @@
     }
     .hero-inner{position:relative;z-index:2;max-width:1100px;width:100%}
     .hero-pretag{
-      display:inline-block;font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;
-      color:var(--gris-t);border-top:1px solid rgba(255,255,255,.2);
+      display:inline-block;font-size:.72rem;letter-spacing:.35em;text-transform:uppercase;
+      color:#bbb;border-top:1px solid rgba(255,255,255,.2);
       padding-top:.7rem;margin-bottom:1.8rem;font-weight:500;
       animation:fadeUp .9s .2s both;
     }
     .hero-logo-img{
-      display:block;max-height:72px;width:auto;
+      display:block;max-height:140px;width:auto;
       margin-bottom:2rem;filter:invert(0);
       animation:fadeUp .9s .3s both;
     }
@@ -90,7 +90,7 @@
       color:var(--blanco);
       animation:fadeUp .9s .35s both;
     }
-    .hero-title em{display:block;font-style:italic;font-weight:400;color:var(--gris-t)}
+    .hero-title em{display:block;font-style:italic;font-weight:400;color:#bbb}
     .hero-bottom{
       display:flex;align-items:flex-end;justify-content:space-between;
       flex-wrap:wrap;gap:1.5rem;
@@ -100,13 +100,13 @@
     .hero-frase{
       font-family:var(--ff-t);font-style:italic;
       font-size:clamp(.9rem,1.8vw,1.15rem);
-      color:var(--gris-t);max-width:480px;line-height:1.6;
+      color:#bbb;max-width:480px;line-height:1.6;
     }
     .hero-ctas{display:flex;gap:.8rem;flex-wrap:wrap;align-items:center}
     .btn-blanco{
       background:var(--blanco);color:var(--negro);
       padding:.8rem 2.2rem;font-family:var(--ff-b);
-      font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
+      font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
       text-decoration:none;border:none;cursor:pointer;
       transition:background .3s,transform .2s;
     }
@@ -114,7 +114,7 @@
     .btn-ghost-blanco{
       background:transparent;color:var(--blanco);
       padding:.8rem 2.2rem;border:1px solid rgba(255,255,255,.3);
-      font-family:var(--ff-b);font-size:.68rem;letter-spacing:.14em;
+      font-family:var(--ff-b);font-size:.82rem;letter-spacing:.14em;
       text-transform:uppercase;font-weight:400;text-decoration:none;
       transition:border-color .3s,transform .2s;cursor:pointer;
     }
@@ -134,19 +134,19 @@
       padding:8rem 4vw;color:var(--negro);overflow:hidden;
     }
     .quienes-grid{display:grid;grid-template-columns:5fr 4fr;gap:6rem;align-items:start;max-width:1200px;margin:0 auto}
-    .sec-label{font-size:.58rem;letter-spacing:.36em;text-transform:uppercase;font-weight:600;margin-bottom:1rem;opacity:.5}
+    .sec-label{font-size:.72rem;letter-spacing:.36em;text-transform:uppercase;font-weight:600;margin-bottom:1rem;opacity:.5}
     .sec-title{font-family:var(--ff-t);font-size:clamp(2.4rem,4.5vw,4rem);font-weight:700;line-height:1.06;margin-bottom:.4rem;letter-spacing:-.01em}
     .sec-title em{font-style:italic;font-weight:400}
     .line{width:40px;height:1.5px;margin:2rem 0;opacity:.25}
-    .quienes-texto p{font-size:.9rem;color:#444;margin-bottom:1.4rem;line-height:1.95;max-width:520px}
+    .quienes-texto p{font-size:1.05rem;color:#333;margin-bottom:1.4rem;line-height:1.95;max-width:520px}
     .firma-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:2.5rem}
     .firma-item{border-left:1.5px solid rgba(0,0,0,.15);padding-left:.9rem}
-    .firma-item strong{display:block;font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;opacity:.5;margin-bottom:.2rem;font-weight:600}
+    .firma-item strong{display:block;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;opacity:.5;margin-bottom:.2rem;font-weight:600}
     .firma-item span{font-family:var(--ff-t);font-style:italic;font-size:.95rem;color:var(--negro)}
     .escenarios{margin-top:2.5rem}
-    .escenarios strong{font-size:.58rem;letter-spacing:.26em;text-transform:uppercase;opacity:.4}
+    .escenarios strong{font-size:.72rem;letter-spacing:.26em;text-transform:uppercase;opacity:.4}
     .escenarios ul{margin-top:.6rem;list-style:none;display:flex;flex-wrap:wrap;gap:.35rem}
-    .escenarios ul li{font-size:.72rem;background:rgba(0,0,0,.05);padding:.24rem .65rem;color:#444}
+    .escenarios ul li{font-size:.86rem;background:rgba(0,0,0,.05);padding:.24rem .65rem;color:#333}
     /* foto lateral */
     .quienes-foto-col{position:relative;padding-top:4rem}
     .quienes-foto{
@@ -155,9 +155,9 @@
     }
     .quienes-foto img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
     .quienes-foto:hover img{transform:scale(1.03)}
-    .foto-placeholder{width:100%;height:100%;background:var(--gris-f);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.8rem;color:var(--gris-m)}
+    .foto-placeholder{width:100%;height:100%;background:var(--gris-f);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.8rem;color:#333}
     .foto-placeholder .ic{font-size:3rem;opacity:.25}
-    .foto-placeholder p{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;opacity:.35}
+    .foto-placeholder p{font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;opacity:.35}
     /* big quote decorativo */
     .quienes-quote{
       position:absolute;bottom:-2rem;left:-1rem;
@@ -174,7 +174,7 @@
     .rep-foto{width:100%;max-width:1200px;margin:0 auto 4rem;position:relative;overflow:hidden;height:420px}
     .rep-foto img{width:100%;height:100%;object-fit:cover;filter:grayscale(30%);transition:transform .8s}
     .rep-foto:hover img{transform:scale(1.02)}
-    .rep-foto-ph{height:100%;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.8rem;color:rgba(255,255,255,.2)}
+    .rep-foto-ph{height:100%;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.8rem;color:rgba(255,255,255,.85)}
     .rep-foto::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,rgba(10,10,10,.5) 0%,transparent 20%,transparent 80%,rgba(10,10,10,.5) 100%)}
     .rep-grid{display:grid;grid-template-columns:repeat(4,1fr);max-width:1200px;margin:0 auto;border-top:1px solid rgba(255,255,255,.1)}
     .rep-item{
@@ -187,7 +187,7 @@
     .rep-num{font-family:var(--ff-t);font-size:3rem;font-weight:700;color:rgba(255,255,255,.08);line-height:1;margin-bottom:1rem}
     .rep-item h3{font-family:var(--ff-t);font-size:1.15rem;font-weight:600;color:var(--blanco);margin-bottom:1.2rem}
     .rep-item ul{list-style:none}
-    .rep-item ul li{font-size:.76rem;color:var(--gris-t);padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
+    .rep-item ul li{font-size:.9rem;color:#bbb;padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
     .rep-item ul li::before{content:'/ ';opacity:.3}
 
     /* ─── SOLISTAS — blanco ───────────────────────────── */
@@ -196,7 +196,7 @@
       padding:8rem 4vw;color:var(--negro);overflow:hidden;
     }
     .sol-header{max-width:1200px;margin:0 auto 4rem;display:flex;justify-content:space-between;align-items:flex-end;gap:2rem}
-    .sol-intro{max-width:420px;font-size:.88rem;color:#555;line-height:1.9;margin-top:1.5rem}
+    .sol-intro{max-width:420px;font-size:1.02rem;color:#333;line-height:1.9;margin-top:1.5rem}
     .solistas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));max-width:1200px;margin:0 auto;border:1px solid rgba(0,0,0,.08)}
     .solista-card{
       padding:2.2rem 2rem;border-right:1px solid rgba(0,0,0,.08);
@@ -204,13 +204,13 @@
       transition:background .3s;
     }
     .solista-card:hover{background:var(--negro);color:var(--blanco)}
-    .solista-card:hover .sol-instrumento{color:var(--gris-t)}
-    .solista-card:hover p{color:var(--gris-t)}
+    .solista-card:hover .sol-instrumento{color:#bbb}
+    .solista-card:hover p{color:#bbb}
     .solista-card:last-child{border-right:none}
     .solista-flag{font-size:1.2rem;margin-bottom:.8rem;display:block}
     .solista-card h3{font-family:var(--ff-t);font-size:1.1rem;font-weight:600;margin-bottom:.25rem;transition:color .3s}
-    .sol-instrumento{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;opacity:.5;transition:color .3s}
-    .solista-card p{font-size:.76rem;color:#666;margin-top:.8rem;line-height:1.8;transition:color .3s}
+    .sol-instrumento{font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;opacity:.5;transition:color .3s}
+    .solista-card p{font-size:.9rem;color:#999;margin-top:.8rem;line-height:1.8;transition:color .3s}
 
     /* ─── GALERÍA — negro ─────────────────────────────── */
     #galeria{
@@ -236,48 +236,48 @@
     .galeria-item:hover img{transform:scale(1.06);filter:grayscale(0%)}
     .gal-overlay{position:absolute;inset:0;background:rgba(10,10,10,0);transition:background .4s;display:flex;align-items:flex-end;padding:1rem}
     .galeria-item:hover .gal-overlay{background:rgba(10,10,10,.45)}
-    .gal-overlay span{color:#fff;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;opacity:0;transition:opacity .3s .1s}
+    .gal-overlay span{color:#fff;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;opacity:0;transition:opacity .3s .1s}
     .galeria-item:hover .gal-overlay span{opacity:1}
     .gal-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.5rem;color:rgba(255,255,255,.15)}
     .gal-ph .ic{font-size:1.5rem;opacity:.4}
-    .gal-ph p{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;opacity:.5}
+    .gal-ph p{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;opacity:.5}
 
     /* LIGHTBOX */
     #lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(10,10,10,.97);align-items:center;justify-content:center}
     #lightbox.active{display:flex}
     #lightbox img{max-width:92vw;max-height:90vh;object-fit:contain}
-    #lb-close{position:absolute;top:1.8rem;right:2.5rem;color:var(--gris-t);font-size:1.6rem;cursor:pointer;background:none;border:none;font-family:var(--ff-b);font-weight:300;transition:color .2s}
+    #lb-close{position:absolute;top:1.8rem;right:2.5rem;color:#bbb;font-size:1.6rem;cursor:pointer;background:none;border:none;font-family:var(--ff-b);font-weight:300;transition:color .2s}
     #lb-close:hover{color:var(--blanco)}
-    #lb-prev,#lb-next{position:absolute;top:50%;transform:translateY(-50%);background:none;border:1px solid rgba(255,255,255,.15);color:var(--gris-t);font-size:1.2rem;padding:.7rem 1rem;cursor:pointer;transition:all .2s;font-family:var(--ff-b)}
+    #lb-prev,#lb-next{position:absolute;top:50%;transform:translateY(-50%);background:none;border:1px solid rgba(255,255,255,.15);color:#bbb;font-size:1.2rem;padding:.7rem 1rem;cursor:pointer;transition:all .2s;font-family:var(--ff-b)}
     #lb-prev{left:2rem}#lb-next{right:2rem}
     #lb-prev:hover,#lb-next:hover{background:var(--blanco);color:var(--negro);border-color:var(--blanco)}
 
     /* ─── FOOTER — negro ──────────────────────────────── */
-    footer{background:var(--negro);border-top:1px solid rgba(255,255,255,.08);padding:5rem 4vw 3rem}
+    footer{background:var(--negro);border-top:1px solid rgba(255,255,255,.08);padding:5rem 4vw 3rem; color:#ccc}
     .footer-inner{max-width:1200px;margin:0 auto}
     .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:4rem;margin-bottom:4rem}
     .footer-brand .f-logo-wrap{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
-    .footer-brand .f-logo-wrap img{height:32px;width:auto;filter:invert(1);opacity:.7}
-    .footer-brand .f-logo-name{font-family:var(--ff-t);font-size:.95rem;color:rgba(255,255,255,.7);font-weight:600}
-    .footer-brand p{color:var(--gris-m);font-size:.76rem;line-height:1.85;max-width:260px}
+    .footer-brand .f-logo-wrap img{height:60px;width:auto;filter:invert(1);opacity:.7}
+    .footer-brand .f-logo-name{font-family:var(--ff-t);font-size:.95rem;color:rgba(255,255,255,.95);font-weight:600}
+    .footer-brand p{color:#333;font-size:.9rem;line-height:1.85;max-width:260px}
     .redes{display:flex;gap:.5rem;margin-top:1.6rem}
-    .red-link{width:30px;height:30px;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;color:var(--gris-m);font-size:.75rem;text-decoration:none;transition:all .3s}
+    .red-link{width:30px;height:30px;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;color:#333;font-size:.75rem;text-decoration:none;transition:all .3s}
     .red-link:hover{background:var(--blanco);color:var(--negro);border-color:var(--blanco)}
-    .footer-col h4{font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:1.2rem;font-weight:600}
+    .footer-col h4{font-size:.62rem;letter-spacing:.26em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:1.1rem;font-weight:600}
     .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.55rem}
     .footer-col ul li a,
-    .footer-col ul li span{color:var(--gris-m);font-size:.76rem;text-decoration:none;transition:color .3s}
+    .footer-col ul li span{color:#333;font-size:.9rem;text-decoration:none;transition:color .3s}
     .footer-col ul li a:hover{color:var(--blanco)}
     .footer-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
-    .footer-bottom p{font-size:.68rem;color:rgba(255,255,255,.2)}
-    .footer-frase{font-family:var(--ff-t);font-style:italic;font-size:.78rem;color:rgba(255,255,255,.2)}
+    .footer-bottom p{font-size:.82rem;color:rgba(255,255,255,.95)}
+    .footer-frase{font-family:var(--ff-t);font-style:italic;font-size:.78rem;color:rgba(255,255,255,.5)}
 
     /* ─── MOBILE NAV ─────────────────────────────────── */
     .nav-mobile{display:none;position:fixed;inset:0;background:var(--negro);z-index:190;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem}
     .nav-mobile.open{display:flex}
     .nav-mobile a{font-size:clamp(1.6rem,5vw,2.5rem);font-family:var(--ff-t);color:var(--blanco);text-decoration:none;letter-spacing:-.01em;transition:opacity .2s}
     .nav-mobile a:hover{opacity:.5}
-    .nm-close{position:absolute;top:1.5rem;right:2rem;background:none;border:none;color:var(--gris-t);font-size:1.5rem;cursor:pointer;font-family:var(--ff-b)}
+    .nm-close{position:absolute;top:1.5rem;right:2rem;background:none;border:none;color:#bbb;font-size:1.5rem;cursor:pointer;font-family:var(--ff-b)}
 
     /* ─── ANIMACIONES ────────────────────────────────── */
     @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
@@ -404,14 +404,14 @@
 <section id="repertorio">
   <div class="sec-num" style="color:rgba(255,255,255,1)">02</div>
   <div class="rep-header">
-    <p class="sec-label reveal" style="color:var(--gris-t)">Programación</p>
+    <p class="sec-label reveal" style="color:#bbb">Programación</p>
     <h2 class="sec-title reveal" style="color:var(--blanco)">Nuestro<br><em>repertorio</em></h2>
     <div class="line reveal" style="background:var(--blanco)"></div>
   </div>
   <div class="rep-foto reveal" id="repFoto">
     <div class="rep-foto-ph">
       <div style="font-size:2rem;opacity:.25">🎼</div>
-      <p style="font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;opacity:.4">Foto: concierto destacado</p>
+      <p style="font-size:.76rem;letter-spacing:.2em;text-transform:uppercase;opacity:.4">Foto: concierto destacado</p>
     </div>
   </div>
   <div class="rep-grid">
@@ -474,19 +474,19 @@
       <span class="solista-flag">🇮🇹</span>
       <h3>Raffaele Bertolini</h3>
       <p class="sol-instrumento">Violín</p>
-      <p>Violinista italiano reconocido en la escena europea, con trayectoria en las principales salas de Italia.</p>
+      <p>Clarinetista italiano reconocido en la escena europea, con trayectoria en las principales salas de Europa y América.</p>
     </div>
     <div class="solista-card reveal reveal-delay-1">
       <span class="solista-flag">🇮🇹</span>
       <h3>Nicola Bertolini</h3>
       <p class="sol-instrumento">Piano</p>
-      <p>Pianista de formación clásica italiana, amplia experiencia en música de cámara y repertorio romántico.</p>
+      <p>Clarinetista de formación clásica italiana, laureado de multiples concursos internacionales.</p>
     </div>
     <div class="solista-card reveal reveal-delay-2">
       <span class="solista-flag">🇮🇹</span>
       <h3>Ángela Ignachitti</h3>
       <p class="sol-instrumento">Soprano</p>
-      <p>Soprano de voz lírica especialista en repertorio italiano y contemporáneo, con presencia en ópera y concierto.</p>
+      <p>Pianista y clavecinista especialista en repertorio italiano y contemporáneo, con presencia en ópera y concierto.</p>
     </div>
     <div class="solista-card reveal reveal-delay-3">
       <span class="solista-flag">🇮🇹</span>
@@ -495,7 +495,7 @@
       <p>Voz de gran profundidad expresiva con formación en los conservatorios más reconocidos de Italia.</p>
     </div>
     <div class="solista-card reveal" style="display:flex;align-items:center;justify-content:center;text-align:center">
-      <p style="font-family:var(--ff-t);font-style:italic;color:var(--gris-m);font-size:.92rem;line-height:1.9">Y otros artistas<br>de talla internacional</p>
+      <p style="font-family:var(--ff-t);font-style:italic;color:#333;font-size:1.06rem;line-height:1.9">Y otros artistas<br>de talla internacional</p>
     </div>
   </div>
 </section>
@@ -503,7 +503,7 @@
 <!-- GALERÍA — negro -->
 <section id="galeria">
   <div class="gal-header">
-    <p class="sec-label reveal" style="color:var(--gris-t)">Imágenes</p>
+    <p class="sec-label reveal" style="color:#bbb">Imágenes</p>
     <h2 class="sec-title reveal" style="color:var(--blanco)">Galería<br><em>sinfónica</em></h2>
     <div class="line reveal" style="background:var(--blanco)"></div>
   </div>
@@ -547,7 +547,7 @@
         <h4>Contacto</h4>
         <ul>
           <li><a href="mailto:contacto@orquestatultepec.mx">contacto@orquestatultepec.mx</a></li>
-          <li><a href="tel:+525500000000">+52 55 0000 0000</a></li>
+          <li><a href="tel:+525532174080">+52 55 3217 4080</a></li>
           <li><span>Tultepec, Estado de México</span></li>
         </ul>
       </div>
@@ -593,7 +593,21 @@
 
   /* ── Galería ── */
   const FOTOS_DIR = 'galeria-sinfonica/';
-  const FOTOS = window.__FOTOS__ || [];
+  const FOTOS = window.__FOTOS__ || [
+  'FOTOS[11].jpg',
+  'FOTOS[2].JPG',
+  'FOTOS[5].JPG',
+  'FOTOS[6].JPG',
+  'FOTOS[7].jpg',
+  'FOTOS[8].jpg',
+  'FOTOS[10].jpg',
+  'FOTOS[11].jpg',
+  'FOTOS[12].jpg',
+  'FOTOS[13].jpg',
+  'FOTOS[15].JPG',
+  'FOTOS[3].jpg',
+  'FOTOS[4].jpg'
+];
   const galeriaGrid = document.getElementById('galeriaGrid');
 
   function buildGaleria(fotos){
@@ -643,3 +657,9 @@
 </script>
 </body>
 </html>
+
+
+
+
+<style>footer, footer p, footer a, footer span, footer h4, footer li, .footer-brand p, .footer-col ul li a, .footer-col ul li span, .footer-col h4, .f-logo-name, .footer-bottom p, .footer-frase, .red-link { color: #ccc !important; }</style>
+
