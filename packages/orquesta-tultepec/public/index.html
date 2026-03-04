@@ -65,7 +65,7 @@
       background-image:url('galeria-sinfonica/hero.jpg');
       background-size:cover;background-position:center top;
       opacity:.80;filter:grayscale(60%);
-    }
+    ;animation:kenburns 11s ease-in-out infinite alternate}
     .hero-overlay{
       position:absolute;inset:0;
       background:linear-gradient(to top, rgba(10,10,10,1) 0%, rgba(10,10,10,.6) 40%, rgba(10,10,10,.1) 100%);
@@ -280,7 +280,7 @@
     .nm-close{position:absolute;top:1.5rem;right:2rem;background:none;border:none;color:#bbb;font-size:1.5rem;cursor:pointer;font-family:var(--ff-b)}
 
     /* ─── ANIMACIONES ────────────────────────────────── */
-    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes kenburns{from{transform:scale(1)}to{transform:scale(1.12)}} @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
     .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
     .reveal.visible{opacity:1;transform:translateY(0)}
     .reveal-delay-1{transition-delay:.1s}
@@ -312,6 +312,32 @@
       .footer-top{grid-template-columns:1fr}
       .footer-bottom{flex-direction:column;text-align:center}
     }
+
+    /* --- VIDEOS --- */
+    #videos{background:var(--blanco);padding:8rem 4vw;color:var(--negro);position:relative;overflow:hidden}
+    .videos-header{max-width:1200px;margin:0 auto 3.5rem}
+    .videos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1200px;margin:0 auto}
+    .video-card{position:relative;cursor:pointer;background:var(--negro);overflow:hidden}
+    .video-thumb{position:relative;width:100%;padding-top:56.25%;overflow:hidden}
+    .video-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s,opacity .4s;filter:grayscale(20%)}
+    .video-card:hover .video-thumb img{transform:scale(1.05);opacity:.7}
+    .video-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+    .video-play-btn{width:52px;height:52px;border:2px solid rgba(255,255,255,.8);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .3s,border-color .3s,transform .2s}
+    .video-play-btn::after{content:'';display:block;width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:18px solid rgba(255,255,255,.9);margin-left:4px}
+    .video-card:hover .video-play-btn{background:var(--blanco);border-color:var(--blanco);transform:scale(1.1)}
+    .video-card:hover .video-play-btn::after{border-left-color:var(--negro)}
+    .video-info{padding:1rem 0 .5rem;background:var(--blanco)}
+    .video-titulo{font-family:var(--ff-t);font-size:1rem;font-weight:600;color:var(--negro);line-height:1.3;margin-bottom:.3rem}
+    .video-sub{font-size:.7rem;letter-spacing:.1em;color:#888;text-transform:uppercase}
+    #video-modal{display:none;position:fixed;inset:0;z-index:999;background:rgba(10,10,10,.96);align-items:center;justify-content:center}
+    #video-modal.active{display:flex}
+    .modal-inner{position:relative;width:90vw;max-width:960px}
+    .modal-iframe-wrap{position:relative;padding-top:56.25%;background:#000}
+    .modal-iframe-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+    .modal-close{position:absolute;top:-2.5rem;right:0;background:none;border:none;color:rgba(255,255,255,.6);font-size:1.6rem;cursor:pointer;font-family:var(--ff-b);transition:color .2s}
+    .modal-close:hover{color:#fff}
+    @media(max-width:900px){.videos-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:600px){.videos-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -351,8 +377,7 @@
   <div class="hero-overlay"></div>
   <div class="hero-inner">
     <div class="hero-pretag">Tultepec · Estado de México · Est. 2010</div>
-    <img src="logo-osjut.png" alt="Orquesta Sinfónica Juvenil de Tultepec"
-         class="hero-logo-img" onerror="this.style.display='none';" />
+    
     <h1 class="hero-title">
       Orquesta<br>Sinfónica<br><em>Juvenil de Tultepec</em>
     </h1>
@@ -417,42 +442,50 @@
   <div class="rep-grid">
     <div class="rep-item reveal">
       <div class="rep-num">01</div>
-      <h3>Clásico</h3>
+      <h3>Barroco</h3>
       <ul>
-        <li>Mozart · Sinfonías</li>
-        <li>Haydn · Cuartetos orquestados</li>
-        <li>Beethoven · Ciclos sinfónicos</li>
-        <li>Schubert · Obras de cámara</li>
+        <li>Vivaldi &middot; Gloria RV 589</li>
+        <li>Vivaldi &middot; Magnificat RV 610</li>
+        <li>Pergolesi &middot; Stabat Mater</li>
+        <li>Bach &middot; Oratorio de Navidad</li>
+        <li>Charpentier &middot; Te Deum</li>
+        <li>H&auml;ndel &middot; Concierto Grosso op.6</li>
       </ul>
     </div>
     <div class="rep-item reveal reveal-delay-1">
       <div class="rep-num">02</div>
-      <h3>Sinfónico Coral</h3>
+      <h3>Clasicismo</h3>
       <ul>
-        <li>Oratorio y cantata</li>
-        <li>Verdi · Réquiem</li>
-        <li>Beethoven · Novena Sinfonía</li>
-        <li>Música sacra contemporánea</li>
+        <li>Haydn &middot; Las Siete Palabras</li>
+        <li>Haydn &middot; Sinf. n.&ordm; 44 &laquo;F&uacute;nebre&raquo;</li>
+        <li>Mozart &middot; Sinf. n.&ordm; 40 sol menor</li>
+        <li>Mozart &middot; R&eacute;quiem K.626</li>
+        <li>Mozart &middot; Concierto para clar&iacute;nete</li>
+        <li>Beethoven &middot; Obertura Egmont</li>
       </ul>
     </div>
     <div class="rep-item reveal reveal-delay-2">
       <div class="rep-num">03</div>
-      <h3>Conciertos con Solistas</h3>
+      <h3>Romanticismo</h3>
       <ul>
-        <li>Violín · Piano · Cello</li>
-        <li>Repertorio italiano y alemán</li>
-        <li>Estrenos con artistas invitados</li>
-        <li>Cruces con música de cámara</li>
+        <li>Brahms &middot; Sinf. n.&ordm; 2 re mayor</li>
+        <li>Tchaikovsky &middot; Sinf. n.&ordm; 5 mi menor</li>
+        <li>Bizet &middot; Carmen, Suites 1 y 2</li>
+        <li>Verdi &middot; Obertura La forza del destino</li>
+        <li>Weber &middot; Obertura Der Freisch&uuml;tz</li>
+        <li>Hummel &middot; Concierto para trompeta</li>
       </ul>
     </div>
     <div class="rep-item reveal reveal-delay-3">
       <div class="rep-num">04</div>
-      <h3>Contemporáneo</h3>
+      <h3>Siglo XX &middot; M&eacute;xico</h3>
       <ul>
-        <li>Compositores mexicanos</li>
-        <li>Estrenos latinoamericanos</li>
-        <li>Fusión con géneros urbanos</li>
-        <li>Encargos y comisiones</li>
+        <li>Moncayo &middot; Huapango</li>
+        <li>Moncayo &middot; Sinfonietta</li>
+        <li>Ponce &middot; Ferial</li>
+        <li>Rodrigo &middot; Concierto de Aranjuez</li>
+        <li>Mangani &middot; Fantas&iacute;a para clar&iacute;nete</li>
+        <li>De Falla &middot; Interludio de La vida breve</li>
       </ul>
     </div>
   </div>
@@ -501,6 +534,52 @@
 </section>
 
 <!-- GALERÍA — negro -->
+
+<!-- VIDEOS - blanco -->
+<section id="videos">
+  <div class="sec-num">05</div>
+  <div class="videos-header">
+    <p class="sec-label reveal" style="color:#888">Archivo audiovisual</p>
+    <h2 class="sec-title reveal">Momentos<br><em>musicales</em></h2>
+    <div class="line reveal" style="background:var(--negro)"></div>
+  </div>
+  <div class="videos-grid" id="videosGrid">
+    <div class="video-card reveal" data-yt="L_CvU3dHeEs">
+      <div class="video-thumb"><img src="https://img.youtube.com/vi/L_CvU3dHeEs/hqdefault.jpg" alt="Clarinete" /><div class="video-play"><div class="video-play-btn"></div></div></div>
+      <div class="video-info"><p class="video-titulo">Concierto para clarinete en La mayor, K. 622</p><p class="video-sub">Mto. Alejandro Moreno &middot; Alc&aacute;zar de Chapultepec</p></div>
+    </div>
+    <div class="video-card reveal reveal-delay-1" data-yt="Xqhag-zD1y0">
+      <div class="video-thumb"><img src="https://img.youtube.com/vi/Xqhag-zD1y0/hqdefault.jpg" alt="Suite Saint Paul" /><div class="video-play"><div class="video-play-btn"></div></div></div>
+      <div class="video-info"><p class="video-titulo">Suite Saint Paul</p><p class="video-sub">Coacalco, Estado de M&eacute;xico &middot; 2025</p></div>
+    </div>
+    <div class="video-card reveal reveal-delay-2" data-yt="vTtpLVT2KFg">
+      <div class="video-thumb"><img src="https://img.youtube.com/vi/vTtpLVT2KFg/hqdefault.jpg" alt="Paisiello" /><div class="video-play"><div class="video-play-btn"></div></div></div>
+      <div class="video-info"><p class="video-titulo">Concierto para Clav&eacute;cin en Fa mayor</p><p class="video-sub">G. Paisiello &middot; Solista: Angela Ignacchiti &middot; Edificio Bicentenario 2024</p></div>
+    </div>
+    <div class="video-card reveal" data-yt="gW5Rf9pOsjE">
+      <div class="video-thumb"><img src="https://img.youtube.com/vi/gW5Rf9pOsjE/hqdefault.jpg" alt="Tultepec" /><div class="video-play"><div class="video-play-btn"></div></div></div>
+      <div class="video-info"><p class="video-titulo">Concierto en Tultepec</p><p class="video-sub">Parroquia de Santa Mar&iacute;a Nativitas &middot; Febrero 2024</p></div>
+    </div>
+    <div class="video-card reveal reveal-delay-1" data-yt="IFN404sCRS4">
+      <div class="video-thumb"><img src="https://img.youtube.com/vi/IFN404sCRS4/hqdefault.jpg" alt="Sinfonietta" /><div class="video-play"><div class="video-play-btn"></div></div></div>
+      <div class="video-info"><p class="video-titulo">Sinfonietta</p><p class="video-sub">Jos&eacute; Pablo Moncayo &middot; Dir. V&iacute;ctor Contreras</p></div>
+    </div>
+    <div class="video-card reveal reveal-delay-2" data-yt="rwYMhjPEcrc">
+      <div class="video-thumb"><img src="https://img.youtube.com/vi/rwYMhjPEcrc/hqdefault.jpg" alt="Oratorio Navidad" /><div class="video-play"><div class="video-play-btn"></div></div></div>
+      <div class="video-info"><p class="video-titulo">Oratorio de Navidad BWV 248</p><p class="video-sub">J.S. Bach &middot; Museo Virreinato, Tepotztl&aacute;n &middot; Diciembre 2023</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- MODAL VIDEO -->
+<div id="video-modal">
+  <div class="modal-inner">
+    <button class="modal-close" id="modal-close">X</button>
+    <div class="modal-iframe-wrap">
+      <iframe id="modal-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
 <section id="galeria">
   <div class="gal-header">
     <p class="sec-label reveal" style="color:#bbb">Imágenes</p>
@@ -530,7 +609,7 @@
         <p>Jóvenes músicos comprometidos con la excelencia interpretativa y el desarrollo cultural de México.</p>
         <div class="redes">
           <a href="#" class="red-link" aria-label="Facebook">f</a>
-          <a href="#" class="red-link" aria-label="Instagram">✦</a>
+          <a href="https://www.instagram.com/orquestasinfonicatultepec/" target="_blank" rel="noopener" class="red-link" aria-label="Instagram">✦</a>
           <a href="#" class="red-link" aria-label="YouTube">▶</a>
         </div>
       </div>
@@ -654,7 +733,30 @@
     if(e.key==='ArrowLeft') document.getElementById('lb-prev').click();
     if(e.key==='ArrowRight')document.getElementById('lb-next').click();
   });
-</script>
+
+  /* -- VIDEOS -- */
+  document.querySelectorAll('.video-card').forEach(function(card){
+    card.addEventListener('click', function(){
+      var id = card.dataset.yt;
+      if(!id) return;
+      document.getElementById('modal-iframe').src = 'https://www.youtube.com/embed/' + id + '?autoplay=1';
+      document.getElementById('video-modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+  document.getElementById('modal-close').addEventListener('click', function(){
+    document.getElementById('video-modal').classList.remove('active');
+    document.getElementById('modal-iframe').src = '';
+    document.body.style.overflow = '';
+  });
+  document.getElementById('video-modal').addEventListener('click', function(e){
+    if(e.target === this){
+      this.classList.remove('active');
+      document.getElementById('modal-iframe').src = '';
+      document.body.style.overflow = '';
+    }
+  });
+  </script>
 </body>
 </html>
 
@@ -662,4 +764,12 @@
 
 
 <style>footer, footer p, footer a, footer span, footer h4, footer li, .footer-brand p, .footer-col ul li a, .footer-col ul li span, .footer-col h4, .f-logo-name, .footer-bottom p, .footer-frase, .red-link { color: #ccc !important; }</style>
+
+
+
+
+
+
+
+
 
