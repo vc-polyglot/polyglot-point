@@ -1,0 +1,271 @@
+﻿/* ============================================
+   POLYGLOT POINT — FLUID THRESHOLD COMPLETO
+   Con la pinche ola de Hokusai y todo funcional
+   ============================================ */
+
+/* RESET DEL BODY */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.login-artistic {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+/* ===== FONDO GRADIENTE AZUL ===== */
+.login-artistic-bg {
+  position: fixed; /* 👈 FIJO para cubrir toda la pantalla */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  
+  /* GRADIENTE THRESHOLD EXACTO */
+  background: linear-gradient(135deg, 
+    #101922 0%,
+    #0a2e52 20%,
+    #137fec 60%,
+    #40e0d0 100%
+  );
+}
+
+/* ===== LA PINCHÉ OLA DE HOKUSAI ===== */
+.login-artistic-bg::before {
+  content: "";
+  position: absolute;
+  bottom: -15%; /* 👈 Nace desde abajo */
+  left: 0%;   /* 👈 Saca por la izquierda */
+  width: 1200px;
+  height: 800px;
+  
+  /* LA OLA BLANCA Y NEGRA */
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/0/0a/The_Great_Wave_off_Kanagawa.jpg");
+  background-size: cover;
+  background-position: center;
+  
+  /* TRATAMIENTO VISUAL - OLA BLANCA */
+  filter: 
+    grayscale(1)     /* Blanco y negro */
+    contrast(1.2)    /* Más contraste */
+    brightness(1.1); /* Un poco más brillante */
+  
+  /* MEZCLA CON EL FONDO */
+  mix-blend-mode: overlay; /* 👈 Overlay para efecto vibrante */
+  opacity: 0.8;            /* 👈 Sutil pero visible */
+  
+  /* MÁSCARA PARA DESVANECIMIENTO */
+  -webkit-mask-image: 
+    linear-gradient(to right, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 80%),
+    linear-gradient(to top, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 90%);
+  -webkit-mask-composite: intersect;
+  mask-composite: intersect;
+  
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ===== CONTENIDO ===== */
+.login-artistic-content {
+  position: relative;
+  z-index: 10; /* 👈 ENCIMA de la ola */
+  display: flex;
+  width: 100%;
+  max-width: 1400px;
+  padding: 2rem;
+  gap: 6rem;
+  align-items: center;
+}
+
+/* ===== LADO IZQUIERDO ===== */
+.login-artistic-left {
+  flex: 1;
+  display: none; /* Tu estructura original */
+}
+
+.login-artistic-title {
+  font-size: 6rem;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 2.5rem;
+  color: white;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.0);
+  
+  /* GRADIENTE DE TEXTO */
+  background: linear-gradient(to right, 
+    
+    #e0f2fe,
+    rgba(186, 230, 253, 0.7)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.login-artistic-subtitle {
+  font-size: 2.25rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  font-weight: 300;
+  max-width: 500px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.0);
+}
+
+/* ===== LADO DERECHO ===== */
+.login-artistic-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ===== PANEL GLASSMORPHISM ===== */
+.login-glass-panel {
+  background: rgba(16, 25, 34, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  padding: 3rem;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+  z-index: 20; /* 👈 ENCIMA de todo */
+}
+
+.login-glass-heading {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: white;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.login-glass-text {
+  color: #92adc9;
+  font-size: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+/* ===== BOTÓN GOOGLE CORREGIDO ===== */
+.login-glass-panel .btn-oauth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  
+  /* GRADIENTE DEL THRESHOLD */
+  background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+  color: white;
+  box-shadow: 
+    0 6px 20px rgba(66, 133, 244, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  
+  /* EVITAR QUE SE ESTIRE */
+  flex-shrink: 0;
+  max-width: 100%;
+}
+
+.login-glass-panel .btn-oauth:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 10px 25px rgba(66, 133, 244, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.15);
+  background: linear-gradient(135deg, #3367D6 0%, #2E8B57 100%);
+}
+
+.login-glass-panel .btn-oauth:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.login-glass-panel .btn-oauth .oauth-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .login-artistic-left {
+    display: block;
+  }
+  
+  .login-artistic-content {
+    gap: 6rem;
+  }
+}
+
+/* Tablet */
+@media (max-width: 1023px) {
+  .login-artistic-content {
+    padding: 1.5rem;
+    gap: 3rem;
+  }
+  
+  .login-glass-panel {
+    padding: 2rem;
+  }
+  
+  .login-artistic-title {
+    font-size: 3rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .login-artistic-content {
+    padding: 1rem;
+    flex-direction: column;
+  }
+  
+  .login-glass-panel {
+    padding: 1.5rem;
+    max-width: 100%;
+  }
+  
+  .login-artistic-title {
+    font-size: 2.5rem;
+    text-align: center;
+  }
+  
+  .login-artistic-subtitle {
+    text-align: center;
+  }
+}
+
+/* Pequeños móviles */
+@media (max-width: 375px) {
+  .login-artistic-title {
+    font-size: 2rem;
+  }
+  
+  .login-glass-panel {
+    padding: 1.25rem;
+  }
+}

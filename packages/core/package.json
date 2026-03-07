@@ -4,6 +4,13 @@
   "main": "index.ts",
   "types": "index.ts",
   "type": "module",
+  "exports": {
+    ".": "./index.ts",
+    "./database": "./database/index.ts",
+    "./auth": "./auth/index.ts",
+    "./llm": "./llm/index.ts",
+    "./types": "./types/index.ts"
+  },
   "dependencies": {
     "drizzle-orm": "^0.44.7",
     "jsonwebtoken": "^9.0.2",
