@@ -203,7 +203,7 @@ const App: React.FC = () => {
   }, [messages, scrollToBottom]);
 
   const handleLogin = useCallback(() => {
-  window.location.href = "http://localhost:3000/api/auth/google";
+  window.location.href = "/auth/google";
   }, []);
 
   const hardResetUi = useCallback(() => {
