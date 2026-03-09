@@ -53,7 +53,7 @@
       position: absolute; top: -20%; left: 0; right: 0; bottom: -20%;
       background-image: url('victor-hero.jpg');
       background-size: cover; background-position: center 30%;
-      filter: grayscale(100%) brightness(0.42) contrast(1.12);
+      filter: grayscale(100%) brightness(1.2) contrast(1.12);
       transition: filter 1.4s ease;
       will-change: transform;
     }
@@ -188,6 +188,90 @@
     [data-lang].lang-active { display: block; }
     .inline-lang { display: none; }
     .inline-lang.lang-active { display: inline; }
+
+    /* BIO SLIDESHOW */
+    .bio-img { position: relative; overflow: hidden; }
+    .bio-img::before { content: ''; position: absolute; inset: -10px -10px 10px 10px; border: 1px solid var(--silver-dim); opacity: 0.25; pointer-events: none; z-index: 1; }
+    .bio-slide {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center top;
+      filter: grayscale(35%) brightness(0.82);
+      transition: opacity 1.2s ease, filter 1.2s ease, transform 8s ease;
+      opacity: 0;
+    }
+    .bio-slide.active {
+      opacity: 1;
+      transform: scale(1.06);
+      filter: grayscale(15%) brightness(0.88);
+    }
+    .bio-slide-placeholder { width: 100%; aspect-ratio: 3/4; display: block; }
+    .bio-img:hover .bio-slide.active { filter: grayscale(0%) brightness(0.95); }
+
+    /* GALLERY */
+    .gallery-wrap { background: var(--bg); }
+    .gallery-inner { max-width: 1200px; margin: 0 auto; padding: 100px 6vw; }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-top: 48px;
+    }
+    .gallery-item {
+      position: relative; overflow: hidden; cursor: pointer;
+      aspect-ratio: 3/4;
+    }
+    .gallery-item:nth-child(3n+1) { aspect-ratio: 3/4; }
+    .gallery-item:nth-child(5), .gallery-item:nth-child(9) {
+      grid-column: span 2; aspect-ratio: 16/9;
+    }
+    .gallery-item img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: grayscale(30%) brightness(0.75);
+      transition: filter 0.6s ease, transform 0.7s ease;
+      display: block;
+    }
+    .gallery-item:hover img {
+      filter: grayscale(0%) brightness(0.95);
+      transform: scale(1.05);
+    }
+    .gallery-item::after {
+      content: '+';
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--silver);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .gallery-item:hover::after { opacity: 1; }
+
+    /* LIGHTBOX */
+    #lightbox {
+      position: fixed; inset: 0; z-index: 2000;
+      background: rgba(7,9,15,0.97);
+      display: none; align-items: center; justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img {
+      max-width: 90vw; max-height: 88vh;
+      object-fit: contain;
+      box-shadow: 0 0 80px rgba(0,0,0,0.9);
+    }
+    #lb-close {
+      position: absolute; top: 24px; right: 32px;
+      font-size: 2rem; color: var(--silver-dim); cursor: pointer;
+      background: none; border: none; line-height: 1;
+      transition: color 0.2s;
+    }
+    #lb-close:hover { color: var(--silver-light); }
+    #lb-prev, #lb-next {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      font-size: 1.8rem; color: var(--silver-dim); cursor: pointer;
+      background: none; border: none; padding: 16px;
+      transition: color 0.2s;
+    }
+    #lb-prev:hover, #lb-next:hover { color: var(--silver-light); }
+    #lb-prev { left: 20px; }
+    #lb-next { right: 20px; }
   </style>
 </head>
 <body>
@@ -203,9 +287,11 @@
   <a href="#bio"><span class="inline-lang lang-active">Biografía</span><span class="inline-lang">Biography</span><span class="inline-lang">Biographie</span><span class="inline-lang">Biografia</span></a>
   <a href="#activities"><span class="inline-lang lang-active">Actividades</span><span class="inline-lang">Activities</span><span class="inline-lang">Activités</span><span class="inline-lang">Attività</span></a>
   <a href="#videos">Videos</a>
-  <a href="#orchestra"><span class="inline-lang lang-active">Orquesta</span><span class="inline-lang">Orchestra</span><span class="inline-lang">Orchestre</span><span class="inline-lang">Orchestra</span></a>
+  <a href="#orchestra"><span class="inline-lang lang-active">Orquesta Barroca</span><span class="inline-lang">Baroque Orchestra</span><span class="inline-lang">Orchestre Baroque</span><span class="inline-lang">Orchestra Barocca</span></a>
+  <a href="#osjut"><span class="inline-lang lang-active">Orquesta Juvenil</span><span class="inline-lang">Youth Orchestra</span><span class="inline-lang">Orchestre Jeune</span><span class="inline-lang">Orchestra Giovanile</span></a>
   <a href="#concerts"><span class="inline-lang lang-active">Conciertos</span><span class="inline-lang">Concerts</span><span class="inline-lang">Concerts</span><span class="inline-lang">Concerti</span></a>
   <a href="#discography"><span class="inline-lang lang-active">Discografía</span><span class="inline-lang">Discography</span><span class="inline-lang">Discographie</span><span class="inline-lang">Discografia</span></a>
+  <a href="#gallery"><span class="inline-lang lang-active">Galería</span><span class="inline-lang">Gallery</span><span class="inline-lang">Galerie</span><span class="inline-lang">Galleria</span></a>
   <a href="#contact"><span class="inline-lang lang-active">Contacto</span><span class="inline-lang">Contact</span><span class="inline-lang">Contact</span><span class="inline-lang">Contatto</span></a>
 </nav>
 
@@ -265,8 +351,12 @@
         <p>Nel corso di decenni di intensa carriera, ha tenuto recital in Messico, Europa, Asia e nelle Americhe. Nel 2019 ha inciso <em>Cuaderno de tonos de maitines di Sor María Clara del Santísimo Sacramento</em> per l'etichetta italiana Linae Occultae.</p>
       </div>
     </div>
-    <div class="bio-img">
-      <img src="victor-bio.jpg" alt="Víctor Contreras"/>
+    <div class="bio-img" id="bioSlideshow">
+      <img class="bio-slide-placeholder" src="victor-bio.jpg" alt="Víctor Contreras" style="opacity:0; width:100%; aspect-ratio:3/4;"/>
+      <div class="bio-slide active" style="background-image:url('victor-bio.jpg')"></div>
+      <div class="bio-slide" style="background-image:url('galeria/g01.jpg')"></div>
+      <div class="bio-slide" style="background-image:url('galeria/g05.jpg')"></div>
+      <div class="bio-slide" style="background-image:url('galeria/g08.jpg')"></div>
     </div>
   </div>
   <div class="bio-facts reveal" id="counters">
@@ -366,7 +456,48 @@
 
 <div class="diag"></div>
 
-<!-- CONCERTS -->
+<!-- OSJUT -->
+<section id="osjut" style="max-width:100%; padding:0;">
+  <div style="background: var(--bg3); max-width:100%;">
+    <div style="max-width:1200px; margin:0 auto; padding:100px 6vw;">
+      <div class="reveal">
+        <p class="section-label">Tultepec, Estado de México</p>
+        <h2 class="section-title"><span class="inline-lang lang-active">Orquesta Sinfónica <em>Juvenil</em></span><span class="inline-lang"><em>Youth</em> Symphony Orchestra</span><span class="inline-lang">Orchestre Symphonique <em>Jeune</em></span><span class="inline-lang">Orchestra Sinfonica <em>Giovanile</em></span></h2>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr; gap:48px; margin-top:48px;" class="reveal">
+        <div style="text-align:center;">
+          <img src="galeria/g09.jpg" alt="Orquesta Sinfónica Juvenil de Tultepec" style="max-width:100%; width:100%; object-fit:contain; display:block;"/>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start;">
+          <div>
+            <div data-lang="es" class="lang-active" style="font-size:1rem; color:var(--cream-dim); line-height:1.88;">
+              <p>La Orquesta Sinfónica y Coro Juvenil de Tultepec es un proyecto artístico y social único en el Estado de México, fundado y dirigido por Víctor Contreras. Con una base de 23 músicos de cuerdas que crece hasta 43 integrantes en sus conciertos sinfónicos, la orquesta representa el talento y la vocación musical de jóvenes tultepenses.</p>
+              <p style="margin-top:1em;">El ensemble ha actuado en los escenarios más prestigiosos del país: el Museo Soumaya, la Catedral Metropolitana, el Museo Nacional del Virreinato en Tepotzotlán y el Auditorio Silvestre Revueltas del Conservatorio Nacional de Música. Su repertorio abarca desde el Barroco hasta la música mexicana contemporánea.</p>
+            </div>
+            <div data-lang="en" style="font-size:1rem; color:var(--cream-dim); line-height:1.88;">
+              <p>The Youth Symphony Orchestra and Choir of Tultepec is a unique artistic and social project in the State of Mexico, founded and directed by Víctor Contreras. With a core of 23 string players growing to 43 for symphonic concerts, the orchestra represents the musical talent and vocation of young musicians from Tultepec.</p>
+              <p style="margin-top:1em;">The ensemble has performed at Mexico's most prestigious venues: Museo Soumaya, the Metropolitan Cathedral, the National Museum of the Viceroyalty in Tepotzotlán, and the Silvestre Revueltas Auditorium at the National Conservatory of Music.</p>
+            </div>
+            <div data-lang="fr" style="font-size:1rem; color:var(--cream-dim); line-height:1.88;">
+              <p>L'Orchestre Symphonique et Chœur Jeune de Tultepec est un projet artistique et social unique dans l'État de Mexico, fondé et dirigé par Víctor Contreras. Avec un noyau de 23 musiciens qui croît jusqu'à 43 lors des concerts symphoniques, l'orchestre représente le talent musical de jeunes de Tultepec.</p>
+            </div>
+            <div data-lang="it" style="font-size:1rem; color:var(--cream-dim); line-height:1.88;">
+              <p>L'Orchestra Sinfonica e Coro Giovanile di Tultepec è un progetto artistico e sociale unico nello Stato del Messico, fondato e diretto da Víctor Contreras. Con un nucleo di 23 archi che cresce fino a 43 elementi nei concerti sinfonici, l'orchestra rappresenta il talento musicale dei giovani di Tultepec.</p>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; justify-content:center;">
+            <a href="https://www.osjut.com" target="_blank" class="hero-cta" style="animation:none; opacity:1; display:inline-block; margin-bottom:24px;">
+              <span class="inline-lang lang-active">Sitio oficial</span>
+              <span class="inline-lang">Official site</span>
+              <span class="inline-lang">Site officiel</span>
+              <span class="inline-lang">Sito ufficiale</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 <section id="concerts">
   <div class="reveal">
     <p class="section-label">Agenda 2025</p>
@@ -440,6 +571,39 @@
   </div>
 </div>
 
+<div class="diag rev"></div>
+
+<!-- GALLERY -->
+<div class="gallery-wrap">
+  <div class="gallery-inner" id="gallery">
+    <div class="reveal">
+      <p class="section-label"><span class="inline-lang lang-active">Momentos</span><span class="inline-lang">Moments</span><span class="inline-lang">Moments</span><span class="inline-lang">Momenti</span></p>
+      <h2 class="section-title"><span class="inline-lang lang-active"><em>Galería</em></span><span class="inline-lang"><em>Gallery</em></span><span class="inline-lang"><em>Galerie</em></span><span class="inline-lang"><em>Galleria</em></span></h2>
+    </div>
+    <div class="gallery-grid reveal">
+      <div class="gallery-item" onclick="openLightbox(0)"><img src="galeria/g01.jpg" alt="Víctor Contreras"/></div>
+      <div class="gallery-item" onclick="openLightbox(1)"><img src="galeria/g02.jpg" alt=""/></div>
+      <div class="gallery-item" onclick="openLightbox(2)"><img src="galeria/g03.jpg" alt=""/></div>
+      <div class="gallery-item" onclick="openLightbox(3)"><img src="galeria/g04.jpg" alt=""/></div>
+      <div class="gallery-item" onclick="openLightbox(4)"><img src="galeria/g05.jpg" alt=""/></div>
+      <div class="gallery-item" onclick="openLightbox(5)"><img src="galeria/g06.jpg" alt=""/></div>
+      <div class="gallery-item" onclick="openLightbox(6)"><img src="galeria/g07.jpg" alt=""/></div>
+      <div class="gallery-item" onclick="openLightbox(7)"><img src="galeria/g08.jpg" alt=""/></div>
+      <div class="gallery-item" onclick="openLightbox(8)"><img src="galeria/g09.jpg" alt=""/></div>
+      <div class="gallery-item" onclick="openLightbox(9)"><img src="galeria/g10.jpg" alt=""/></div>
+      <div class="gallery-item" onclick="openLightbox(10)"><img src="galeria/g11.jpg" alt=""/></div>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button id="lb-close" onclick="closeLightbox()">✕</button>
+  <button id="lb-prev" onclick="lbNav(-1)">‹</button>
+  <img id="lb-img" src="" alt=""/>
+  <button id="lb-next" onclick="lbNav(1)">›</button>
+</div>
+
 <div class="diag"></div>
 
 <!-- CONTACT -->
@@ -458,7 +622,7 @@
       </h3>
       <div class="contact-detail">
         <span class="contact-detail-icon">✉</span>
-        <div><a href="mailto:victoropus24@yahoo.com.mx">victoropus24@yahoo.com.mx</a></div>
+        <div><a href="/cdn-cgi/l/email-protection#384e515b4c574a57484d4b0a0c784159505757165b5755165540"><span class="__cf_email__" data-cfemail="86f0efe5f2e9f4e9f6f3f5b4b2c6ffe7eee9e9a8e5e9eba8ebfe">[email&#160;protected]</span></a></div>
       </div>
       <div class="contact-detail">
         <span class="contact-detail-icon">☏</span>
@@ -528,8 +692,46 @@
   </p>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   let currentLang = 'es';
+
+  // BIO SLIDESHOW
+  (function() {
+    const slides = document.querySelectorAll('#bioSlideshow .bio-slide');
+    if (!slides.length) return;
+    let cur = 0;
+    setInterval(() => {
+      slides[cur].classList.remove('active');
+      cur = (cur + 1) % slides.length;
+      slides[cur].classList.add('active');
+    }, 4000);
+  })();
+
+  // LIGHTBOX
+  const galleryImgs = ['galeria/g01.jpg','galeria/g02.jpg','galeria/g03.jpg','galeria/g04.jpg','galeria/g05.jpg','galeria/g06.jpg','galeria/g07.jpg','galeria/g08.jpg','galeria/g09.jpg','galeria/g10.jpg','galeria/g11.jpg'];
+  let lbIndex = 0;
+  function openLightbox(i) {
+    lbIndex = i;
+    document.getElementById('lb-img').src = galleryImgs[i];
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function lbNav(dir) {
+    lbIndex = (lbIndex + dir + galleryImgs.length) % galleryImgs.length;
+    document.getElementById('lb-img').src = galleryImgs[lbIndex];
+  }
+  document.getElementById('lightbox').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('lightbox')) closeLightbox();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') lbNav(1);
+    if (e.key === 'ArrowLeft') lbNav(-1);
+  });
 
   // PARALLAX
   const parallaxEl = document.getElementById('hero-parallax');
