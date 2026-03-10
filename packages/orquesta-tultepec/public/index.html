@@ -64,7 +64,7 @@
       position:absolute;inset:0;
       background-image:url('galeria-sinfonica/hero.jpg');
       background-size:cover;background-position:center top;
-      opacity:.80;filter:grayscale(60%);
+      opacity:.99;filter:grayscale(60%);
     ;animation:kenburns 11s ease-in-out infinite alternate}
     .hero-overlay{
       position:absolute;inset:0;
@@ -338,6 +338,41 @@
     .modal-close:hover{color:#fff}
     @media(max-width:900px){.videos-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:600px){.videos-grid{grid-template-columns:1fr}}
+
+    /* --- CONCIERTOS --- */
+    #conciertos{background:var(--negro);padding:8rem 4vw;color:var(--blanco);position:relative;overflow:hidden}
+    .conciertos-header{max-width:1200px;margin:0 auto 3rem}
+    .tabs{display:flex;gap:0;max-width:1200px;margin:0 auto 3.5rem;border-bottom:1px solid rgba(255,255,255,.1)}
+    .tab-btn{background:none;border:none;cursor:pointer;font-family:var(--ff-b);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:rgba(255,255,255,.35);padding:.9rem 2rem .9rem 0;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .25s}
+    .tab-btn.active{color:var(--blanco);border-bottom-color:var(--blanco)}
+    .tab-btn:hover{color:rgba(255,255,255,.7)}
+    .tab-panel{display:none;max-width:1200px;margin:0 auto}
+    .tab-panel.active{display:block}
+    /* proximos */
+    .proximos-empty{padding:4rem 0;text-align:center}
+    .proximos-empty p{font-family:var(--ff-t);font-style:italic;font-size:1.2rem;color:rgba(255,255,255,.25)}
+    .evento-card{display:grid;grid-template-columns:120px 1fr;gap:2rem;padding:2rem 0;border-bottom:1px solid rgba(255,255,255,.07);transition:background .2s}
+    .evento-card:first-child{border-top:1px solid rgba(255,255,255,.07)}
+    .evento-fecha{text-align:right;padding-top:.2rem}
+    .evento-fecha .dia{font-family:var(--ff-t);font-size:2.8rem;font-weight:700;line-height:1;color:var(--blanco)}
+    .evento-fecha .mes{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.35);font-weight:600;margin-top:.2rem}
+    .evento-fecha .anio{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.2);font-weight:400}
+    .evento-info h3{font-family:var(--ff-t);font-size:1.15rem;font-weight:600;color:var(--blanco);margin-bottom:.4rem;line-height:1.3}
+    .evento-info .orquesta{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);font-weight:500;margin-bottom:.4rem}
+    .evento-info .venue{font-size:.82rem;color:rgba(255,255,255,.5);font-style:italic}
+    /* historial por aÃ±o */
+    .anio-grupo{margin-bottom:3rem}
+    \.anio-label{font-family:var(--ff-t);font-style:italic;font-size:1.1rem;font-weight:400;color:rgba(255,255,255,.6);letter-spacing:.2em;text-transform:uppercase;margin-bottom:2rem;margin-top:2.5rem;display:flex;align-items:center;gap:1.5rem;border-left:2px solid rgba(255,255,255,.3);padding-left:1rem}.anio-label::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.1)}
+    .hist-item{display:grid;grid-template-columns:90px 1fr;gap:1.5rem;padding:1.2rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
+    .hist-item:last-child{border-bottom:none}
+    .hist-fecha{font-size:.7rem;letter-spacing:.1em;color:rgba(255,255,255,.7);text-transform:uppercase;font-weight:500;padding-top:.25rem;line-height:1.5}
+    \.hist-info h4{font-family:var(--ff-t);font-size:1rem;font-weight:600;color:rgba(255,255,255,.97);margin-bottom:.2rem;line-height:1.35}
+    \.hist-info .h-orq{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:.2rem}
+    \.hist-info .h-venue{font-size:.78rem;color:rgba(255,255,255,.55);font-style:italic}
+    @media(max-width:600px){
+      .evento-card{grid-template-columns:80px 1fr;gap:1rem}
+      .hist-item{grid-template-columns:70px 1fr;gap:1rem}
+    }
   </style>
 </head>
 <body>
@@ -376,7 +411,7 @@
   <div class="hero-photo"></div>
   <div class="hero-overlay"></div>
   <div class="hero-inner">
-    <div class="hero-pretag">Tultepec · Estado de México · Est. 2010</div>
+    <div class="hero-pretag">Tultepec · Estado de México · Est. 2018</div>
     
     <h1 class="hero-title">
       Orquesta<br>Sinfónica<br><em>Juvenil de Tultepec</em>
@@ -527,6 +562,31 @@
       <p class="sol-instrumento">Mezzosoprano</p>
       <p>Voz de gran profundidad expresiva con formación en los conservatorios más reconocidos de Italia.</p>
     </div>
+        <div class="solista-card reveal">
+      <span class="solista-flag">🇲🇽</span>
+      <h3>Audrey Valerio</h3>
+      <p class="sol-instrumento">Violonchelo</p>
+      <p>Chelista de s&oacute;lida formaci&oacute;n acad&eacute;mica, con presencia destacada en el repertorio cl&aacute;sico y rom&aacute;ntico.</p>
+    </div>
+    <div class="solista-card reveal reveal-delay-1">
+      <span class="solista-flag">🇲🇽</span>
+      <h3>Gilberto Arzola</h3>
+      <p class="sol-instrumento">Viol&iacute;n &middot; Fundador</p>
+      <p>Violinista y fundador de la Orquesta Sinf&oacute;nica Juvenil de Tultepec, pilar art&iacute;stico de la agrupaci&oacute;n desde sus or&iacute;genes.</p>
+    </div>
+    <div class="solista-card reveal reveal-delay-2">
+      <span class="solista-flag">🇲🇽</span>
+      <h3>Josu&eacute; Olivier</h3>
+      <p class="sol-instrumento">Trompeta</p>
+      <p>Trompetista de t&eacute;cnica depurada, especialista en el repertorio barroco y cl&aacute;sico para viento metal.</p>
+    </div>
+    <div class="solista-card reveal reveal-delay-3">
+      <span class="solista-flag">🇲🇽</span>
+      <h3>Irlanda Contreras</h3>
+      <p class="sol-instrumento">Soprano</p>
+      <p>Soprano de voz luminosa con amplio repertorio en &oacute;pera, oratorio y m&uacute;sica de c&aacute;mara.</p>
+    </div>
+    <div class="solista-card reveal reveal-delay-1"><span class="solista-flag">&#x1F1F2;&#x1F1FD;</span><h3>David Atl Montero Sierra</h3><p class="sol-instrumento">Piano</p><p>Pianista mexicano de s&oacute;lida trayectoria, con presencia en escenarios de m&uacute;sica de c&aacute;mara y concierto sinf&oacute;nico.</p></div>
     <div class="solista-card reveal" style="display:flex;align-items:center;justify-content:center;text-align:center">
       <p style="font-family:var(--ff-t);font-style:italic;color:#333;font-size:1.06rem;line-height:1.9">Y otros artistas<br>de talla internacional</p>
     </div>
@@ -535,6 +595,293 @@
 
 <!-- GALERÍA — negro -->
 
+
+<!-- CONCIERTOS - negro -->
+<section id="conciertos">
+  <div class="sec-num" style="color:rgba(255,255,255,1)">05</div>
+  <div class="conciertos-header">
+    <p class="sec-label reveal" style="color:rgba(255,255,255,.35)">Agenda</p>
+    <h2 class="sec-title reveal" style="color:var(--blanco)">Conciertos</h2>
+    <div class="line reveal" style="background:var(--blanco)"></div>
+  </div>
+
+  <div class="tabs reveal">
+    <button class="tab-btn active" onclick="setTab('proximos')">Pr&oacute;ximos</button>
+    <button class="tab-btn" onclick="setTab('historial')">Historial</button>
+  </div>
+
+  <!-- PROXIMOS -->
+  <div class="tab-panel active" id="tab-proximos">
+    <div class="proximos-empty">
+      <p>Pr&oacute;xima temporada en anuncio</p>
+    </div>
+  </div>
+
+  <!-- HISTORIAL -->
+  <div class="tab-panel" id="tab-historial">
+
+    <div class="anio-grupo">
+      <div class="anio-label">2025</div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">19 Dic<br>2025</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Sinf&oacute;nica de Tultepec</p>
+          <h4>Concierto navide&ntilde;o, orquesta y &oacute;rgano barroco</h4>
+          <p class="h-venue">Iglesia de San Francisco de As&iacute;s, Coacalco &mdash; &oacute;rgano barroco de 1791</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">17 Dic<br>2025</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Barroca del Conservatorio Nacional de M&uacute;sica</p>
+          <h4>Melod&iacute;as antiguas y revoluci&oacute;n sinf&oacute;nica</h4>
+          <p class="h-venue">Beethoven &middot; Gustav Holst</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">21 Nov<br>2025</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Sinf&oacute;nica Juvenil de Tultepec</p>
+          <h4>Festival Internacional de &Oacute;rgano de Tepotztotl&aacute;n</h4>
+          <p class="h-venue">Museo Nacional del Virreinato, Tepotztotl&aacute;n</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">25 Oct<br>2025</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Barroca del Conservatorio Nacional de M&uacute;sica</p>
+          <h4>Un despertar musical en el Museo Nacional del Virreinato</h4>
+          <p class="h-venue">16&deg; Festival de M&uacute;sica Antigua, Tepotztotl&aacute;n</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">29 Ago<br>2025</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Barroca del Conservatorio Nacional de M&uacute;sica</p>
+          <h4>Obras de Muffat y Joseph</h4>
+          <p class="h-venue">Sala Manuel M. Ponce, Palacio de Bellas Artes</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">13 May<br>2025</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Barroca del Conservatorio Nacional de M&uacute;sica</p>
+          <h4>El arte de la trompeta: Esplendor orquestal</h4>
+          <p class="h-venue">Solista: Olivier S&aacute;nchez (trompeta)</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">30 Mar<br>2025</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Sinf&oacute;nica Juvenil de Tultepec</p>
+          <h4>Haydn y Mozart</h4>
+          <p class="h-venue">Auditorio Bicentenario, Tultepec</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">27 Mar<br>2025</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Barroca del Conservatorio Nacional de M&uacute;sica</p>
+          <h4>Las 7 palabras de Cristo en la Cruz &mdash; Haydn &middot; Mozart</h4>
+          <p class="h-venue"></p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">13 Feb<br>2025</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Barroca del Conservatorio Nacional de M&uacute;sica</p>
+          <h4>Mozart</h4>
+          <p class="h-venue">Alc&aacute;zar del Castillo de Chapultepec &mdash; Solista: Dr. Alejandro Moreno (clarinete)</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">23 Ene<br>2025</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Barroca del Conservatorio Nacional de M&uacute;sica</p>
+          <h4>Mozart en 3 tiempos</h4>
+          <p class="h-venue">Solista: Alejandro Moreno (clarinete)</p>
+        </div>
+      </div>
+
+    </div><!-- /2025 -->
+
+    <div class="anio-grupo">
+      <div class="anio-label">2024</div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">6 Dic<br>2024</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Sinf&oacute;nica Juvenil de Tultepec</p>
+          <h4>Beethoven: Egmont, Emperador, SinfonÃ­a n.Âº 8</h4>
+          <p class="h-venue">Solista: David Montero Sierra</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">19 Sep<br>2024</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Sinf&oacute;nica Juvenil de Tultepec</p>
+          <h4>Concierto especial por el 60&deg; aniversario del Museo Nacional del Virreinato</h4>
+          <p class="h-venue">Museo Nacional del Virreinato, Tepotztotl&aacute;n</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">14 Jul<br>2024</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Sinf&oacute;nica Juvenil de Tultepec</p>
+          <h4>Arias de &oacute;pera &middot; Concierto para clavec&iacute;n y orquesta</h4>
+          <p class="h-venue">Auditorio Bicentenario &mdash; Solistas: Silvia di Falco &middot; Angela Ignacchiti</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">19 May<br>2024</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Sinf&oacute;nica Juvenil de Tultepec</p>
+          <h4>SinfonÃ­a n.Âº 8 de Beethoven &middot; Concierto para violonchelo de Haydn</h4>
+          <p class="h-venue">Museo Nacional de la Pirotecnia</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">25 Abr<br>2024</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Barroca del Conservatorio Nacional de M&uacute;sica</p>
+          <h4>Concierto dedicado a Joseph Haydn</h4>
+          <p class="h-venue">Solista: Audrey Valerio (violonchelo)</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">7 Feb<br>2024</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Sinf&oacute;nica Juvenil de Tultepec</p>
+          <h4>Juventino Rosas y Beethoven</h4>
+          <p class="h-venue">Parroquia de Santa Mar&iacute;a Nativitas, Tultepec</p>
+        </div>
+      </div>
+
+    </div><!-- /2024 -->
+
+    <div class="anio-grupo">
+      <div class="anio-label">2023</div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">21 Dic<br>2023</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Sinf&oacute;nica Juvenil de Tultepec</p>
+          <h4>Celebraci&oacute;n barroca</h4>
+          <p class="h-venue">Catedral Metropolitana de la Ciudad de M&eacute;xico &mdash; Bach &middot; Vivaldi &middot; Corelli</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">25 Oct<br>2023</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Sinf&oacute;nica Juvenil de Tultepec</p>
+          <h4>M&eacute;xico sinf&oacute;nico</h4>
+          <p class="h-venue">Museo Soumaya &mdash; Moncayo &middot; Juventino Rosas &middot; Manuel M. Ponce</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">9 Jul<br>2023</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Sinf&oacute;nica Juvenil de Tultepec</p>
+          <h4>Solistas Raffaele Bertolini y Nicola Bertolini</h4>
+          <p class="h-venue">Auditorio Bicentenario, Tultepec</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">31 May<br>2023</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Barroca del Conservatorio Nacional de M&uacute;sica</p>
+          <h4>Un viaje sonoro al siglo XVIII con las sinfonÃ­as de Haydn</h4>
+          <p class="h-venue">Museo Soumaya</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">14 May<br>2023</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Sinf&oacute;nica Juvenil de Tultepec</p>
+          <h4>Sinfonietta de Moncayo &middot; Bizet &middot; Mozart</h4>
+          <p class="h-venue">Auditorio Bicentenario, Tultepec</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">19 Feb<br>2023</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Sinf&oacute;nica Juvenil de Tultepec</p>
+          <h4>Un cl&aacute;sico despertar</h4>
+          <p class="h-venue">Museo Nacional del Virreinato, Tepotztotl&aacute;n</p>
+        </div>
+      </div>
+
+    </div><!-- /2023 -->
+
+    <div class="anio-grupo">
+      <div class="anio-label">2022</div>
+      <div class="hist-item">
+        <div class="hist-fecha">7 Dic<br>2022</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Barroca del Conservatorio Nacional de M&uacute;sica</p>
+          <h4>Concierto de diciembre</h4>
+          <p class="h-venue">Biblioteca Jos&eacute; Vasconcelos, Ciudad de M&eacute;xico</p>
+        </div>
+      </div>
+    </div><!-- /2022 -->
+
+    <div class="anio-grupo">
+      <div class="anio-label">2019</div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">21 Jun<br>2019</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Barroca del Conservatorio Nacional de M&uacute;sica</p>
+          <h4>Coro del Taller de M&uacute;sica Antigua</h4>
+          <p class="h-venue">Antiguo Palacio del Arzobispado, Ciudad de M&eacute;xico</p>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-fecha">1 May<br>2019</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Barroca del Conservatorio Nacional de M&uacute;sica</p>
+          <h4>Vivaldi &middot; Zelenka &middot; Muffat &middot; Haydn</h4>
+          <p class="h-venue">Sal&oacute;n de Recepciones, Museo Nacional de Arte</p>
+        </div>
+      </div>
+
+    </div><!-- /2019 -->
+
+    <div class="anio-grupo">
+      <div class="anio-label">2014</div>
+      <div class="hist-item">
+        <div class="hist-fecha">Dic<br>2014</div>
+        <div class="hist-info">
+          <p class="h-orq">Orquesta Barroca Stylus Phantasticus</p>
+          <h4>Concierto decembrino</h4>
+          <p class="h-venue">Sal&oacute;n de Recepciones, Museo Nacional de Arte</p>
+        </div>
+      </div>
+    </div><!-- /2014 -->
+
+  </div><!-- /tab-historial -->
+</section>
 <!-- VIDEOS - blanco -->
 <section id="videos">
   <div class="sec-num">05</div>
@@ -625,7 +972,7 @@
       <div class="footer-col">
         <h4>Contacto</h4>
         <ul>
-          <li><a href="mailto:contacto@orquestatultepec.mx">contacto@orquestatultepec.mx</a></li>
+          <li><a href="mailto:contacto@osjut.com">contacto@osjut.com</a></li>
           <li><a href="tel:+525532174080">+52 55 3217 4080</a></li>
           <li><span>Tultepec, Estado de México</span></li>
         </ul>
@@ -677,7 +1024,7 @@
   'FOTOS[2].JPG',
   'FOTOS[5].JPG',
   'FOTOS[6].JPG',
-  'FOTOS[7].jpg',
+  'Tato.jpeg',
   'FOTOS[8].jpg',
   'FOTOS[10].jpg',
   'FOTOS[11].jpg',
@@ -713,7 +1060,7 @@
 
   if(FOTOS.length){
     document.getElementById('quienesFoto').innerHTML=
-      `<img src="${FOTOS_DIR}${FOTOS[0]}" alt="Orquesta" loading="lazy" style="width:100%;height:100%;object-fit:cover;">`;
+      `<img src="${FOTOS_DIR}${'Tato.jpeg'}" alt="Orquesta" loading="lazy" style="width:100%;height:100%;object-fit:cover;">`;
   }
   if(FOTOS.length>1){
     document.getElementById('repFoto').innerHTML=
@@ -758,7 +1105,34 @@
       document.body.style.overflow = '';
     }
   });
+  
+  /* -- TABS CONCIERTOS -- */
+  function setTab(id){
+    document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active') });
+    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active') });
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+  
+
+  /* -- ROTACION HERO -- */
+  (function(){
+    if(!FOTOS.length) return;
+    var heroPhoto = document.querySelector('.hero-photo');
+    if(!heroPhoto) return;
+    var idxH = 0;
+    setInterval(function(){
+      idxH = (idxH + 1) % FOTOS.length;
+      heroPhoto.style.transition = 'opacity .8s';
+      heroPhoto.style.opacity = '0';
+      setTimeout(function(){
+        heroPhoto.style.backgroundImage = 'url(' + FOTOS_DIR + FOTOS[idxH] + ')';
+        heroPhoto.style.opacity = '0.80';
+      }, 800);
+    }, 10000);
+  })();
   </script>
+
 </body>
 </html>
 
@@ -766,6 +1140,16 @@
 
 
 <style>footer, footer p, footer a, footer span, footer h4, footer li, .footer-brand p, .footer-col ul li a, .footer-col ul li span, .footer-col h4, .f-logo-name, .footer-bottom p, .footer-frase, .red-link { color: #ccc !important; }</style>
+
+
+
+
+
+
+
+
+
+
 
 
 
