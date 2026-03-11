@@ -535,11 +535,16 @@
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       .hero { grid-template-columns: 1fr; min-height: auto; }
-      .hero-izq { min-height: 80vw; padding: 3rem 2rem 4rem; }
+      .hero-izq { min-height: 100svh; padding: 2rem 2rem 14vh; }
       .hero-der { display: none; }
-      .seccion, .separador { padding-left: 2rem; padding-right: 2rem; }
+      .hero-titulo { font-size: clamp(2.8rem, 12vw, 4.5rem); line-height: 1; }
+      .hero-tagline { font-size: .75rem; margin-top: 1rem; letter-spacing: .08em; }
+      .seccion, .separador { padding-left: 1.5rem; padding-right: 1.5rem; }
       .galeria-grid { columns: 2; }
       .animales-grid { grid-template-columns: 1fr; }
+      .recuerdos-grid { gap: 1rem; }
+      .recuerdo-card { width: 140px; }
+      .recuerdo-foto-wrap { width: 140px; height: 140px; }
     }
   </style>
 </head>
@@ -550,12 +555,11 @@
 
   <!-- ── HERO ── -->
   <section class="hero">
-    <img src="hero.png" alt="" style="width:100%; display:block;">
+    <img src="hero.png" alt="" style="width:100%; display:block; cursor:pointer;" onclick="abrirLightbox(['hero.png'], 0)">
     <div class="hero-izq">
       <h1 class="hero-titulo">
         El<br><em>Arca</em><br>de Rox
       </h1>
-      <p class="hero-tagline">Aquí viven Aquiles, la Copito y Elvis.<br>Rox solo paga las croquetas.</p>
     </div>
     <div class="hero-der"></div>
   </section>
