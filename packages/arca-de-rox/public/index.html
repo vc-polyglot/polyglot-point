@@ -625,7 +625,7 @@
             <span class="animal-palabra">vividor</span>
             <span class="animal-palabra">carismático</span>
           </div>
-          <p class="animal-frase">"Thank you very much."</p>
+          <p class="animal-frase">"Soy irresistible"</p>
         </div>
       </div>
 
@@ -706,7 +706,7 @@
   <!-- ── GALERÍA ── -->
   <div class="separador fade-up">
     <div class="separador-linea"></div>
-    <span class="separador-texto">el archivo de rox</span>
+    <span class="separador-texto">El archivo de Rox</span>
     <div class="separador-linea"></div>
   </div>
 
@@ -714,7 +714,7 @@
     <div class="galeria-header" onclick="toggleGaleria()">
       <h2 class="seccion-titulo" style="margin-bottom:0">
         <span>Galería</span>
-        Lo que Rox ve
+        Instantes
       </h2>
       <button class="galeria-toggle" id="galeriaToggle">
         <span>ver fotos</span>
@@ -754,6 +754,10 @@
 
   <!-- ── AUDIO ── -->
   <audio id="audioFondo2" src="audio/fondo2.mp3" preload="none"></audio>
+  <audio id="audioFondo3" src="audio/fondo3.mp3" preload="none"></audio>
+  <audio id="audioFondo4" src="audio/fondo4.mp3" preload="none"></audio>
+  <audio id="audioFondo5" src="audio/fondo5.mp3" preload="none"></audio>
+  <audio id="audioFondo6" src="audio/fondo6.mp3" preload="none"></audio>
   <audio id="audioAquiles" src="audio/aquiles.mp3" preload="none"></audio>
   <audio id="audioCopito"  src="audio/copito.mp3"  preload="none"></audio>
   <audio id="audioElvis"   src="audio/elvis.mp3"   preload="none"></audio>
@@ -870,7 +874,25 @@
   let musicaActiva = false;
   let animalActivo = null;
 
-  const fondo = document.getElementById('audioFondo2');
+  const fondos = [
+    document.getElementById('audioFondo2'),
+    document.getElementById('audioFondo3'),
+    document.getElementById('audioFondo4'),
+    document.getElementById('audioFondo5'),
+    document.getElementById('audioFondo6'),
+  ];
+  let fondoActual = 0;
+  let fondo = fondos[0];
+
+  fondos.forEach(a => {
+    a.volume = VOL_FONDO;
+    a.onended = () => {
+      fondoActual = (fondoActual + 1) % fondos.length;
+      fondo = fondos[fondoActual];
+      fondo.volume = VOL_FONDO;
+      fondo.play().catch(() => {});
+    };
+  });
 
   const audios = {
     aquiles: document.getElementById('audioAquiles'),
@@ -878,8 +900,6 @@
     elvis:   document.getElementById('audioElvis'),
   };
 
-  fondo.volume = VOL_FONDO;
-  fondo.loop   = true;
   Object.values(audios).forEach(a => a.volume = VOL_ANIMAL);
 
   function toggleMusica() {
@@ -960,12 +980,17 @@
       const data = await res.json();
       if (!data.fotos || data.fotos.length === 0) return;
       const recuerdos = data.fotos.filter(f => f.includes('/recuerdos/'));
+
       document.querySelectorAll('.recuerdo-card').forEach(card => {
         const nombre = card.dataset.recuerdo;
         const foto   = recuerdos.find(f => f.toLowerCase().includes(nombre));
         if (!foto) return;
         card.querySelector('.recuerdo-foto-wrap').innerHTML =
           `<img class="recuerdo-foto" src="${foto}" alt="${nombre}">`;
+
+        // Al picarle abre lightbox con todas las fotos de recuerdos
+        card.style.cursor = 'pointer';
+        card.onclick = () => abrirLightbox(recuerdos, recuerdos.indexOf(foto));
       });
     } catch(e) {}
   }
