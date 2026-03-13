@@ -31,537 +31,194 @@
       overflow-x: hidden;
     }
 
-    /* ── GRAIN OVERLAY ── */
     body::before {
       content: '';
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 100;
-      opacity: .025;
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 100; opacity: .025;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
       background-size: 200px;
     }
 
-    /* ── CANVAS PÉTALOS ── */
-    #petalosCanvas {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 99;
-    }
+    #petalosCanvas { position: fixed; inset: 0; pointer-events: none; z-index: 99; }
 
     /* ── HERO ── */
-    .hero {
-      position: relative;
-      overflow: hidden;
-    }
-
+    .hero { position: relative; overflow: hidden; cursor: pointer; }
+    .hero-img { width: 100%; display: block; }
     .hero-izq {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
+      position: absolute; bottom: 0; left: 0; right: 0;
+      display: flex; flex-direction: column; justify-content: flex-end;
       padding: 16rem 16rem 32rem;
       background: linear-gradient(to top, rgba(46,42,38,0.5) 0%, transparent 100%);
       z-index: 2;
     }
-
     .hero-titulo {
       font-family: 'Cormorant Garamond', serif;
       font-size: clamp(3.5rem, 7vw, 7rem);
-      font-weight: 300;
-      line-height: .9;
-      color: var(--cream);
-      position: relative;
-      z-index: 2;
+      font-weight: 300; line-height: .9; color: var(--cream); position: relative; z-index: 2;
     }
-
-    .hero-titulo em {
-      font-style: italic;
-      color: var(--rosa);
-    }
-
+    .hero-titulo em { font-style: italic; color: var(--rosa); }
     .hero-tagline {
-      margin-top: 2rem;
-      font-size: 1.2rem;
-      letter-spacing: .12em;
-      color: var(--arena);
-      text-transform: uppercase;
-      position: relative;
-      z-index: 2;
-      opacity: .7;
-      font-weight: 600;
+      margin-top: 2rem; font-size: 1.2rem; letter-spacing: .12em;
+      color: var(--arena); text-transform: uppercase; position: relative; z-index: 2;
+      opacity: .7; font-weight: 600;
     }
-
-    .hero-der { display: none; }
 
     /* ── SEPARADOR ── */
-    .separador {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      padding: 0 4rem;
-      margin: 5rem 0 3rem;
-    }
-
-    .separador-linea {
-      flex: 1;
-      height: 1px;
-      background: var(--arena);
-    }
-
-    .separador-texto {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: 1.1rem;
-      color: var(--terracota);
-      white-space: nowrap;
-      letter-spacing: .05em;
-    }
+    .separador { display: flex; align-items: center; gap: 1.5rem; padding: 0 4rem; margin: 5rem 0 3rem; }
+    .separador-linea { flex: 1; height: 1px; background: var(--arena); }
+    .separador-texto { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1rem; color: var(--terracota); white-space: nowrap; letter-spacing: .05em; }
 
     /* ── SECCIONES ── */
     .seccion { padding: 0 4rem 6rem; }
-
-    .seccion-titulo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2rem, 4vw, 3.5rem);
-      font-weight: 300;
-      margin-bottom: 3rem;
-      color: var(--texto);
-    }
-
-    .seccion-titulo span {
-      display: block;
-      font-size: .75rem;
-      font-family: 'DM Sans', sans-serif;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      color: var(--terracota);
-      margin-bottom: .5rem;
-    }
+    .seccion-titulo { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 300; margin-bottom: 3rem; color: var(--texto); }
+    .seccion-titulo span { display: block; font-size: .75rem; font-family: 'DM Sans', sans-serif; letter-spacing: .2em; text-transform: uppercase; color: var(--terracota); margin-bottom: .5rem; }
 
     /* ── CARDS ANIMALES ── */
-    .animales-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 2rem;
-    }
+    .animales-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; }
 
-    .animal-card {
-      cursor: pointer;
-      position: relative;
-      background: white;
-      border-radius: 2px;
-      overflow: hidden;
-      transition: transform .3s ease, box-shadow .3s ease;
-    }
+    .animal-card { cursor: pointer; position: relative; background: white; border-radius: 2px; overflow: hidden; transition: transform .3s ease, box-shadow .3s ease; }
+    .animal-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(46,42,38,.12); }
 
-    .animal-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 50px rgba(46,42,38,.12);
-    }
-
-    .animal-foto-wrap {
-      width: 100%;
-      aspect-ratio: 4/3;
-      overflow: hidden;
-      position: relative;
-      background: var(--arena);
-    }
-
-    .animal-foto {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform .6s ease;
-    }
-
+    .animal-foto-wrap { width: 100%; aspect-ratio: 4/3; overflow: hidden; position: relative; background: var(--arena); }
+    .animal-foto { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
     .animal-card:hover .animal-foto { transform: scale(1.04); }
-
-    .animal-foto-placeholder {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .animal-foto-placeholder span {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      color: var(--texto);
-      opacity: .25;
-      font-size: 1.1rem;
-    }
+    .animal-foto-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+    .animal-foto-placeholder span { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--texto); opacity: .25; font-size: 1.1rem; }
 
     .animal-info { padding: 1.8rem 2rem; }
+    .animal-nombre { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 300; line-height: 1; margin-bottom: .4rem; }
+    .animal-especie { font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--lila); margin-bottom: 1rem; }
+    .animal-palabras { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.2rem; }
+    .animal-palabra { font-size: .72rem; padding: .3rem .8rem; border: 1px solid var(--arena); border-radius: 20px; letter-spacing: .08em; text-transform: uppercase; color: var(--texto); opacity: .7; }
+    .animal-frase { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem; color: var(--terracota); border-top: 1px solid var(--arena); padding-top: 1rem; }
 
-    .animal-nombre {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.2rem;
-      font-weight: 300;
-      line-height: 1;
-      margin-bottom: .4rem;
+    /* Historia en card */
+    .animal-historia {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 1rem; color: var(--texto); opacity: .75;
+      margin-top: .9rem; line-height: 1.6;
+      border-top: 1px solid var(--arena); padding-top: .9rem;
     }
+    .animal-historia:empty { display: none; }
 
-    .animal-especie {
-      font-size: .7rem;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      color: var(--lila);
-      margin-bottom: 1rem;
-    }
-
-    .animal-palabras {
-      display: flex;
-      gap: .5rem;
-      flex-wrap: wrap;
-      margin-bottom: 1.2rem;
-    }
-
-    .animal-palabra {
-      font-size: .72rem;
-      padding: .3rem .8rem;
-      border: 1px solid var(--arena);
-      border-radius: 20px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--texto);
-      opacity: .7;
-    }
-
-    .animal-frase {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: 1.05rem;
-      color: var(--terracota);
-      border-top: 1px solid var(--arena);
-      padding-top: 1rem;
-    }
-
-    .animal-musica-badge {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: rgba(250,247,242,.9);
-      backdrop-filter: blur(6px);
-      border-radius: 20px;
-      padding: .35rem .9rem;
-      font-size: .7rem;
-      letter-spacing: .1em;
-      color: var(--texto);
-      display: flex;
-      align-items: center;
-      gap: .4rem;
-      opacity: 0;
-      transition: opacity .3s;
-    }
-
+    .animal-musica-badge { position: absolute; top: 1rem; right: 1rem; background: rgba(250,247,242,.9); backdrop-filter: blur(6px); border-radius: 20px; padding: .35rem .9rem; font-size: .7rem; letter-spacing: .1em; color: var(--texto); display: flex; align-items: center; gap: .4rem; opacity: 0; transition: opacity .3s; }
     .animal-card:hover .animal-musica-badge { opacity: 1; }
     .animal-musica-badge::before { content: '♪'; color: var(--terracota); }
 
-    /* ── LOS QUE LLEGARON PRIMERO ── */
+    /* ── RECUERDOS ── */
     .recuerdos-grid { display: flex; gap: 2rem; flex-wrap: wrap; }
-
-    .recuerdo-card {
-      width: 180px;
-      text-align: center;
-      opacity: .65;
-      transition: opacity .3s;
-    }
-
+    .recuerdo-card { width: 180px; text-align: center; opacity: .65; transition: opacity .3s; }
     .recuerdo-card:hover { opacity: 1; }
-
-    .recuerdo-foto-wrap {
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 2px solid var(--arena);
-      margin: 0 auto 1rem;
-      background: var(--gris-suave);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .recuerdo-foto {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: grayscale(40%);
-      transition: filter .4s;
-    }
-
+    .recuerdo-foto-wrap { width: 180px; height: 180px; border-radius: 50%; overflow: hidden; border: 2px solid var(--arena); margin: 0 auto 1rem; background: var(--gris-suave); display: flex; align-items: center; justify-content: center; }
+    .recuerdo-foto { width: 100%; height: 100%; object-fit: cover; filter: grayscale(40%); transition: filter .4s; }
     .recuerdo-card:hover .recuerdo-foto { filter: grayscale(0%); }
-
-    .recuerdo-foto-placeholder {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
+    .recuerdo-foto-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
     .recuerdo-foto-placeholder span { font-size: 2.5rem; opacity: .3; }
-
-    .recuerdo-nombre {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.3rem;
-      font-weight: 300;
-    }
-
-    .recuerdo-especie {
-      font-size: .68rem;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      color: var(--lila);
-      margin-top: .2rem;
-    }
+    .recuerdo-nombre { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 300; }
+    .recuerdo-especie { font-size: .68rem; letter-spacing: .15em; text-transform: uppercase; color: var(--lila); margin-top: .2rem; }
 
     /* ── GALERÍA ── */
-    .galeria-header {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      cursor: pointer;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid var(--arena);
-    }
-
-    .galeria-toggle {
-      background: none;
-      border: 1px solid var(--arena);
-      padding: .5rem 1.2rem;
-      border-radius: 20px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: .75rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--texto);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: .5rem;
-      transition: all .2s;
-    }
-
-    .galeria-toggle:hover {
-      background: var(--texto);
-      color: var(--cream);
-      border-color: var(--texto);
-    }
-
+    .galeria-header { display: flex; align-items: flex-end; justify-content: space-between; cursor: pointer; padding-bottom: 2rem; border-bottom: 1px solid var(--arena); }
+    .galeria-toggle { background: none; border: 1px solid var(--arena); padding: .5rem 1.2rem; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--texto); cursor: pointer; display: flex; align-items: center; gap: .5rem; transition: all .2s; }
+    .galeria-toggle:hover { background: var(--texto); color: var(--cream); border-color: var(--texto); }
     #galeriaChevron { transition: transform .4s ease; }
-
-    .galeria-contenedor {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height .7s cubic-bezier(.4,0,.2,1);
-    }
-
+    .galeria-contenedor { max-height: 0; overflow: hidden; transition: max-height .7s cubic-bezier(.4,0,.2,1); }
     .galeria-contenedor.abierta { max-height: 9000px; }
-
-    .galeria-grid {
-      columns: 3;
-      column-gap: 1rem;
-      padding-top: 2rem;
-    }
-
-    .galeria-item {
-      break-inside: avoid;
-      margin-bottom: 1rem;
-      overflow: hidden;
-      border-radius: 2px;
-      cursor: pointer;
-    }
-
-    .galeria-item img {
-      width: 100%;
-      display: block;
-      transition: transform .5s ease;
-    }
-
+    .galeria-grid { columns: 3; column-gap: 1rem; padding-top: 2rem; }
+    .galeria-item { break-inside: avoid; margin-bottom: 1rem; overflow: hidden; border-radius: 2px; cursor: pointer; }
+    .galeria-item img { width: 100%; display: block; transition: transform .5s ease; }
     .galeria-item:hover img { transform: scale(1.03); }
 
+    /* ── SECCIÓN ROX ── */
+    .rox-section { padding: 0 4rem 6rem; }
+    .rox-inner {
+      background: linear-gradient(135deg, #2E2A26 0%, #7c4e2d 100%);
+      border-radius: 16px; padding: 3.5rem 3rem; text-align: center;
+    }
+    .rox-eyebrow {
+      font-size: .72rem; letter-spacing: .25em; text-transform: uppercase;
+      color: var(--rosa); margin-bottom: .75rem; font-family: 'DM Sans', sans-serif;
+    }
+    .rox-titulo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 300;
+      color: var(--cream); margin-bottom: .5rem;
+    }
+    .rox-titulo em { font-style: italic; color: var(--rosa); }
+    .rox-sub {
+      font-size: .9rem; color: rgba(250,247,242,.45);
+      margin-bottom: 2.5rem; letter-spacing: .05em;
+    }
+    .rox-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: .75rem; max-width: 820px; margin: 0 auto;
+    }
+    .rox-item {
+      aspect-ratio: 1; border-radius: 10px; overflow: hidden;
+      background: rgba(255,255,255,.08);
+      cursor: pointer; transition: transform .25s, box-shadow .25s;
+    }
+    .rox-item:hover { transform: scale(1.05); box-shadow: 0 8px 32px rgba(0,0,0,.4); }
+    .rox-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .rox-empty { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; opacity: .25; }
+
     /* ── LIGHTBOX ── */
-    .lightbox {
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      background: rgba(24,20,17,.95);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .3s ease;
-    }
-
+    .lightbox { position: fixed; inset: 0; z-index: 200; background: rgba(24,20,17,.95); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .3s ease; }
     .lightbox.visible { opacity: 1; pointer-events: all; }
-
-    .lightbox-img {
-      max-width: 88vw;
-      max-height: 88vh;
-      object-fit: contain;
-      border-radius: 2px;
-      box-shadow: 0 40px 100px rgba(0,0,0,.6);
-      transition: opacity .25s ease, transform .25s ease;
-    }
-
+    .lightbox-img { max-width: 88vw; max-height: 88vh; object-fit: contain; border-radius: 2px; box-shadow: 0 40px 100px rgba(0,0,0,.6); transition: opacity .25s ease, transform .25s ease; }
     .lightbox-img.saliendo { opacity: 0; transform: scale(.97); }
-
-    .lightbox-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: 1px solid rgba(255,255,255,.2);
-      color: white;
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      font-size: 1.2rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all .2s;
-      backdrop-filter: blur(6px);
-    }
-
+    .lightbox-btn { position: absolute; top: 50%; transform: translateY(-50%); background: none; border: 1px solid rgba(255,255,255,.2); color: white; width: 52px; height: 52px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; backdrop-filter: blur(6px); }
     .lightbox-btn:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.5); }
     .lightbox-prev { left: 2rem; }
     .lightbox-next { right: 2rem; }
-
-    .lightbox-cerrar {
-      position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
-      background: none;
-      border: 1px solid rgba(255,255,255,.2);
-      color: white;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      font-size: 1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all .2s;
-    }
-
+    .lightbox-cerrar { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: 1px solid rgba(255,255,255,.2); color: white; width: 40px; height: 40px; border-radius: 50%; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; }
     .lightbox-cerrar:hover { background: rgba(255,255,255,.1); }
-
-    .lightbox-contador {
-      position: absolute;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: .7rem;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,.35);
-      font-family: 'DM Sans', sans-serif;
-    }
+    .lightbox-contador { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.35); font-family: 'DM Sans', sans-serif; }
 
     /* ── PLAYER ── */
-    #player {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      z-index: 150;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: .5rem;
-    }
-
-    .player-btn {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      border: 1.5px solid var(--texto);
-      background: var(--cream);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      color: var(--texto);
-      transition: all .2s;
-    }
-
+    #player { position: fixed; bottom: 2rem; right: 2rem; z-index: 150; display: flex; flex-direction: column; align-items: flex-end; gap: .5rem; }
+    .player-btn { width: 48px; height: 48px; border-radius: 50%; border: 1.5px solid var(--texto); background: var(--cream); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--texto); transition: all .2s; }
     .player-btn:hover { background: var(--texto); color: var(--cream); }
-
-    .player-label {
-      font-size: .65rem;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      color: var(--texto);
-      opacity: .4;
-    }
+    .player-label { font-size: .65rem; letter-spacing: .15em; text-transform: uppercase; color: var(--texto); opacity: .4; }
 
     /* ── FOOTER ── */
-    footer {
-      text-align: center;
-      padding: 4rem;
-      border-top: 1px solid var(--arena);
-      margin-top: 4rem;
-    }
+    footer { text-align: center; padding: 4rem; border-top: 1px solid var(--arena); margin-top: 4rem; }
+    footer p { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1rem; color: var(--texto); opacity: .4; }
 
-    footer p {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: 1rem;
-      color: var(--texto);
-      opacity: .4;
-    }
-
-    /* ── FADE IN ── */
-    .fade-up {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity .7s ease, transform .7s ease;
-    }
-
+    /* ── FADE UP ── */
+    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
     .fade-up.visible { opacity: 1; transform: translateY(0); }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
-      .hero { grid-template-columns: 1fr; min-height: auto; }
       .hero-izq { min-height: 100svh; padding: 2rem 2rem 14vh; }
-      .hero-der { display: none; }
       .hero-titulo { font-size: clamp(2.8rem, 12vw, 4.5rem); line-height: 1; }
       .hero-tagline { font-size: .75rem; margin-top: 1rem; letter-spacing: .08em; }
-      .seccion, .separador { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .seccion, .separador, .rox-section { padding-left: 1.5rem; padding-right: 1.5rem; }
       .galeria-grid { columns: 2; }
       .animales-grid { grid-template-columns: 1fr; }
       .recuerdos-grid { gap: 1rem; }
       .recuerdo-card { width: 140px; }
       .recuerdo-foto-wrap { width: 140px; height: 140px; }
+      .rox-grid { grid-template-columns: repeat(3, 1fr); }
+      .rox-inner { padding: 2.5rem 1.5rem; }
+    }
+    @media (max-width: 420px) {
+      .rox-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
 <body>
 
-  <!-- ── CANVAS PÉTALOS ── -->
   <canvas id="petalosCanvas"></canvas>
 
   <!-- ── HERO ── -->
-  <section class="hero" onclick="abrirLightbox(['hero.png'], 0)" style="cursor:pointer;">
-    <img src="hero.png" alt="" style="width:100%; display:block;">
+  <section class="hero" onclick="abrirLightbox([heroImgSrc], 0)">
+    <img id="heroImg" class="hero-img" src="hero.png" alt="">
     <div class="hero-izq">
-      <h1 class="hero-titulo">
-        El<br><em>Arca</em><br>de Rox
-      </h1>
+      <h1 class="hero-titulo">El<br><em>Arca</em><br>de Rox</h1>
     </div>
-    <div class="hero-der"></div>
   </section>
 
   <!-- ── RESIDENTES ── -->
@@ -572,10 +229,7 @@
   </div>
 
   <section class="seccion fade-up" id="residentes">
-    <h2 class="seccion-titulo">
-      <span>Residentes</span>
-      Los de siempre
-    </h2>
+    <h2 class="seccion-titulo"><span>Residentes</span>Los de siempre</h2>
     <div class="animales-grid">
 
       <div class="animal-card" data-animal="aquiles" onclick="toggleAnimal(this)">
@@ -592,6 +246,7 @@
             <span class="animal-palabra">elegante</span>
           </div>
           <p class="animal-frase">"Yo no ladro. Opino."</p>
+          <p class="animal-historia" data-historia="aquiles"></p>
         </div>
       </div>
 
@@ -609,6 +264,7 @@
             <span class="animal-palabra">delicada</span>
           </div>
           <p class="animal-frase">"Me merezco todo lo bonito."</p>
+          <p class="animal-historia" data-historia="copito"></p>
         </div>
       </div>
 
@@ -626,6 +282,7 @@
             <span class="animal-palabra">carismático</span>
           </div>
           <p class="animal-frase">"Soy irresistible"</p>
+          <p class="animal-historia" data-historia="elvis"></p>
         </div>
       </div>
 
@@ -640,66 +297,15 @@
   </div>
 
   <section class="seccion fade-up" id="recuerdos">
-    <h2 class="seccion-titulo">
-      <span>Siempre aquí</span>
-      Ya tenían su cuarto
-    </h2>
+    <h2 class="seccion-titulo"><span>Siempre aquí</span>Ya tenían su cuarto</h2>
     <div class="recuerdos-grid">
-
-      <div class="recuerdo-card" data-recuerdo="tigrillo">
-        <div class="recuerdo-foto-wrap">
-          <div class="recuerdo-foto-placeholder"><span>🐱</span></div>
-        </div>
-        <p class="recuerdo-nombre">Tigrillo</p>
-        <p class="recuerdo-especie">Gato</p>
-      </div>
-
-      <div class="recuerdo-card" data-recuerdo="paquito">
-        <div class="recuerdo-foto-wrap">
-          <div class="recuerdo-foto-placeholder"><span>🦜</span></div>
-        </div>
-        <p class="recuerdo-nombre">Paquito</p>
-        <p class="recuerdo-especie">Cotorro</p>
-      </div>
-
-      <div class="recuerdo-card" data-recuerdo="katy">
-        <div class="recuerdo-foto-wrap">
-          <div class="recuerdo-foto-placeholder"><span>🐾</span></div>
-        </div>
-        <p class="recuerdo-nombre">Katy</p>
-        <p class="recuerdo-especie">Perro</p>
-      </div>
-
-      <div class="recuerdo-card" data-recuerdo="campanita">
-        <div class="recuerdo-foto-wrap">
-          <div class="recuerdo-foto-placeholder"><span>🐾</span></div>
-        </div>
-        <p class="recuerdo-nombre">Campana</p>
-        <p class="recuerdo-especie">Perro</p>
-      </div>
-
-      <div class="recuerdo-card" data-recuerdo="osito">
-        <div class="recuerdo-foto-wrap">
-          <div class="recuerdo-foto-placeholder"><span>🐾</span></div>
-        </div>
-        <p class="recuerdo-nombre">Osito</p>
-        <p class="recuerdo-especie">Perrito amarillo</p>
-      </div>
-      <div class="recuerdo-card" data-recuerdo="benito">
-        <div class="recuerdo-foto-wrap">
-          <div class="recuerdo-foto-placeholder"><span>🐱</span></div>
-        </div>
-        <p class="recuerdo-nombre">Benito</p>
-        <p class="recuerdo-especie">Gato</p>
-      </div>
-
-      <div class="recuerdo-card" data-recuerdo="lila">
-        <div class="recuerdo-foto-wrap">
-          <div class="recuerdo-foto-placeholder"><span>🐾</span></div>
-        </div>
-        <p class="recuerdo-nombre">Lila</p>
-        <p class="recuerdo-especie">Perrita</p>
-      </div>
+      <div class="recuerdo-card" data-recuerdo="tigrillo"><div class="recuerdo-foto-wrap"><div class="recuerdo-foto-placeholder"><span>🐱</span></div></div><p class="recuerdo-nombre">Tigrillo</p><p class="recuerdo-especie">Gato</p></div>
+      <div class="recuerdo-card" data-recuerdo="paquito"><div class="recuerdo-foto-wrap"><div class="recuerdo-foto-placeholder"><span>🦜</span></div></div><p class="recuerdo-nombre">Paquito</p><p class="recuerdo-especie">Cotorro</p></div>
+      <div class="recuerdo-card" data-recuerdo="katy"><div class="recuerdo-foto-wrap"><div class="recuerdo-foto-placeholder"><span>🐾</span></div></div><p class="recuerdo-nombre">Katy</p><p class="recuerdo-especie">Perro</p></div>
+      <div class="recuerdo-card" data-recuerdo="campanita"><div class="recuerdo-foto-wrap"><div class="recuerdo-foto-placeholder"><span>🐾</span></div></div><p class="recuerdo-nombre">Campana</p><p class="recuerdo-especie">Perro</p></div>
+      <div class="recuerdo-card" data-recuerdo="osito"><div class="recuerdo-foto-wrap"><div class="recuerdo-foto-placeholder"><span>🐾</span></div></div><p class="recuerdo-nombre">Osito</p><p class="recuerdo-especie">Perrito amarillo</p></div>
+      <div class="recuerdo-card" data-recuerdo="benito"><div class="recuerdo-foto-wrap"><div class="recuerdo-foto-placeholder"><span>🐱</span></div></div><p class="recuerdo-nombre">Benito</p><p class="recuerdo-especie">Gato</p></div>
+      <div class="recuerdo-card" data-recuerdo="lila"><div class="recuerdo-foto-wrap"><div class="recuerdo-foto-placeholder"><span>🐾</span></div></div><p class="recuerdo-nombre">Lila</p><p class="recuerdo-especie">Perrita</p></div>
     </div>
   </section>
 
@@ -712,10 +318,7 @@
 
   <section class="seccion fade-up" id="galeria">
     <div class="galeria-header" onclick="toggleGaleria()">
-      <h2 class="seccion-titulo" style="margin-bottom:0">
-        <span>Galería</span>
-        Instantes
-      </h2>
+      <h2 class="seccion-titulo" style="margin-bottom:0"><span>Galería</span>Instantes</h2>
       <button class="galeria-toggle" id="galeriaToggle">
         <span>ver fotos</span>
         <svg id="galeriaChevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"/></svg>
@@ -723,10 +326,24 @@
     </div>
     <div class="galeria-contenedor" id="galeriaContenedor">
       <div class="galeria-grid" id="galeriaGrid">
-        <p style="font-style:italic; opacity:.4; font-family:'Cormorant Garamond',serif;">
-          Las fotos aparecen aquí automáticamente.
-        </p>
+        <p style="font-style:italic;opacity:.4;font-family:'Cormorant Garamond',serif;">Las fotos aparecen aquí automáticamente.</p>
       </div>
+    </div>
+  </section>
+
+  <!-- ── ROX ── -->
+  <div class="separador fade-up">
+    <div class="separador-linea"></div>
+    <span class="separador-texto">Ella subió a todos al arca</span>
+    <div class="separador-linea"></div>
+  </div>
+
+  <section class="rox-section fade-up" id="rox-section" style="display:none">
+    <div class="rox-inner">
+      <p class="rox-eyebrow">la que hace todo esto posible</p>
+      <h2 class="rox-titulo">La que paga<br><em>las croquetas</em></h2>
+      <p class="rox-sub">y los veterinarios, y las medicinas, y los mimos</p>
+      <div class="rox-grid" id="rox-grid"></div>
     </div>
   </section>
 
@@ -752,7 +369,7 @@
     <span class="lightbox-contador" id="lightboxContador"></span>
   </div>
 
-  <!-- ── AUDIO ── -->
+  <!-- Audios hardcodeados (fallback) -->
   <audio id="audioFondo2" src="audio/fondo2.mp3" preload="none"></audio>
   <audio id="audioFondo3" src="audio/fondo3.mp3" preload="none"></audio>
   <audio id="audioFondo4" src="audio/fondo4.mp3" preload="none"></audio>
@@ -763,118 +380,65 @@
   <audio id="audioElvis"   src="audio/elvis.mp3"   preload="none"></audio>
 
   <script>
-  /* ══════════════════════════════════════════════════════
-     PÉTALOS — completamente aislados, no tocan nada más
-  ══════════════════════════════════════════════════════ */
+  /* ════════════════════════════════════════
+     PÉTALOS
+  ════════════════════════════════════════ */
   (function() {
     const canvas = document.getElementById('petalosCanvas');
     const ctx    = canvas.getContext('2d');
-
-    // Colores propios hardcodeados — independientes de todo lo demás
-    const COLORES = [
-      { r: 232, g: 196, b: 184 }, // rosa palo
-      { r: 184, g: 169, b: 201 }, // lila grisáceo
-      { r: 232, g: 221, b: 208 }, // arena
-      { r: 214, g: 153, b: 128 }, // terracota suave
-      { r: 242, g: 237, b: 232 }, // crema
-    ];
-
-    const CANTIDAD = 38;
-    let petalos = [];
-    let W, H;
-
-    function resize() {
-      W = canvas.width  = window.innerWidth;
-      H = canvas.height = window.innerHeight;
-    }
-
-    window.addEventListener('resize', resize);
-    resize();
-
-    function rand(a, b) { return a + Math.random() * (b - a); }
-
-    function crearPetalo(desdeArriba) {
-      const c = COLORES[Math.floor(Math.random() * COLORES.length)];
-      return {
-        x:       rand(0, W),
-        y:       desdeArriba ? rand(-200, -10) : rand(0, H),
-        vx:      rand(-0.5, 0.5),
-        vy:      rand(0.4, 1.1),
-        rot:     rand(0, Math.PI * 2),
-        vrot:    rand(-0.02, 0.02),
-        w:       rand(8, 18),
-        h:       rand(13, 26),
-        fase:    rand(0, Math.PI * 2),
-        velFase: rand(0.008, 0.02),
-        ampFase: rand(0.5, 1.5),
-        alpha:   rand(0.2, 0.5),
-        r: c.r, g: c.g, b: c.b,
-      };
-    }
-
-    for (let i = 0; i < CANTIDAD; i++) petalos.push(crearPetalo(false));
-
-    function dibujarPetalo(p) {
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rot);
-      ctx.globalAlpha = p.alpha;
-
-      ctx.beginPath();
-      ctx.moveTo(0, -p.h / 2);
-      ctx.bezierCurveTo( p.w / 2, -p.h / 4,  p.w / 2,  p.h / 4, 0,  p.h / 2);
-      ctx.bezierCurveTo(-p.w / 2,  p.h / 4, -p.w / 2, -p.h / 4, 0, -p.h / 2);
-      ctx.fillStyle = `rgb(${p.r},${p.g},${p.b})`;
-      ctx.fill();
-
-      // Nervadura
-      ctx.beginPath();
-      ctx.moveTo(0, -p.h / 2);
-      ctx.lineTo(0,  p.h / 2);
-      ctx.strokeStyle = `rgba(${Math.max(p.r-40,0)},${Math.max(p.g-40,0)},${Math.max(p.b-40,0)},0.25)`;
-      ctx.lineWidth = 0.5;
-      ctx.stroke();
-
-      ctx.restore();
-    }
-
-    function tick() {
-      ctx.clearRect(0, 0, W, H);
-
-      petalos.forEach(p => {
-        p.fase += p.velFase;
-        p.x += p.vx + Math.sin(p.fase) * p.ampFase;
-        p.y += p.vy;
-        p.rot += p.vrot;
-
-        // Turbulencia suave
-        p.vy += rand(-0.008, 0.008);
-        p.vy  = Math.max(0.2, Math.min(p.vy, 1.6));
-
-        if (p.y > H + 30 || p.x < -60 || p.x > W + 60) {
-          Object.assign(p, crearPetalo(true));
-        }
-
-        dibujarPetalo(p);
-      });
-
-      requestAnimationFrame(tick);
-    }
-
+    const COLS   = [{r:232,g:196,b:184},{r:184,g:169,b:201},{r:232,g:221,b:208},{r:214,g:153,b:128},{r:242,g:237,b:232}];
+    const N = 38;
+    let P = [], W, H;
+    function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+    window.addEventListener('resize', resize); resize();
+    function rand(a,b){return a+Math.random()*(b-a);}
+    function mk(top){const c=COLS[0|Math.random()*COLS.length];return{x:rand(0,W),y:top?rand(-200,-10):rand(0,H),vx:rand(-.5,.5),vy:rand(.4,1.1),rot:rand(0,Math.PI*2),vrot:rand(-.02,.02),w:rand(8,18),h:rand(13,26),fase:rand(0,Math.PI*2),vf:rand(.008,.02),af:rand(.5,1.5),al:rand(.2,.5),r:c.r,g:c.g,b:c.b};}
+    for(let i=0;i<N;i++) P.push(mk(false));
+    function draw(p){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.globalAlpha=p.al;ctx.beginPath();ctx.moveTo(0,-p.h/2);ctx.bezierCurveTo(p.w/2,-p.h/4,p.w/2,p.h/4,0,p.h/2);ctx.bezierCurveTo(-p.w/2,p.h/4,-p.w/2,-p.h/4,0,-p.h/2);ctx.fillStyle=`rgb(${p.r},${p.g},${p.b})`;ctx.fill();ctx.beginPath();ctx.moveTo(0,-p.h/2);ctx.lineTo(0,p.h/2);ctx.strokeStyle=`rgba(${Math.max(p.r-40,0)},${Math.max(p.g-40,0)},${Math.max(p.b-40,0)},.25)`;ctx.lineWidth=.5;ctx.stroke();ctx.restore();}
+    function tick(){ctx.clearRect(0,0,W,H);P.forEach(p=>{p.fase+=p.vf;p.x+=p.vx+Math.sin(p.fase)*p.af;p.y+=p.vy;p.rot+=p.vrot;p.vy+=rand(-.008,.008);p.vy=Math.max(.2,Math.min(p.vy,1.6));if(p.y>H+30||p.x<-60||p.x>W+60)Object.assign(p,mk(true));draw(p);});requestAnimationFrame(tick);}
     tick();
   })();
 
-/* ══════════════════════════════════════
-     MÚSICA
-  ══════════════════════════════════════ */
-  const VOL_FONDO        = 0.20;
-  const VOL_FONDO_DUCKED = 0.06;
-  const VOL_ANIMAL       = 0.65;
+  /* ════════════════════════════════════════
+     CONFIG DINÁMICA + HERO
+  ════════════════════════════════════════ */
+  let heroImgSrc = 'hero.png';
+  let siteConfig  = {};
+  let animalSongs = { aquiles: 'audio/aquiles.mp3', copito: 'audio/copito.mp3', elvis: 'audio/elvis.mp3' };
 
+  async function loadConfig() {
+    try {
+      siteConfig = await fetch('/api/config').then(r => r.json());
+      // Hero dinámico
+      if (siteConfig.heroPhoto) {
+        document.getElementById('heroImg').src = siteConfig.heroPhoto;
+        heroImgSrc = siteConfig.heroPhoto;
+      }
+    } catch {}
+  }
+
+  async function loadAnimalSongs() {
+    try {
+      const songs = await fetch('/api/audio/canciones').then(r => r.json());
+      ['aquiles','copito','elvis'].forEach(a => {
+        if (songs[a]) {
+          animalSongs[a] = songs[a];
+          document.getElementById('audio' + a.charAt(0).toUpperCase() + a.slice(1)).src = songs[a];
+        }
+      });
+    } catch {}
+  }
+
+  /* ════════════════════════════════════════
+     MÚSICA
+  ════════════════════════════════════════ */
+  const VOL_FONDO = 0.20;
+  const VOL_ANIMAL = 0.65;
   let musicaActiva = false;
   let animalActivo = null;
+  let loopSongs    = [];  // URLs dinámicas del loop
 
-  const fondos = [
+  const fondosDefault = [
     document.getElementById('audioFondo2'),
     document.getElementById('audioFondo3'),
     document.getElementById('audioFondo4'),
@@ -882,24 +446,45 @@
     document.getElementById('audioFondo6'),
   ];
   let fondoActual = 0;
-  let fondo = fondos[0];
+  let fondo = fondosDefault[0];
 
-  fondos.forEach(a => {
-    a.volume = VOL_FONDO;
-    a.onended = () => {
-      fondoActual = (fondoActual + 1) % fondos.length;
-      fondo = fondos[fondoActual];
-      fondo.volume = VOL_FONDO;
-      fondo.play().catch(() => {});
-    };
-  });
+  // Cargar canciones del loop (las del repo + las subidas)
+  async function loadLoopSongs() {
+    try {
+      const nuevas = await fetch('/api/audio/loop').then(r => r.json());
+      loopSongs = nuevas;
+      // Reconfigurar el loop para incluirlas todas
+      setupLoop();
+    } catch {}
+  }
+
+  function getAllLoopAudios() {
+    // Primero las originales, luego las nuevas como elementos <audio> temporales
+    return fondosDefault;
+  }
+
+  function setupLoop() {
+    fondosDefault.forEach(a => {
+      a.volume = VOL_FONDO;
+      a.onended = () => { nextLoopSong(); };
+    });
+  }
+
+  function nextLoopSong() {
+    fondoActual = (fondoActual + 1) % fondosDefault.length;
+    fondo = fondosDefault[fondoActual];
+    fondo.currentTime = 0;
+    fondo.volume = VOL_FONDO;
+    if (musicaActiva) fondo.play().catch(() => {});
+  }
+
+  setupLoop();
 
   const audios = {
     aquiles: document.getElementById('audioAquiles'),
     copito:  document.getElementById('audioCopito'),
     elvis:   document.getElementById('audioElvis'),
   };
-
   Object.values(audios).forEach(a => a.volume = VOL_ANIMAL);
 
   function toggleMusica() {
@@ -919,85 +504,129 @@
   async function toggleAnimal(card) {
     const nombre = card.dataset.animal;
 
-    // Detener canción anterior si era diferente animal
+    // Detener animal anterior
     if (animalActivo && animalActivo !== nombre) {
       audios[animalActivo].pause();
       audios[animalActivo].currentTime = 0;
       animalActivo = null;
-      fondo.volume = VOL_FONDO;
+      if (musicaActiva) { fondo.volume = VOL_FONDO; fondo.play().catch(()=>{}); }
     }
 
     // Abrir lightbox con fotos del animal
     try {
-      const res  = await fetch('/api/fotos');
-      const data = await res.json();
+      const data  = await fetch('/api/fotos').then(r => r.json());
       const fotos = data.fotos.filter(f => f.toLowerCase().includes('/' + nombre + '/'));
       if (fotos.length > 0) abrirLightbox(fotos, 0);
-    } catch(e) {}
+    } catch {}
 
+    // Reproducir su canción
     const audio = audios[nombre];
     if (!audio) return;
 
     if (animalActivo === nombre) {
-      audio.pause();
-      audio.currentTime = 0;
-      fondo.volume = VOL_FONDO;
+      audio.pause(); audio.currentTime = 0;
+      if (musicaActiva) { fondo.volume = VOL_FONDO; fondo.play().catch(()=>{}); }
       animalActivo = null;
       return;
     }
 
     fondo.pause();
+    fondo.volume = VOL_FONDO;
     audio.play().catch(() => {});
     animalActivo = nombre;
-    audio.onended = () => { fondo.volume = VOL_FONDO; animalActivo = null; };
+    audio.onended = () => {
+      animalActivo = null;
+      if (musicaActiva) fondo.play().catch(() => {});
+    };
   }
 
-  /* ══════════════════════════════════════
+  /* ════════════════════════════════════════
      FOTOS
-  ══════════════════════════════════════ */
+  ════════════════════════════════════════ */
   async function cargarFotoAnimal(animal) {
     try {
       const res  = await fetch('/api/fotos');
       const data = await res.json();
       if (!data.fotos || data.fotos.length === 0) return;
-      const FOTOS_PRINCIPALES = {
-        aquiles: 'Aquiles jard',
-        copito:  'Copito caja',
-        elvis:   'Elvis Bryan',
-      };
-      const clave = FOTOS_PRINCIPALES[animal] || animal;
-      const foto = data.fotos.find(f => f.includes(clave));
+
+      let foto = null;
+
+      // 1. Usar la foto principal del config si está definida
+      const cfg = siteConfig[animal];
+      if (cfg && cfg.mainPhoto) {
+        foto = data.fotos.find(f => f.includes('/' + animal + '/' + cfg.mainPhoto));
+      }
+
+      // 2. Fallback: primera foto de la carpeta del animal
+      if (!foto) {
+        foto = data.fotos.find(f => f.toLowerCase().includes('/' + animal + '/'));
+      }
+
       if (!foto) return;
       const wrap = document.querySelector(`[data-animal="${animal}"] .animal-foto-wrap`);
       if (!wrap) return;
       wrap.innerHTML = `<img class="animal-foto" src="${foto}" alt="${animal}">`;
-    } catch(e) {}
+    } catch {}
   }
 
   async function cargarFotosRecuerdos() {
     try {
       const res  = await fetch('/api/fotos');
       const data = await res.json();
-      if (!data.fotos || data.fotos.length === 0) return;
+      if (!data.fotos) return;
       const recuerdos = data.fotos.filter(f => f.includes('/recuerdos/'));
-
       document.querySelectorAll('.recuerdo-card').forEach(card => {
         const nombre = card.dataset.recuerdo;
         const foto   = recuerdos.find(f => f.toLowerCase().includes(nombre));
         if (!foto) return;
-        card.querySelector('.recuerdo-foto-wrap').innerHTML =
-          `<img class="recuerdo-foto" src="${foto}" alt="${nombre}">`;
-
-        // Al picarle abre lightbox con todas las fotos de recuerdos
+        card.querySelector('.recuerdo-foto-wrap').innerHTML = `<img class="recuerdo-foto" src="${foto}" alt="${nombre}">`;
         card.style.cursor = 'pointer';
         card.onclick = () => abrirLightbox(recuerdos, recuerdos.indexOf(foto));
       });
-    } catch(e) {}
+    } catch {}
   }
 
-  /* ══════════════════════════════════════
+  /* ════════════════════════════════════════
+     HISTORIAS
+  ════════════════════════════════════════ */
+  async function cargarHistorias() {
+    try {
+      const s = await fetch('/api/stories').then(r => r.json());
+      ['aquiles','copito','elvis'].forEach(a => {
+        if (!s[a]) return;
+        const el = document.querySelector(`[data-historia="${a}"]`);
+        if (el) el.textContent = s[a];
+      });
+    } catch {}
+  }
+
+  /* ════════════════════════════════════════
+     SECCIÓN ROX
+  ════════════════════════════════════════ */
+  async function cargarRox() {
+    try {
+      const slots   = await fetch('/api/rox').then(r => r.json());
+      const section = document.getElementById('rox-section');
+      const grid    = document.getElementById('rox-grid');
+      const llenas  = slots.filter(Boolean);
+      if (llenas.length === 0) return;  // Ocultar si no hay fotos
+
+      section.style.display = 'block';
+      grid.innerHTML = slots.map((url, i) => {
+        if (!url) return '';  // No mostrar slots vacíos en la página pública
+        return `<div class="rox-item" onclick="abrirLightbox(roxFotosLlenas, ${llenas.indexOf(url)})">
+          <img src="${url}" alt="Foto ${i+1}" loading="lazy">
+        </div>`;
+      }).filter(Boolean).join('');
+
+      // Guardar para el lightbox
+      window.roxFotosLlenas = llenas;
+    } catch {}
+  }
+
+  /* ════════════════════════════════════════
      GALERÍA + LIGHTBOX
-  ══════════════════════════════════════ */
+  ════════════════════════════════════════ */
   let lbFotos  = [];
   let lbIndice = 0;
 
@@ -1012,10 +641,10 @@
         const div = document.createElement('div');
         div.className = 'galeria-item';
         div.innerHTML = `<img src="${url}" alt="foto" loading="lazy">`;
-        div.onclick = () => abrirLightbox(data.fotos, i);
+        div.onclick   = () => abrirLightbox(data.fotos, i);
         grid.appendChild(div);
       });
-    } catch(e) {}
+    } catch {}
   }
 
   function abrirLightbox(fotos, indice) {
@@ -1049,9 +678,7 @@
     if (musicaActiva) fondo.play().catch(() => {});
   }
 
-  function lightboxClickFondo(e) {
-    if (e.target === e.currentTarget) cerrarLightbox();
-  }
+  function lightboxClickFondo(e) { if (e.target === e.currentTarget) cerrarLightbox(); }
 
   document.addEventListener('keydown', e => {
     if (!document.getElementById('lightbox').classList.contains('visible')) return;
@@ -1061,38 +688,50 @@
   });
 
   function toggleGaleria() {
-    const contenedor = document.getElementById('galeriaContenedor');
-    const chevron    = document.getElementById('galeriaChevron');
-    const toggle     = document.getElementById('galeriaToggle');
-    const abierta    = contenedor.classList.toggle('abierta');
-    toggle.querySelector('span').textContent = abierta ? 'cerrar' : 'ver fotos';
-    chevron.style.transform = abierta ? 'rotate(180deg)' : 'rotate(0deg)';
+    const c = document.getElementById('galeriaContenedor');
+    const v = document.getElementById('galeriaChevron');
+    const t = document.getElementById('galeriaToggle');
+    const a = c.classList.toggle('abierta');
+    t.querySelector('span').textContent = a ? 'cerrar' : 'ver fotos';
+    v.style.transform = a ? 'rotate(180deg)' : 'rotate(0deg)';
   }
 
-  /* ══════════════════════════════════════
-     FADE UP + INICIAR
-  ══════════════════════════════════════ */
-  const observer = new IntersectionObserver(entries => {
+  /* ════════════════════════════════════════
+     FADE UP
+  ════════════════════════════════════════ */
+  const obs = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.1 });
-  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
 
-  cargarFotoAnimal('aquiles');
-  cargarFotoAnimal('copito');
-  cargarFotoAnimal('elvis');
-  cargarFotosRecuerdos();
-  cargarGaleria();
-  /* ── Toggle pétalos ── */
+  /* ════════════════════════════════════════
+     PÉTALOS TOGGLE
+  ════════════════════════════════════════ */
   let petalosActivos = true;
   function togglePetalos() {
     petalosActivos = !petalosActivos;
-    const canvas = document.getElementById('petalosCanvas');
-    const btn    = document.getElementById('petalosBtn');
-    const label  = document.getElementById('petalosLabel');
-    canvas.style.opacity    = petalosActivos ? '1' : '0';
-    btn.style.opacity       = petalosActivos ? '1' : '0.35';
-    label.textContent       = petalosActivos ? 'pétalos' : 'sin pétalos';
+    document.getElementById('petalosCanvas').style.opacity = petalosActivos ? '1' : '0';
+    document.getElementById('petalosBtn').style.opacity    = petalosActivos ? '1' : '0.35';
+    document.getElementById('petalosLabel').textContent    = petalosActivos ? 'pétalos' : 'sin pétalos';
   }
+
+  /* ════════════════════════════════════════
+     ARRANQUE
+  ════════════════════════════════════════ */
+  (async () => {
+    await loadConfig();
+    await Promise.all([
+      loadAnimalSongs(),
+      loadLoopSongs(),
+      cargarFotoAnimal('aquiles'),
+      cargarFotoAnimal('copito'),
+      cargarFotoAnimal('elvis'),
+      cargarFotosRecuerdos(),
+      cargarGaleria(),
+      cargarHistorias(),
+      cargarRox(),
+    ]);
+  })();
   </script>
 </body>
 </html>

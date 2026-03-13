@@ -1,0 +1,26 @@
+{
+  "heroPhoto": null,
+  "aquiles": {
+    "mainPhoto": "Aquiles jardín.jpeg"
+  },
+  "copito": {
+    "mainPhoto": "Copito flor.jpeg"
+  },
+  "elvis": {
+    "mainPhoto": null
+  },
+  "rox": {
+    "slots": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  }
+}

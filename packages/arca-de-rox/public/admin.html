@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — El Arca de Rox</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cream:  #FAF7F2;
+    --warm:   #E8DDD0;
+    --terra:  #C4673A;
+    --terra2: #a0502a;
+    --salvia: #5C7A6B;
+    --salvia2:#3d5c50;
+    --rojo:   #c0392b;
+    --rojo2:  #96281b;
+    --oro:    #d4a84b;
+    --sombra: rgba(80,40,0,.14);
+    --r:      12px;
+  }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--cream); color: #2E2A26; min-height: 100vh; }
+
+  /* LOGIN */
+  #login {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #2E2A26 0%, #7c4e2d 100%);
+  }
+  .login-box {
+    background: var(--cream); padding: 2.5rem 3rem;
+    border-radius: var(--r); box-shadow: 0 20px 60px rgba(0,0,0,.4);
+    text-align: center; width: 340px;
+  }
+  .login-box .paw { font-size: 3rem; margin-bottom: .4rem; }
+  .login-box h1  { font-size: 1.4rem; color: var(--terra); margin-bottom: .2rem; }
+  .login-box p   { font-size: .85rem; color: #aaa; margin-bottom: 1.4rem; }
+  .login-box input {
+    width: 100%; padding: .75rem 1rem;
+    border: 2px solid var(--warm); border-radius: 8px;
+    font-size: 1rem; background: white; margin-bottom: .9rem;
+  }
+  .login-box input:focus { outline: none; border-color: var(--terra); }
+  .btn-login {
+    width: 100%; padding: .85rem; background: var(--terra); color: white;
+    border: none; border-radius: 8px; font-size: 1rem; font-weight: 600;
+    cursor: pointer; transition: background .2s;
+  }
+  .btn-login:hover { background: var(--terra2); }
+  .login-err { color: var(--rojo); font-size: .88rem; margin-top: .6rem; display: none; }
+
+  /* DASHBOARD */
+  #dash { display: none; }
+  header {
+    background: linear-gradient(90deg, #2E2A26, #7c4e2d);
+    color: white; padding: 1rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,.3);
+  }
+  header h1 { font-size: 1.15rem; }
+  .btn-out {
+    background: rgba(255,255,255,.15); color: white;
+    border: 1px solid rgba(255,255,255,.3); padding: .4rem .9rem;
+    border-radius: 6px; cursor: pointer; font-size: .85rem; transition: background .2s;
+  }
+  .btn-out:hover { background: rgba(255,255,255,.25); }
+
+  /* TABS */
+  .tabs {
+    display: flex; gap: 4px; padding: 1rem 2rem 0;
+    background: var(--warm); border-bottom: 3px solid var(--terra);
+    flex-wrap: wrap;
+  }
+  .tab {
+    padding: .55rem 1.3rem; border-radius: 8px 8px 0 0;
+    border: none; background: transparent; color: var(--terra);
+    font-size: .92rem; font-weight: 600; cursor: pointer; transition: background .2s;
+  }
+  .tab:hover { background: rgba(196,103,58,.1); }
+  .tab.active { background: var(--cream); }
+
+  /* PANELS */
+  .panel { display: none; padding: 2rem; max-width: 1000px; margin: 0 auto; }
+  .panel.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: white; border-radius: var(--r);
+    box-shadow: 0 2px 16px var(--sombra);
+    padding: 1.5rem; margin-bottom: 1.5rem;
+  }
+  .card h2 {
+    font-size: 1.05rem; color: var(--terra);
+    margin-bottom: 1rem; padding-bottom: .5rem;
+    border-bottom: 2px solid var(--warm);
+    display: flex; align-items: center; gap: .5rem;
+  }
+
+  /* BOTONES */
+  .btn {
+    padding: .45rem 1rem; border-radius: 7px; border: none;
+    cursor: pointer; font-size: .85rem; font-weight: 600; transition: all .15s;
+  }
+  .btn-g  { background: var(--salvia);  color: white; }
+  .btn-g:hover  { background: var(--salvia2); }
+  .btn-r  { background: var(--rojo);    color: white; }
+  .btn-r:hover  { background: var(--rojo2); }
+  .btn-o  { background: var(--oro);     color: #2E2A26; }
+  .btn-o:hover  { background: #c4983b; }
+  .btn-t  { background: var(--terra);   color: white; }
+  .btn-t:hover  { background: var(--terra2); }
+
+  /* UPLOAD ZONE */
+  .upzone {
+    border: 2px dashed var(--terra); border-radius: 10px;
+    padding: 1.4rem; text-align: center; cursor: pointer;
+    transition: background .2s; margin-bottom: 1rem; background: var(--cream);
+  }
+  .upzone:hover { background: var(--warm); }
+  .upzone p { color: #999; font-size: .88rem; }
+  .upzone input { display: none; }
+  .upzone .ic { font-size: 1.8rem; margin-bottom: .25rem; }
+
+  /* PHOTO GRID */
+  .pgrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: .65rem; margin-top: .65rem;
+  }
+  .pthumb {
+    position: relative; border-radius: 8px; overflow: hidden;
+    aspect-ratio: 1; background: var(--warm);
+    border: 3px solid transparent; transition: border-color .2s;
+  }
+  .pthumb.main { border-color: var(--oro); }
+  .pthumb img  { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pthumb .pactions {
+    position: absolute; inset: 0; background: rgba(0,0,0,.55);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: .35rem;
+    opacity: 0; transition: opacity .2s;
+  }
+  .pthumb:hover .pactions { opacity: 1; }
+  .badge-main {
+    position: absolute; top: 3px; left: 3px;
+    background: var(--oro); color: #2E2A26;
+    font-size: .6rem; font-weight: 700;
+    padding: 2px 5px; border-radius: 4px;
+  }
+
+  /* HISTORIA */
+  textarea.hist {
+    width: 100%; padding: .7rem 1rem;
+    border: 2px solid var(--warm); border-radius: 8px;
+    resize: vertical; font-size: .93rem; font-family: inherit;
+    min-height: 110px; background: var(--cream);
+  }
+  textarea.hist:focus { outline: none; border-color: var(--terra); }
+
+  /* SONG LIST */
+  .slist { list-style: none; }
+  .sitem {
+    display: flex; align-items: center; gap: .65rem;
+    padding: .55rem .7rem; border-radius: 8px; margin-bottom: .3rem;
+    background: var(--cream); border: 1px solid var(--warm);
+  }
+  .sitem span { flex: 1; font-size: .87rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sitem audio { height: 28px; flex-shrink: 0; }
+  .sitem .orig-badge {
+    font-size: .65rem; background: var(--warm); padding: 2px 7px;
+    border-radius: 10px; color: #888; flex-shrink: 0;
+  }
+
+  /* ROX GRID */
+  .rox-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: .65rem; margin-top: .65rem;
+  }
+  @media (max-width: 650px) { .rox-grid { grid-template-columns: repeat(3, 1fr); } }
+  .rslot {
+    position: relative; aspect-ratio: 1; border-radius: 10px;
+    overflow: hidden; background: var(--warm);
+    border: 2px dashed var(--terra); cursor: pointer;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    transition: border-color .2s;
+  }
+  .rslot:hover, .rslot.filled { border-style: solid; }
+  .rslot img { width: 100%; height: 100%; object-fit: cover; }
+  .rslot .snum { position: absolute; top: 4px; left: 5px; font-size: .7rem; font-weight: 700; color: var(--terra); }
+  .rslot .sempty { font-size: 1.6rem; color: #bba; }
+  .rslot .sacts {
+    position: absolute; inset: 0; background: rgba(0,0,0,.55);
+    display: flex; align-items: center; justify-content: center; gap: .35rem;
+    opacity: 0; transition: opacity .2s;
+  }
+  .rslot:hover .sacts { opacity: 1; }
+  .rslot input { display: none; }
+
+  /* HERO PREVIEW */
+  .hero-prev { width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: .7rem; display: none; }
+
+  /* TOAST */
+  #toast {
+    position: fixed; bottom: 1.5rem; right: 1.5rem;
+    background: var(--salvia2); color: white;
+    padding: .7rem 1.3rem; border-radius: 8px; font-weight: 600;
+    box-shadow: 0 4px 20px rgba(0,0,0,.3);
+    transform: translateY(100px); opacity: 0; transition: all .3s; z-index: 9999;
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+  #toast.err  { background: var(--rojo2); }
+
+  /* ANIMAL SECTION DIVIDER */
+  .adiv { border-top: 2px solid var(--warm); margin: 1.5rem 0; padding-top: 1.5rem; }
+  .adiv:first-child { border-top: none; margin-top: 0; padding-top: 0; }
+  .adiv h3 { font-size: 1rem; color: var(--terra2); margin-bottom: 1rem; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-box">
+    <div class="paw">🐾</div>
+    <h1>El Arca de Rox</h1>
+    <p>Panel de administración</p>
+    <input type="password" id="pw" placeholder="Contraseña" autocomplete="current-password">
+    <button class="btn-login" onclick="doLogin()">Entrar</button>
+    <p class="login-err" id="lerr">Contraseña incorrecta 🙅</p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dash">
+  <header>
+    <h1>🐾 El Arca de Rox — Admin</h1>
+    <button class="btn-out" onclick="doLogout()">Salir</button>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('animales',this)">🐕 Animales</button>
+    <button class="tab" onclick="showTab('musica',this)">🎵 Música</button>
+    <button class="tab" onclick="showTab('hero',this)">🌅 Hero</button>
+    <button class="tab" onclick="showTab('rox',this)">💛 La que paga las croquetas</button>
+  </div>
+
+  <!-- ANIMALES -->
+  <div class="panel active" id="panel-animales">
+    <!-- generado por JS -->
+  </div>
+
+  <!-- MÚSICA -->
+  <div class="panel" id="panel-musica">
+
+    <div class="card">
+      <h2>🎶 Loop musical general</h2>
+      <p style="font-size:.88rem;color:#999;margin-bottom:1rem">
+        Las canciones marcadas como «original» (fondo2–fondo6) no se pueden borrar.
+        Las que subas con el botón sí.
+      </p>
+      <div class="upzone" onclick="this.querySelector('input').click()">
+        <div class="ic">🎵</div>
+        <p>Subir canción al loop (mp3, ogg, wav)</p>
+        <input type="file" accept="audio/*" onchange="uploadLoop(this)">
+      </div>
+      <ul class="slist" id="loop-list"></ul>
+    </div>
+
+    <div class="card">
+      <h2>🐾 Canción de cada animal</h2>
+      <p style="font-size:.88rem;color:#999;margin-bottom:1rem">
+        Al subir una nueva, reemplaza automáticamente la anterior.
+      </p>
+      <div id="animal-songs"></div>
+    </div>
+
+  </div>
+
+  <!-- HERO -->
+  <div class="panel" id="panel-hero">
+    <div class="card">
+      <h2>🌅 Foto hero principal</h2>
+      <p style="font-size:.88rem;color:#999;margin-bottom:1rem">
+        La imagen grande de inicio. Al subir una nueva se borra la anterior automáticamente.
+      </p>
+      <img class="hero-prev" id="hero-prev" alt="Hero actual">
+      <div class="upzone" onclick="this.querySelector('input').click()">
+        <div class="ic">🌄</div>
+        <p>Subir nueva foto hero</p>
+        <input type="file" accept="image/*" onchange="uploadHero(this)">
+      </div>
+    </div>
+  </div>
+
+  <!-- ROX -->
+  <div class="panel" id="panel-rox">
+    <div class="card">
+      <h2>💛 La que paga las croquetas — 10 fotos</h2>
+      <p style="font-size:.88rem;color:#999;margin-bottom:.5rem">
+        Haz click en cualquier slot para subir o cambiar la foto.
+      </p>
+      <div class="rox-grid" id="rox-grid"></div>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ─────────────────────────────────────────────────────
+//  UTILS
+// ─────────────────────────────────────────────────────
+const ANIMALS = ['aquiles', 'copito', 'elvis'];
+const NAMES   = { aquiles: 'Aquiles', copito: 'La Copito', elvis: 'Elvis' };
+const EMOJI   = { aquiles: '🐕', copito: '🐈', elvis: '🌭' };
+
+let toastT;
+function toast(msg, isErr = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (isErr ? ' err' : '');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.className = '', 3200);
+}
+
+async function api(method, url, body = null) {
+  const opts = {
+    method,
+    headers: body instanceof FormData ? {} : { 'Content-Type': 'application/json' },
+  };
+  if (body) opts.body = body instanceof FormData ? body : JSON.stringify(body);
+  const r = await fetch(url, opts);
+  if (!r.ok) {
+    const e = await r.json().catch(() => ({ error: r.statusText }));
+    throw new Error(e.error || r.statusText);
+  }
+  return r.json();
+}
+
+// ─────────────────────────────────────────────────────
+//  AUTH
+// ─────────────────────────────────────────────────────
+async function checkSession() {
+  try {
+    const d = await api('GET', '/api/admin/me');
+    if (d.isAdmin) showDash();
+  } catch {}
+}
+
+async function doLogin() {
+  const pw = document.getElementById('pw').value;
+  const er = document.getElementById('lerr');
+  er.style.display = 'none';
+  try {
+    await api('POST', '/api/admin/login', { password: pw });
+    showDash();
+  } catch {
+    er.style.display = 'block';
+    document.getElementById('pw').value = '';
+  }
+}
+document.getElementById('pw').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+async function doLogout() {
+  await api('POST', '/api/admin/logout');
+  document.getElementById('dash').style.display = 'none';
+  document.getElementById('login').style.display = 'flex';
+}
+
+function showDash() {
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('dash').style.display  = 'block';
+  init();
+}
+
+// ─────────────────────────────────────────────────────
+//  TABS
+// ─────────────────────────────────────────────────────
+function showTab(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ─────────────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────────────
+let cfgCache = {};
+
+async function init() {
+  buildAnimalHTML();
+  cfgCache = await api('GET', '/api/config');
+  await Promise.all([
+    loadAllPhotos(),
+    loadAllStories(),
+    loadLoopList(),
+    loadAnimalSongs(),
+    loadRox(),
+  ]);
+  // Hero preview
+  if (cfgCache.heroPhoto) {
+    const img = document.getElementById('hero-prev');
+    img.src = cfgCache.heroPhoto + '?t=' + Date.now();
+    img.style.display = 'block';
+  }
+}
+
+// ─────────────────────────────────────────────────────
+//  PANEL ANIMALES — HTML
+// ─────────────────────────────────────────────────────
+function buildAnimalHTML() {
+  const panel = document.getElementById('panel-animales');
+  panel.innerHTML = `<div class="card">` +
+    ANIMALS.map((a, i) => `
+    <div class="adiv">
+      <h3>${EMOJI[a]} ${NAMES[a]}</h3>
+
+      <div class="upzone" onclick="document.getElementById('upl-${a}').click()">
+        <div class="ic">📸</div>
+        <p>Subir fotos de ${NAMES[a]}</p>
+        <input type="file" id="upl-${a}" accept="image/*" multiple onchange="uploadPhotos('${a}',this)">
+      </div>
+      <div class="pgrid" id="grid-${a}"></div>
+
+      <div style="margin-top:1.1rem">
+        <p style="font-weight:600;font-size:.9rem;color:var(--terra2);margin-bottom:.45rem">📖 Historia</p>
+        <textarea class="hist" id="hist-${a}" placeholder="Escribe aquí lo que quieras contar sobre ${NAMES[a]}…"></textarea>
+        <button class="btn btn-g" style="margin-top:.45rem" onclick="saveStory('${a}')">💾 Guardar</button>
+      </div>
+    </div>`).join('') +
+  `</div>`;
+}
+
+// ─────────────────────────────────────────────────────
+//  FOTOS
+// ─────────────────────────────────────────────────────
+async function loadAllPhotos() {
+  await Promise.all(ANIMALS.map(loadPhotos));
+}
+
+async function loadPhotos(animal) {
+  try {
+    const photos = await api('GET', `/api/fotos/${animal}`);
+    renderGrid(animal, photos);
+  } catch {}
+}
+
+function renderGrid(animal, photos) {
+  const grid = document.getElementById('grid-' + animal);
+  if (!grid) return;
+  const main = cfgCache[animal] && cfgCache[animal].mainPhoto;
+  grid.innerHTML = photos.length
+    ? photos.map(url => {
+        const fn    = url.split('/').pop();
+        const isMn  = fn === main;
+        return `
+        <div class="pthumb ${isMn ? 'main' : ''}" id="th-${animal}-${fn}">
+          ${isMn ? '<span class="badge-main">⭐</span>' : ''}
+          <img src="${url}?t=${Date.now()}" alt="">
+          <div class="pactions">
+            <button class="btn btn-o" style="font-size:.72rem" onclick="setMain('${animal}','${fn}')">⭐ Principal</button>
+            <button class="btn btn-r" style="font-size:.72rem" onclick="delPhoto('${animal}','${fn}')">🗑 Borrar</button>
+          </div>
+        </div>`;
+      }).join('')
+    : '<p style="color:#bbb;font-size:.85rem">Sin fotos todavía</p>';
+}
+
+async function uploadPhotos(animal, input) {
+  for (const file of Array.from(input.files)) {
+    try {
+      const fd = new FormData();
+      fd.append('photo', file);
+      await api('POST', `/api/admin/fotos/${animal}`, fd);
+    } catch (e) { toast('Error subiendo ' + file.name, true); }
+  }
+  cfgCache = await api('GET', '/api/config');
+  await loadPhotos(animal);
+  toast('✅ Fotos subidas');
+  input.value = '';
+}
+
+async function delPhoto(animal, fn) {
+  if (!confirm(`¿Borrar ${fn}?`)) return;
+  await api('DELETE', `/api/admin/fotos/${animal}/${fn}`);
+  cfgCache = await api('GET', '/api/config');
+  await loadPhotos(animal);
+  toast('🗑 Foto borrada');
+}
+
+async function setMain(animal, fn) {
+  await api('PUT', `/api/admin/fotos/${animal}/main`, { filename: fn });
+  cfgCache = await api('GET', '/api/config');
+  await loadPhotos(animal);
+  toast('⭐ Foto principal actualizada');
+}
+
+// ─────────────────────────────────────────────────────
+//  HISTORIAS
+// ─────────────────────────────────────────────────────
+async function loadAllStories() {
+  try {
+    const s = await api('GET', '/api/stories');
+    ANIMALS.forEach(a => {
+      const ta = document.getElementById('hist-' + a);
+      if (ta) ta.value = s[a] || '';
+    });
+  } catch {}
+}
+
+async function saveStory(animal) {
+  const text = document.getElementById('hist-' + animal).value;
+  await api('PUT', `/api/admin/stories/${animal}`, { text });
+  toast('💾 Historia guardada');
+}
+
+// ─────────────────────────────────────────────────────
+//  LOOP MUSICAL
+// ─────────────────────────────────────────────────────
+// Canciones "originales" del repo (no borrables)
+const ORIGINALS = ['fondo2.mp3','fondo3.mp3','fondo4.mp3','fondo5.mp3','fondo6.mp3'];
+
+async function loadLoopList() {
+  try {
+    const newSongs = await api('GET', '/api/audio/loop');   // solo las "loop-*"
+    const list     = document.getElementById('loop-list');
+    const allSongs = [
+      ...ORIGINALS.map(n => ({ url: `/audio/${n}`, original: true })),
+      ...newSongs.map(u => ({ url: u, original: false })),
+    ];
+    list.innerHTML = allSongs.map(({ url, original }) => {
+      const name = url.split('/').pop();
+      return `<li class="sitem">
+        <span>🎵 ${name}</span>
+        <audio controls src="${url}" preload="none"></audio>
+        ${original
+          ? `<span class="orig-badge">original</span>`
+          : `<button class="btn btn-r" style="font-size:.75rem" onclick="delLoop('${name}')">🗑</button>`}
+      </li>`;
+    }).join('') || '<li style="color:#bbb;font-size:.85rem;padding:.4rem">Sin canciones</li>';
+  } catch {}
+}
+
+async function uploadLoop(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const fd = new FormData();
+  fd.append('song', file);
+  try {
+    await api('POST', '/api/admin/audio/loop', fd);
+    await loadLoopList();
+    toast('🎵 Canción subida al loop');
+  } catch (e) { toast('Error: ' + e.message, true); }
+  input.value = '';
+}
+
+async function delLoop(filename) {
+  if (!confirm(`¿Borrar ${filename} del loop?`)) return;
+  await api('DELETE', `/api/admin/audio/loop/${filename}`);
+  await loadLoopList();
+  toast('🗑 Canción borrada');
+}
+
+// ─────────────────────────────────────────────────────
+//  CANCIONES POR ANIMAL
+// ─────────────────────────────────────────────────────
+async function loadAnimalSongs() {
+  try {
+    const songs  = await api('GET', '/api/audio/canciones');
+    const panel  = document.getElementById('animal-songs');
+    panel.innerHTML = ANIMALS.map(a => {
+      const url = songs[a] || null;
+      return `
+      <div class="adiv">
+        <h3>${EMOJI[a]} ${NAMES[a]}
+          ${url ? '<span style="font-size:.75rem;color:var(--salvia);font-weight:400;margin-left:.5rem">✅ con canción</span>'
+                : '<span style="font-size:.75rem;color:#bbb;font-weight:400;margin-left:.5rem">sin canción</span>'}
+        </h3>
+        ${url ? `<audio controls src="${url}" preload="none" style="width:100%;height:30px;margin-bottom:.6rem"></audio>` : ''}
+        <label class="btn btn-t" style="cursor:pointer;display:inline-flex;align-items:center;gap:.4rem">
+          📤 ${url ? 'Cambiar' : 'Subir'} canción
+          <input type="file" accept="audio/*" style="display:none" onchange="uploadAnimalSong('${a}',this)">
+        </label>
+      </div>`;
+    }).join('');
+  } catch {}
+}
+
+async function uploadAnimalSong(animal, input) {
+  const file = input.files[0];
+  if (!file) return;
+  const fd = new FormData();
+  fd.append('song', file);
+  try {
+    await api('POST', `/api/admin/audio/${animal}`, fd);
+    await loadAnimalSongs();
+    toast(`🎵 Canción de ${NAMES[animal]} actualizada`);
+  } catch (e) { toast('Error: ' + e.message, true); }
+  input.value = '';
+}
+
+// ─────────────────────────────────────────────────────
+//  HERO
+// ─────────────────────────────────────────────────────
+async function uploadHero(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const fd = new FormData();
+  fd.append('photo', file);
+  try {
+    const d   = await api('POST', '/api/admin/hero', fd);
+    const img = document.getElementById('hero-prev');
+    img.src   = d.url + '?t=' + Date.now();
+    img.style.display = 'block';
+    toast('🌅 Hero actualizado');
+  } catch (e) { toast('Error: ' + e.message, true); }
+  input.value = '';
+}
+
+// ─────────────────────────────────────────────────────
+//  ROX — 10 slots
+// ─────────────────────────────────────────────────────
+async function loadRox() {
+  try {
+    const slots = await api('GET', '/api/rox');
+    const grid  = document.getElementById('rox-grid');
+    grid.innerHTML = slots.map((url, i) => {
+      const s = i + 1;
+      return `
+      <div class="rslot ${url ? 'filled' : ''}" id="rslot-${s}">
+        <span class="snum">${s}</span>
+        ${url ? `<img src="${url}?t=${Date.now()}" alt="">` : `<span class="sempty">📷</span>`}
+        <div class="sacts">
+          <label class="btn btn-t" style="font-size:.72rem;cursor:pointer">
+            ${url ? '🔄' : '➕'}
+            <input type="file" accept="image/*" onchange="uploadRox(${s},this)">
+          </label>
+          ${url ? `<button class="btn btn-r" style="font-size:.72rem" onclick="delRox(${s})">🗑</button>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+  } catch {}
+}
+
+async function uploadRox(slot, input) {
+  const file = input.files[0];
+  if (!file) return;
+  const fd = new FormData();
+  fd.append('photo', file);
+  try {
+    await api('POST', `/api/admin/rox/${slot}`, fd);
+    await loadRox();
+    toast(`💛 Foto ${slot} de Rox actualizada`);
+  } catch (e) { toast('Error: ' + e.message, true); }
+  input.value = '';
+}
+
+async function delRox(slot) {
+  if (!confirm(`¿Borrar foto ${slot}?`)) return;
+  await api('DELETE', `/api/admin/rox/${slot}`);
+  await loadRox();
+  toast(`🗑 Foto ${slot} borrada`);
+}
+
+// ─────────────────────────────────────────────────────
+//  INICIO
+// ─────────────────────────────────────────────────────
+checkSession();
+</script>
+</body>
+</html>
