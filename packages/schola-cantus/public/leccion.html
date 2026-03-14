@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lección — Cantus Aeternus</title>
+  <link rel="stylesheet" href="/css/schola.css">
+  <style>
+    /* ── Layout lección ── */
+    .lesson-layout {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 3.5rem;
+      padding: 3rem 0 6rem;
+      align-items: start;
+    }
+
+    /* ── Cabecera ── */
+    .lesson-header {
+      padding: 2.5rem 0 0;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2rem;
+      margin-bottom: 0;
+    }
+
+    .lesson-header__back {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      display: inline-block;
+      margin-bottom: 1.2rem;
+      transition: color 0.2s;
+    }
+
+    .lesson-header__back:hover { color: var(--accent); }
+
+    .lesson-header__course {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .lesson-header__module {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      color: var(--accent);
+      font-style: italic;
+      margin-bottom: 0.5rem;
+    }
+
+    .lesson-header__title {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    /* ── Video ── */
+    .video-wrap {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+    }
+
+    .video-wrap iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+
+    .video-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-style: italic;
+      gap: 0.5rem;
+      font-family: var(--font-display);
+    }
+
+    .video-placeholder__icon {
+      font-size: 2.5rem;
+      opacity: 0.3;
+    }
+
+    /* ── Contenido de la lección ── */
+    .lesson-content {
+      font-size: 1rem;
+      line-height: 1.85;
+      color: var(--text);
+    }
+
+    .lesson-content p { margin-bottom: 1.3em; }
+    .lesson-content h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin: 1.8em 0 0.6em;
+    }
+
+    /* ── Recursos ── */
+    .resources-section {
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .resources-section__title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .resource-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--text);
+      font-size: var(--size-sm);
+      transition: color 0.2s;
+    }
+
+    .resource-item:last-child { border-bottom: none; }
+    .resource-item:hover { color: var(--accent); }
+
+    .resource-item__icon {
+      font-size: 1.1rem;
+      opacity: 0.5;
+    }
+
+    /* ── Navegación entre lecciones ── */
+    .lesson-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .lesson-nav__btn {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      max-width: 45%;
+    }
+
+    .lesson-nav__btn:hover { color: var(--accent); }
+    .lesson-nav__btn--next { text-align: right; align-items: flex-end; }
+
+    .lesson-nav__label {
+      font-size: var(--size-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    .lesson-nav__title {
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    /* ── Sidebar: índice ── */
+    .lesson-sidebar { position: sticky; top: 5rem; }
+
+    .index-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .index-card__header {
+      padding: 1.2rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .index-card__title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .index-card__course {
+      font-size: var(--size-xs);
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 0.2rem;
+    }
+
+    .index-card__progress {
+      padding: 0.8rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .index-card__modules {
+      max-height: 420px;
+      overflow-y: auto;
+    }
+
+    .index-mod {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .index-mod:last-child { border-bottom: none; }
+
+    .index-mod__title {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.8rem 1.5rem 0.5rem;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
+    .index-lesson {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.45rem 1.5rem;
+      font-size: var(--size-xs);
+      color: var(--text-muted);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .index-lesson:hover { background: var(--bg); }
+
+    .index-lesson--active {
+      background: var(--bg);
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .index-lesson__dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      flex-shrink: 0;
+    }
+
+    .index-lesson__dot--done {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* ── Botón marcar lección ── */
+    .mark-section {
+      margin-top: 2rem;
+    }
+
+    /* ── Loading ── */
+    .loading-state {
+      padding: 4rem 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    @media (max-width: 860px) {
+      .lesson-layout {
+        grid-template-columns: 1fr;
+      }
+      .lesson-sidebar { position: static; }
+      .index-card__modules { max-height: 280px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="/" class="nav__logo">Cantus Aeternus</a>
+    <ul class="nav__links">
+      <li><a href="/cursos">cursos</a></li>
+      <li><a href="#" id="nav-auth-link" class="nav__cta">entrar</a></li>
+    </ul>
+  </nav>
+
+  <div id="app">
+    <div class="container">
+      <p class="loading-state">Cargando lección…</p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span>Cantus Aeternus</span>
+    <span>Academia de música antigua</span>
+  </footer>
+
+  <script>
+    const lessonId = location.pathname.split('/').pop();
+    let currentUser = null;
+    let courseData   = null;
+    let userProgress = {};
+
+    async function init() {
+      await checkAuth();
+      await loadLesson();
+    }
+
+    async function checkAuth() {
+      try {
+        const res  = await fetch('/api/auth/me');
+        const data = await res.json();
+        const link = document.getElementById('nav-auth-link');
+        if (data.loggedIn) {
+          currentUser = data;
+          link.textContent = 'mi cuenta';
+          link.href = '/dashboard';
+        } else {
+          link.textContent = 'entrar';
+          link.href = '/entrar';
+        }
+      } catch(e) {}
+    }
+
+    async function loadLesson() {
+      const app = document.getElementById('app');
+      try {
+        const res    = await fetch('/api/lessons/' + lessonId);
+        if (!res.ok) throw new Error('not found');
+        const lesson = await res.json();
+
+        // Cargar curso completo para el índice lateral
+        const cr = await fetch('/api/courses/' + lesson.course_id);
+        courseData   = await cr.json();
+
+        // Cargar progreso si hay usuario
+        if (currentUser) {
+          try {
+            const pr = await fetch('/api/progress/' + lesson.course_id);
+            const pd = await pr.json();
+            userProgress = pd.detail || {};
+          } catch(e) {}
+        }
+
+        renderLesson(lesson);
+      } catch(e) {
+        app.innerHTML = `
+          <div class="container">
+            <div style="padding:4rem 0;text-align:center">
+              <p class="text-muted text-italic">Lección no encontrada.</p>
+              <a href="/cursos" class="btn btn--ghost mt-3">← Volver a cursos</a>
+            </div>
+          </div>`;
+      }
+    }
+
+    function getYoutubeId(url) {
+      if (!url) return null;
+      const m = url.match(/(?:youtu\.be\/|watch\?v=|embed\/)([a-zA-Z0-9_-]{11})/);
+      return m ? m[1] : null;
+    }
+
+    function renderLesson(lesson) {
+      document.title = `${lesson.title} — Cantus Aeternus`;
+
+      // Video
+      const ytId = getYoutubeId(lesson.video_url);
+      const videoHTML = ytId
+        ? `<div class="video-wrap">
+             <iframe src="https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1"
+               allowfullscreen loading="lazy"></iframe>
+           </div>`
+        : lesson.video_url
+          ? `<div class="video-wrap" style="padding-bottom:30%">
+               <div class="video-placeholder">
+                 <span class="video-placeholder__icon">♪</span>
+                 <span>Video no disponible</span>
+               </div>
+             </div>`
+          : '';
+
+      // Recursos
+      const resourcesHTML = (lesson.resources || []).length > 0 ? `
+        <div class="resources-section">
+          <p class="resources-section__title">Materiales</p>
+          ${(lesson.resources).map(r => `
+            <a href="${r.file_url}" target="_blank" class="resource-item" download>
+              <span class="resource-item__icon">↓</span>
+              <span>${r.title}</span>
+            </a>`).join('')}
+        </div>` : '';
+
+      // Navegación anterior/siguiente
+      const allLessons = (courseData?.modules || []).flatMap(m => m.lessons || []);
+      const currentIdx = allLessons.findIndex(l => l.id === lessonId);
+      const prevLesson = currentIdx > 0 ? allLessons[currentIdx - 1] : null;
+      const nextLesson = currentIdx < allLessons.length - 1 ? allLessons[currentIdx + 1] : null;
+
+      const lessonNavHTML = `
+        <div class="lesson-nav">
+          <div>
+            ${prevLesson ? `
+              <a href="/leccion/${prevLesson.id}" class="lesson-nav__btn">
+                <span class="lesson-nav__label">← anterior</span>
+                <span class="lesson-nav__title">${prevLesson.title}</span>
+              </a>` : ''}
+          </div>
+          <div>
+            ${nextLesson ? `
+              <a href="/leccion/${nextLesson.id}" class="lesson-nav__btn lesson-nav__btn--next">
+                <span class="lesson-nav__label">siguiente →</span>
+                <span class="lesson-nav__title">${nextLesson.title}</span>
+              </a>` : ''}
+          </div>
+        </div>`;
+
+      // Índice lateral
+      const allLessonsCount = allLessons.length;
+      const completedCount  = allLessons.filter(l => userProgress[l.id]?.completed).length;
+      const percent = allLessonsCount > 0 ? Math.round((completedCount / allLessonsCount) * 100) : 0;
+
+      const indexModulesHTML = (courseData?.modules || []).map(mod => `
+        <div class="index-mod">
+          <p class="index-mod__title">${mod.title}</p>
+          ${(mod.lessons || []).map(l => {
+            const done   = !!userProgress[l.id]?.completed;
+            const active = l.id === lessonId;
+            return `
+              <a href="/leccion/${l.id}" class="index-lesson ${active ? 'index-lesson--active' : ''}">
+                <div class="index-lesson__dot ${done ? 'index-lesson__dot--done' : ''}"></div>
+                <span>${l.title}</span>
+              </a>`;
+          }).join('')}
+        </div>`).join('');
+
+      const markBtnHTML = currentUser ? `
+        <div class="mark-section">
+          <button class="btn ${userProgress[lessonId]?.completed ? 'btn--outline' : 'btn--primary'}"
+            id="btn-mark" style="width:100%">
+            ${userProgress[lessonId]?.completed ? 'Lección completada ✓' : 'Marcar como completada'}
+          </button>
+        </div>` : `
+        <div class="mark-section">
+          <a href="/entrar" class="btn btn--outline" style="width:100%;text-align:center;display:block">
+            Entrar para llevar tu progreso
+          </a>
+        </div>`;
+
+      document.getElementById('app').innerHTML = `
+        <header class="lesson-header">
+          <div class="container">
+            <a href="/curso/${lesson.course_id}" class="lesson-header__back">← ${lesson.course_title}</a>
+            <p class="lesson-header__module">${lesson.module_title}</p>
+            <h1 class="lesson-header__title">${lesson.title}</h1>
+          </div>
+        </header>
+
+        <div class="container">
+          <div class="lesson-layout">
+            <main>
+              ${videoHTML}
+
+              ${lesson.description ? `<p class="text-muted text-italic" style="margin-bottom:1.5rem">${lesson.description}</p>` : ''}
+
+              ${lesson.content_text ? `
+                <div class="lesson-content drop-cap">
+                  ${lesson.content_text.split('\n\n').map(p => `<p>${p}</p>`).join('')}
+                </div>` : ''}
+
+              ${resourcesHTML}
+              ${lessonNavHTML}
+            </main>
+
+            <aside class="lesson-sidebar">
+              <div class="index-card">
+                <div class="index-card__header">
+                  <p class="index-card__title">${courseData?.title || ''}</p>
+                  <p class="index-card__course">índice del curso</p>
+                </div>
+                ${currentUser ? `
+                  <div class="index-card__progress">
+                    <div class="progress">
+                      <div class="progress__bar">
+                        <div class="progress__fill" style="width:${percent}%"></div>
+                      </div>
+                      <div class="progress__pct">${percent}% completado</div>
+                    </div>
+                  </div>` : ''}
+                <div class="index-card__modules">
+                  ${indexModulesHTML}
+                </div>
+              </div>
+              ${markBtnHTML}
+            </aside>
+          </div>
+        </div>`;
+
+      // Marcar como completada
+      const btnMark = document.getElementById('btn-mark');
+      if (btnMark && !userProgress[lessonId]?.completed) {
+        btnMark.addEventListener('click', async () => {
+          btnMark.disabled = true;
+          const r = await fetch('/api/progress', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ lesson_id: lessonId })
+          });
+          const d = await r.json();
+          if (d.ok) {
+            userProgress[lessonId] = { completed: true };
+            btnMark.textContent = 'Lección completada ✓';
+            btnMark.className = 'btn btn--outline';
+            btnMark.style.width = '100%';
+            // Actualizar punto en índice
+            const dot = document.querySelector(`.index-lesson--active .index-lesson__dot`);
+            if (dot) { dot.classList.add('index-lesson__dot--done'); }
+          } else {
+            btnMark.disabled = false;
+          }
+        });
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cursos — Cantus Aeternus</title>
+  <link rel="stylesheet" href="/css/schola.css">
+  <style>
+    .page-header {
+      padding: 4rem 0 2.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-header__eyebrow {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .page-header__title {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 400;
+      margin-bottom: 0.6rem;
+    }
+
+    .page-header__desc {
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: 1rem;
+    }
+
+    .courses-section {
+      padding: 4rem 0 6rem;
+    }
+
+    .courses-count {
+      font-size: var(--size-sm);
+      color: var(--text-muted);
+      font-style: italic;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Estado vacío */
+    .empty-state {
+      text-align: center;
+      padding: 6rem 0;
+      color: var(--text-muted);
+    }
+
+    .empty-state__icon {
+      font-family: var(--font-display);
+      font-size: 4rem;
+      color: var(--accent);
+      opacity: 0.3;
+      margin-bottom: 1.5rem;
+      line-height: 1;
+    }
+
+    .empty-state__title {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state__text {
+      font-style: italic;
+      font-size: var(--size-sm);
+    }
+
+    /* Skeleton loader */
+    .skeleton {
+      background: linear-gradient(90deg, var(--surface) 25%, var(--border) 50%, var(--surface) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: var(--radius);
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .skeleton-card {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 2rem;
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .skeleton-line {
+      height: 14px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="/" class="nav__logo">Cantus Aeternus</a>
+    <ul class="nav__links">
+      <li><a href="/cursos" class="active">cursos</a></li>
+      <li><a href="/#proposito">academia</a></li>
+      <li><a href="#" id="nav-auth-link" class="nav__cta">entrar</a></li>
+    </ul>
+  </nav>
+
+  <header class="page-header">
+    <div class="container">
+      <p class="page-header__eyebrow">Cantus Aeternus</p>
+      <h1 class="page-header__title">Cursos</h1>
+      <p class="page-header__desc">Estudia música antigua a tu propio ritmo.</p>
+    </div>
+  </header>
+
+  <section class="courses-section">
+    <div class="container">
+      <p class="courses-count" id="courses-count"></p>
+      <div class="courses-grid" id="courses-grid">
+        <!-- Skeletons mientras carga -->
+        <div class="skeleton-card">
+          <div class="skeleton skeleton-line" style="width:40px;height:48px;margin-bottom:0.4rem"></div>
+          <div class="skeleton skeleton-line" style="width:70%"></div>
+          <div class="skeleton skeleton-line" style="width:100%"></div>
+          <div class="skeleton skeleton-line" style="width:90%"></div>
+          <div class="skeleton skeleton-line" style="width:40%;margin-top:0.4rem"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton skeleton-line" style="width:40px;height:48px;margin-bottom:0.4rem"></div>
+          <div class="skeleton skeleton-line" style="width:60%"></div>
+          <div class="skeleton skeleton-line" style="width:100%"></div>
+          <div class="skeleton skeleton-line" style="width:80%"></div>
+          <div class="skeleton skeleton-line" style="width:40%;margin-top:0.4rem"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton skeleton-line" style="width:40px;height:48px;margin-bottom:0.4rem"></div>
+          <div class="skeleton skeleton-line" style="width:75%"></div>
+          <div class="skeleton skeleton-line" style="width:100%"></div>
+          <div class="skeleton skeleton-line" style="width:85%"></div>
+          <div class="skeleton skeleton-line" style="width:40%;margin-top:0.4rem"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span>Cantus Aeternus</span>
+    <span>Academia de música antigua</span>
+  </footer>
+
+  <script>
+    async function loadCourses() {
+      const grid  = document.getElementById('courses-grid');
+      const count = document.getElementById('courses-count');
+
+      try {
+        const res     = await fetch('/api/courses');
+        const courses = await res.json();
+
+        if (!courses.length) {
+          grid.innerHTML = `
+            <div class="empty-state" style="grid-column:1/-1">
+              <div class="empty-state__icon">♩</div>
+              <h2 class="empty-state__title">Los cursos se publicarán pronto</h2>
+              <p class="empty-state__text">Vuelve en unos días.</p>
+            </div>`;
+          return;
+        }
+
+        count.textContent = `${courses.length} curso${courses.length !== 1 ? 's' : ''} disponible${courses.length !== 1 ? 's' : ''}`;
+
+        grid.innerHTML = courses.map(c => `
+          <article class="course-card">
+            <div class="course-card__initial">${c.title.charAt(0)}</div>
+            <h2 class="course-card__title">${c.title}</h2>
+            <p class="course-card__desc">${c.description || ''}</p>
+            <p class="course-card__meta">
+              ${c.lessonCount} lección${c.lessonCount !== 1 ? 'es' : ''}
+              &nbsp;·&nbsp;
+              ${c.moduleCount} módulo${c.moduleCount !== 1 ? 's' : ''}
+              ${c.price === 0 ? '&nbsp;·&nbsp;<span style="color:var(--accent)">gratuito</span>' : ''}
+            </p>
+            <a href="/curso/${c.id}" class="course-card__link">Ver curso →</a>
+          </article>
+        `).join('');
+
+      } catch(e) {
+        grid.innerHTML = `<p class="text-muted text-italic" style="grid-column:1/-1">Error al cargar los cursos.</p>`;
+      }
+    }
+
+    async function checkAuth() {
+      try {
+        const res  = await fetch('/api/auth/me');
+        const data = await res.json();
+        const link = document.getElementById('nav-auth-link');
+        if (data.loggedIn) {
+          link.textContent = 'mi cuenta';
+          link.href = '/dashboard';
+        } else {
+          link.textContent = 'entrar';
+          link.href = '/entrar';
+        }
+      } catch(e) {}
+    }
+
+    loadCourses();
+    checkAuth();
+  </script>
+</body>
+</html>

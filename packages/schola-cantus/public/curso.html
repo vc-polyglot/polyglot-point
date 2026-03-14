@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Curso — Cantus Aeternus</title>
+  <link rel="stylesheet" href="/css/schola.css">
+  <style>
+    /* ── Layout curso ── */
+    .course-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 4rem;
+      padding: 4rem 0 6rem;
+      align-items: start;
+    }
+
+    /* ── Cabecera del curso ── */
+    .course-header {
+      padding: 4rem 0 0;
+    }
+
+    .course-header__back {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      display: inline-block;
+      margin-bottom: 2rem;
+      transition: color 0.2s;
+    }
+
+    .course-header__back:hover { color: var(--accent); }
+
+    .course-header__initial {
+      font-family: var(--font-display);
+      font-size: 5rem;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.6rem;
+    }
+
+    .course-header__title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    .course-header__desc {
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-style: italic;
+      max-width: 560px;
+      margin-bottom: 1.5rem;
+    }
+
+    .course-header__meta {
+      display: flex;
+      gap: 1.5rem;
+      font-size: var(--size-sm);
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .course-header__meta span { display: flex; align-items: center; gap: 0.4rem; }
+
+    /* ── Módulos y lecciones ── */
+    .modules-section { margin-top: 1rem; }
+
+    .modules-section__title {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .module-block {
+      margin-bottom: 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .module-block__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 0;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .module-block__name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .module-block__toggle {
+      font-size: 1rem;
+      color: var(--text-muted);
+      transition: transform 0.25s;
+    }
+
+    .module-block__toggle--open { transform: rotate(180deg); }
+
+    .module-block__lessons {
+      padding-bottom: 0.8rem;
+      display: none;
+    }
+
+    .module-block__lessons--open { display: block; }
+
+    .lesson-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.55rem 0;
+    }
+
+    .lesson-row__dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      flex-shrink: 0;
+    }
+
+    .lesson-row__dot--done {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .lesson-row__link {
+      font-size: var(--size-sm);
+      color: var(--text);
+      transition: color 0.2s;
+    }
+
+    .lesson-row__link:hover { color: var(--accent); }
+
+    /* ── Sidebar ── */
+    .course-sidebar {
+      position: sticky;
+      top: 5rem;
+    }
+
+    .sidebar-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .sidebar-card__price {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 500;
+      margin-bottom: 0.3rem;
+    }
+
+    .sidebar-card__price--free {
+      color: var(--accent);
+    }
+
+    .sidebar-card__label {
+      font-size: var(--size-xs);
+      color: var(--text-muted);
+      font-style: italic;
+      margin-bottom: 1.8rem;
+    }
+
+    .sidebar-card__btn {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .sidebar-card__details {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .sidebar-card__details li {
+      font-size: var(--size-sm);
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .sidebar-card__details li strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* ── Estados ── */
+    .loading-state {
+      padding: 4rem 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .not-found {
+      padding: 6rem 0;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="/" class="nav__logo">Cantus Aeternus</a>
+    <ul class="nav__links">
+      <li><a href="/cursos">cursos</a></li>
+      <li><a href="/#proposito">academia</a></li>
+      <li><a href="#" id="nav-auth-link" class="nav__cta">entrar</a></li>
+    </ul>
+  </nav>
+
+  <div id="app">
+    <div class="container">
+      <p class="loading-state">Cargando curso…</p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span>Cantus Aeternus</span>
+    <span>Academia de música antigua</span>
+  </footer>
+
+  <script>
+    const courseId = location.pathname.split('/').pop();
+    let currentUser = null;
+    let userProgress = {};
+    let enrolled = false;
+
+    async function init() {
+      await checkAuth();
+      await loadCourse();
+    }
+
+    async function checkAuth() {
+      try {
+        const res  = await fetch('/api/auth/me');
+        const data = await res.json();
+        const link = document.getElementById('nav-auth-link');
+        if (data.loggedIn) {
+          currentUser = data;
+          link.textContent = 'mi cuenta';
+          link.href = '/dashboard';
+        } else {
+          link.textContent = 'entrar';
+          link.href = '/entrar';
+        }
+      } catch(e) {}
+    }
+
+    async function loadCourse() {
+      const app = document.getElementById('app');
+      try {
+        const res    = await fetch('/api/courses/' + courseId);
+        if (!res.ok) throw new Error('not found');
+        const course = await res.json();
+
+        // Si hay usuario, cargar progreso
+        if (currentUser) {
+          try {
+            const pr = await fetch('/api/progress/' + courseId);
+            const pd = await pr.json();
+            userProgress = pd.detail || {};
+            // Verificar si está inscrito
+            const me = await fetch('/api/auth/me');
+            const md = await me.json();
+            // enrolled se deduce del progreso o de los enrollments — usamos el endpoint de dashboard
+            const dash = await fetch('/api/dashboard');
+            if (dash.ok) {
+              const dd = await dash.json();
+              enrolled = dd.courses.some(c => c.id === courseId);
+            }
+          } catch(e) {}
+        }
+
+        renderCourse(course);
+      } catch(e) {
+        app.innerHTML = `
+          <div class="container">
+            <div class="not-found">
+              <p class="text-muted text-italic">Curso no encontrado.</p>
+              <a href="/cursos" class="btn btn--ghost mt-3">← Volver a cursos</a>
+            </div>
+          </div>`;
+      }
+    }
+
+    function renderCourse(course) {
+      const allLessons = (course.modules || []).flatMap(m => m.lessons || []);
+      const completedCount = allLessons.filter(l => userProgress[l.id]?.completed).length;
+      const percent = allLessons.length > 0
+        ? Math.round((completedCount / allLessons.length) * 100)
+        : 0;
+
+      const modulesHTML = (course.modules || []).map((mod, i) => {
+        const lessonsHTML = (mod.lessons || []).map(l => {
+          const done = !!userProgress[l.id]?.completed;
+          return `
+            <div class="lesson-row">
+              <div class="lesson-row__dot ${done ? 'lesson-row__dot--done' : ''}"></div>
+              <a href="/leccion/${l.id}" class="lesson-row__link">${l.title}</a>
+            </div>`;
+        }).join('');
+
+        return `
+          <div class="module-block">
+            <div class="module-block__header" onclick="toggleModule(this)">
+              <span class="module-block__name">${mod.title}</span>
+              <span class="module-block__toggle ${i === 0 ? 'module-block__toggle--open' : ''}">▾</span>
+            </div>
+            <div class="module-block__lessons ${i === 0 ? 'module-block__lessons--open' : ''}">
+              ${lessonsHTML || '<p class="text-muted text-italic" style="font-size:var(--size-sm);padding:0.4rem 0">Sin lecciones aún.</p>'}
+            </div>
+          </div>`;
+      }).join('');
+
+      const progressHTML = enrolled && allLessons.length > 0 ? `
+        <div class="progress mt-3">
+          <div class="progress__label">Tu progreso</div>
+          <div class="progress__bar">
+            <div class="progress__fill" style="width:${percent}%"></div>
+          </div>
+          <div class="progress__pct">${percent}%</div>
+        </div>` : '';
+
+      const enrollBtn = enrolled
+        ? `<a href="/cursos" class="btn btn--outline sidebar-card__btn">Inscrito ✓</a>`
+        : currentUser
+          ? `<button class="btn btn--primary sidebar-card__btn" id="btn-enroll">Inscribirme</button>`
+          : `<a href="/entrar" class="btn btn--primary sidebar-card__btn">Entrar para inscribirme</a>`;
+
+      document.title = `${course.title} — Cantus Aeternus`;
+
+      document.getElementById('app').innerHTML = `
+        <header class="course-header">
+          <div class="container">
+            <a href="/cursos" class="course-header__back">← cursos</a>
+            <div class="course-header__initial">${course.title.charAt(0)}</div>
+            <h1 class="course-header__title">${course.title}</h1>
+            <p class="course-header__desc">${course.description || ''}</p>
+            <div class="course-header__meta">
+              <span>📖 ${allLessons.length} lecciones</span>
+              <span>◫ ${(course.modules || []).length} módulos</span>
+              ${course.price === 0 ? '<span style="color:var(--accent)">✦ Gratuito</span>' : ''}
+            </div>
+            ${progressHTML}
+          </div>
+        </header>
+
+        <div class="container">
+          <div class="course-layout">
+            <main>
+              <div class="modules-section">
+                <h2 class="modules-section__title">Contenido del curso</h2>
+                ${modulesHTML || '<p class="text-muted text-italic">Los módulos se publicarán pronto.</p>'}
+              </div>
+            </main>
+
+            <aside class="course-sidebar">
+              <div class="sidebar-card">
+                <div class="sidebar-card__price ${course.price === 0 ? 'sidebar-card__price--free' : ''}">
+                  ${course.price === 0 ? 'Gratuito' : '$' + course.price}
+                </div>
+                <p class="sidebar-card__label">
+                  ${course.price === 0 ? 'Acceso libre' : 'Pago único'}
+                </p>
+                ${enrollBtn}
+                <ul class="sidebar-card__details">
+                  <li><span>Lecciones</span><strong>${allLessons.length}</strong></li>
+                  <li><span>Módulos</span><strong>${(course.modules || []).length}</strong></li>
+                  <li><span>Acceso</span><strong>ilimitado</strong></li>
+                </ul>
+              </div>
+            </aside>
+          </div>
+        </div>`;
+
+      // Botón inscribir
+      const btnEnroll = document.getElementById('btn-enroll');
+      if (btnEnroll) {
+        btnEnroll.addEventListener('click', async () => {
+          btnEnroll.disabled = true;
+          btnEnroll.textContent = 'Inscribiendo…';
+          const r = await fetch('/api/enroll', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ course_id: courseId })
+          });
+          const d = await r.json();
+          if (d.ok) {
+            btnEnroll.textContent = 'Inscrito ✓';
+            btnEnroll.className = 'btn btn--outline sidebar-card__btn';
+            enrolled = true;
+          } else {
+            btnEnroll.disabled = false;
+            btnEnroll.textContent = 'Inscribirme';
+          }
+        });
+      }
+    }
+
+    function toggleModule(header) {
+      const lessons = header.nextElementSibling;
+      const toggle  = header.querySelector('.module-block__toggle');
+      const isOpen  = lessons.classList.contains('module-block__lessons--open');
+      lessons.classList.toggle('module-block__lessons--open', !isOpen);
+      toggle.classList.toggle('module-block__toggle--open', !isOpen);
+    }
+
+    init();
+  </script>
+</body>
+</html>

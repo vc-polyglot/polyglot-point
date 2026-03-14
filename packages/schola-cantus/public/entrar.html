@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar — Cantus Aeternus</title>
+  <link rel="stylesheet" href="/css/schola.css">
+  <style>
+    body { display: flex; flex-direction: column; min-height: 100vh; }
+
+    .auth-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 1.5rem;
+    }
+
+    .auth-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 3rem 2.5rem;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .auth-box__title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 500;
+      margin-bottom: 0.3rem;
+    }
+
+    .auth-box__sub {
+      font-size: var(--size-sm);
+      color: var(--text-muted);
+      font-style: italic;
+      margin-bottom: 2rem;
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    .auth-tab {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 0.5rem 1.2rem;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .auth-tab--active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .auth-form { display: none; }
+    .auth-form--active { display: block; }
+
+    .auth-box__footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: var(--size-sm);
+      color: var(--text-muted);
+    }
+
+    .auth-box__footer a { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="/" class="nav__logo">Cantus Aeternus</a>
+    <ul class="nav__links">
+      <li><a href="/cursos">cursos</a></li>
+    </ul>
+  </nav>
+
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <h1 class="auth-box__title">Cantus Aeternus</h1>
+      <p class="auth-box__sub">Tu biblioteca de música antigua</p>
+
+      <div class="auth-tabs">
+        <button class="auth-tab auth-tab--active" data-tab="login">entrar</button>
+        <button class="auth-tab" data-tab="register">registrarse</button>
+      </div>
+
+      <div id="msg"></div>
+
+      <!-- Login -->
+      <div id="form-login" class="auth-form auth-form--active">
+        <div class="form-group">
+          <label>correo electrónico</label>
+          <input type="email" id="login-email" placeholder="tu@correo.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label>contraseña</label>
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <button class="btn btn--primary" style="width:100%" id="btn-login">entrar</button>
+      </div>
+
+      <!-- Registro -->
+      <div id="form-register" class="auth-form">
+        <div class="form-group">
+          <label>nombre</label>
+          <input type="text" id="reg-name" placeholder="Tu nombre">
+        </div>
+        <div class="form-group">
+          <label>correo electrónico</label>
+          <input type="email" id="reg-email" placeholder="tu@correo.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label>contraseña</label>
+          <input type="password" id="reg-password" placeholder="mínimo 6 caracteres" autocomplete="new-password">
+        </div>
+        <button class="btn btn--primary" style="width:100%" id="btn-register">crear cuenta</button>
+      </div>
+
+      <p class="auth-box__footer">
+        <a href="/">← volver al inicio</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Tabs
+    document.querySelectorAll('.auth-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('auth-tab--active'));
+        document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('auth-form--active'));
+        tab.classList.add('auth-tab--active');
+        document.getElementById('form-' + tab.dataset.tab).classList.add('auth-form--active');
+        clearMsg();
+      });
+    });
+
+    function showMsg(text, type = 'error') {
+      const el = document.getElementById('msg');
+      el.innerHTML = `<div class="msg msg--${type}">${text}</div>`;
+    }
+    function clearMsg() { document.getElementById('msg').innerHTML = ''; }
+
+    // Login
+    document.getElementById('btn-login').addEventListener('click', async () => {
+      const email    = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      if (!email || !password) return showMsg('Completa todos los campos.');
+      const res  = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (data.ok) window.location.href = data.redirect;
+      else showMsg(data.error || 'Error al iniciar sesión.');
+    });
+
+    // Registro
+    document.getElementById('btn-register').addEventListener('click', async () => {
+      const name     = document.getElementById('reg-name').value.trim();
+      const email    = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-password').value;
+      if (!name || !email || !password) return showMsg('Completa todos los campos.');
+      if (password.length < 6) return showMsg('La contraseña debe tener al menos 6 caracteres.');
+      const res  = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      });
+      const data = await res.json();
+      if (data.ok) window.location.href = data.redirect;
+      else showMsg(data.error || 'Error al crear la cuenta.');
+    });
+
+    // Enter key
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Enter') return;
+      if (document.getElementById('form-login').classList.contains('auth-form--active'))
+        document.getElementById('btn-login').click();
+      else
+        document.getElementById('btn-register').click();
+    });
+
+    // Redirigir si ya está logueado
+    fetch('/api/auth/me').then(r => r.json()).then(d => {
+      if (d.loggedIn) window.location.href = '/dashboard';
+    });
+  </script>
+</body>
+</html>

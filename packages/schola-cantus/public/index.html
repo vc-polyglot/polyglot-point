@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cantus Aeternus — Academia de música antigua</title>
+  <link rel="stylesheet" href="/css/schola.css">
+  <style>
+    /* ── Hero ── */
+    .hero {
+      padding: 7rem 0 5rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero__eyebrow {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1.6rem;
+    }
+
+    .hero__title {
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      font-weight: 400;
+      line-height: 1.05;
+      margin-bottom: 1.6rem;
+    }
+
+    .hero__title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero__desc {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto 2.8rem;
+      font-style: italic;
+    }
+
+    .hero__actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ── Divisor ornamental ── */
+    .ornament {
+      text-align: center;
+      font-family: var(--font-display);
+      color: var(--accent);
+      font-size: 1.4rem;
+      letter-spacing: 0.3em;
+      margin: 1rem 0;
+      opacity: 0.5;
+    }
+
+    /* ── Sección cursos ── */
+    .featured-courses {
+      padding: 5rem 0;
+    }
+
+    /* ── Sección propósito ── */
+    .purpose {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 0;
+      text-align: center;
+    }
+
+    .purpose__quote {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-style: italic;
+      color: var(--text);
+      max-width: 680px;
+      margin: 0 auto 1rem;
+      line-height: 1.5;
+    }
+
+    .purpose__attr {
+      font-size: var(--size-xs);
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navegación -->
+  <nav class="nav">
+    <a href="/" class="nav__logo">Cantus Aeternus</a>
+    <ul class="nav__links">
+      <li><a href="/cursos">cursos</a></li>
+      <li><a href="#proposito">academia</a></li>
+      <li><a href="#" id="nav-auth-link" class="nav__cta">entrar</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="container">
+      <p class="hero__eyebrow">Academia de música antigua</p>
+      <h1 class="hero__title">Schola<br><em>Cantus</em></h1>
+      <p class="hero__desc">
+        Una biblioteca personal de música antigua.<br>
+        Un lugar de estudio, no una plataforma de cursos.
+      </p>
+      <div class="hero__actions">
+        <a href="/cursos" class="btn btn--primary">Explorar cursos</a>
+        <a href="/entrar" class="btn btn--outline">Crear cuenta</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Ornamento -->
+  <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+  <!-- Cursos destacados -->
+  <section class="featured-courses" id="cursos">
+    <div class="container">
+      <h2 class="section__title">Cursos</h2>
+      <p class="section__subtitle">Estudia a tu ritmo, cuando quieras.</p>
+      <div class="section__divider"></div>
+      <div class="courses-grid" id="courses-grid">
+        <!-- Se puebla con JS -->
+      </div>
+      <div id="courses-empty" class="hidden" style="text-align:center; padding: 3rem 0; color: var(--text-muted); font-style:italic;">
+        Los cursos se publicarán pronto.
+      </div>
+    </div>
+  </section>
+
+  <!-- Propósito -->
+  <section class="purpose" id="proposito">
+    <div class="container">
+      <p class="purpose__quote">
+        "La sensación debe ser abrir un libro antiguo en una mesa de lectura."
+      </p>
+      <p class="purpose__attr">— Cantus Aeternus</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span>Cantus Aeternus</span>
+    <span>Academia de música antigua</span>
+  </footer>
+
+  <script>
+    // Cargar cursos
+    async function loadCourses() {
+      try {
+        const res = await fetch('/api/courses');
+        const courses = await res.json();
+        const grid  = document.getElementById('courses-grid');
+        const empty = document.getElementById('courses-empty');
+
+        if (!courses.length) {
+          empty.classList.remove('hidden');
+          return;
+        }
+
+        grid.innerHTML = courses.slice(0, 6).map(c => `
+          <article class="course-card">
+            <div class="course-card__initial">${c.title.charAt(0)}</div>
+            <h3 class="course-card__title">${c.title}</h3>
+            <p class="course-card__desc">${c.description || ''}</p>
+            <p class="course-card__meta">${c.lessonCount} lección${c.lessonCount !== 1 ? 'es' : ''} · ${c.moduleCount} módulo${c.moduleCount !== 1 ? 's' : ''}</p>
+            <a href="/curso/${c.id}" class="course-card__link">Ver curso →</a>
+          </article>
+        `).join('');
+      } catch(e) {
+        console.error(e);
+      }
+    }
+
+    // Actualizar nav según sesión
+    async function checkAuth() {
+      try {
+        const res  = await fetch('/api/auth/me');
+        const data = await res.json();
+        const link = document.getElementById('nav-auth-link');
+        if (data.loggedIn) {
+          link.textContent = 'mi cuenta';
+          link.href = '/dashboard';
+        } else {
+          link.textContent = 'entrar';
+          link.href = '/entrar';
+        }
+      } catch(e) {}
+    }
+
+    loadCourses();
+    checkAuth();
+  </script>
+</body>
+</html>
