@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hugo Armando Medina — Guitarrista · Director · Arreglista</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:   #080808;
+      --dark:    #111111;
+      --panel:   #161616;
+      --gold:    #c8a96e;
+      --gold2:   #e8d5a3;
+      --ivory:   #f0ece3;
+      --cream:   #ede8df;
+      --cream2:  #e0d9ce;
+      --thin:    'Cormorant Garamond', serif;
+      --sans:    'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--ivory);
+      font-family: var(--sans);
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 2rem 4rem;
+      mix-blend-mode: normal;
+      transition: background .4s;
+    }
+    nav.scrolled { background: rgba(8,8,8,.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(200,169,110,.12); }
+    .nav-logo {
+      font-family: var(--thin);
+      font-size: 1.1rem;
+      font-weight: 300;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 3rem; list-style: none; }
+    .nav-links a {
+      font-family: var(--sans);
+      font-size: .72rem;
+      font-weight: 400;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(240,236,227,.5);
+      text-decoration: none;
+      transition: color .3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: -4px; left: 0; width: 0; height: 1px;
+      background: var(--gold);
+      transition: width .35s ease;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ─── HERO ─── */
+    #hero {
+      position: relative;
+      height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    #particles {
+      position: absolute; inset: 0;
+      z-index: 0;
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      text-align: center;
+      animation: heroIn 1.6s ease forwards;
+      opacity: 0;
+    }
+    @keyframes heroIn {
+      from { opacity:0; transform: translateY(30px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+    .hero-eyebrow {
+      font-family: var(--sans);
+      font-size: .68rem;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2rem;
+    }
+    .hero-name {
+      font-family: var(--thin);
+      font-size: clamp(3.5rem, 8vw, 9rem);
+      font-weight: 300;
+      line-height: .95;
+      letter-spacing: -.01em;
+      color: var(--ivory);
+      margin-bottom: 1.5rem;
+    }
+    .hero-name em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .hero-roles {
+      font-family: var(--thin);
+      font-size: clamp(1rem, 2vw, 1.4rem);
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(240,236,227,.45);
+      letter-spacing: .08em;
+      height: 2rem;
+      overflow: hidden;
+    }
+    .hero-roles span {
+      display: block;
+      animation: roleCycle 6s ease-in-out infinite;
+    }
+    @keyframes roleCycle {
+      0%,20% { transform: translateY(0); opacity:1; }
+      25%,45% { transform: translateY(-2rem); opacity:0; }
+      50%,70% { transform: translateY(-2rem); opacity:1; }
+      /* trick: roles rotate via JS */
+    }
+    .hero-line {
+      width: 1px; height: 80px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      margin: 3rem auto 0;
+      animation: lineGrow 1.2s 1s ease forwards;
+      transform-origin: top;
+      transform: scaleY(0);
+    }
+    @keyframes lineGrow {
+      to { transform: scaleY(1); }
+    }
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; left: 50%;
+      transform: translateX(-50%);
+      font-size: .62rem;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: rgba(240,236,227,.3);
+      z-index: 2;
+    }
+
+    /* ─── SECTION COMMON ─── */
+    section { padding: 9rem 0; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 4rem; }
+    .section-label {
+      font-size: .62rem;
+      letter-spacing: .45em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: 1.2rem;
+    }
+    .section-label::after {
+      content: ''; flex: 0 0 50px; height: 1px; background: var(--gold);
+    }
+    .section-title {
+      font-family: var(--thin);
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      margin-bottom: 1rem;
+    }
+    .section-title em { font-style: italic; color: var(--gold); }
+    .divider {
+      width: 60px; height: 1px;
+      background: var(--gold);
+      margin: 2rem 0;
+    }
+
+    /* ─── SOLISTA ─── */
+    #solista { background: var(--black); }
+    .solista-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: start;
+    }
+    .solista-photo {
+      position: relative;
+    }
+    .photo-frame {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: var(--panel);
+      border: 1px solid rgba(200,169,110,.15);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .photo-frame img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%) contrast(1.05);
+      transition: filter .6s ease;
+    }
+    .photo-frame:hover img { filter: grayscale(60%) contrast(1.05); }
+    .photo-placeholder {
+      color: var(--grey);
+      font-size: .72rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 2;
+    }
+    .photo-frame::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 40%; 
+      background: linear-gradient(to top, rgba(8,8,8,.7), transparent);
+    }
+    .photo-accent {
+      position: absolute;
+      bottom: -20px; right: -20px;
+      width: 60%; height: 60%;
+      border: 1px solid rgba(200,169,110,.2);
+      z-index: -1;
+    }
+    .solista-text { padding-top: 3rem; }
+    .solista-bio {
+      font-family: var(--thin);
+      font-size: 1.2rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: rgba(240,236,227,.75);
+      margin-bottom: 2.5rem;
+    }
+    .awards-row {
+      display: flex; gap: 3rem;
+      margin-bottom: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(200,169,110,.12);
+    }
+    .award-item { }
+    .award-number {
+      font-family: var(--thin);
+      font-size: 3rem;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .award-label {
+      font-size: .68rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-top: .3rem;
+    }
+
+    /* ─── VIDEO GRID ─── */
+    .video-section-title {
+      font-family: var(--sans);
+      font-size: .68rem;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-bottom: 1.5rem;
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    .video-slot {
+      aspect-ratio: 16/9;
+      background: var(--panel);
+      border: 1px solid rgba(200,169,110,.1);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: .8rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .3s;
+      cursor: pointer;
+    }
+    .video-slot:hover { border-color: rgba(200,169,110,.4); }
+    .video-slot iframe {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+    .video-play {
+      width: 48px; height: 48px;
+      border: 1px solid rgba(200,169,110,.4);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .video-play svg { fill: var(--gold); width: 16px; margin-left: 3px; }
+    .video-label {
+      font-size: .65rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--grey);
+      text-align: center;
+    }
+
+    /* ─── DIRECTOR ─── */
+    #director { background: var(--dark); }
+    .director-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .director-image-stack { position: relative; height: 520px; }
+    .dir-img-main {
+      position: absolute;
+      top: 0; left: 0;
+      width: 78%; height: 85%;
+      background: var(--panel);
+      border: 1px solid rgba(200,169,110,.12);
+      overflow: hidden;
+    }
+    .dir-img-main img { width:100%;height:100%;object-fit:cover;filter:grayscale(100%); }
+    .dir-img-secondary {
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 55%; height: 50%;
+      background: var(--panel);
+      border: 1px solid rgba(200,169,110,.2);
+      overflow: hidden;
+    }
+    .dir-img-secondary img { width:100%;height:100%;object-fit:cover;filter:grayscale(100%); }
+    .dir-accent-line {
+      position: absolute;
+      bottom: 20px; left: 20px;
+      width: 1px; height: 60px;
+      background: var(--gold);
+    }
+    .director-info { }
+    .director-highlights {
+      list-style: none;
+      margin: 2rem 0 3rem;
+    }
+    .director-highlights li {
+      display: flex; gap: 1.2rem;
+      padding: 1.2rem 0;
+      border-bottom: 1px solid rgba(200,169,110,.08);
+      font-family: var(--thin);
+      font-size: 1.05rem;
+      color: rgba(240,236,227,.7);
+      line-height: 1.5;
+    }
+    .director-highlights li::before {
+      content: '—';
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* ─── CAMARA / TETRAKTYS ─── */
+    #camara { background: var(--cream); }
+    #camara .section-label { color: var(--gold); }
+    #camara .section-label::after { background: var(--gold); }
+    #camara .section-title { color: #1a1410; }
+    #camara .section-title em { color: #8a6d3b; }
+    #camara p { color: rgba(20,16,10,.6); }
+    .ensemble-card {
+      background: #f5f0e8;
+      padding: 2.5rem;
+      border: 1px solid rgba(140,110,60,.15);
+      transition: border-color .3s, transform .3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .ensemble-card:hover { border-color: rgba(140,110,60,.4); transform: translateY(-3px); }
+    .ensemble-card::before { background: #8a6d3b; }
+    .ensemble-photo { background: #ddd8ce; }
+    .ensemble-name { color: #6b5020; }
+    .ensemble-desc { color: rgba(20,16,10,.55); }
+    #camara .video-slot { background: #e0d9ce; border-color: rgba(140,110,60,.2); }
+    #camara .video-label { color: rgba(20,16,10,.45); }
+    #camara .video-play { border-color: rgba(140,110,60,.4); }
+    #camara .video-play svg { fill: #8a6d3b; }
+    .camara-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      margin-bottom: 5rem;
+      align-items: end;
+    }
+    .ensembles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-bottom: 4rem;
+    }
+    .ensemble-card {
+      background: var(--panel);
+      padding: 2.5rem;
+      border: 1px solid rgba(200,169,110,.07);
+      transition: border-color .3s, transform .3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .ensemble-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 2px; height: 0;
+      background: var(--gold);
+      transition: height .4s ease;
+    }
+    .ensemble-card:hover { border-color: rgba(200,169,110,.25); transform: translateY(-3px); }
+    .ensemble-card:hover::before { height: 100%; }
+    .ensemble-photo {
+      width: 100%; aspect-ratio: 4/3;
+      background: #1a1a1a;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .ensemble-photo img { width:100%;height:100%;object-fit:cover;filter:grayscale(100%); }
+    .ensemble-name {
+      font-family: var(--thin);
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: var(--gold2);
+      margin-bottom: .5rem;
+    }
+    .ensemble-desc {
+      font-size: .82rem;
+      line-height: 1.7;
+      color: rgba(240,236,227,.5);
+    }
+
+    /* ─── CRÍTICAS ─── */
+    #criticas { background: var(--cream); }
+    #criticas .section-label { color: var(--gold); }
+    #criticas .section-label::after { background: var(--gold); }
+    #criticas .section-title { color: #1a1410; }
+    #criticas .section-title em { color: #8a6d3b; }
+    #criticas > .container > .criticas-intro > div:last-child { color: rgba(20,16,10,.5); }
+    .critica-card {
+      background: #f5f0e8;
+      padding: 3.5rem;
+      position: relative;
+    }
+    .critica-card:first-child {
+      grid-column: span 2;
+      background: var(--cream2);
+    }
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 4rem;
+      margin-bottom: 5rem;
+      align-items: end;
+    }
+    .criticas-intro {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+    }
+    .critica-card {
+      background: var(--dark);
+      padding: 3.5rem;
+      position: relative;
+    }
+    .critica-card:first-child {
+      grid-column: span 2;
+      background: var(--black);
+    }
+    .quote-mark {
+      font-family: var(--thin);
+      font-size: 8rem;
+      line-height: .5;
+      color: rgba(140,110,60,.18);
+      position: absolute;
+      top: 2rem; left: 2.5rem;
+      pointer-events: none;
+    }
+    .critica-text {
+      font-family: var(--thin);
+      font-size: clamp(1.1rem, 2vw, 1.6rem);
+      font-style: italic;
+      font-weight: 300;
+      line-height: 1.65;
+      color: rgba(20,16,10,.75);
+      position: relative; z-index: 1;
+      margin-bottom: 2rem;
+    }
+    .critica-card:first-child .critica-text { font-size: clamp(1.4rem, 2.5vw, 2.2rem); }
+    .critica-author {
+      font-size: .68rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: #8a6d3b;
+    }
+
+    /* ─── CONTACTO ─── */
+    #contacto { background: var(--black); }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8rem;
+      align-items: center;
+    }
+    .contact-big {
+      font-family: var(--thin);
+      font-size: clamp(3rem, 6vw, 6rem);
+      font-weight: 300;
+      line-height: 1;
+      margin-bottom: 3rem;
+    }
+    .contact-big em { font-style: italic; color: var(--gold); }
+    .contact-info { }
+    .contact-item {
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid rgba(200,169,110,.1);
+    }
+    .contact-item:last-child { border-bottom: none; }
+    .contact-item-label {
+      font-size: .62rem;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: .5rem;
+    }
+    .contact-item-value {
+      font-family: var(--thin);
+      font-size: 1.3rem;
+      font-weight: 300;
+      color: var(--ivory);
+      text-decoration: none;
+      transition: color .3s;
+    }
+    .contact-item-value:hover { color: var(--gold); }
+
+    /* ─── GALERÍA CIRCULAR ─── */
+    #galeria {
+      background: var(--dark);
+      overflow: hidden;
+      position: relative;
+    }
+    .galeria-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .carousel-wrap {
+      position: relative;
+      width: 100%;
+      height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      user-select: none;
+    }
+    .carousel-wrap:active { cursor: grabbing; }
+    #carousel3d {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      transform-style: preserve-3d;
+    }
+    .c-item {
+      position: absolute;
+      width: 200px;
+      height: 260px;
+      top: 50%; left: 50%;
+      margin: -130px 0 0 -100px;
+      background: var(--panel);
+      border: 1px solid rgba(200,169,110,.15);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color .3s, box-shadow .3s;
+    }
+    .c-item:hover {
+      border-color: rgba(200,169,110,.5);
+      box-shadow: 0 0 30px rgba(200,169,110,.08);
+    }
+    .c-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: grayscale(80%) contrast(1.05);
+      transition: filter .5s;
+      pointer-events: none;
+    }
+    .c-item:hover img { filter: grayscale(30%) contrast(1.05); }
+    .c-item-label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: .8rem 1rem;
+      background: linear-gradient(to top, rgba(8,8,8,.9), transparent);
+      font-size: .6rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(240,236,227,.5);
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .c-item:hover .c-item-label { opacity: 1; }
+    .carousel-hint {
+      text-align: center;
+      font-size: .62rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: rgba(240,236,227,.2);
+      margin-top: 2rem;
+    }
+
+    /* ─── LIGHTBOX ─── */
+    #lightbox {
+      position: fixed; inset: 0; z-index: 999;
+      background: rgba(4,4,4,.95);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .4s;
+      backdrop-filter: blur(8px);
+    }
+    #lightbox.open { opacity: 1; pointer-events: all; }
+    .lb-img-wrap {
+      position: relative;
+      max-width: 80vw;
+      max-height: 80vh;
+    }
+    #lbImg {
+      max-width: 80vw;
+      max-height: 75vh;
+      object-fit: contain;
+      border: 1px solid rgba(200,169,110,.2);
+      display: block;
+      transition: opacity .3s;
+    }
+    .lb-caption {
+      text-align: center;
+      font-family: var(--thin);
+      font-size: 1rem;
+      font-style: italic;
+      color: rgba(240,236,227,.5);
+      margin-top: 1rem;
+      letter-spacing: .08em;
+    }
+    .lb-btn {
+      position: fixed;
+      top: 50%; transform: translateY(-50%);
+      background: none;
+      border: 1px solid rgba(200,169,110,.25);
+      color: var(--gold);
+      font-size: 1.5rem;
+      width: 52px; height: 52px;
+      cursor: pointer;
+      transition: border-color .3s, background .3s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .lb-btn:hover { border-color: var(--gold); background: rgba(200,169,110,.08); }
+    #lbPrev { left: 2rem; }
+    #lbNext { right: 2rem; }
+    #lbClose {
+      position: fixed;
+      top: 2rem; right: 2rem;
+      background: none;
+      border: 1px solid rgba(200,169,110,.2);
+      color: rgba(240,236,227,.5);
+      font-size: 1rem;
+      width: 44px; height: 44px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      letter-spacing: .1em;
+      transition: border-color .3s, color .3s;
+    }
+    #lbClose:hover { border-color: var(--gold); color: var(--gold); }
+    .lb-counter {
+      position: fixed;
+      bottom: 2rem; left: 50%;
+      transform: translateX(-50%);
+      font-size: .62rem;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: rgba(240,236,227,.3);
+    }
+
+    /* ─── FRANJA DE PARTÍCULAS ─── */
+    #strip {
+      width: 100%;
+      height: 90px;
+      position: relative;
+      background: var(--black);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    #strip canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    @media (max-width: 900px) {
+      #strip { height: 44px; }
+    }
+
+    /* ─── FRANJA PARTÍCULAS 2 ─── */
+    #strip2 {
+      width: 100%;
+      height: 90px;
+      position: relative;
+      background: var(--dark);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    #strip2 canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    @media (max-width: 900px) {
+      #strip2 { height: 44px; }
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--dark);
+      padding: 2.5rem 4rem;
+      display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid rgba(200,169,110,.1);
+    }
+    .footer-name {
+      font-family: var(--thin);
+      font-size: .9rem;
+      letter-spacing: .2em;
+      color: rgba(240,236,227,.3);
+    }
+    .footer-copy {
+      font-size: .65rem;
+      letter-spacing: .15em;
+      color: rgba(240,236,227,.2);
+    }
+
+    /* ─── REVEAL ANIMATION ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity .9s ease, transform .9s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      nav { padding: 1.5rem 2rem; }
+      .nav-links { display: none; }
+      .container { padding: 0 2rem; }
+      .solista-grid,
+      .director-layout,
+      .camara-header,
+      .criticas-grid,
+      .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .critica-card:first-child { grid-column: span 1; }
+      .ensembles-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">H · A · M</a>
+  <ul class="nav-links">
+    <li><a href="#solista">Solista</a></li>
+    <li><a href="#director">Director</a></li>
+    <li><a href="#camara">Cámara</a></li>
+    <li><a href="#galeria">Galería</a></li>
+    <li><a href="#criticas">Críticas</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- FRANJA ANIMADA -->
+<div id="strip"><canvas id="stripCanvas"></canvas></div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-content">
+    <p class="hero-eyebrow">Guitarrista · México</p>
+    <h1 class="hero-name">Hugo<br><em>Armando</em><br>Medina</h1>
+    <div class="hero-roles">
+      <span id="roleText">Guitarrista Solista</span>
+    </div>
+    <div class="hero-line"></div>
+  </div>
+  <p class="hero-scroll">Desplazar</p>
+</section>
+
+<!-- SOLISTA -->
+<section id="solista">
+  <div class="container">
+    <div class="solista-grid">
+      <div class="solista-photo reveal">
+        <div class="photo-frame">
+          <img src="Hugo Armando Medina-17.jpg" alt="Hugo Armando Medina">
+        </div>
+        <div class="photo-accent"></div>
+      </div>
+      <div class="solista-text reveal">
+        <p class="section-label">Solista</p>
+        <h2 class="section-title">La guitarra<br>como <em>voz</em></h2>
+        <div class="divider"></div>
+        <p class="solista-bio">
+          Formado en la FaM-UNAM bajo la guía de Antonio Rodríguez Delgado. Ganador del Premio Nacional de la Juventud 2013. Ha actuado como solista en el Festival del Caribe, el Ciclo de Guitarra del INBA y festivales a lo largo de la república mexicana.
+        </p>
+        <p class="solista-bio">
+          Participante activo en clases magistrales con Leo Brouwer, Marco Tamayo y el Cuarteto Penderecki. Becario del CONACULTA y FOCAEM en diversas ocasiones. En 2019 realizó el estreno mundial del Divertimento para Guitarra y Cuerdas de Armando Luna Ponce con la Orquesta Filarmónica de Toluca.
+        </p>
+        <div class="awards-row">
+          <div class="award-item">
+            <div class="award-number">8</div>
+            <div class="award-label">Primeros premios<br>internacionales</div>
+          </div>
+          <div class="award-item">
+            <div class="award-number">2013</div>
+            <div class="award-label">Premio Nacional<br>de la Juventud</div>
+          </div>
+          <div class="award-item">
+            <div class="award-number">2019</div>
+            <div class="award-label">Estreno mundial<br>Luna Ponce</div>
+          </div>
+        </div>
+        <div class="video-section-title">Video — Solista</div>
+        <div class="video-grid">
+          <div class="video-slot">
+            <!-- Embed iframe aquí -->
+            <div class="video-play">
+              <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+            </div>
+            <span class="video-label">Toccata de Pasquini<br>Leo Brouwer</span>
+          </div>
+          <div class="video-slot">
+            <div class="video-play">
+              <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+            </div>
+            <span class="video-label">Ciaccona<br>J. S. Bach</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIRECTOR -->
+<section id="director">
+  <div class="container">
+    <div class="director-layout">
+      <div class="director-image-stack reveal">
+        <div class="dir-img-main">
+          <img src="Sonar las Joyas.jpg" alt="Orquesta SONAR Las Joyas" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);">
+        </div>
+        <div class="dir-img-secondary">
+          <img src="Auge_2.JPG" alt="Hugo Armando Medina dirigiendo" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);">
+        </div>
+        <div class="dir-accent-line"></div>
+      </div>
+      <div class="director-info reveal">
+        <p class="section-label">Director Orquestal</p>
+        <h2 class="section-title">El gesto<br>que <em>convoca</em></h2>
+        <div class="divider"></div>
+        <ul class="director-highlights">
+          <li>Director titular de la Orquesta SONAR Las Joyas, León, Guanajuato</li>
+          <li>Magno Concierto Interorquestas 2023 — 1,200 niños en la Velaria de la Feria de León</li>
+          <li>Lleno total en el Teatro del Bicentenario con "The Magical Mystery Tour"</li>
+          <li>Producción de El Mayab — orquesta, coro, narrador y actores infantiles</li>
+          <li>Intercambios con orquestas de Querétaro y Michoacán</li>
+          <li>Actualmente desarrolla un método de pedagogía musical comunitaria</li>
+        </ul>
+        <div class="video-section-title">Videos — Orquesta</div>
+        <div class="video-grid">
+          <div class="video-slot">
+            <div class="video-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+            <span class="video-label">The Beatles Sinfónico<br>Magical Mystery Tour</span>
+          </div>
+          <div class="video-slot">
+            <div class="video-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+            <span class="video-label">El Mayab<br>Juan Manuel López</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FRANJA PARTÍCULAS 2 -->
+<div id="strip2"><canvas id="particles"></canvas></div>
+
+<!-- CÁMARA / TETRAKTYS -->
+<section id="camara">
+  <div class="container">
+    <div class="camara-header">
+      <div class="reveal">
+        <p class="section-label">Música de Cámara</p>
+        <h2 class="section-title">Cuatro voces,<br>un <em>pensamiento</em></h2>
+      </div>
+      <div class="reveal">
+        <p style="font-family:var(--thin);font-size:1.1rem;line-height:1.8;color:rgba(240,236,227,.6)">
+          Miembro fundador del Tetraktys Guitar Quartet. Han estrenado y recibido dedicatorias de Leo Brouwer, Mauro Godoy Villalobos y Lupino Caballero. Conciertos en España, Cuba, Italia, Colombia y Argentina.
+        </p>
+      </div>
+    </div>
+
+    <div class="ensembles-grid">
+      <!-- TETRAKTYS -->
+      <div class="ensemble-card reveal">
+        <div class="ensemble-photo">
+          <img src="DSCN7348.JPG" alt="Tetraktys Guitar Quartet">
+        </div>
+        <div class="ensemble-name">Tetraktys Guitar Quartet</div>
+        <p class="ensemble-desc">
+          Festival Internacional Cervantino · Foro Internacional de Música Nueva · VI Festival Leo Brouwer, La Habana. Grabación de la obra integral de Leo Brouwer para cuarteto.
+        </p>
+      </div>
+      <!-- DI-SUONARE -->
+      <div class="ensemble-card reveal">
+        <div class="ensemble-photo">
+          <img src="DSCN7350.JPG" alt="Di-Suonare Dúo">
+        </div>
+        <div class="ensemble-name">Di-Suonare Dúo</div>
+        <p class="ensemble-desc">
+          Con Miguel Ángel Rivera. Estreno mundial de "A mi modo" de Julio Flores en el XXXIII Foro Internacional de Música Nueva. Ciclos del Festival Itinerante de Guitarra Joven.
+        </p>
+      </div>
+      <!-- KOSMOS -->
+      <div class="ensemble-card reveal">
+        <div class="ensemble-photo">
+          <img src="DSCN7355.JPG" alt="Kosmos Dúo">
+        </div>
+        <div class="ensemble-name">Kosmos Dúo</div>
+        <p class="ensemble-desc">
+          Formado en 2017. Estrenos absolutos de Mauro Godoy Villalobos, Francesco Telli y J. M. Sánchez Verdú. Conciertos y masterclasses en Chihuahua.
+        </p>
+      </div>
+    </div>
+
+    <div class="video-grid" style="max-width:800px;" >
+      <div class="video-slot reveal">
+        <div class="video-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        <span class="video-label">8 Miniaturas Precoces<br>Armando Luna</span>
+      </div>
+      <div class="video-slot reveal">
+        <div class="video-play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+        <span class="video-label">Camerata de Guitarras<br>CIPEC A.C.</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- GALERÍA -->
+<section id="galeria">
+  <div class="container">
+    <div class="galeria-header reveal">
+      <p class="section-label" style="justify-content:center;">Galería</p>
+      <h2 class="section-title">El <em>instante</em> detenido</h2>
+    </div>
+  </div>
+  <div class="carousel-wrap" id="carouselWrap">
+    <div id="carousel3d">
+      <!-- Las tarjetas se generan por JS — agrega src reales en el array de imágenes del script -->
+    </div>
+  </div>
+  <p class="carousel-hint">Arrastra · Explora · Haz clic para ampliar</p>
+</section>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <div class="lb-img-wrap">
+    <img id="lbImg" src="" alt="">
+    <p class="lb-caption" id="lbCaption"></p>
+  </div>
+  <button class="lb-btn" id="lbPrev">&#8592;</button>
+  <button class="lb-btn" id="lbNext">&#8594;</button>
+  <button id="lbClose">&#10005;</button>
+  <p class="lb-counter" id="lbCounter"></p>
+</div>
+
+<!-- CRÍTICAS -->
+
+<section id="criticas">
+  <div class="container">
+    <div class="criticas-intro">
+      <div class="reveal">
+        <p class="section-label">Críticas</p>
+        <h2 class="section-title">Lo que<br>dicen <em>ellos</em></h2>
+      </div>
+      <div class="reveal" style="font-family:var(--thin);font-size:1rem;line-height:1.8;color:rgba(240,236,227,.45);">
+        Compositor, director y crítico coinciden: Hugo Armando Medina imprime sensibilidad e inteligencia en cada interpretación.
+      </div>
+    </div>
+    <div class="criticas-grid">
+      <div class="critica-card reveal">
+        <span class="quote-mark">"</span>
+        <p class="critica-text">El cuarteto Tetraktys me impresionó por su amplitud expresiva y en momentos mágicos. Debemos escucharle con atención.</p>
+        <p class="critica-author">Leo Brouwer</p>
+      </div>
+      <div class="critica-card reveal">
+        <span class="quote-mark">"</span>
+        <p class="critica-text">En esta grabación se aprecia la gran musicalidad de Hugo Armando Medina, quien hace un manejo sensible e inteligente de mi pieza.</p>
+        <p class="critica-author">Mauro Godoy Villalobos — sobre "Homage"</p>
+      </div>
+      <div class="critica-card reveal">
+        <span class="quote-mark">"</span>
+        <p class="critica-text">Antes de la primera nota, ya hay armonía, esa que se intuye no bien ha comenzado a sonar la música.</p>
+        <p class="critica-author">Omar Páramo — Gaceta UNAM</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="reveal">
+        <p class="section-label">Contacto</p>
+        <h2 class="contact-big">Hagamos<br><em>música</em><br>juntos</h2>
+        <p style="font-family:var(--thin);font-size:1.05rem;line-height:1.8;color:rgba(240,236,227,.5)">
+          Conciertos, residencias, masterclasses, grabaciones y proyectos educativos.
+        </p>
+      </div>
+      <div class="contact-info reveal">
+        <div class="contact-item">
+          <span class="contact-item-label">Correo electrónico</span>
+          <a href="mailto:hugo.opus@gmail.com" class="contact-item-value">hugo.opus@gmail.com</a>
+        </div>
+        <div class="contact-item">
+          <span class="contact-item-label">Teléfono / WhatsApp</span>
+          <a href="tel:+52155860278 21" class="contact-item-value">+521 55 8602 7821</a>
+        </div>
+        <div class="contact-item">
+          <span class="contact-item-label">Discografía</span>
+          <a href="#" class="contact-item-value" style="font-size:1rem;color:var(--grey);">Per Suonare a Quattro · Paisajes y Miniaturas</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-name">Hugo Armando Medina González — Tultepec, México 1986</span>
+  <span class="footer-copy">© 2026</span>
+</footer>
+
+
+<script>
+/* ─── PARTICLES CANVAS ─── */
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H, pts = [], mouse = { x: -9999, y: -9999 };
+const GOLD = '200,169,110';
+const N = 90;
+const MAX_DIST = 140;
+
+function resize() {
+  W = canvas.width  = canvas.offsetWidth;
+  H = canvas.height = canvas.offsetHeight;
+}
+window.addEventListener('resize', () => { resize(); init(); });
+
+function init() {
+  pts = [];
+  for (let i = 0; i < N; i++) {
+    pts.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - .5) * .35,
+      vy: (Math.random() - .5) * .35,
+      r: Math.random() * 1.2 + .4,
+    });
+  }
+}
+
+document.addEventListener('mousemove', e => {
+  const r = canvas.getBoundingClientRect();
+  mouse.x = e.clientX - r.left;
+  mouse.y = e.clientY - r.top;
+});
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  // update
+  for (const p of pts) {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0 || p.x > W) p.vx *= -1;
+    if (p.y < 0 || p.y > H) p.vy *= -1;
+  }
+
+  // lines
+  for (let i = 0; i < pts.length; i++) {
+    for (let j = i+1; j < pts.length; j++) {
+      const dx = pts[i].x - pts[j].x;
+      const dy = pts[i].y - pts[j].y;
+      const d  = Math.sqrt(dx*dx + dy*dy);
+      if (d < MAX_DIST) {
+        const a = (1 - d/MAX_DIST) * .35;
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(${GOLD},${a})`;
+        ctx.lineWidth = .6;
+        ctx.moveTo(pts[i].x, pts[i].y);
+        ctx.lineTo(pts[j].x, pts[j].y);
+        ctx.stroke();
+      }
+    }
+    // mouse lines
+    const dx = pts[i].x - mouse.x;
+    const dy = pts[i].y - mouse.y;
+    const d  = Math.sqrt(dx*dx + dy*dy);
+    if (d < 180) {
+      const a = (1 - d/180) * .6;
+      ctx.beginPath();
+      ctx.strokeStyle = `rgba(${GOLD},${a})`;
+      ctx.lineWidth = .8;
+      ctx.moveTo(pts[i].x, pts[i].y);
+      ctx.lineTo(mouse.x, mouse.y);
+      ctx.stroke();
+    }
+  }
+
+  // dots
+  for (const p of pts) {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(${GOLD},.7)`;
+    ctx.fill();
+  }
+
+  requestAnimationFrame(draw);
+}
+
+resize(); init(); draw();
+
+/* ─── NAV SCROLL ─── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+/* ─── ROLE ROTATOR ─── */
+const roles = ['Guitarrista Solista', 'Director Orquestal', 'Arreglista', 'Tetraktys Guitar Quartet'];
+let ri = 0;
+const roleEl = document.getElementById('roleText');
+function nextRole() {
+  roleEl.style.transition = 'opacity .4s, transform .4s';
+  roleEl.style.opacity = '0';
+  roleEl.style.transform = 'translateY(-10px)';
+  setTimeout(() => {
+    ri = (ri + 1) % roles.length;
+    roleEl.textContent = roles[ri];
+    roleEl.style.transform = 'translateY(10px)';
+    roleEl.style.opacity = '0';
+    setTimeout(() => {
+      roleEl.style.opacity = '1';
+      roleEl.style.transform = 'translateY(0)';
+    }, 50);
+  }, 400);
+}
+setInterval(nextRole, 2800);
+
+/* ─── CIRCULAR CAROUSEL ─── */
+// ── IMÁGENES: reemplaza las URLs con tus fotos reales ──
+const GALLERY = [
+  { src: 'Hugo Armando Medina-1.jpg',   label: 'Hugo Armando Medina' },
+  { src: 'Hugo Armando Medina-3.jpg',   label: 'Hugo Armando Medina' },
+  { src: 'Hugo Armando Medina-10.jpg',  label: 'Hugo Armando Medina' },
+  { src: 'Hugo Armando Medina-16.jpg',  label: 'Hugo Armando Medina' },
+  { src: 'Hugo Armando Medina-17.jpg',  label: 'Hugo Armando Medina' },
+  { src: 'Hugo Armando Medina-19.jpg',  label: 'Hugo Armando Medina' },
+  { src: 'Hugo Armando Medina-21.jpg',  label: 'Hugo Armando Medina' },
+  { src: 'Hugo Armando Medina-25.jpg',  label: 'Hugo Armando Medina' },
+  { src: 'Hugo Armando Medina-29.jpg',  label: 'Hugo Armando Medina' },
+  { src: 'Sonar las Joyas.jpg',         label: 'Orquesta SONAR Las Joyas' },
+  { src: 'Auge_2.JPG',                  label: 'Concierto' },
+  { src: 'Concierto Quanaxhuato  3.jpeg', label: 'Cuanaxhuato' },
+  { src: '4 Paracho color.jpg',         label: 'Paracho' },
+  { src: '6 Paracho color.jpg',         label: 'Paracho' },
+  { src: 'DSCN3933.JPG',               label: 'Concierto' },
+  { src: 'DSCN7348.JPG',               label: 'Concierto' },
+  { src: 'DSCN7350.JPG',               label: 'Concierto' },
+  { src: 'DSCN7355.JPG',               label: 'Concierto' },
+  { src: '_MG_1437.jpg',               label: 'Concierto' },
+  { src: 'IMG_1335.JPG',               label: 'Concierto' },
+  { src: 'FB_IMG_1660008344033.jpg',   label: 'Hugo Armando Medina' },
+];
+
+const carousel  = document.getElementById('carousel3d');
+const carouWrap = document.getElementById('carouselWrap');
+const RADIUS    = 340;
+const ITEM_W    = 200;
+const ITEM_H    = 260;
+let   angle     = 0;
+let   velocity  = 0;
+let   isDragging = false;
+let   lastX     = 0;
+let   autoSpin  = true;
+let   pauseTimer = null;
+
+// Build cards
+GALLERY.forEach((img, i) => {
+  const div = document.createElement('div');
+  div.className = 'c-item';
+  div.innerHTML = `<img src="${img.src}" alt="${img.label}" loading="lazy"><span class="c-item-label">${img.label}</span>`;
+  div.dataset.index = i;
+  div.addEventListener('click', () => {
+    if (Math.abs(velocity) < .03) openLightbox(i);
+  });
+  carousel.appendChild(div);
+});
+
+const cards = carousel.querySelectorAll('.c-item');
+const total = cards.length;
+
+function positionCards() {
+  const step = (Math.PI * 2) / total;
+  cards.forEach((card, i) => {
+    const a   = angle + step * i;
+    const x   = Math.sin(a) * RADIUS;
+    const z   = Math.cos(a) * RADIUS;
+    const scale = (z + RADIUS) / (RADIUS * 2) * .5 + .55;
+    const opacity = (z + RADIUS) / (RADIUS * 2) * .6 + .25;
+    card.style.transform = `translate3d(${x - ITEM_W/2}px, ${-ITEM_H/2}px, ${z}px) scale(${scale})`;
+    card.style.opacity   = opacity;
+    card.style.zIndex    = Math.round(z + RADIUS);
+  });
+}
+
+function animateCarousel() {
+  if (autoSpin && !isDragging) velocity += (.004 - velocity) * .008;
+  angle += velocity;
+  velocity *= .93;
+  positionCards();
+  requestAnimationFrame(animateCarousel);
+}
+animateCarousel();
+
+// Drag
+carouWrap.addEventListener('mousedown', e => {
+  isDragging = true; lastX = e.clientX; autoSpin = false;
+  clearTimeout(pauseTimer);
+});
+window.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  const delta = e.clientX - lastX;
+  velocity = delta * .012;
+  lastX = e.clientX;
+});
+window.addEventListener('mouseup', () => {
+  if (!isDragging) return;
+  isDragging = false;
+  pauseTimer = setTimeout(() => { autoSpin = true; }, 2000);
+});
+
+// Touch
+carouWrap.addEventListener('touchstart', e => {
+  isDragging = true; lastX = e.touches[0].clientX; autoSpin = false;
+  clearTimeout(pauseTimer);
+}, { passive: true });
+carouWrap.addEventListener('touchmove', e => {
+  if (!isDragging) return;
+  velocity = (e.touches[0].clientX - lastX) * .012;
+  lastX = e.touches[0].clientX;
+}, { passive: true });
+carouWrap.addEventListener('touchend', () => {
+  isDragging = false;
+  pauseTimer = setTimeout(() => { autoSpin = true; }, 2000);
+});
+
+// Pause on hover
+carouWrap.addEventListener('mouseenter', () => { if (!isDragging) autoSpin = false; });
+carouWrap.addEventListener('mouseleave', () => { if (!isDragging) autoSpin = true; });
+
+/* ─── LIGHTBOX ─── */
+const lightbox  = document.getElementById('lightbox');
+const lbImg     = document.getElementById('lbImg');
+const lbCaption = document.getElementById('lbCaption');
+const lbCounter = document.getElementById('lbCounter');
+let lbIndex = 0;
+
+function openLightbox(i) {
+  lbIndex = i;
+  updateLb();
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+}
+function updateLb() {
+  lbImg.style.opacity = '0';
+  setTimeout(() => {
+    lbImg.src = GALLERY[lbIndex].src;
+    lbCaption.textContent = GALLERY[lbIndex].label;
+    lbCounter.textContent = `${lbIndex + 1} / ${GALLERY.length}`;
+    lbImg.style.opacity = '1';
+  }, 150);
+}
+
+document.getElementById('lbClose').addEventListener('click', closeLightbox);
+document.getElementById('lbPrev').addEventListener('click', () => {
+  lbIndex = (lbIndex - 1 + GALLERY.length) % GALLERY.length; updateLb();
+});
+document.getElementById('lbNext').addEventListener('click', () => {
+  lbIndex = (lbIndex + 1) % GALLERY.length; updateLb();
+});
+lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', e => {
+  if (!lightbox.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft')  { lbIndex = (lbIndex - 1 + GALLERY.length) % GALLERY.length; updateLb(); }
+  if (e.key === 'ArrowRight') { lbIndex = (lbIndex + 1) % GALLERY.length; updateLb(); }
+});
+
+/* ─── FRANJA PARTÍCULAS ─── */
+(function() {
+  const sc  = document.getElementById('stripCanvas');
+  const sx  = sc.getContext('2d');
+  let SW, SH, spts = [];
+  const SN = 55, SDIST = 120;
+
+  function sresize() {
+    SW = sc.width  = sc.offsetWidth;
+    SH = sc.height = sc.offsetHeight;
+  }
+  window.addEventListener('resize', () => { sresize(); sinit(); });
+
+  function sinit() {
+    spts = [];
+    for (let i = 0; i < SN; i++) {
+      spts.push({
+        x:  Math.random() * SW,
+        y:  Math.random() * SH,
+        vx: (Math.random() - .5) * .5,
+        vy: (Math.random() - .5) * .5,
+        r:  Math.random() * 1.3 + .4,
+      });
+    }
+  }
+
+  function sdraw() {
+    sx.clearRect(0, 0, SW, SH);
+    for (const p of spts) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > SW) p.vx *= -1;
+      if (p.y < 0 || p.y > SH) p.vy *= -1;
+    }
+    for (let i = 0; i < spts.length; i++) {
+      for (let j = i+1; j < spts.length; j++) {
+        const dx = spts[i].x - spts[j].x;
+        const dy = spts[i].y - spts[j].y;
+        const d  = Math.sqrt(dx*dx + dy*dy);
+        if (d < SDIST) {
+          sx.beginPath();
+          sx.strokeStyle = `rgba(200,169,110,${(1 - d/SDIST) * .45})`;
+          sx.lineWidth = .7;
+          sx.moveTo(spts[i].x, spts[i].y);
+          sx.lineTo(spts[j].x, spts[j].y);
+          sx.stroke();
+        }
+      }
+      sx.beginPath();
+      sx.arc(spts[i].x, spts[i].y, spts[i].r, 0, Math.PI*2);
+      sx.fillStyle = 'rgba(200,169,110,.75)';
+      sx.fill();
+    }
+    requestAnimationFrame(sdraw);
+  }
+  sresize(); sinit(); sdraw();
+})();
+
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), 80);
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+revealEls.forEach(el => io.observe(el));
+</script>
+</body>
+</html>

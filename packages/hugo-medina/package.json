@@ -1,0 +1,12 @@
+{
+  "name": "hugo-medina",
+  "version": "1.0.0",
+  "description": "Sitio web de Hugo Armando Medina — Guitarrista · Director · Arreglista",
+  "main": "backend/index.js",
+  "scripts": {
+    "start": "node backend/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
