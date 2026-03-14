@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -120,18 +120,59 @@
     .footer-legal { font-family: "Crimson Pro", serif; font-size: 0.85rem; color: rgba(168,153,122,0.5); text-align: right; max-width: 400px; line-height: 1.6; }
     @keyframes lb-zoom { from { transform: scale(0.6); opacity: 0; filter: blur(12px); } to { transform: scale(1); opacity: 1; filter: blur(0); } }
     @keyframes fade-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal { opacity: 1; transform: none; transition: opacity 0.8s ease, transform 0.8s ease; }
+    .js-ready .reveal { opacity: 0; transform: translateY(40px); }
+    .js-ready .reveal.visible { opacity: 1; transform: translateY(0); }
+    /* RETO */
+    .reto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+    .reto-stat { text-align: center; padding: 3rem; border: 1px solid rgba(185,28,28,0.4); background: rgba(127,29,29,0.1); position: relative; }
+    .reto-stat::before { content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 40px; height: 3px; background: var(--crimson); }
+    .reto-amount { font-family: "Playfair Display", serif; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; color: var(--gold-light); line-height: 1; margin-bottom: 0.5rem; display: block; }
+    .reto-amount-label { font-family: "EB Garamond", serif; font-size: 0.85rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--stone); display: block; margin-bottom: 2rem; }
+    .reto-items { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
+    .reto-item { display: flex; align-items: flex-start; gap: 1rem; font-family: "Crimson Pro", serif; font-size: 1.05rem; color: var(--stone); line-height: 1.5; }
+    .reto-item::before { content: "—"; color: var(--crimson); font-weight: 700; flex-shrink: 0; }
+
+    /* EVENTOS */
+    .eventos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
+    .evento-card { position: relative; overflow: hidden; border: 1px solid rgba(201,168,76,0.15); cursor: zoom-in; }
+    .evento-card img { width: 100%; display: block; transition: transform 0.5s ease, filter 0.4s; filter: brightness(0.85); }
+    .evento-card:hover img { transform: scale(1.03); filter: brightness(1); }
+    .evento-card .evento-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(13,9,6,0.9), transparent); padding: 1.5rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    .evento-card:hover .evento-overlay { opacity: 1; }
+    .evento-overlay-text { font-family: "EB Garamond", serif; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-light); }
+
     .lang-switcher { display: flex; gap: 0.4rem; align-items: center; margin-left: 1.5rem; }
     .lang-btn { font-family: "EB Garamond", serif; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--stone); background: transparent; border: 1px solid rgba(168,153,122,0.3); padding: 0.25rem 0.5rem; cursor: pointer; transition: all 0.2s; }
     .lang-btn:hover, .lang-btn.active { color: var(--gold-light); border-color: var(--gold); background: rgba(201,168,76,0.1); }
+
+    /* EVENTOS */
+    .eventos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
+    .evento-card { position: relative; overflow: hidden; border: 1px solid rgba(201,168,76,0.15); cursor: zoom-in; transition: border-color 0.3s, transform 0.3s; }
+    .evento-card:hover { border-color: rgba(201,168,76,0.4); transform: translateY(-4px); }
+    .evento-card img { width: 100%; display: block; transition: transform 0.5s ease, filter 0.4s; filter: brightness(0.85); }
+    .evento-card:hover img { transform: scale(1.03); filter: brightness(1); }
+    .evento-card .evento-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(13,9,6,0.9), transparent); padding: 1.5rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    .evento-card:hover .evento-overlay { opacity: 1; }
+    .evento-overlay-text { font-family: "EB Garamond", serif; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-light); }
+
+    /* EL RETO */
+    .reto-inner { max-width: 800px; margin: 0 auto; text-align: center; }
+    .reto-cifra { font-family: "Playfair Display", serif; font-size: clamp(3rem, 8vw, 6rem); font-weight: 900; color: var(--crimson-light); line-height: 1; margin: 1.5rem 0 0.5rem; letter-spacing: -0.02em; }
+    .reto-cifra-label { font-family: "EB Garamond", serif; font-size: 0.85rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--stone); margin-bottom: 3rem; display: block; }
+    .reto-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; margin-top: 3rem; text-align: left; }
+    .reto-col { padding: 1.5rem; border-left: 2px solid rgba(185,28,28,0.4); }
+    .reto-col-title { font-family: "Playfair Display", serif; font-size: 1rem; font-weight: 700; color: var(--warm-white); margin-bottom: 0.5rem; }
+    .reto-col-text { font-family: "Crimson Pro", serif; font-size: 0.95rem; color: var(--stone); line-height: 1.6; }
+    @media (max-width: 900px) { .reto-cols { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .eventos-grid { grid-template-columns: 1fr; } }
     @media (max-width: 900px) {
       nav { flex-direction: row; align-items: center; padding: 1rem 6vw; }
       nav .nav-links { display: none; flex-direction: column; gap: 0.75rem; width: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(13,9,6,0.97); z-index: 200; justify-content: center; align-items: center; padding: 2rem; }
       nav .nav-links.open { display: flex; }
       .hamburger { display: flex; flex-direction: column; gap: 5px; cursor: pointer; z-index: 300; }
       .hamburger span { width: 24px; height: 2px; background: var(--warm-white); display: block; transition: 0.3s; }
-      .historia-grid, .donar-grid, .quienes-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .historia-grid, .donar-grid, .quienes-grid, .reto-grid { grid-template-columns: 1fr; gap: 3rem; }
       .fases-grid { grid-template-columns: 1fr 1fr; gap: 3rem; }
       .fases-grid::before { display: none; }
       .gallery-mosaic { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
@@ -167,6 +208,7 @@
     <li><a href="#historia" id="nav-historia">La Historia</a></li>
     <li><a href="#fases" id="nav-proyecto">El Proyecto</a></li>
     <li><a href="#galeria" id="nav-imagenes">Im&#225;genes</a></li>
+    <li><a href="#eventos" id="nav-eventos">Eventos</a></li>
     <li><a href="#donar" id="nav-donar">Donar</a></li>
     <li><a href="#contacto" id="nav-contacto">Contacto</a></li>
   </ul>
@@ -261,6 +303,55 @@
   </div>
 </section>
 
+<!-- EVENTOS -->
+<section id="eventos" style="padding: 10vh 0; background: #0D0806;">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center; margin-bottom: 4rem;">
+      <span class="section-label">Eventos</span>
+      <h2 class="section-title">Pr&#243;ximos<br><em>conciertos</em></h2>
+    </div>
+    <div class="eventos-grid reveal">
+      <div class="evento-card">
+        <img src="cartel_concierto.jpeg" alt="Concierto Orquesta Barroca CNM" class="gallery-click" />
+        <div class="evento-overlay"><span class="evento-overlay-text">Orquesta Barroca del CNM &middot; 12 marzo 2026</span></div>
+      </div>
+      <div class="evento-card">
+        <img src="cartel_programa.jpeg" alt="Programa del concierto" class="gallery-click" />
+        <div class="evento-overlay"><span class="evento-overlay-text">Beethoven: Egmont &middot; Sinfonía No. 7</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EL RETO -->
+<section id="reto" style="padding: 10vh 0; background: linear-gradient(to bottom, #0D0806, var(--ink));">
+  <div class="section-inner">
+    <div class="reto-grid reveal">
+      <div>
+        <span class="section-label">El Reto</span>
+        <h2 class="section-title">El instrumento<br>ya es nuestro.<br><em>El camino, no.</em></h2>
+        <p class="body-text">Este proyecto nace del coraz&#243;n de la comunidad de San Ignacio. Es un esfuerzo conjunto de la sociedad civil, la Iglesia y todos quienes queremos que este templo siga siendo un espacio vivo de fe, cultura y encuentro.</p>
+        <p class="body-text">El nuevo &#243;rgano servir&#225; tanto para la liturgia como para la formaci&#243;n de j&#243;venes m&#250;sicos y para abrir nuestras puertas a m&#225;s personas a trav&#233;s de la m&#250;sica. <strong>El &#243;rgano ya fue donado</strong> a trav&#233;s de un proceso formal de selecci&#243;n internacional. Lo que falta es tra&#233;rlo.</p>
+      </div>
+      <div>
+        <div class="reto-stat">
+          <span class="reto-amount">$5,000,000</span>
+          <span class="reto-amount-label">pesos &middot; costo estimado total</span>
+          <div class="reto-items">
+            <div class="reto-item">Desmontaje especializado en Ginebra</div>
+            <div class="reto-item">Transporte internacional y gesti&#243;n aduanal</div>
+            <div class="reto-item">Restauraci&#243;n e instalaci&#243;n por organeros certificados</div>
+            <div class="reto-item">Adecuaciones ac&#250;sticas y estructurales en San Ignacio</div>
+          </div>
+        </div>
+        <div style="margin-top:2rem; text-align:center;">
+          <a href="#donar" class="btn-primary">Contribuir ahora</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="donar" style="padding: 12vh 0; background: var(--ink);">
   <div class="section-inner">
     <div class="donar-grid">
@@ -282,13 +373,13 @@
           <div class="donar-separator"></div>
           <p class="donar-card-title" id="after-title" style="font-size:1.1rem; margin-bottom:1.5rem;">Despu&#233;s de tu transferencia:</p>
           <div class="donar-steps">
-            <div class="donar-step" id="step1">Env&#237;a tu comprobante a <strong>dona@nuevohogarparaleo.com</strong></div>
+            <div class="donar-step" id="step1">Env&#237;a tu comprobante a <strong><a id="email-dona-step" href="#">dona&#64;nuevohogarparaleo.com</a></strong></div>
             <div class="donar-step" id="step2">Adjunta tu Constancia de Situaci&#243;n Fiscal si deseas tu <strong>CFDI deducible</strong></div>
             <div class="donar-step" id="step3">En m&#225;ximo <strong>5 d&#237;as h&#225;biles</strong> recibir&#225;s tu comprobante fiscal</div>
           </div>
           <div class="donar-note" id="donar-note">Si no necesitas CFDI, basta con enviarnos tu comprobante. Registraremos tu donativo y te enviaremos un recibo con nuestro agradecimiento.</div>
           <br>
-          <a href="mailto:dona@nuevohogarparaleo.com" class="btn-primary" id="btn-email" style="display:block;text-align:center;">Escribir a dona@nuevohogarparaleo.com</a>
+          <a href="#" class="btn-primary" id="btn-email" style="display:block;text-align:center;">Escribir a dona&#64;nuevohogarparaleo.com</a>
         </div>
       </div>
     </div>
@@ -303,7 +394,6 @@
     </div>
     <div class="quienes-grid reveal">
       <div class="quienes-card">
-        <span class="quienes-flag">&#127477;&#127469;</span>
         <p class="quienes-name">Paroisse Protestante Rive Droite</p>
         <p class="quienes-role" id="q1-role">Donantes originales &middot; Ginebra, Suiza</p>
         <p class="quienes-text" id="q1-text">En sesi&#243;n del 11 de junio de 2025, el Consejo de la Parroquia eligi&#243; oficialmente a nuestra propuesta como ganadora del concurso internacional para recibir el &#243;rgano.</p>
@@ -340,7 +430,7 @@
       <div class="contacto-links">
         <div class="contacto-link-item">
           <span class="contacto-link-label" id="label-dona">Donativos</span>
-          <a href="mailto:dona@nuevohogarparaleo.com" class="contacto-link-val">dona@nuevohogarparaleo.com</a>
+          <a href="#" id="email-dona-contacto" class="contacto-link-val">dona&#64;nuevohogarparaleo.com</a>
         </div>
         <div class="contacto-link-item">
           <span class="contacto-link-label" id="label-tel">Iglesia San Ignacio de Loyola</span>
@@ -348,10 +438,10 @@
         </div>
         <div class="contacto-link-item">
           <span class="contacto-link-label" id="label-mail">Correo de la parroquia</span>
-          <a href="mailto:amdg1@prodigy.net.mx" class="contacto-link-val">amdg1@prodigy.net.mx</a>
+          <a href="#" id="email-amdg-contacto" class="contacto-link-val">amdg1&#64;prodigy.net.mx</a>
         </div>
       </div>
-      <a href="mailto:dona@nuevohogarparaleo.com" class="btn-primary" id="btn-contacto">Cont&#225;ctanos</a>
+      <a href="#" class="btn-primary" id="btn-contacto">Cont&#225;ctanos</a>
     </div>
   </div>
 </section>
@@ -365,7 +455,7 @@
   <img id="lightbox-img" src="" style="max-width:92vw;max-height:92vh;object-fit:contain;pointer-events:none;user-select:none;animation:lb-zoom 1.2s ease;" ondragstart="return false" oncontextmenu="return false" />
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 (function() {
   // COUNTDOWN
   function updateCountdown() {
@@ -384,6 +474,7 @@
   setInterval(updateCountdown, 60000);
 
   // REVEAL
+  document.body.classList.add("js-ready");
   var obs = new IntersectionObserver(function(entries) {
     entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); } });
   }, { threshold: 0.1, rootMargin: "0px 0px -60px 0px" });
@@ -639,18 +730,4 @@
     set("label-benef", d.labelBenef); set("label-banco", d.labelBanco); set("label-clabe", d.labelClabe);
     set("after-title", d.afterTitle);
     set("step1", d.step1, true); set("step2", d.step2, true); set("step3", d.step3, true);
-    set("donar-note", d.donarNote); set("btn-email", d.btnEmail);
-    set("sec-label-quienes", d.secLabelQuienes); set("sec-title-quienes", d.secTitleQuienes, true);
-    set("q1-role", d.q1role); set("q1-text", d.q1text);
-    set("q2-role", d.q2role); set("q2-text", d.q2text);
-    set("q3-role", d.q3role); set("q3-text", d.q3text);
-    set("q4-role", d.q4role); set("q4-text", d.q4text);
-    set("sec-label-contacto", d.secLabelContacto); set("sec-title-contacto", d.secTitleContacto, true);
-    set("contacto-p", d.contactoP);
-    set("label-dona", d.labelDona); set("label-tel", d.labelTel); set("label-mail", d.labelMail);
-    set("btn-contacto", d.btnContacto); set("footer-legal", d.footerLegal, true);
-  };
-})();
-</script>
-</body>
-</html>
+    set("donar-note", d.do
