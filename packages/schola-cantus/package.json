@@ -1,7 +1,7 @@
 {
   "name": "schola-cantus",
   "version": "1.0.0",
-  "description": "Academia de música antigua — Schola Cantus",
+  "description": "Academia de música antigua — Cantus Aeternus",
   "main": "backend/index.js",
   "scripts": {
     "start": "node backend/index.js"
