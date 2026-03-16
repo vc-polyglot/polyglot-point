@@ -75,7 +75,9 @@ app.get('/',          (req, res) => res.sendFile(path.join(__dirname, '../public
 app.get('/cursos',    (req, res) => res.sendFile(path.join(__dirname, '../public/cursos.html')));
 app.get('/curso/:id', (req, res) => res.sendFile(path.join(__dirname, '../public/curso.html')));
 app.get('/leccion/:id', (req, res) => res.sendFile(path.join(__dirname, '../public/leccion.html')));
-app.get('/entrar',    (req, res) => res.sendFile(path.join(__dirname, '../public/entrar.html')));
+app.get('/entrar',      (req, res) => res.sendFile(path.join(__dirname, '../public/entrar.html')));
+app.get('/profesores', (req, res) => res.sendFile(path.join(__dirname, '../public/profesores.html')));
+app.get('/recursos',   (req, res) => res.sendFile(path.join(__dirname, '../public/recursos.html')));
 
 app.get('/dashboard', requireAuth, (req, res) =>
   res.sendFile(path.join(__dirname, '../public/dashboard.html')));
