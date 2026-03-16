@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profesores — Cantus Aeternus</title>
+  <link rel="stylesheet" href="/css/schola.css">
+  <style>
+    .page-header {
+      padding: 4rem 0 2.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-header__eyebrow {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .page-header__title {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 400;
+      margin-bottom: 0.6rem;
+    }
+
+    .page-header__desc {
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: 1rem;
+    }
+
+    .profesores-section {
+      padding: 4rem 0 6rem;
+    }
+
+    .profesores-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-top: 2.5rem;
+    }
+
+    .prof-card {
+      display: flex;
+      gap: 1.4rem;
+      align-items: flex-start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.25s;
+    }
+
+    .prof-card:hover {
+      box-shadow: 0 4px 16px rgba(44, 36, 22, 0.1);
+    }
+
+    .prof-card__initial {
+      font-family: var(--font-display);
+      font-size: 2.4rem;
+      color: var(--accent);
+      line-height: 1;
+      flex-shrink: 0;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      background: var(--bg);
+    }
+
+    .prof-card__body { flex: 1; }
+
+    .prof-card__name {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .prof-card__role {
+      font-size: var(--size-xs);
+      color: var(--accent);
+      font-style: italic;
+      margin-bottom: 0.8rem;
+      letter-spacing: 0.02em;
+    }
+
+    .prof-card__bio {
+      font-size: var(--size-sm);
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="main-nav"></nav>
+
+  <header class="page-header">
+    <div class="container">
+      <p class="page-header__eyebrow">Cantus Aeternus</p>
+      <h1 class="page-header__title">Profesores</h1>
+      <p class="page-header__desc">Maestros de la tradición musical antigua.</p>
+    </div>
+  </header>
+
+  <section class="profesores-section">
+    <div class="container">
+      <div class="profesores-grid">
+
+        <div class="prof-card">
+          <div class="prof-card__initial">G</div>
+          <div class="prof-card__body">
+            <h3 class="prof-card__name">Guido d'Arezzo</h3>
+            <p class="prof-card__role">Teoría musical · Notación gregoriana</p>
+            <p class="prof-card__bio">Monje benedictino del siglo XI, reformador de la notación musical. Inventor del hexacordo y pionero del solfeo.</p>
+          </div>
+        </div>
+
+        <div class="prof-card">
+          <div class="prof-card__initial">L</div>
+          <div class="prof-card__body">
+            <h3 class="prof-card__name">Magister Leoninus</h3>
+            <p class="prof-card__role">Polifonía · Escuela de Notre-Dame</p>
+            <p class="prof-card__bio">Compositor parisiense del siglo XII, autor del <em>Magnus Liber Organi</em>. Figura central del organum medieval.</p>
+          </div>
+        </div>
+
+        <div class="prof-card">
+          <div class="prof-card__initial">P</div>
+          <div class="prof-card__body">
+            <h3 class="prof-card__name">Magister Perotinus Magnus</h3>
+            <p class="prof-card__role">Polifonía · Ars Antiqua</p>
+            <p class="prof-card__bio">Sucesor de Leoninus en Notre-Dame, llevó el organum a tres y cuatro voces. Cima del <em>Ars Antiqua</em>.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span>Cantus Aeternus</span>
+    <span>Academia de música antigua</span>
+  </footer>
+
+  <script src="/js/nav.js"></script>
+</body>
+</html>
