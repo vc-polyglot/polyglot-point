@@ -301,7 +301,7 @@ body.cursor-hover .cursor-ring {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, transparent 70%, var(--marfil) 100%);
+  background: linear-gradient(to right, transparent 90%, var(--marfil) 100%);
 }
 
 .hero-text {
