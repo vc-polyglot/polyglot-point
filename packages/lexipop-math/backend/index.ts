@@ -100,6 +100,28 @@ async function initRedisSessionStore(): Promise<void> {
 }
 
 // ─── Health ───────────────────────────────────────────────────────────────────
+
+// Privacy Policy
+app.get("/privacy", (_req: Request, res: Response) => {
+  res.send(`<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><title>Pol�tica de Privacidad - LexiPop Math</title>
+<style>body{font-family:sans-serif;max-width:800px;margin:40px auto;padding:0 20px;line-height:1.6}h1{color:#1a1a2e}</style>
+</head>
+<body>
+<h1>Pol�tica de Privacidad de LexiPop Math</h1>
+<p><strong>�ltima actualizaci�n:</strong> 19 de marzo de 2026</p>
+<p>LexiPop Math recopila �nicamente la informaci�n necesaria para operar el servicio: nombre, correo electr�nico y foto de perfil proporcionados por Google OAuth. No vendemos ni compartimos tus datos con terceros. Los datos de progreso se almacenan en nuestra base de datos para mantener tu historial de ejercicios. Puedes solicitar la eliminaci�n de tu cuenta en cualquier momento escribiendo a polyglotpoint@gmail.com.</p>
+<h2>Datos que recopilamos</h2>
+<ul>
+<li>Nombre y correo electr�nico (v�a Google OAuth)</li>
+<li>Progreso en ejercicios matem�ticos</li>
+<li>Informaci�n de suscripci�n (procesada por Stripe)</li>
+</ul>
+<h2>Contacto</h2>
+<p>polyglotpoint@gmail.com</p>
+</body></html>`);
+});
 app.get("/health", (_req: Request, res: Response) => {
   res.status(200).json({
     status:            "ok",
