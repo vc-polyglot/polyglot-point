@@ -211,272 +211,145 @@
 <script>
 (function () {
 
-  /* ─── TRADUCCIONES ─────────────────────────────────────────── */
+  /* ══════════════════════════════════════════════════════════════
+     TRADUCCIONES
+  ══════════════════════════════════════════════════════════════ */
   var T = {
-
     es: {
-      'nav-sobre':         'Sobre Nurani',
-      'nav-presencia':     'Presencia',
-      'nav-medievalmx':    'Medieval MX',
-      'nav-galeria':       'Galería',
-      'nav-escuchame':     'Escúchame',
-      'nav-contacto':      'Contacto',
-      'menu-cerrar':       '&#x2715; &nbsp; Cerrar',
-      'hero-eyebrow':      'Mezzosoprano &middot; México',
-      'hero-subtitle':     'Voz antigua en el mundo contemporáneo.<br>Cantata, Ópera, Oratorio y Música Medieval.',
-      'hero-scroll':       'Descubrir',
-      'sobre-label':       'Trayectoria',
-      'sobre-title':       'Una voz<br><em>formada en dos mundos</em>',
-      'sobre-caption':     'Fotografía de concierto',
-      'sobre-p1':          'Mezzosoprano egresada del <strong>Conservatorio Nacional de Música de México</strong>, Nurani Huet amplió su formación en el <strong>Koninklijk Conservatorium de La Haya</strong>, Países Bajos, bajo la guía de Peter van Heyhgen, Eric Mentzel, Jill Feldman y Maria Acda.',
-      'sobre-p2':          'Graduada de la especialidad <em>Medieval Music Research and Performance</em> en Medieval Music Besalú y la <strong>Universitat de Lleida</strong>, España, su trayectoria como solista se ha concentrado en la Cantata, la Ópera y el Oratorio del Barroco, así como en la Música Medieval.',
-      'sobre-p3':          'Ha cantado en los principales recintos de México y en ciudades de <strong>Francia, España, Lituania y Países Bajos</strong>. Ha colaborado con ensambles como Cappella Barroca de México, Armonicus Cuatro, Equinox Project (Francia) y Liminar.',
-      'sobre-p4':          'Durante nueve años estuvo al frente del <strong>Taller de Música Antigua para cantantes</strong> en el Conservatorio Nacional de Música. Actualmente es integrante del <strong>Coro de Madrigalistas del INBAL</strong>, tutora de la Academia de Música Antigua de la UNAM y titular del Taller de Música Medieval en la Facultad de Música.',
-      'presencia-label':   'Presencia internacional',
-      'presencia-title':   'Escenarios <em>en cuatro países</em>',
-      'pais-mexico':       'México',
-      'pais-francia':      'Francia',
-      'pais-espana':       'España',
-      'pais-lituania':     'Lituania',
-      'pais-paises-bajos': 'Países Bajos',
-      'genero-label':      'Repertorio',
-      'genero-cantata':    'Cantata Barroca',
-      'genero-medieval':   'Música Medieval',
-      'genero-opera':      'Ópera',
-      'genero-oratorio':   'Oratorio',
-      'medievalmx-label':  'Proyecto propio',
-      'medievalmx-title':  '<em>Medieval MX</em>',
-      'medievalmx-p1':     'Fundado por Nurani Huet, <em>Medieval MX</em> es un proyecto artístico y académico dedicado a la interpretación, investigación y difusión en México de los repertorios tardomedievales y renacentistas tempranos.',
-      'medievalmx-p2':     'La iniciativa recupera músicas de los siglos XII al XVI y las lleva a escenarios contemporáneos con rigor histórico y sensibilidad viva, acercando el pasado sonoro a nuevos públicos.',
-      'tag-interpretacion':'Interpretación',
-      'tag-investigacion': 'Investigación',
-      'tag-difusion':      'Difusión académica',
-      'tag-siglos':        'Siglos XII–XVI',
-      'tag-mexico':        'México',
-      'escuchame-label':   'Canal oficial',
-      'escuchame-title':   'Escúchame <em>cantar</em>',
-      'escuchame-link':    'Ver canal completo en YouTube',
-      'galeria-label':     'Galería',
-      'galeria-title':     'Momentos <em>en escena</em>',
-      'galeria-expand':    'Ver completa',
-      'contacto-label':    'Contacto',
-      'contacto-title':    'Invitaciones<br><em style="color:var(--oro-claro);">&amp; colaboraciones</em>',
-      'contacto-p':        'Para contrataciones, colaboraciones artísticas,<br>proyectos académicos o prensa:',
-      'footer-rights':     '&copy; 2025 Nurani Huet &middot; Todos los derechos reservados',
-      'footer-sub':        'Mezzosoprano &middot; México &middot; Barroco &middot; Medieval'
+      'nav-sobre':'Sobre Nurani','nav-presencia':'Presencia','nav-medievalmx':'Medieval MX',
+      'nav-galeria':'Galería','nav-escuchame':'Escúchame','nav-contacto':'Contacto',
+      'menu-cerrar':'&#x2715; &nbsp; Cerrar',
+      'hero-eyebrow':'Mezzosoprano &middot; México',
+      'hero-subtitle':'Voz antigua en el mundo contemporáneo.<br>Cantata, Ópera, Oratorio y Música Medieval.',
+      'hero-scroll':'Descubrir',
+      'sobre-label':'Trayectoria',
+      'sobre-title':'Una voz<br><em>formada en dos mundos</em>',
+      'sobre-caption':'Fotografía de concierto',
+      'sobre-p1':'Mezzosoprano egresada del <strong>Conservatorio Nacional de Música de México</strong>, Nurani Huet amplió su formación en el <strong>Koninklijk Conservatorium de La Haya</strong>, Países Bajos, bajo la guía de Peter van Heyhgen, Eric Mentzel, Jill Feldman y Maria Acda.',
+      'sobre-p2':'Graduada de la especialidad <em>Medieval Music Research and Performance</em> en Medieval Music Besalú y la <strong>Universitat de Lleida</strong>, España, su trayectoria como solista se ha concentrado en la Cantata, la Ópera y el Oratorio del Barroco, así como en la Música Medieval.',
+      'sobre-p3':'Ha cantado en los principales recintos de México y en ciudades de <strong>Francia, España, Lituania y Países Bajos</strong>. Ha colaborado con ensambles como Cappella Barroca de México, Armonicus Cuatro, Equinox Project (Francia) y Liminar.',
+      'sobre-p4':'Durante nueve años estuvo al frente del <strong>Taller de Música Antigua para cantantes</strong> en el Conservatorio Nacional de Música. Actualmente es integrante del <strong>Coro de Madrigalistas del INBAL</strong>, tutora de la Academia de Música Antigua de la UNAM y titular del Taller de Música Medieval en la Facultad de Música.',
+      'presencia-label':'Presencia internacional','presencia-title':'Escenarios <em>en cuatro países</em>',
+      'pais-mexico':'México','pais-francia':'Francia','pais-espana':'España','pais-lituania':'Lituania','pais-paises-bajos':'Países Bajos',
+      'genero-label':'Repertorio','genero-cantata':'Cantata Barroca','genero-medieval':'Música Medieval','genero-opera':'Ópera','genero-oratorio':'Oratorio',
+      'medievalmx-label':'Proyecto propio','medievalmx-title':'<em>Medieval MX</em>',
+      'medievalmx-p1':'Fundado por Nurani Huet, <em>Medieval MX</em> es un proyecto artístico y académico dedicado a la interpretación, investigación y difusión en México de los repertorios tardomedievales y renacentistas tempranos.',
+      'medievalmx-p2':'La iniciativa recupera músicas de los siglos XII al XVI y las lleva a escenarios contemporáneos con rigor histórico y sensibilidad viva, acercando el pasado sonoro a nuevos públicos.',
+      'tag-interpretacion':'Interpretación','tag-investigacion':'Investigación','tag-difusion':'Difusión académica','tag-siglos':'Siglos XII–XVI','tag-mexico':'México',
+      'escuchame-label':'Canal oficial','escuchame-title':'Escúchame <em>cantar</em>','escuchame-link':'Ver canal completo en YouTube',
+      'galeria-label':'Galería','galeria-title':'Momentos <em>en escena</em>','galeria-expand':'Ver completa',
+      'contacto-label':'Contacto','contacto-title':'Invitaciones<br><em style="color:var(--oro-claro);">&amp; colaboraciones</em>',
+      'contacto-p':'Para contrataciones, colaboraciones artísticas,<br>proyectos académicos o prensa:',
+      'footer-rights':'&copy; 2025 Nurani Huet &middot; Todos los derechos reservados',
+      'footer-sub':'Mezzosoprano &middot; México &middot; Barroco &middot; Medieval'
     },
-
     fr: {
-      'nav-sobre':         'À propos',
-      'nav-presencia':     'Présence',
-      'nav-medievalmx':    'Medieval MX',
-      'nav-galeria':       'Galerie',
-      'nav-escuchame':     'Écouter',
-      'nav-contacto':      'Contact',
-      'menu-cerrar':       '&#x2715; &nbsp; Fermer',
-      'hero-eyebrow':      'Mezzo-soprano &middot; Mexique',
-      'hero-subtitle':     'Une voix ancienne dans le monde contemporain.<br>Cantate, Opéra, Oratorio et Musique Médiévale.',
-      'hero-scroll':       'Découvrir',
-      'sobre-label':       'Parcours',
-      'sobre-title':       'Une voix<br><em>formée en deux mondes</em>',
-      'sobre-caption':     'Photographie de concert',
-      'sobre-p1':          `Mezzo-soprano diplômée du <strong>Conservatoire National de Musique du Mexique</strong>, Nurani Huet a approfondi sa formation au <strong>Koninklijk Conservatorium de La Haye</strong>, Pays-Bas, sous la direction de Peter van Heyhgen, Eric Mentzel, Jill Feldman et Maria Acda.`,
-      'sobre-p2':          `Diplômée de la spécialité <em>Medieval Music Research and Performance</em> à Medieval Music Besalú et à l'<strong>Universitat de Lleida</strong>, Espagne, sa carrière de soliste s'est concentrée sur la Cantate, l'Opéra et l'Oratorio baroques, ainsi que sur la Musique Médiévale.`,
-      'sobre-p3':          `Elle a chanté dans les principales salles du Mexique et dans des villes de <strong>France, d'Espagne, de Lituanie et des Pays-Bas</strong>. Elle a collaboré avec des ensembles tels que Cappella Barroca de México, Armonicus Cuatro, Equinox Project (France) et Liminar.`,
-      'sobre-p4':          `Pendant neuf ans, elle a dirigé l'<strong>Atelier de Musique Ancienne pour chanteurs</strong> au Conservatoire National de Musique. Elle est actuellement membre du <strong>Chœur de Madrigalistes de l'INBAL</strong>, tutrice de l'Académie de Musique Ancienne de l'UNAM et titulaire de l'Atelier de Musique Médiévale à la Faculté de Musique.`,
-      'presencia-label':   'Présence internationale',
-      'presencia-title':   'Scènes <em>dans quatre pays</em>',
-      'pais-mexico':       'Mexique',
-      'pais-francia':      'France',
-      'pais-espana':       'Espagne',
-      'pais-lituania':     'Lituanie',
-      'pais-paises-bajos': 'Pays-Bas',
-      'genero-label':      'Répertoire',
-      'genero-cantata':    'Cantate Baroque',
-      'genero-medieval':   'Musique Médiévale',
-      'genero-opera':      'Opéra',
-      'genero-oratorio':   'Oratorio',
-      'medievalmx-label':  'Projet personnel',
-      'medievalmx-title':  '<em>Medieval MX</em>',
-      'medievalmx-p1':     `Fondé par Nurani Huet, <em>Medieval MX</em> est un projet artistique et académique dédié à l'interprétation, la recherche et la diffusion au Mexique des répertoires tardo-médiévaux et de la Renaissance précoce.`,
-      'medievalmx-p2':     `L'initiative récupère des musiques des XII<sup>e</sup> au XVI<sup>e</sup> siècles et les porte sur des scènes contemporaines avec rigueur historique et sensibilité vivante, rapprochant le passé sonore de nouveaux publics.`,
-      'tag-interpretacion':'Interprétation',
-      'tag-investigacion': 'Recherche',
-      'tag-difusion':      'Diffusion académique',
-      'tag-siglos':        'XII<sup>e</sup>–XVI<sup>e</sup> s.',
-      'tag-mexico':        'Mexique',
-      'escuchame-label':   'Chaîne officielle',
-      'escuchame-title':   'Écoutez-moi <em>chanter</em>',
-      'escuchame-link':    'Voir la chaîne complète sur YouTube',
-      'galeria-label':     'Galerie',
-      'galeria-title':     'Moments <em>sur scène</em>',
-      'galeria-expand':    'Voir en grand',
-      'contacto-label':    'Contact',
-      'contacto-title':    'Engagements<br><em style="color:var(--oro-claro);">&amp; collaborations</em>',
-      'contacto-p':        'Pour des engagements, des collaborations artistiques,<br>des projets académiques ou la presse&nbsp;:',
-      'footer-rights':     '&copy; 2025 Nurani Huet &middot; Tous droits réservés',
-      'footer-sub':        'Mezzo-soprano &middot; Mexique &middot; Baroque &middot; Médiéval'
+      'nav-sobre':'À propos','nav-presencia':'Présence','nav-medievalmx':'Medieval MX',
+      'nav-galeria':'Galerie','nav-escuchame':'Écouter','nav-contacto':'Contact',
+      'menu-cerrar':'&#x2715; &nbsp; Fermer',
+      'hero-eyebrow':'Mezzo-soprano &middot; Mexique',
+      'hero-subtitle':'Une voix ancienne dans le monde contemporain.<br>Cantate, Opéra, Oratorio et Musique Médiévale.',
+      'hero-scroll':'Découvrir',
+      'sobre-label':'Parcours','sobre-title':'Une voix<br><em>formée en deux mondes</em>','sobre-caption':'Photographie de concert',
+      'sobre-p1':'Mezzo-soprano diplômée du <strong>Conservatoire National de Musique du Mexique</strong>, Nurani Huet a approfondi sa formation au <strong>Koninklijk Conservatorium de La Haye</strong>, Pays-Bas, sous la direction de Peter van Heyhgen, Eric Mentzel, Jill Feldman et Maria Acda.',
+      'sobre-p2':"Diplômée de la spécialité <em>Medieval Music Research and Performance</em> à Medieval Music Besalú et à l'<strong>Universitat de Lleida</strong>, Espagne, sa carrière de soliste s'est concentrée sur la Cantate, l'Opéra et l'Oratorio baroques, ainsi que sur la Musique Médiévale.",
+      'sobre-p3':"Elle a chanté dans les principales salles du Mexique et dans des villes de <strong>France, d'Espagne, de Lituanie et des Pays-Bas</strong>. Elle a collaboré avec des ensembles tels que Cappella Barroca de México, Armonicus Cuatro, Equinox Project (France) et Liminar.",
+      'sobre-p4':"Pendant neuf ans, elle a dirigé l'<strong>Atelier de Musique Ancienne pour chanteurs</strong> au Conservatoire National de Musique. Elle est actuellement membre du <strong>Chœur de Madrigalistes de l'INBAL</strong>, tutrice de l'Académie de Musique Ancienne de l'UNAM et titulaire de l'Atelier de Musique Médiévale à la Faculté de Musique.",
+      'presencia-label':'Présence internationale','presencia-title':'Scènes <em>dans quatre pays</em>',
+      'pais-mexico':'Mexique','pais-francia':'France','pais-espana':'Espagne','pais-lituania':'Lituanie','pais-paises-bajos':'Pays-Bas',
+      'genero-label':'Répertoire','genero-cantata':'Cantate Baroque','genero-medieval':'Musique Médiévale','genero-opera':'Opéra','genero-oratorio':'Oratorio',
+      'medievalmx-label':'Projet personnel','medievalmx-title':'<em>Medieval MX</em>',
+      'medievalmx-p1':"Fondé par Nurani Huet, <em>Medieval MX</em> est un projet artistique et académique dédié à l'interprétation, la recherche et la diffusion au Mexique des répertoires tardo-médiévaux et de la Renaissance précoce.",
+      'medievalmx-p2':"L'initiative récupère des musiques des XII<sup>e</sup> au XVI<sup>e</sup> siècles et les porte sur des scènes contemporaines avec rigueur historique et sensibilité vivante, rapprochant le passé sonore de nouveaux publics.",
+      'tag-interpretacion':'Interprétation','tag-investigacion':'Recherche','tag-difusion':'Diffusion académique','tag-siglos':'XII<sup>e</sup>–XVI<sup>e</sup> s.','tag-mexico':'Mexique',
+      'escuchame-label':'Chaîne officielle','escuchame-title':'Écoutez-moi <em>chanter</em>','escuchame-link':'Voir la chaîne complète sur YouTube',
+      'galeria-label':'Galerie','galeria-title':'Moments <em>sur scène</em>','galeria-expand':'Voir en grand',
+      'contacto-label':'Contact','contacto-title':'Engagements<br><em style="color:var(--oro-claro);">&amp; collaborations</em>',
+      'contacto-p':'Pour des engagements, des collaborations artistiques,<br>des projets académiques ou la presse&nbsp;:',
+      'footer-rights':'&copy; 2025 Nurani Huet &middot; Tous droits réservés',
+      'footer-sub':'Mezzo-soprano &middot; Mexique &middot; Baroque &middot; Médiéval'
     },
-
     en: {
-      'nav-sobre':         'About',
-      'nav-presencia':     'Presence',
-      'nav-medievalmx':    'Medieval MX',
-      'nav-galeria':       'Gallery',
-      'nav-escuchame':     'Listen',
-      'nav-contacto':      'Contact',
-      'menu-cerrar':       '&#x2715; &nbsp; Close',
-      'hero-eyebrow':      'Mezzo-soprano &middot; Mexico',
-      'hero-subtitle':     'An ancient voice in the contemporary world.<br>Cantata, Opera, Oratorio and Medieval Music.',
-      'hero-scroll':       'Discover',
-      'sobre-label':       'Biography',
-      'sobre-title':       'A voice<br><em>shaped in two worlds</em>',
-      'sobre-caption':     'Concert photograph',
-      'sobre-p1':          'Mezzo-soprano graduate of the <strong>National Conservatory of Music of Mexico</strong>, Nurani Huet expanded her training at the <strong>Koninklijk Conservatorium in The Hague</strong>, Netherlands, under the guidance of Peter van Heyhgen, Eric Mentzel, Jill Feldman and Maria Acda.',
-      'sobre-p2':          'Graduate of the <em>Medieval Music Research and Performance</em> specialty at Medieval Music Besalú and the <strong>Universitat de Lleida</strong>, Spain, her career as a soloist has focused on Baroque Cantata, Opera and Oratorio, as well as Medieval Music.',
-      'sobre-p3':          'She has performed at leading venues in Mexico and in cities across <strong>France, Spain, Lithuania and the Netherlands</strong>. She has collaborated with ensembles such as Cappella Barroca de México, Armonicus Cuatro, Equinox Project (France) and Liminar.',
-      'sobre-p4':          'For nine years she led the <strong>Early Music Workshop for singers</strong> at the National Conservatory of Music. She is currently a member of the <strong>INBAL Madrigal Choir</strong>, tutor at the UNAM Early Music Academy and director of the Medieval Music Workshop at the Faculty of Music.',
-      'presencia-label':   'International presence',
-      'presencia-title':   'Stages <em>across four countries</em>',
-      'pais-mexico':       'Mexico',
-      'pais-francia':      'France',
-      'pais-espana':       'Spain',
-      'pais-lituania':     'Lithuania',
-      'pais-paises-bajos': 'Netherlands',
-      'genero-label':      'Repertoire',
-      'genero-cantata':    'Baroque Cantata',
-      'genero-medieval':   'Medieval Music',
-      'genero-opera':      'Opera',
-      'genero-oratorio':   'Oratorio',
-      'medievalmx-label':  'Personal project',
-      'medievalmx-title':  '<em>Medieval MX</em>',
-      'medievalmx-p1':     'Founded by Nurani Huet, <em>Medieval MX</em> is an artistic and academic project dedicated to the performance, research and promotion in Mexico of late-medieval and early-Renaissance repertoires.',
-      'medievalmx-p2':     'The initiative recovers music from the 12th to 16th centuries and brings it to contemporary stages with historical rigour and living sensitivity, bringing the sonic past to new audiences.',
-      'tag-interpretacion':'Performance',
-      'tag-investigacion': 'Research',
-      'tag-difusion':      'Academic dissemination',
-      'tag-siglos':        '12th–16th centuries',
-      'tag-mexico':        'Mexico',
-      'escuchame-label':   'Official channel',
-      'escuchame-title':   'Listen to me <em>sing</em>',
-      'escuchame-link':    'View full channel on YouTube',
-      'galeria-label':     'Gallery',
-      'galeria-title':     'Moments <em>on stage</em>',
-      'galeria-expand':    'View full',
-      'contacto-label':    'Contact',
-      'contacto-title':    'Bookings<br><em style="color:var(--oro-claro);">&amp; collaborations</em>',
-      'contacto-p':        'For bookings, artistic collaborations,<br>academic projects or press:',
-      'footer-rights':     '&copy; 2025 Nurani Huet &middot; All rights reserved',
-      'footer-sub':        'Mezzo-soprano &middot; Mexico &middot; Baroque &middot; Medieval'
+      'nav-sobre':'About','nav-presencia':'Presence','nav-medievalmx':'Medieval MX',
+      'nav-galeria':'Gallery','nav-escuchame':'Listen','nav-contacto':'Contact',
+      'menu-cerrar':'&#x2715; &nbsp; Close',
+      'hero-eyebrow':'Mezzo-soprano &middot; Mexico',
+      'hero-subtitle':'An ancient voice in the contemporary world.<br>Cantata, Opera, Oratorio and Medieval Music.',
+      'hero-scroll':'Discover',
+      'sobre-label':'Biography','sobre-title':'A voice<br><em>shaped in two worlds</em>','sobre-caption':'Concert photograph',
+      'sobre-p1':'Mezzo-soprano graduate of the <strong>National Conservatory of Music of Mexico</strong>, Nurani Huet expanded her training at the <strong>Koninklijk Conservatorium in The Hague</strong>, Netherlands, under the guidance of Peter van Heyhgen, Eric Mentzel, Jill Feldman and Maria Acda.',
+      'sobre-p2':'Graduate of the <em>Medieval Music Research and Performance</em> specialty at Medieval Music Besalú and the <strong>Universitat de Lleida</strong>, Spain, her career as a soloist has focused on Baroque Cantata, Opera and Oratorio, as well as Medieval Music.',
+      'sobre-p3':'She has performed at leading venues in Mexico and in cities across <strong>France, Spain, Lithuania and the Netherlands</strong>. She has collaborated with ensembles such as Cappella Barroca de México, Armonicus Cuatro, Equinox Project (France) and Liminar.',
+      'sobre-p4':'For nine years she led the <strong>Early Music Workshop for singers</strong> at the National Conservatory of Music. She is currently a member of the <strong>INBAL Madrigal Choir</strong>, tutor at the UNAM Early Music Academy and director of the Medieval Music Workshop at the Faculty of Music.',
+      'presencia-label':'International presence','presencia-title':'Stages <em>across four countries</em>',
+      'pais-mexico':'Mexico','pais-francia':'France','pais-espana':'Spain','pais-lituania':'Lithuania','pais-paises-bajos':'Netherlands',
+      'genero-label':'Repertoire','genero-cantata':'Baroque Cantata','genero-medieval':'Medieval Music','genero-opera':'Opera','genero-oratorio':'Oratorio',
+      'medievalmx-label':'Personal project','medievalmx-title':'<em>Medieval MX</em>',
+      'medievalmx-p1':'Founded by Nurani Huet, <em>Medieval MX</em> is an artistic and academic project dedicated to the performance, research and promotion in Mexico of late-medieval and early-Renaissance repertoires.',
+      'medievalmx-p2':'The initiative recovers music from the 12th to 16th centuries and brings it to contemporary stages with historical rigour and living sensitivity, bringing the sonic past to new audiences.',
+      'tag-interpretacion':'Performance','tag-investigacion':'Research','tag-difusion':'Academic dissemination','tag-siglos':'12th–16th centuries','tag-mexico':'Mexico',
+      'escuchame-label':'Official channel','escuchame-title':'Listen to me <em>sing</em>','escuchame-link':'View full channel on YouTube',
+      'galeria-label':'Gallery','galeria-title':'Moments <em>on stage</em>','galeria-expand':'View full',
+      'contacto-label':'Contact','contacto-title':'Bookings<br><em style="color:var(--oro-claro);">&amp; collaborations</em>',
+      'contacto-p':'For bookings, artistic collaborations,<br>academic projects or press:',
+      'footer-rights':'&copy; 2025 Nurani Huet &middot; All rights reserved',
+      'footer-sub':'Mezzo-soprano &middot; Mexico &middot; Baroque &middot; Medieval'
     },
-
     it: {
-      'nav-sobre':         'Chi è',
-      'nav-presencia':     'Presenza',
-      'nav-medievalmx':    'Medieval MX',
-      'nav-galeria':       'Galleria',
-      'nav-escuchame':     'Ascolta',
-      'nav-contacto':      'Contatti',
-      'menu-cerrar':       '&#x2715; &nbsp; Chiudi',
-      'hero-eyebrow':      'Mezzosoprano &middot; Messico',
-      'hero-subtitle':     'Una voce antica nel mondo contemporaneo.<br>Cantata, Opera, Oratorio e Musica Medievale.',
-      'hero-scroll':       'Scoprire',
-      'sobre-label':       'Biografia',
-      'sobre-title':       'Una voce<br><em>formata in due mondi</em>',
-      'sobre-caption':     'Fotografia di concerto',
-      'sobre-p1':          `Mezzosoprano diplomata al <strong>Conservatorio Nazionale di Musica del Messico</strong>, Nurani Huet ha approfondito la sua formazione al <strong>Koninklijk Conservatorium dell'Aia</strong>, Paesi Bassi, sotto la guida di Peter van Heyhgen, Eric Mentzel, Jill Feldman e Maria Acda.`,
-      'sobre-p2':          `Diplomata nella specialità <em>Medieval Music Research and Performance</em> a Medieval Music Besalú e all'<strong>Universitat de Lleida</strong>, Spagna, la sua carriera da solista si è concentrata sulla Cantata, l'Opera e l'Oratorio barocchi, oltre che sulla Musica Medievale.`,
-      'sobre-p3':          'Ha cantato nelle principali sale del Messico e in città di <strong>Francia, Spagna, Lituania e Paesi Bassi</strong>. Ha collaborato con ensemble come Cappella Barroca de México, Armonicus Cuatro, Equinox Project (Francia) e Liminar.',
-      'sobre-p4':          `Per nove anni ha diretto il <strong>Laboratorio di Musica Antica per cantanti</strong> presso il Conservatorio Nazionale di Musica. Attualmente è membro del <strong>Coro di Madrigalisti dell'INBAL</strong>, tutrice dell'Accademia di Musica Antica dell'UNAM e titolare del Laboratorio di Musica Medievale presso la Facoltà di Musica.`,
-      'presencia-label':   'Presenza internazionale',
-      'presencia-title':   'Palcoscenici <em>in quattro paesi</em>',
-      'pais-mexico':       'Messico',
-      'pais-francia':      'Francia',
-      'pais-espana':       'Spagna',
-      'pais-lituania':     'Lituania',
-      'pais-paises-bajos': 'Paesi Bassi',
-      'genero-label':      'Repertorio',
-      'genero-cantata':    'Cantata Barocca',
-      'genero-medieval':   'Musica Medievale',
-      'genero-opera':      'Opera',
-      'genero-oratorio':   'Oratorio',
-      'medievalmx-label':  'Progetto personale',
-      'medievalmx-title':  '<em>Medieval MX</em>',
-      'medievalmx-p1':     `Fondato da Nurani Huet, <em>Medieval MX</em> è un progetto artistico e accademico dedicato all'interpretazione, alla ricerca e alla diffusione in Messico dei repertori tardo-medievali e rinascimentali precoci.`,
-      'medievalmx-p2':     `L'iniziativa recupera musiche dal XII al XVI secolo e le porta su palcoscenici contemporanei con rigore storico e sensibilità viva, avvicinando il passato sonoro a nuovi pubblici.`,
-      'tag-interpretacion':'Interpretazione',
-      'tag-investigacion': 'Ricerca',
-      'tag-difusion':      'Diffusione accademica',
-      'tag-siglos':        'Sec. XII–XVI',
-      'tag-mexico':        'Messico',
-      'escuchame-label':   'Canale ufficiale',
-      'escuchame-title':   'Ascoltami <em>cantare</em>',
-      'escuchame-link':    'Visualizza il canale completo su YouTube',
-      'galeria-label':     'Galleria',
-      'galeria-title':     'Momenti <em>in scena</em>',
-      'galeria-expand':    'Vedi intera',
-      'contacto-label':    'Contatti',
-      'contacto-title':    'Ingaggi<br><em style="color:var(--oro-claro);">&amp; collaborazioni</em>',
-      'contacto-p':        'Per ingaggi, collaborazioni artistiche,<br>progetti accademici o stampa:',
-      'footer-rights':     '&copy; 2025 Nurani Huet &middot; Tutti i diritti riservati',
-      'footer-sub':        'Mezzosoprano &middot; Messico &middot; Barocco &middot; Medievale'
+      'nav-sobre':'Chi è','nav-presencia':'Presenza','nav-medievalmx':'Medieval MX',
+      'nav-galeria':'Galleria','nav-escuchame':'Ascolta','nav-contacto':'Contatti',
+      'menu-cerrar':'&#x2715; &nbsp; Chiudi',
+      'hero-eyebrow':'Mezzosoprano &middot; Messico',
+      'hero-subtitle':'Una voce antica nel mondo contemporaneo.<br>Cantata, Opera, Oratorio e Musica Medievale.',
+      'hero-scroll':'Scoprire',
+      'sobre-label':'Biografia','sobre-title':'Una voce<br><em>formata in due mondi</em>','sobre-caption':'Fotografia di concerto',
+      'sobre-p1':"Mezzosoprano diplomata al <strong>Conservatorio Nazionale di Musica del Messico</strong>, Nurani Huet ha approfondito la sua formazione al <strong>Koninklijk Conservatorium dell'Aia</strong>, Paesi Bassi, sotto la guida di Peter van Heyhgen, Eric Mentzel, Jill Feldman e Maria Acda.",
+      'sobre-p2':"Diplomata nella specialità <em>Medieval Music Research and Performance</em> a Medieval Music Besalú e all'<strong>Universitat de Lleida</strong>, Spagna, la sua carriera da solista si è concentrata sulla Cantata, l'Opera e l'Oratorio barocchi, oltre che sulla Musica Medievale.",
+      'sobre-p3':'Ha cantato nelle principali sale del Messico e in città di <strong>Francia, Spagna, Lituania e Paesi Bassi</strong>. Ha collaborato con ensemble come Cappella Barroca de México, Armonicus Cuatro, Equinox Project (Francia) e Liminar.',
+      'sobre-p4':"Per nove anni ha diretto il <strong>Laboratorio di Musica Antica per cantanti</strong> presso il Conservatorio Nazionale di Musica. Attualmente è membro del <strong>Coro di Madrigalisti dell'INBAL</strong>, tutrice dell'Accademia di Musica Antica dell'UNAM e titolare del Laboratorio di Musica Medievale presso la Facoltà di Musica.",
+      'presencia-label':'Presenza internazionale','presencia-title':'Palcoscenici <em>in quattro paesi</em>',
+      'pais-mexico':'Messico','pais-francia':'Francia','pais-espana':'Spagna','pais-lituania':'Lituania','pais-paises-bajos':'Paesi Bassi',
+      'genero-label':'Repertorio','genero-cantata':'Cantata Barocca','genero-medieval':'Musica Medievale','genero-opera':'Opera','genero-oratorio':'Oratorio',
+      'medievalmx-label':'Progetto personale','medievalmx-title':'<em>Medieval MX</em>',
+      'medievalmx-p1':"Fondato da Nurani Huet, <em>Medieval MX</em> è un progetto artistico e accademico dedicato all'interpretazione, alla ricerca e alla diffusione in Messico dei repertori tardo-medievali e rinascimentali precoci.",
+      'medievalmx-p2':"L'iniziativa recupera musiche dal XII al XVI secolo e le porta su palcoscenici contemporanei con rigore storico e sensibilità viva, avvicinando il passato sonoro a nuovi pubblici.",
+      'tag-interpretacion':'Interpretazione','tag-investigacion':'Ricerca','tag-difusion':'Diffusione accademica','tag-siglos':'Sec. XII–XVI','tag-mexico':'Messico',
+      'escuchame-label':'Canale ufficiale','escuchame-title':'Ascoltami <em>cantare</em>','escuchame-link':'Visualizza il canale completo su YouTube',
+      'galeria-label':'Galleria','galeria-title':'Momenti <em>in scena</em>','galeria-expand':'Vedi intera',
+      'contacto-label':'Contatti','contacto-title':'Ingaggi<br><em style="color:var(--oro-claro);">&amp; collaborazioni</em>',
+      'contacto-p':'Per ingaggi, collaborazioni artistiche,<br>progetti accademici o stampa:',
+      'footer-rights':'&copy; 2025 Nurani Huet &middot; Tutti i diritti riservati',
+      'footer-sub':'Mezzosoprano &middot; Messico &middot; Barocco &middot; Medievale'
     },
-
     pt: {
-      'nav-sobre':         'Sobre',
-      'nav-presencia':     'Presença',
-      'nav-medievalmx':    'Medieval MX',
-      'nav-galeria':       'Galeria',
-      'nav-escuchame':     'Ouça',
-      'nav-contacto':      'Contacto',
-      'menu-cerrar':       '&#x2715; &nbsp; Fechar',
-      'hero-eyebrow':      'Mezzosoprano &middot; México',
-      'hero-subtitle':     'Uma voz antiga no mundo contemporâneo.<br>Cantata, Ópera, Oratório e Música Medieval.',
-      'hero-scroll':       'Descobrir',
-      'sobre-label':       'Trajetória',
-      'sobre-title':       'Uma voz<br><em>formada em dois mundos</em>',
-      'sobre-caption':     'Fotografia de concerto',
-      'sobre-p1':          'Mezzosoprano formada no <strong>Conservatório Nacional de Música do México</strong>, Nurani Huet ampliou a sua formação no <strong>Koninklijk Conservatorium de Haia</strong>, Países Baixos, sob a orientação de Peter van Heyhgen, Eric Mentzel, Jill Feldman e Maria Acda.',
-      'sobre-p2':          'Graduada na especialidade <em>Medieval Music Research and Performance</em> em Medieval Music Besalú e na <strong>Universitat de Lleida</strong>, Espanha, a sua trajetória como solista concentrou-se na Cantata, na Ópera e no Oratório Barrocos, bem como na Música Medieval.',
-      'sobre-p3':          'Cantou nos principais recintos do México e em cidades de <strong>França, Espanha, Lituânia e Países Baixos</strong>. Colaborou com conjuntos como Cappella Barroca de México, Armonicus Cuatro, Equinox Project (França) e Liminar.',
-      'sobre-p4':          'Durante nove anos esteve à frente do <strong>Ateliê de Música Antiga para cantores</strong> no Conservatório Nacional de Música. Atualmente é integrante do <strong>Coral de Madrigalistas do INBAL</strong>, tutora da Academia de Música Antiga da UNAM e titular do Ateliê de Música Medieval na Faculdade de Música.',
-      'presencia-label':   'Presença internacional',
-      'presencia-title':   'Palcos <em>em quatro países</em>',
-      'pais-mexico':       'México',
-      'pais-francia':      'França',
-      'pais-espana':       'Espanha',
-      'pais-lituania':     'Lituânia',
-      'pais-paises-bajos': 'Países Baixos',
-      'genero-label':      'Repertório',
-      'genero-cantata':    'Cantata Barroca',
-      'genero-medieval':   'Música Medieval',
-      'genero-opera':      'Ópera',
-      'genero-oratorio':   'Oratório',
-      'medievalmx-label':  'Projeto próprio',
-      'medievalmx-title':  '<em>Medieval MX</em>',
-      'medievalmx-p1':     'Fundado por Nurani Huet, <em>Medieval MX</em> é um projeto artístico e académico dedicado à interpretação, investigação e divulgação no México dos repertórios tardo-medievais e renascentistas precoces.',
-      'medievalmx-p2':     'A iniciativa recupera músicas dos séculos XII ao XVI e leva-as a palcos contemporâneos com rigor histórico e sensibilidade viva, aproximando o passado sonoro de novos públicos.',
-      'tag-interpretacion':'Interpretação',
-      'tag-investigacion': 'Investigação',
-      'tag-difusion':      'Difusão académica',
-      'tag-siglos':        'Séc. XII–XVI',
-      'tag-mexico':        'México',
-      'escuchame-label':   'Canal oficial',
-      'escuchame-title':   'Ouça-me <em>cantar</em>',
-      'escuchame-link':    'Ver canal completo no YouTube',
-      'galeria-label':     'Galeria',
-      'galeria-title':     'Momentos <em>em cena</em>',
-      'galeria-expand':    'Ver completa',
-      'contacto-label':    'Contacto',
-      'contacto-title':    'Convites<br><em style="color:var(--oro-claro);">&amp; colaborações</em>',
-      'contacto-p':        'Para contratações, colaborações artísticas,<br>projetos académicos ou imprensa:',
-      'footer-rights':     '&copy; 2025 Nurani Huet &middot; Todos os direitos reservados',
-      'footer-sub':        'Mezzosoprano &middot; México &middot; Barroco &middot; Medieval'
+      'nav-sobre':'Sobre','nav-presencia':'Presença','nav-medievalmx':'Medieval MX',
+      'nav-galeria':'Galeria','nav-escuchame':'Ouça','nav-contacto':'Contacto',
+      'menu-cerrar':'&#x2715; &nbsp; Fechar',
+      'hero-eyebrow':'Mezzosoprano &middot; México',
+      'hero-subtitle':'Uma voz antiga no mundo contemporâneo.<br>Cantata, Ópera, Oratório e Música Medieval.',
+      'hero-scroll':'Descobrir',
+      'sobre-label':'Trajetória','sobre-title':'Uma voz<br><em>formada em dois mundos</em>','sobre-caption':'Fotografia de concerto',
+      'sobre-p1':'Mezzosoprano formada no <strong>Conservatório Nacional de Música do México</strong>, Nurani Huet ampliou a sua formação no <strong>Koninklijk Conservatorium de Haia</strong>, Países Baixos, sob a orientação de Peter van Heyhgen, Eric Mentzel, Jill Feldman e Maria Acda.',
+      'sobre-p2':'Graduada na especialidade <em>Medieval Music Research and Performance</em> em Medieval Music Besalú e na <strong>Universitat de Lleida</strong>, Espanha, a sua trajetória como solista concentrou-se na Cantata, na Ópera e no Oratório Barrocos, bem como na Música Medieval.',
+      'sobre-p3':'Cantou nos principais recintos do México e em cidades de <strong>França, Espanha, Lituânia e Países Baixos</strong>. Colaborou com conjuntos como Cappella Barroca de México, Armonicus Cuatro, Equinox Project (França) e Liminar.',
+      'sobre-p4':'Durante nove anos esteve à frente do <strong>Ateliê de Música Antiga para cantores</strong> no Conservatório Nacional de Música. Atualmente é integrante do <strong>Coral de Madrigalistas do INBAL</strong>, tutora da Academia de Música Antiga da UNAM e titular do Ateliê de Música Medieval na Faculdade de Música.',
+      'presencia-label':'Presença internacional','presencia-title':'Palcos <em>em quatro países</em>',
+      'pais-mexico':'México','pais-francia':'França','pais-espana':'Espanha','pais-lituania':'Lituânia','pais-paises-bajos':'Países Baixos',
+      'genero-label':'Repertório','genero-cantata':'Cantata Barroca','genero-medieval':'Música Medieval','genero-opera':'Ópera','genero-oratorio':'Oratório',
+      'medievalmx-label':'Projeto próprio','medievalmx-title':'<em>Medieval MX</em>',
+      'medievalmx-p1':'Fundado por Nurani Huet, <em>Medieval MX</em> é um projeto artístico e académico dedicado à interpretação, investigação e divulgação no México dos repertórios tardo-medievais e renascentistas precoces.',
+      'medievalmx-p2':'A iniciativa recupera músicas dos séculos XII ao XVI e leva-as a palcos contemporâneos com rigor histórico e sensibilidade viva, aproximando o passado sonoro de novos públicos.',
+      'tag-interpretacion':'Interpretação','tag-investigacion':'Investigação','tag-difusion':'Difusão académica','tag-siglos':'Séc. XII–XVI','tag-mexico':'México',
+      'escuchame-label':'Canal oficial','escuchame-title':'Ouça-me <em>cantar</em>','escuchame-link':'Ver canal completo no YouTube',
+      'galeria-label':'Galeria','galeria-title':'Momentos <em>em cena</em>','galeria-expand':'Ver completa',
+      'contacto-label':'Contacto','contacto-title':'Convites<br><em style="color:var(--oro-claro);">&amp; colaborações</em>',
+      'contacto-p':'Para contratações, colaborações artísticas,<br>projetos académicos ou imprensa:',
+      'footer-rights':'&copy; 2025 Nurani Huet &middot; Todos os direitos reservados',
+      'footer-sub':'Mezzosoprano &middot; México &middot; Barroco &middot; Medieval'
     }
-
   };
 
-  var LANG_LABELS = { es: 'ES', fr: 'FR', en: 'EN', it: 'IT', pt: 'PT' };
+  var LANG_LABELS = { es:'ES', fr:'FR', en:'EN', it:'IT', pt:'PT' };
   var currentLang = 'es';
 
   function setLang(lang) {
@@ -484,199 +357,222 @@
     currentLang = lang;
     var t = T[lang];
     document.documentElement.lang = lang;
-    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
       var key = el.getAttribute('data-i18n');
       if (t[key] !== undefined) el.innerHTML = t[key];
     });
-    var toggleBtn = document.getElementById('langToggle');
-    if (toggleBtn) toggleBtn.textContent = LANG_LABELS[lang];
-    document.querySelectorAll('[data-lang]').forEach(function (b) {
+    var btn = document.getElementById('langToggle');
+    if (btn) btn.textContent = LANG_LABELS[lang];
+    document.querySelectorAll('[data-lang]').forEach(function(b) {
       b.classList.toggle('active', b.getAttribute('data-lang') === lang);
     });
-    try { localStorage.setItem('nurani-lang', lang); } catch (e) {}
+    try { localStorage.setItem('nurani-lang', lang); } catch(e) {}
   }
 
-  // Restaurar idioma guardado
   try {
     var saved = localStorage.getItem('nurani-lang');
     if (saved && T[saved]) setLang(saved);
-  } catch (e) {}
+  } catch(e) {}
 
-  // Dropdown del nav (desktop)
   var langToggle   = document.getElementById('langToggle');
   var langDropdown = document.getElementById('langDropdown');
 
   if (langToggle && langDropdown) {
-    langToggle.addEventListener('click', function (e) {
+    langToggle.addEventListener('click', function(e) {
       e.stopPropagation();
       langDropdown.classList.toggle('open');
     });
-    document.addEventListener('click', function () {
+    document.addEventListener('click', function() {
       if (langDropdown) langDropdown.classList.remove('open');
     });
-    langDropdown.addEventListener('click', function (e) { e.stopPropagation(); });
+    langDropdown.addEventListener('click', function(e) { e.stopPropagation(); });
   }
 
-  // Botones [data-lang] — nav dropdown + menú móvil
-  document.querySelectorAll('[data-lang]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
+  document.querySelectorAll('[data-lang]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
       setLang(this.getAttribute('data-lang'));
       if (langDropdown) langDropdown.classList.remove('open');
     });
   });
 
-  /* ─── CURSOR ───────────────────────────────────────────────── */
-  var dot  = document.getElementById("cursorDot");
-  var ring = document.getElementById("cursorRing");
+  /* ══════════════════════════════════════════════════════════════
+     CURSOR
+  ══════════════════════════════════════════════════════════════ */
+  var dot    = document.getElementById('cursorDot');
+  var ring   = document.getElementById('cursorRing');
   var mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
 
   if (dot && ring) {
-    window.addEventListener("mousemove", function (e) {
+    window.addEventListener('mousemove', function(e) {
       mouseX = e.clientX; mouseY = e.clientY;
-      dot.style.left = mouseX + "px";
-      dot.style.top  = mouseY + "px";
+      dot.style.left = mouseX + 'px';
+      dot.style.top  = mouseY + 'px';
     });
+
     (function animateRing() {
       ringX += (mouseX - ringX) * 0.12;
       ringY += (mouseY - ringY) * 0.12;
-      ring.style.left = ringX + "px";
-      ring.style.top  = ringY + "px";
+      ring.style.left = ringX + 'px';
+      ring.style.top  = ringY + 'px';
       requestAnimationFrame(animateRing);
-    
-  /* --- NAVBAR FONDO ADAPTIVO ----------------------------------- */
-  var navbarEl = document.getElementById("navbar");
-  var darkZones = [
-    document.querySelector(".hero"),
-    document.getElementById("galeria"),
-    document.getElementById("contacto"),
-    document.querySelector("footer")
-  ].filter(Boolean);
+    })();
 
-  function updateNavColor() {
-    var y = 70;
-    var isDark = darkZones.some(function(el) {
-      var r = el.getBoundingClientRect();
-      return r.top <= y && r.bottom > y;
-    });
-    // En el tope (hero) usar estilos originales, no nav-dark
-    if (window.scrollY < 80) isDark = false;
-    if (navbarEl) navbarEl.classList.toggle("nav-dark", isDark);
-  }
-
-  window.addEventListener("scroll", updateNavColor);
-  updateNavColor();
-})();
-    document.querySelectorAll(".stack-item").forEach(function (el) {
-      el.addEventListener("mouseenter", function () { document.body.classList.add("cursor-hover"); });
-      el.addEventListener("mouseleave", function () { document.body.classList.remove("cursor-hover"); });
+    document.querySelectorAll('.stack-item').forEach(function(el) {
+      el.addEventListener('mouseenter', function() { document.body.classList.add('cursor-hover'); });
+      el.addEventListener('mouseleave', function() { document.body.classList.remove('cursor-hover'); });
     });
   }
 
-  /* ─── MENÚ OVERLAY ──────────────────────────────────────────── */
-  var hamburger   = document.getElementById("hamburger");
-  var menuOverlay = document.getElementById("menuOverlay");
-  var menuClose   = document.getElementById("menuClose");
+  /* ══════════════════════════════════════════════════════════════
+     MENÚ OVERLAY
+  ══════════════════════════════════════════════════════════════ */
+  var hamburger   = document.getElementById('hamburger');
+  var menuOverlay = document.getElementById('menuOverlay');
+  var menuClose   = document.getElementById('menuClose');
 
   function closeMenu() {
-    if (menuOverlay) menuOverlay.classList.remove("open");
-    document.body.style.overflow = "";
+    if (menuOverlay) menuOverlay.classList.remove('open');
+    document.body.style.overflow = '';
   }
 
   if (hamburger && menuOverlay) {
-    hamburger.addEventListener("click", function () {
-      menuOverlay.classList.add("open");
-      document.body.style.overflow = "hidden";
+    hamburger.addEventListener('click', function() {
+      menuOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
     });
   }
 
-  if (menuClose) menuClose.addEventListener("click", closeMenu);
+  if (menuClose) menuClose.addEventListener('click', closeMenu);
   if (menuOverlay) {
-    menuOverlay.addEventListener("click", function (e) {
+    menuOverlay.addEventListener('click', function(e) {
       if (e.target === menuOverlay) closeMenu();
     });
   }
-  document.querySelectorAll(".menu-link").forEach(function (link) {
-    link.addEventListener("click", closeMenu);
+  document.querySelectorAll('.menu-link').forEach(function(link) {
+    link.addEventListener('click', closeMenu);
   });
 
-  /* ─── NAVBAR SCROLL ─────────────────────────────────────────── */
-  var navbar = document.getElementById("navbar");
+  /* ══════════════════════════════════════════════════════════════
+     NAVBAR SCROLL CLASS
+  ══════════════════════════════════════════════════════════════ */
+  var navbar = document.getElementById('navbar');
   if (navbar) {
-    window.addEventListener("scroll", function () {
-      navbar.classList.toggle("scrolled", window.scrollY > 80);
+    window.addEventListener('scroll', function() {
+      navbar.classList.toggle('scrolled', window.scrollY > 80);
     });
   }
 
-  /* ─── LIGHTBOX ──────────────────────────────────────────────── */
-  var lightbox      = document.getElementById("lightbox");
-  var lightboxImg   = document.getElementById("lightboxImg");
-  var lightboxClose = document.getElementById("lightboxClose");
+  /* ══════════════════════════════════════════════════════════════
+     NAV-DARK: detección de color de fondo real
+     Técnica: pointer-events:none momentáneo → elementFromPoint
+     detecta el elemento detrás del nav → luminancia del fondo.
+     Caso especial hero: foto oscura en móvil, marfil en desktop.
+  ══════════════════════════════════════════════════════════════ */
+  var navEl  = document.getElementById('navbar');
+  var heroEl = document.querySelector('.hero');
+
+  function parseLuminance(rgb) {
+    var m = rgb.match(/[\d.]+/g);
+    if (!m || m.length < 3) return 1;
+    var r = parseFloat(m[0]) / 255;
+    var g = parseFloat(m[1]) / 255;
+    var b = parseFloat(m[2]) / 255;
+    return 0.299 * r + 0.587 * g + 0.114 * b;
+  }
+
+  function isBgDark(el) {
+    var node = el;
+    while (node && node !== document.documentElement) {
+      var bg = window.getComputedStyle(node).backgroundColor;
+      if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
+        return parseLuminance(bg) < 0.45;
+      }
+      node = node.parentElement;
+    }
+    return false;
+  }
+
+  function updateNavDark() {
+    if (!navEl) return;
+    var navH  = navEl.offsetHeight;
+    var midY  = navH / 2;
+    var midX  = window.innerWidth / 2;
+    var isDark = false;
+
+    /* ¿Estamos sobre el hero? */
+    if (heroEl) {
+      var hr = heroEl.getBoundingClientRect();
+      if (hr.top <= midY && hr.bottom > midY) {
+        /* En móvil la foto cubre todo → nav claro.
+           En desktop el texto está sobre marfil → nav oscuro. */
+        isDark = window.innerWidth <= 900;
+        navEl.classList.toggle('nav-dark', isDark);
+        return;
+      }
+    }
+
+    /* Fuera del hero: samplear el elemento real detrás del nav */
+    navEl.style.pointerEvents = 'none';
+    var el = document.elementFromPoint(midX, midY);
+    navEl.style.pointerEvents = '';
+
+    if (el) isDark = isBgDark(el);
+    navEl.classList.toggle('nav-dark', isDark);
+  }
+
+  window.addEventListener('scroll', updateNavDark, { passive: true });
+  window.addEventListener('resize', updateNavDark, { passive: true });
+  updateNavDark();
+
+  /* ══════════════════════════════════════════════════════════════
+     LIGHTBOX
+  ══════════════════════════════════════════════════════════════ */
+  var lightbox      = document.getElementById('lightbox');
+  var lightboxImg   = document.getElementById('lightboxImg');
+  var lightboxClose = document.getElementById('lightboxClose');
 
   function closeLightbox() {
-    if (lightbox)    lightbox.classList.remove("open");
-    if (lightboxImg) lightboxImg.src = "";
-    document.body.style.overflow = "";
+    if (lightbox)    lightbox.classList.remove('open');
+    if (lightboxImg) lightboxImg.src = '';
+    document.body.style.overflow = '';
   }
 
-  document.querySelectorAll(".stack-item").forEach(function (item) {
-    item.addEventListener("click", function () {
-      var src = item.getAttribute("data-src");
+  document.querySelectorAll('.stack-item').forEach(function(item) {
+    item.addEventListener('click', function() {
+      var src = item.getAttribute('data-src');
       if (!src || !lightbox || !lightboxImg) return;
       lightboxImg.src = src;
-      lightbox.classList.add("open");
-      document.body.style.overflow = "hidden";
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
     });
   });
 
-  if (lightboxClose) lightboxClose.addEventListener("click", closeLightbox);
+  if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
   if (lightbox) {
-    lightbox.addEventListener("click", function (e) {
+    lightbox.addEventListener('click', function(e) {
       if (e.target === lightbox) closeLightbox();
     });
   }
 
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") { closeLightbox(); closeMenu(); }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { closeLightbox(); closeMenu(); }
   });
 
-  /* ─── SCROLL SUAVE ──────────────────────────────────────────── */
-  document.querySelectorAll("a[href^='#']").forEach(function (anchor) {
-    anchor.addEventListener("click", function (e) {
-      var href = this.getAttribute("href");
-      if (!href || href === "#") return;
+  /* ══════════════════════════════════════════════════════════════
+     SCROLL SUAVE
+  ══════════════════════════════════════════════════════════════ */
+  document.querySelectorAll("a[href^='#']").forEach(function(anchor) {
+    anchor.addEventListener('click', function(e) {
+      var href = this.getAttribute('href');
+      if (!href || href === '#') return;
       try {
         var target = document.querySelector(href);
-        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: "smooth" }); }
-      } catch (err) {}
+        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+      } catch(err) {}
     });
   });
 
-
-  /* --- NAVBAR FONDO ADAPTIVO ----------------------------------- */
-  var navbarEl = document.getElementById("navbar");
-  var darkZones = [
-    document.querySelector(".hero"),
-    document.getElementById("galeria"),
-    document.getElementById("contacto"),
-    document.querySelector("footer")
-  ].filter(Boolean);
-
-  function updateNavColor() {
-    var y = 70;
-    var isDark = darkZones.some(function(el) {
-      var r = el.getBoundingClientRect();
-      return r.top <= y && r.bottom > y;
-    });
-    // En el tope (hero) usar estilos originales, no nav-dark
-    if (window.scrollY < 80) isDark = false;
-    if (navbarEl) navbarEl.classList.toggle("nav-dark", isDark);
-  }
-
-  window.addEventListener("scroll", updateNavColor);
-  updateNavColor();
 })();
 </script>
 </body>
 </html>
-
-
