@@ -1,4 +1,4 @@
-import "dotenv/config";
+﻿import "dotenv/config";
 
 process.on("uncaughtException",  (err)    => console.error("UNCAUGHT EXCEPTION:",  err));
 process.on("unhandledRejection", (reason) => console.error("UNHANDLED REJECTION:", reason));
@@ -17,10 +17,10 @@ app.set("etag", false);
 
 const isProduction = process.env.NODE_ENV === "production";
 
-// ─── Trust proxy (Railway sits behind one) ───────────────────────────────────
+// â”€â”€â”€ Trust proxy (Railway sits behind one) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 app.set("trust proxy", 1);
 
-// ─── Canonical redirect ───────────────────────────────────────────────────────
+// â”€â”€â”€ Canonical redirect â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const CANONICAL_HOST = process.env.CANONICAL_HOST || "www.lexipopmath.com";
 app.use((req, res, next) => {
   const host  = String(req.headers.host || "");
@@ -31,7 +31,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// ─── CORS ─────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ CORS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const allowedExact = new Set(
   [
     process.env.CLIENT_URL,
@@ -58,7 +58,7 @@ app.use(
   })
 );
 
-// ─── Session ──────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Session â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const SESSION_SECRET =
   process.env.SESSION_SECRET ||
   (isProduction
@@ -66,7 +66,7 @@ const SESSION_SECRET =
     : "lexipop-math-dev-secret-change-in-prod");
 
 if (isProduction && !process.env.SESSION_SECRET) {
-  console.warn("[WARN] SESSION_SECRET ausente en producción — configúrala en Railway.");
+  console.warn("[WARN] SESSION_SECRET ausente en producciÃ³n â€” configÃºrala en Railway.");
 }
 
 const sessionOptions: session.SessionOptions = {
@@ -77,7 +77,7 @@ const sessionOptions: session.SessionOptions = {
     secure:   isProduction,
     sameSite: isProduction ? "none" : "lax",
     httpOnly: true,
-    maxAge:   30 * 24 * 60 * 60 * 1000, // 30 días
+    maxAge:   30 * 24 * 60 * 60 * 1000, // 30 dÃ­as
   },
 };
 
@@ -99,27 +99,56 @@ async function initRedisSessionStore(): Promise<void> {
   }
 }
 
-// ─── Health ───────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Health â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 // Privacy Policy
 app.get("/privacy", (_req: Request, res: Response) => {
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
   res.send(`<!DOCTYPE html>
 <html lang="es">
-<head><meta charset="UTF-8"><title>Pol�tica de Privacidad - LexiPop Math</title>
-<style>body{font-family:sans-serif;max-width:800px;margin:40px auto;padding:0 20px;line-height:1.6}h1{color:#1a1a2e}</style>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Politica de Privacidad - LexiPop Math</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: #e8f0fe; color: #1a1a2e; min-height: 100vh; padding: 40px 20px; }
+  .card { background: white; max-width: 760px; margin: 0 auto; border-radius: 20px; padding: 48px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+  .logo { text-align: center; margin-bottom: 32px; }
+  .logo img { width: 72px; }
+  .logo h1 { font-size: 1.6rem; color: #1a1a2e; margin-top: 8px; }
+  h2 { font-size: 1.1rem; color: #3b5bdb; margin: 28px 0 10px; }
+  p, li { font-size: 0.95rem; line-height: 1.7; color: #333; }
+  ul { padding-left: 20px; margin-top: 8px; }
+  li { margin-bottom: 6px; }
+  .footer { text-align: center; margin-top: 32px; font-size: 0.8rem; color: #888; }
+  a { color: #3b5bdb; }
+</style>
 </head>
 <body>
-<h1>Pol�tica de Privacidad de LexiPop Math</h1>
-<p><strong>�ltima actualizaci�n:</strong> 19 de marzo de 2026</p>
-<p>LexiPop Math recopila �nicamente la informaci�n necesaria para operar el servicio: nombre, correo electr�nico y foto de perfil proporcionados por Google OAuth. No vendemos ni compartimos tus datos con terceros. Los datos de progreso se almacenan en nuestra base de datos para mantener tu historial de ejercicios. Puedes solicitar la eliminaci�n de tu cuenta en cualquier momento escribiendo a polyglotpoint@gmail.com.</p>
-<h2>Datos que recopilamos</h2>
-<ul>
-<li>Nombre y correo electr�nico (v�a Google OAuth)</li>
-<li>Progreso en ejercicios matem�ticos</li>
-<li>Informaci�n de suscripci�n (procesada por Stripe)</li>
-</ul>
-<h2>Contacto</h2>
-<p>polyglotpoint@gmail.com</p>
+<div class="card">
+  <div class="logo">
+    <img src="/lexipop-logo.png" alt="LexiPop Math" />
+    <h1>LexiPop Math</h1>
+  </div>
+  <h2>Politica de Privacidad</h2>
+  <p><strong>Ultima actualizacion:</strong> 19 de marzo de 2026</p>
+  <p style="margin-top:12px">LexiPop Math recopila unicamente la informacion necesaria para operar el servicio. No vendemos ni compartimos tus datos con terceros.</p>
+  <h2>Datos que recopilamos</h2>
+  <ul>
+    <li>Nombre y correo electronico (via Google OAuth)</li>
+    <li>Progreso en ejercicios matematicos</li>
+    <li>Informacion de suscripcion (procesada por Stripe)</li>
+  </ul>
+  <h2>Uso de los datos</h2>
+  <p>Usamos tus datos unicamente para identificarte, guardar tu progreso y gestionar tu suscripcion. Nunca los vendemos ni compartimos con terceros.</p>
+  <h2>Eliminacion de cuenta</h2>
+  <p>Puedes solicitar la eliminacion de tu cuenta y datos en cualquier momento escribiendo a <a href="mailto:polyglotpoint@gmail.com">polyglotpoint@gmail.com</a>.</p>
+  <h2>Contacto</h2>
+  <p><a href="mailto:polyglotpoint@gmail.com">polyglotpoint@gmail.com</a></p>
+  <div class="footer">LexiPop Studio &copy; 2026</div>
+</div>
 </body></html>`);
 });
 app.get("/health", (_req: Request, res: Response) => {
@@ -135,7 +164,7 @@ app.get("/health", (_req: Request, res: Response) => {
   });
 });
 
-// ─── Request logger ───────────────────────────────────────────────────────────
+// â”€â”€â”€ Request logger â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 app.use((req, res, next) => {
   const start = Date.now();
   const path  = req.path;
@@ -146,12 +175,12 @@ app.use((req, res, next) => {
   next();
 });
 
-// ─── Body parsers ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ Body parsers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 app.use('/api/math/stripe/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 
-// ─── Bootstrap ───────────────────────────────────────────────────────────────
+// â”€â”€â”€ Bootstrap â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 (async () => {
   await initRedisSessionStore();
 
@@ -159,13 +188,13 @@ app.use(express.urlencoded({ extended: true, limit: "1mb" }));
   app.use(passport.initialize());
   app.use(passport.session());
 
-  // ── Auth routes  (/auth/google, /auth/google/callback, /auth/logout)
+  // â”€â”€ Auth routes  (/auth/google, /auth/google/callback, /auth/logout)
   app.use("/auth", authRoutes);
 
-  // ── Math API routes  (/api/health, /api/help)
+  // â”€â”€ Math API routes  (/api/health, /api/help)
   app.use("/api/math", mathRoutes);
 
-  // ── Me endpoint
+  // â”€â”€ Me endpoint
   app.get("/api/me", (req: Request, res: Response) => {
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
     if (req.isAuthenticated && req.isAuthenticated() && req.user) {
@@ -175,24 +204,24 @@ app.use(express.urlencoded({ extended: true, limit: "1mb" }));
     res.status(401).json({ error: "No autenticado" });
   });
 
-  // ── Logout
+  // â”€â”€ Logout
   app.post("/api/logout", (req: Request, res: Response) => {
     req.logout((err) => {
-      if (err) return res.status(500).json({ error: "Error al cerrar sesión" });
+      if (err) return res.status(500).json({ error: "Error al cerrar sesiÃ³n" });
       req.session.destroy((err2) => {
-        if (err2) return res.status(500).json({ error: "Error destruyendo sesión" });
+        if (err2) return res.status(500).json({ error: "Error destruyendo sesiÃ³n" });
         res.clearCookie("connect.sid", {
           path:     "/",
           secure:   isProduction,
           sameSite: isProduction ? "none" : "lax",
           httpOnly: true,
         });
-        res.json({ message: "Sesión cerrada" });
+        res.json({ message: "SesiÃ³n cerrada" });
       });
     });
   });
 
-  // ── Global error handler
+  // â”€â”€ Global error handler
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status  = err?.status || err?.statusCode || 500;
     const message = err?.message || "Internal Server Error";
@@ -200,7 +229,7 @@ app.use(express.urlencoded({ extended: true, limit: "1mb" }));
     res.status(status).json({ message });
   });
 
-  // ── Vite / static frontend
+  // â”€â”€ Vite / static frontend
   if (app.get("env") === "development") {
     const http = await import("http");
     const server = http.createServer(app);
@@ -223,3 +252,4 @@ function logBoot(port: number) {
   console.log(`[LexiPop Math] SESSION_SECRET: ${!!process.env.SESSION_SECRET}`);
   console.log(`[LexiPop Math] OPENAI_API_KEY:  ${!!process.env.OPENAI_API_KEY}`);
 }
+
