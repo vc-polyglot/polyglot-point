@@ -52,7 +52,7 @@ nav.scrolled {
 }
 
 nav.scrolled .nav-logo { color: var(--burdeos); font-size: 1.4rem; }
-nav.scrolled .nav-links a { color: var(--burdeos); font-size: 0.8rem; }
+nav.scrolled nav.scrolled .nav-links a { color: var(--burdeos); font-size: 1rem; }
 nav.scrolled .nav-links a:hover { color: var(--oro); }
 nav.scrolled .hamburger span { background: var(--burdeos); }
 
@@ -77,14 +77,16 @@ nav.scrolled .nav-logo { color: var(--texto); }
 
 .nav-links {
   list-style: none;
-  display: flex;
-  gap: 2.5rem;
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: 1.2rem 2rem;
+  align-items: center;
 }
 
 .nav-links a {
   font-family: 'Montserrat', sans-serif;
   font-weight: 300;
-  font-size: 0.65rem;
+  font-size: 1rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--burdeos);
@@ -112,7 +114,7 @@ nav.scrolled .nav-links a:hover { color: var(--burdeos); }
 
 .hamburger span {
   display: block;
-  width: 24px;
+  width: 30px;
   height: 1px;
   background: var(--burdeos);
   transition: background 0.3s;
@@ -170,10 +172,10 @@ body.cursor-hover .cursor-ring {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 5px;
+  gap: 7px;
   background: none;
   border: none;
-  padding: 0.5rem;
+  padding: 1rem;
   cursor: none;
   z-index: 200;
 }
@@ -308,7 +310,7 @@ body.cursor-hover .cursor-ring {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 6rem 4rem 6rem 5rem;
+  padding: 6rem 4rem 6rem 8rem;
   position: relative;
   z-index: 2;
 }
@@ -978,12 +980,126 @@ footer p {
   transform: none;
 }
 
+/* ─── SELECTOR DE IDIOMA (nav desktop) ─────────────────────────── */
+
+.lang-selector {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.lang-current {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.85rem;
+  letter-spacing: 0.22em;
+  color: var(--burdeos);
+  background: none;
+  border: 1px solid rgba(139, 58, 82, 0.35);
+  padding: 0.55rem 1.2rem;
+  cursor: none;
+  transition: color 0.3s, border-color 0.3s;
+}
+
+.lang-current:hover {
+  color: var(--oro);
+  border-color: var(--oro);
+}
+
+nav.scrolled .lang-current {
+  color: var(--burdeos);
+  border-color: rgba(139, 58, 82, 0.35);
+}
+
+.lang-dropdown {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  list-style: none;
+  background: #2A1F1F;
+  border: 1px solid rgba(184, 150, 90, 0.2);
+  min-width: 130px;
+  z-index: 1000000;
+  display: none;
+}
+
+.lang-dropdown.open {
+  display: block;
+}
+
+.lang-dropdown li + li {
+  border-top: 1px solid rgba(184, 150, 90, 0.08);
+}
+
+.lang-dropdown li button {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  color: var(--crema-oscura);
+  padding: 0.65rem 1.1rem;
+  text-align: left;
+  cursor: none;
+  transition: color 0.2s, background 0.2s;
+}
+
+.lang-dropdown li button:hover,
+.lang-dropdown li button.active {
+  color: var(--oro);
+  background: rgba(184, 150, 90, 0.07);
+}
+
+/* ─── SELECTOR DE IDIOMA (menú overlay móvil) ─────────────────── */
+
+.menu-lang {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 2.5rem;
+}
+
+.menu-lang-btn {
+  background: none;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: var(--texto-muy-suave);
+  cursor: none;
+  transition: color 0.3s;
+  padding: 0;
+}
+
+.menu-lang-btn:hover,
+.menu-lang-btn.active {
+  color: var(--oro);
+}
+
+.menu-lang-sep {
+  font-size: 0.5rem;
+  color: var(--texto-muy-suave);
+  opacity: 0.3;
+  user-select: none;
+}
+
 /* ─── RESPONSIVE ──────────────────────────────────────────────── */
 
 @media (max-width: 900px) {
 
   /* NAV */
-  .nav-links { display: none; }
+  .nav-links {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: 1.2rem 2rem;
+  align-items: center;
+}
+  .lang-selector { display: none; }
 
   /* HERO */
   .hero {
@@ -1034,3 +1150,23 @@ footer p {
 
   footer { flex-direction: column; gap: 0.5rem; text-align: center; }
 }
+
+
+
+
+
+.nav-links li:nth-child(5) { grid-column: 2; }
+.nav-links li:nth-child(6) { grid-column: 3; }
+
+
+
+
+
+/* --- NAVBAR ADAPTIVO FONDO OSCURO/CLARO ----------------------- */
+nav.nav-dark .nav-logo { color: var(--marfil); }
+nav.nav-dark .nav-links a { color: var(--marfil); }
+nav.nav-dark .nav-links a:hover { color: var(--oro-claro); }
+nav.nav-dark .hamburger span { background: var(--marfil); }
+nav.nav-dark .lang-current { color: var(--marfil); border-color: rgba(247,243,238,0.4); }
+nav.nav-dark .lang-current:hover { color: var(--oro-claro); border-color: var(--oro-claro); }
+
