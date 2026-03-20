@@ -130,12 +130,13 @@ function getAllPhotos(animal) {
 // ──────────────────────────────────────────────────────────────
 //  MIDDLEWARE
 // ──────────────────────────────────────────────────────────────
+app.set('trust proxy', 1);
 app.use((req, res, next) => { res.removeHeader('Accept-Ranges'); next(); });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
   secret: SESSION_SECRET, resave: false, saveUninitialized: false,
-  cookie: { maxAge: 8 * 60 * 60 * 1000, httpOnly: true, sameSite: 'lax' },
+  cookie: { maxAge: 8 * 60 * 60 * 1000, httpOnly: true, sameSite: 'none', secure: true },
 }));
 app.use(express.static(PUBLIC_DIR));
 
