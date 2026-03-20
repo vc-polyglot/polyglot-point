@@ -422,8 +422,9 @@
       const songs = await fetch('/api/audio/canciones').then(r => r.json());
       ['aquiles','copito','elvis'].forEach(a => {
         if (songs[a]) {
-          animalSongs[a] = songs[a];
-          document.getElementById('audio' + a.charAt(0).toUpperCase() + a.slice(1)).src = songs[a];
+          const url = typeof songs[a] === 'string' ? songs[a] : songs[a].url;
+          animalSongs[a] = url;
+          document.getElementById('audio' + a.charAt(0).toUpperCase() + a.slice(1)).src = url;
         }
       });
     } catch {}
@@ -608,18 +609,18 @@
       const slots   = await fetch('/api/rox').then(r => r.json());
       const section = document.getElementById('rox-section');
       const grid    = document.getElementById('rox-grid');
-      const llenas  = slots.filter(Boolean);
-      if (llenas.length === 0) return;  // Ocultar si no hay fotos
+      const llenas = slots.filter(Boolean).map(s => typeof s === 'string' ? s : s.url);
+      if (llenas.length === 0) return;
 
       section.style.display = 'block';
-      grid.innerHTML = slots.map((url, i) => {
-        if (!url) return '';  // No mostrar slots vacíos en la página pública
+      grid.innerHTML = slots.map((s, i) => {
+        const url = s ? (typeof s === 'string' ? s : s.url) : null;
+        if (!url) return '';
         return `<div class="rox-item" onclick="abrirLightbox(roxFotosLlenas, ${llenas.indexOf(url)})">
           <img src="${url}" alt="Foto ${i+1}" loading="lazy">
         </div>`;
       }).filter(Boolean).join('');
 
-      // Guardar para el lightbox
       window.roxFotosLlenas = llenas;
     } catch {}
   }
