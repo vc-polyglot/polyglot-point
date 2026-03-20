@@ -123,7 +123,7 @@
     .galeria-toggle:hover { background: var(--texto); color: var(--cream); border-color: var(--texto); }
     #galeriaChevron { transition: transform .4s ease; }
     .galeria-contenedor { max-height: 0; overflow: hidden; transition: max-height .7s cubic-bezier(.4,0,.2,1); }
-    .galeria-contenedor.abierta { max-height: 9000px; }
+    .galeria-contenedor.abierta { max-height: 70vh; overflow-y: auto; }
     .galeria-grid { columns: 3; column-gap: 1rem; padding-top: 2rem; }
     .galeria-item { break-inside: avoid; margin-bottom: 1rem; overflow: hidden; border-radius: 2px; cursor: pointer; }
     .galeria-item img { width: 100%; display: block; transition: transform .5s ease; }
