@@ -1,26 +1,21 @@
 {
   "heroPhoto": null,
+  "heroPublicId": null,
   "aquiles": {
-    "mainPhoto": "Aquiles jardín.jpeg"
+    "mainPhoto": null,
+    "photos": []
   },
   "copito": {
-    "mainPhoto": "Copito flor.jpeg"
+    "mainPhoto": null,
+    "photos": []
   },
   "elvis": {
-    "mainPhoto": null
+    "mainPhoto": null,
+    "photos": []
   },
   "rox": {
-    "slots": [
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null
-    ]
-  }
+    "slots": [null, null, null, null, null, null, null, null, null, null]
+  },
+  "loopSongs": [],
+  "animalSongs": {}
 }

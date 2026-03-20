@@ -1,47 +1,57 @@
 // ══════════════════════════════════════════════════════════════
 //  El Arca de Rox — backend/index.js
-//  Compatible con estructura existente: public/fotos/ y public/audio/
+//  Fotos → Cloudinary (nuevas) + /fotos/ local (legado del repo)
+//  JSON  → Railway Volume (/data) o ../data en local
 // ══════════════════════════════════════════════════════════════
 
-const express = require('express');
-const session = require('express-session');
-const multer  = require('multer');
-const path    = require('path');
-const fs      = require('fs');
+const express    = require('express');
+const session    = require('express-session');
+const multer     = require('multer');
+const path       = require('path');
+const fs         = require('fs');
+const cloudinary = require('cloudinary').v2;
 
 const app  = express();
 const PORT = process.env.PORT || 3005;
+
+// ──────────────────────────────────────────────────────────────
+//  CLOUDINARY
+// ──────────────────────────────────────────────────────────────
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'dvrxzdabu',
+  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+function uploadToCloudinary(buffer, options) {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload_stream(options, (err, result) => {
+      if (err) reject(err);
+      else resolve(result);
+    }).end(buffer);
+  });
+}
+
+function deleteFromCloudinary(publicId, resourceType = 'image') {
+  if (!publicId) return Promise.resolve();
+  return cloudinary.uploader.destroy(publicId, { resource_type: resourceType }).catch(() => {});
+}
 
 // ──────────────────────────────────────────────────────────────
 //  CONFIG
 // ──────────────────────────────────────────────────────────────
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'arca2024';
 const SESSION_SECRET = process.env.SESSION_SECRET || 'rox-super-secreta-2024';
+const DATA_DIR       = process.env.DATA_DIR || path.join(__dirname, '../data');
+const PUBLIC_DIR     = path.join(__dirname, '../public');
+const FOTOS_DIR      = path.join(PUBLIC_DIR, 'fotos');   // fotos legado del repo
+const AUDIO_DIR      = path.join(PUBLIC_DIR, 'audio');
 
-// ──────────────────────────────────────────────────────────────
-//  RUTAS DE CARPETAS  (misma estructura que ya existe)
-// ──────────────────────────────────────────────────────────────
-const PUBLIC_DIR = path.join(__dirname, '../public');
-const DATA_DIR   = path.join(__dirname, '../data');
-
-//  Fotos:  public/fotos/aquiles/  copito/  elvis/  recuerdos/  hero/  rox/
-//  Audio:  public/audio/          (fondo2-6 + aquiles/copito/elvis ya están aquí)
-
-const FOTOS_DIR = path.join(PUBLIC_DIR, 'fotos');
-const AUDIO_DIR = path.join(PUBLIC_DIR, 'audio');
+fs.mkdirSync(DATA_DIR, { recursive: true });
 
 const ANIMALS = ['aquiles', 'copito', 'elvis'];
 const EXT_IMG  = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
 const EXT_AUD  = ['.mp3', '.ogg', '.wav', '.m4a'];
-
-// Crear carpetas que no existan
-[
-  DATA_DIR,
-  path.join(FOTOS_DIR, 'hero'),
-  path.join(FOTOS_DIR, 'rox'),
-  AUDIO_DIR,
-  ...ANIMALS.map(a => path.join(FOTOS_DIR, a)),
-].forEach(d => fs.mkdirSync(d, { recursive: true }));
 
 // ──────────────────────────────────────────────────────────────
 //  JSON DE ESTADO
@@ -62,100 +72,60 @@ if (!fs.existsSync(STORIES_FILE))
 
 if (!fs.existsSync(CONFIG_FILE))
   writeJSON(CONFIG_FILE, {
-    heroPhoto: null,
-    aquiles:   { mainPhoto: null },
-    copito:    { mainPhoto: null },
-    elvis:     { mainPhoto: null },
-    rox:       { slots: Array(10).fill(null) },
+    heroPhoto: null, heroPublicId: null,
+    aquiles:  { mainPhoto: null, photos: [] },
+    copito:   { mainPhoto: null, photos: [] },
+    elvis:    { mainPhoto: null, photos: [] },
+    rox:      { slots: Array(10).fill(null) },
+    loopSongs: [], animalSongs: {},
   });
 
+// Migrar config viejo al nuevo formato si hace falta
+function migrateConfig() {
+  const c = readJSON(CONFIG_FILE, {});
+  let changed = false;
+  ANIMALS.forEach(a => {
+    if (!c[a]) { c[a] = { mainPhoto: null, photos: [] }; changed = true; }
+    if (!Array.isArray(c[a].photos)) { c[a].photos = []; changed = true; }
+  });
+  if (!Array.isArray(c.loopSongs))   { c.loopSongs = [];   changed = true; }
+  if (!c.animalSongs)                { c.animalSongs = {}; changed = true; }
+  if (!c.rox)                        { c.rox = { slots: Array(10).fill(null) }; changed = true; }
+  if (changed) writeJSON(CONFIG_FILE, c);
+}
+migrateConfig();
+
 // ──────────────────────────────────────────────────────────────
-//  MULTER
+//  MULTER — memoria, sube a Cloudinary
 // ──────────────────────────────────────────────────────────────
-function imgFilter(req, file, cb) {
-  cb(null, EXT_IMG.includes(path.extname(file.originalname).toLowerCase()));
+const memStorage = multer.memoryStorage();
+const uploadImg  = multer({ storage: memStorage, limits: { fileSize: 20 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => cb(null, EXT_IMG.includes(path.extname(file.originalname).toLowerCase())) });
+const uploadAud  = multer({ storage: memStorage, limits: { fileSize: 50 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => cb(null, EXT_AUD.includes(path.extname(file.originalname).toLowerCase())) });
+
+// ──────────────────────────────────────────────────────────────
+//  HELPERS — fotos legado (las que están en el repo /fotos/)
+// ──────────────────────────────────────────────────────────────
+function getLegacyPhotos(animal) {
+  // Devuelve array de { url, publicId: null } para fotos del repo
+  const dir = path.join(FOTOS_DIR, animal);
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir)
+    .filter(f => EXT_IMG.includes(path.extname(f).toLowerCase()))
+    .map(f => ({ url: `/fotos/${animal}/${f}`, publicId: null, legacy: true, filename: f }));
 }
-function audFilter(req, file, cb) {
-  cb(null, EXT_AUD.includes(path.extname(file.originalname).toLowerCase()));
+
+function getAllPhotos(animal) {
+  // Combina legado + Cloudinary
+  const config  = readJSON(CONFIG_FILE, {});
+  const cloud   = (config[animal] && config[animal].photos) || [];
+  const legacy  = getLegacyPhotos(animal);
+  // Evitar duplicar si alguna foto del repo ya fue subida a Cloudinary
+  const cloudUrls = new Set(cloud.map(p => p.url));
+  const legacyFiltered = legacy.filter(p => !cloudUrls.has(p.url));
+  return [...legacyFiltered, ...cloud];
 }
-function uniqueName(req, file, cb) {
-  const ext = path.extname(file.originalname).toLowerCase();
-  cb(null, Date.now() + '-' + Math.round(Math.random() * 1e9) + ext);
-}
-
-// Fotos animales → public/fotos/<animal>/
-const uploadAnimal = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => cb(null, path.join(FOTOS_DIR, req.params.animal)),
-    filename: uniqueName,
-  }),
-  fileFilter: imgFilter,
-  limits: { fileSize: 20 * 1024 * 1024 },
-});
-
-// Hero → public/fotos/hero/
-const uploadHero = multer({
-  storage: multer.diskStorage({
-    destination: () => path.join(FOTOS_DIR, 'hero'),
-    filename: uniqueName,
-  }),
-  fileFilter: imgFilter,
-  limits: { fileSize: 20 * 1024 * 1024 },
-});
-
-// Loop → public/audio/loop-<ts>.mp3
-const uploadLoop = multer({
-  storage: multer.diskStorage({
-    destination: () => AUDIO_DIR,
-    filename: (req, file, cb) => {
-      const ext = path.extname(file.originalname).toLowerCase();
-      cb(null, 'loop-' + Date.now() + ext);
-    },
-  }),
-  fileFilter: audFilter,
-  limits: { fileSize: 50 * 1024 * 1024 },
-});
-
-// Canción animal → public/audio/<animal>.mp3  (reemplaza la anterior)
-const uploadAnimalSong = multer({
-  storage: multer.diskStorage({
-    destination: () => AUDIO_DIR,
-    filename: (req, file, cb) => {
-      // Borrar archivo anterior del mismo animal antes de guardar
-      try {
-        fs.readdirSync(AUDIO_DIR)
-          .filter(f => f.startsWith(req.params.animal + '.') &&
-                       EXT_AUD.includes(path.extname(f).toLowerCase()))
-          .forEach(f => fs.unlinkSync(path.join(AUDIO_DIR, f)));
-      } catch {}
-      const ext = path.extname(file.originalname).toLowerCase();
-      cb(null, req.params.animal + ext);
-    },
-  }),
-  fileFilter: audFilter,
-  limits: { fileSize: 50 * 1024 * 1024 },
-});
-
-// Rox → public/fotos/rox/slot-<N>.ext
-const uploadRox = multer({
-  storage: multer.diskStorage({
-    destination: () => path.join(FOTOS_DIR, 'rox'),
-    filename: (req, file, cb) => {
-      const slot   = parseInt(req.params.slot, 10);
-      const roxDir = path.join(FOTOS_DIR, 'rox');
-      try {
-        fs.readdirSync(roxDir)
-          .filter(f => new RegExp(`^slot-${slot}[.-]`).test(f) ||
-                       f === `slot-${slot}${path.extname(f)}`)
-          .forEach(f => fs.unlinkSync(path.join(roxDir, f)));
-      } catch {}
-      const ext = path.extname(file.originalname).toLowerCase();
-      cb(null, `slot-${slot}${ext}`);
-    },
-  }),
-  fileFilter: imgFilter,
-  limits: { fileSize: 20 * 1024 * 1024 },
-});
 
 // ──────────────────────────────────────────────────────────────
 //  MIDDLEWARE
@@ -164,9 +134,7 @@ app.use((req, res, next) => { res.removeHeader('Accept-Ranges'); next(); });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-  secret: SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
+  secret: SESSION_SECRET, resave: false, saveUninitialized: false,
   cookie: { maxAge: 8 * 60 * 60 * 1000, httpOnly: true, sameSite: 'lax' },
 }));
 app.use(express.static(PUBLIC_DIR));
@@ -180,91 +148,66 @@ function requireAuth(req, res, next) {
 }
 
 app.post('/api/admin/login', (req, res) => {
-  if (req.body.password === ADMIN_PASSWORD) {
-    req.session.isAdmin = true;
-    return res.json({ ok: true });
-  }
+  if (req.body.password === ADMIN_PASSWORD) { req.session.isAdmin = true; return res.json({ ok: true }); }
   res.status(401).json({ error: 'Contraseña incorrecta' });
 });
-
-app.post('/api/admin/logout', (req, res) => {
-  req.session.destroy(() => res.json({ ok: true }));
-});
-
-app.get('/api/admin/me', (req, res) => {
-  res.json({ isAdmin: !!(req.session && req.session.isAdmin) });
-});
+app.post('/api/admin/logout', (req, res) => { req.session.destroy(() => res.json({ ok: true })); });
+app.get('/api/admin/me', (req, res) => { res.json({ isAdmin: !!(req.session && req.session.isAdmin) }); });
 
 // ──────────────────────────────────────────────────────────────
 //  API PÚBLICA
 // ──────────────────────────────────────────────────────────────
 
-// /api/fotos  ← IGUAL QUE ANTES, el index.html sigue funcionando
+// /api/fotos — compatible con index.html existente
 app.get('/api/fotos', (req, res) => {
-  const carpetas = ['aquiles', 'copito', 'elvis', 'recuerdos'];
   let fotos = [];
-  carpetas.forEach(c => {
-    const ruta = path.join(FOTOS_DIR, c);
-    if (!fs.existsSync(ruta)) return;
-    fs.readdirSync(ruta).forEach(f => {
-      if (EXT_IMG.includes(path.extname(f).toLowerCase()))
-        fotos.push(`/fotos/${c}/${f}`);
-    });
-  });
+  ANIMALS.forEach(a => { getAllPhotos(a).forEach(p => fotos.push(p.url)); });
+  // Recuerdos — siempre del repo
+  const recDir = path.join(FOTOS_DIR, 'recuerdos');
+  if (fs.existsSync(recDir)) {
+    fs.readdirSync(recDir)
+      .filter(f => EXT_IMG.includes(path.extname(f).toLowerCase()))
+      .forEach(f => fotos.push(`/fotos/recuerdos/${f}`));
+  }
   res.json({ fotos, total: fotos.length });
 });
 
-// /api/fotos/:animal  ← lista de un animal para el admin
+// /api/fotos/:animal — para el admin (devuelve objetos con url + publicId)
 app.get('/api/fotos/:animal', (req, res) => {
   const { animal } = req.params;
-  if (![...ANIMALS, 'recuerdos'].includes(animal))
-    return res.status(400).json({ error: 'Carpeta inválida' });
-  const dir = path.join(FOTOS_DIR, animal);
-  const files = fs.existsSync(dir)
-    ? fs.readdirSync(dir).filter(f => EXT_IMG.includes(path.extname(f).toLowerCase()))
-    : [];
-  res.json(files.map(f => `/fotos/${animal}/${f}`));
+  if (!ANIMALS.includes(animal)) return res.status(400).json({ error: 'Animal inválido' });
+  res.json(getAllPhotos(animal));
 });
 
-// /api/stories
-app.get('/api/stories', (req, res) => {
-  res.json(readJSON(STORIES_FILE, {}));
-});
+app.get('/api/stories', (req, res) => res.json(readJSON(STORIES_FILE, {})));
+app.get('/api/config',  (req, res) => res.json(readJSON(CONFIG_FILE,  {})));
 
-// /api/config
-app.get('/api/config', (req, res) => {
-  res.json(readJSON(CONFIG_FILE, {}));
-});
-
-// /api/audio/loop  ← canciones con prefijo "loop-"
 app.get('/api/audio/loop', (req, res) => {
-  const files = fs.existsSync(AUDIO_DIR)
-    ? fs.readdirSync(AUDIO_DIR)
-        .filter(f => f.startsWith('loop-') && EXT_AUD.includes(path.extname(f).toLowerCase()))
-    : [];
-  res.json(files.map(f => `/audio/${f}`));
+  const config = readJSON(CONFIG_FILE, {});
+  res.json(config.loopSongs || []);
 });
 
-// /api/audio/canciones  ← { aquiles: "/audio/aquiles.mp3", ... }
 app.get('/api/audio/canciones', (req, res) => {
+  const config = readJSON(CONFIG_FILE, {});
+  // Primero busca en config (Cloudinary), luego fallback a archivos del repo
   const result = {};
   ANIMALS.forEach(a => {
-    const found = fs.readdirSync(AUDIO_DIR)
-      .find(f => f.startsWith(a + '.') && EXT_AUD.includes(path.extname(f).toLowerCase()));
-    if (found) result[a] = `/audio/${found}`;
+    if (config.animalSongs && config.animalSongs[a]) {
+      result[a] = config.animalSongs[a];
+    } else {
+      // Fallback: buscar en /audio/<animal>.mp3
+      const found = fs.existsSync(AUDIO_DIR)
+        ? fs.readdirSync(AUDIO_DIR).find(f => f.startsWith(a + '.') && EXT_AUD.includes(path.extname(f).toLowerCase()))
+        : null;
+      if (found) result[a] = { url: `/audio/${found}`, publicId: null };
+    }
   });
   res.json(result);
 });
 
-// /api/rox  ← 10 slots (verifica que los archivos sigan existiendo)
 app.get('/api/rox', (req, res) => {
   const config = readJSON(CONFIG_FILE, {});
-  const slots  = (config.rox && config.rox.slots) || Array(10).fill(null);
-  const synced = slots.map(url => {
-    if (!url) return null;
-    return fs.existsSync(path.join(PUBLIC_DIR, url)) ? url : null;
-  });
-  res.json(synced);
+  res.json((config.rox && config.rox.slots) || Array(10).fill(null));
 });
 
 // ──────────────────────────────────────────────────────────────
@@ -282,23 +225,46 @@ app.put('/api/admin/stories/:animal', requireAuth, (req, res) => {
 });
 
 // ── FOTOS ANIMALES ──
-app.post('/api/admin/fotos/:animal', requireAuth, (req, res, next) => {
-  if (!ANIMALS.includes(req.params.animal)) return res.status(400).json({ error: 'Animal inválido' });
-  next();
-}, uploadAnimal.single('photo'), (req, res) => {
+app.post('/api/admin/fotos/:animal', requireAuth, uploadImg.single('photo'), async (req, res) => {
+  const { animal } = req.params;
+  if (!ANIMALS.includes(animal)) return res.status(400).json({ error: 'Animal inválido' });
   if (!req.file) return res.status(400).json({ error: 'Sin archivo' });
-  res.json({ ok: true, url: `/fotos/${req.params.animal}/${req.file.filename}` });
+  try {
+    const result = await uploadToCloudinary(req.file.buffer, {
+      folder: `arca-de-rox/${animal}`, resource_type: 'image',
+    });
+    const config = readJSON(CONFIG_FILE, {});
+    if (!config[animal]) config[animal] = { mainPhoto: null, photos: [] };
+    if (!Array.isArray(config[animal].photos)) config[animal].photos = [];
+    config[animal].photos.push({ url: result.secure_url, publicId: result.public_id });
+    writeJSON(CONFIG_FILE, config);
+    res.json({ ok: true, url: result.secure_url, publicId: result.public_id });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-app.delete('/api/admin/fotos/:animal/:filename', requireAuth, (req, res) => {
-  const { animal, filename } = req.params;
+app.delete('/api/admin/fotos/:animal', requireAuth, async (req, res) => {
+  const { animal } = req.params;
+  const { publicId, filename } = req.body;
   if (!ANIMALS.includes(animal)) return res.status(400).json({ error: 'Animal inválido' });
-  const fp = path.join(FOTOS_DIR, animal, path.basename(filename));
-  if (fs.existsSync(fp)) fs.unlinkSync(fp);
-  const config = readJSON(CONFIG_FILE, {});
-  if (config[animal] && config[animal].mainPhoto === path.basename(filename)) {
-    config[animal].mainPhoto = null;
+
+  if (publicId) {
+    // Foto de Cloudinary
+    await deleteFromCloudinary(publicId);
+    const config = readJSON(CONFIG_FILE, {});
+    if (config[animal] && config[animal].photos) {
+      config[animal].photos = config[animal].photos.filter(p => p.publicId !== publicId);
+      if (config[animal].mainPhoto === publicId) config[animal].mainPhoto = null;
+    }
     writeJSON(CONFIG_FILE, config);
+  } else if (filename) {
+    // Foto legado del repo
+    const fp = path.join(FOTOS_DIR, animal, path.basename(filename));
+    if (fs.existsSync(fp)) fs.unlinkSync(fp);
+    const config = readJSON(CONFIG_FILE, {});
+    if (config[animal] && config[animal].mainPhoto === filename) {
+      config[animal].mainPhoto = null;
+      writeJSON(CONFIG_FILE, config);
+    }
   }
   res.json({ ok: true });
 });
@@ -307,91 +273,114 @@ app.put('/api/admin/fotos/:animal/main', requireAuth, (req, res) => {
   const { animal } = req.params;
   if (!ANIMALS.includes(animal)) return res.status(400).json({ error: 'Animal inválido' });
   const config = readJSON(CONFIG_FILE, {});
-  if (!config[animal]) config[animal] = {};
-  config[animal].mainPhoto = req.body.filename || null;
+  if (!config[animal]) config[animal] = { mainPhoto: null, photos: [] };
+  // Acepta publicId (Cloudinary) o filename (legado)
+  config[animal].mainPhoto = req.body.publicId || req.body.filename || null;
   writeJSON(CONFIG_FILE, config);
   res.json({ ok: true });
 });
 
 // ── HERO ──
-app.post('/api/admin/hero', requireAuth, uploadHero.single('photo'), (req, res) => {
+app.post('/api/admin/hero', requireAuth, uploadImg.single('photo'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'Sin archivo' });
-  const heroDir = path.join(FOTOS_DIR, 'hero');
   try {
-    fs.readdirSync(heroDir)
-      .filter(f => f !== req.file.filename)
-      .forEach(f => fs.unlinkSync(path.join(heroDir, f)));
-  } catch {}
-  const url    = `/fotos/hero/${req.file.filename}`;
-  const config = readJSON(CONFIG_FILE, {});
-  config.heroPhoto = url;
-  writeJSON(CONFIG_FILE, config);
-  res.json({ ok: true, url });
+    const config = readJSON(CONFIG_FILE, {});
+    if (config.heroPublicId) await deleteFromCloudinary(config.heroPublicId);
+    const result = await uploadToCloudinary(req.file.buffer, {
+      folder: 'arca-de-rox/hero', resource_type: 'image',
+    });
+    config.heroPhoto    = result.secure_url;
+    config.heroPublicId = result.public_id;
+    writeJSON(CONFIG_FILE, config);
+    res.json({ ok: true, url: result.secure_url });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 // ── LOOP ──
-app.post('/api/admin/audio/loop', requireAuth, uploadLoop.single('song'), (req, res) => {
+app.post('/api/admin/audio/loop', requireAuth, uploadAud.single('song'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'Sin archivo' });
-  res.json({ ok: true, url: `/audio/${req.file.filename}` });
+  try {
+    const result = await uploadToCloudinary(req.file.buffer, {
+      folder: 'arca-de-rox/loop', resource_type: 'video',
+      public_id: path.parse(req.file.originalname).name + '-' + Date.now(),
+    });
+    const config = readJSON(CONFIG_FILE, {});
+    if (!config.loopSongs) config.loopSongs = [];
+    config.loopSongs.push({ url: result.secure_url, publicId: result.public_id, name: req.file.originalname });
+    writeJSON(CONFIG_FILE, config);
+    res.json({ ok: true, url: result.secure_url, publicId: result.public_id });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-app.delete('/api/admin/audio/loop/:filename', requireAuth, (req, res) => {
-  const name = path.basename(req.params.filename);
-  // Solo borrar si tiene prefijo loop- (no tocar fondo2-6 originales)
-  if (!name.startsWith('loop-')) return res.status(400).json({ error: 'No se puede borrar ese archivo' });
-  const fp = path.join(AUDIO_DIR, name);
-  if (fs.existsSync(fp)) fs.unlinkSync(fp);
+app.delete('/api/admin/audio/loop', requireAuth, async (req, res) => {
+  const { publicId } = req.body;
+  if (!publicId) return res.status(400).json({ error: 'Sin publicId' });
+  await deleteFromCloudinary(publicId, 'video');
+  const config = readJSON(CONFIG_FILE, {});
+  config.loopSongs = (config.loopSongs || []).filter(s => s.publicId !== publicId);
+  writeJSON(CONFIG_FILE, config);
   res.json({ ok: true });
 });
 
 // ── CANCIÓN ANIMAL ──
-app.post('/api/admin/audio/:animal', requireAuth, (req, res, next) => {
-  if (!ANIMALS.includes(req.params.animal)) return res.status(400).json({ error: 'Animal inválido' });
-  next();
-}, uploadAnimalSong.single('song'), (req, res) => {
+app.post('/api/admin/audio/:animal', requireAuth, uploadAud.single('song'), async (req, res) => {
+  const { animal } = req.params;
+  if (!ANIMALS.includes(animal)) return res.status(400).json({ error: 'Animal inválido' });
   if (!req.file) return res.status(400).json({ error: 'Sin archivo' });
-  res.json({ ok: true, url: `/audio/${req.file.filename}` });
+  try {
+    const config = readJSON(CONFIG_FILE, {});
+    if (config.animalSongs && config.animalSongs[animal] && config.animalSongs[animal].publicId)
+      await deleteFromCloudinary(config.animalSongs[animal].publicId, 'video');
+    const result = await uploadToCloudinary(req.file.buffer, {
+      folder: 'arca-de-rox/canciones', resource_type: 'video',
+      public_id: animal + '-' + Date.now(),
+    });
+    if (!config.animalSongs) config.animalSongs = {};
+    config.animalSongs[animal] = { url: result.secure_url, publicId: result.public_id };
+    writeJSON(CONFIG_FILE, config);
+    res.json({ ok: true, url: result.secure_url });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 // ── ROX ──
-app.post('/api/admin/rox/:slot', requireAuth, (req, res, next) => {
-  if (parseInt(req.params.slot) < 1 || parseInt(req.params.slot) > 10)
-    return res.status(400).json({ error: 'Slot inválido (1–10)' });
-  next();
-}, uploadRox.single('photo'), (req, res) => {
+app.post('/api/admin/rox/:slot', requireAuth, uploadImg.single('photo'), async (req, res) => {
+  const slot = parseInt(req.params.slot, 10);
+  if (slot < 1 || slot > 10) return res.status(400).json({ error: 'Slot inválido' });
   if (!req.file) return res.status(400).json({ error: 'Sin archivo' });
-  const slot   = parseInt(req.params.slot, 10);
-  const url    = `/fotos/rox/${req.file.filename}`;
-  const config = readJSON(CONFIG_FILE, {});
-  if (!config.rox) config.rox = { slots: Array(10).fill(null) };
-  config.rox.slots[slot - 1] = url;
-  writeJSON(CONFIG_FILE, config);
-  res.json({ ok: true, url });
+  try {
+    const config = readJSON(CONFIG_FILE, {});
+    if (!config.rox) config.rox = { slots: Array(10).fill(null) };
+    if (!Array.isArray(config.rox.slots)) config.rox.slots = Array(10).fill(null);
+    const old = config.rox.slots[slot - 1];
+    if (old && old.publicId) await deleteFromCloudinary(old.publicId);
+    const result = await uploadToCloudinary(req.file.buffer, {
+      folder: 'arca-de-rox/rox', resource_type: 'image',
+    });
+    config.rox.slots[slot - 1] = { url: result.secure_url, publicId: result.public_id };
+    writeJSON(CONFIG_FILE, config);
+    res.json({ ok: true, url: result.secure_url });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-app.delete('/api/admin/rox/:slot', requireAuth, (req, res) => {
+app.delete('/api/admin/rox/:slot', requireAuth, async (req, res) => {
   const slot = parseInt(req.params.slot, 10);
   if (slot < 1 || slot > 10) return res.status(400).json({ error: 'Slot inválido' });
   const config = readJSON(CONFIG_FILE, {});
   if (!config.rox) config.rox = { slots: Array(10).fill(null) };
-  const oldUrl = config.rox.slots[slot - 1];
-  if (oldUrl) {
-    try { fs.unlinkSync(path.join(PUBLIC_DIR, oldUrl)); } catch {}
-  }
+  const old = config.rox.slots[slot - 1];
+  if (old && old.publicId) await deleteFromCloudinary(old.publicId);
   config.rox.slots[slot - 1] = null;
   writeJSON(CONFIG_FILE, config);
   res.json({ ok: true });
 });
 
-// ── RUTA ADMIN HTML ──
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(PUBLIC_DIR, 'admin.html'));
-});
+app.get('/admin', (req, res) => res.sendFile(path.join(PUBLIC_DIR, 'admin.html')));
 
 // ──────────────────────────────────────────────────────────────
 //  INICIO
 // ──────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`\n🐾  El Arca de Rox  →  http://localhost:${PORT}`);
-  console.log(`🔐  Admin           →  http://localhost:${PORT}/admin\n`);
+  console.log(`🔐  Admin           →  http://localhost:${PORT}/admin`);
+  console.log(`📁  Datos           →  ${DATA_DIR}\n`);
 });
