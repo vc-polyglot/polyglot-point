@@ -128,7 +128,7 @@ nav.nav-links-dark .lang-current:hover   { color: var(--oro-claro) !important; b
   border-radius: 50%;
   position: fixed; top: 0; left: 0;
   pointer-events: none;
-  z-index: 99999;
+  z-index: 2147483647;
   transform: translate(-50%, -50%);
   transition: transform 0.1s ease, background 0.3s;
 }
@@ -138,7 +138,7 @@ nav.nav-links-dark .lang-current:hover   { color: var(--oro-claro) !important; b
   border-radius: 50%;
   position: fixed; top: 0; left: 0;
   pointer-events: none;
-  z-index: 99998;
+  z-index: 2147483646;
   transform: translate(-50%, -50%);
   transition: width 0.3s ease, height 0.3s ease, opacity 0.3s;
   opacity: 0.6;
@@ -172,6 +172,7 @@ body.cursor-hover .cursor-ring { width: 44px; height: 44px; opacity: 0.4; }
   letter-spacing: 0.3em;
   color: var(--oro);
   cursor: none;
+  z-index: 99999999;
   transition: color 0.3s;
 }
 .menu-close:hover { color: var(--marfil); }
@@ -548,10 +549,10 @@ footer p { font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0
   position: fixed;
   bottom: 2.5rem;
   left: 2.5rem;
-  z-index: 9999990;
+  z-index: 9000;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.6rem;
 }
 
 .music-btn {
@@ -564,6 +565,7 @@ footer p { font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0
   align-items: center;
   justify-content: center;
   cursor: none;
+  color: var(--oro);
   transition: background 0.3s, border-color 0.3s, transform 0.3s;
   backdrop-filter: blur(6px);
   flex-shrink: 0;
@@ -579,6 +581,34 @@ footer p { font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0
   width: 16px;
   height: 20px;
   color: var(--oro);
+}
+
+.music-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.music-btn--sm {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(46, 30, 20, 0.7);
+  border: 1px solid rgba(184, 150, 90, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: none;
+  color: var(--oro);
+  transition: background 0.3s, border-color 0.3s, transform 0.3s;
+  backdrop-filter: blur(6px);
+  flex-shrink: 0;
+}
+
+.music-btn--sm:hover {
+  background: rgba(46, 30, 20, 0.95);
+  border-color: var(--oro);
+  transform: scale(1.1);
 }
 
 .music-info {
@@ -624,8 +654,8 @@ footer p { font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0
   nav.nav-logo-dark .nav-logo        { color: var(--marfil) !important; }
   nav.nav-links-dark .hamburger span { background: var(--marfil) !important; }
 
-  /* Estado base móvil: logo burdeos (sobre secciones claras) */
-  .nav-logo { color: var(--burdeos); font-size: 1rem; }
+  /* Estado base móvil: logo marfil siempre (nav-logo-dark lo sobreescribe si hace falta) */
+  .nav-logo { color: var(--marfil); font-size: 1rem; }
 
   /* HERO móvil: foto full-screen, texto sobre fondo oscuro */
   .hero { grid-template-columns: 1fr; height: 100vh; }
