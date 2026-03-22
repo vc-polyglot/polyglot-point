@@ -9,7 +9,7 @@
   :root {
     --cream:#FAF7F2; --warm:#E8DDD0; --terra:#C4673A; --terra2:#a0502a;
     --salvia:#5C7A6B; --salvia2:#3d5c50; --rojo:#c0392b; --rojo2:#96281b;
-    --oro:#d4a84b; --sombra:rgba(80,40,0,.14); --r:12px;
+    --oro:#d4a84b; --lila:#B8A9C9; --sombra:rgba(80,40,0,.14); --r:12px;
   }
   body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--cream); color:#2E2A26; min-height:100vh; }
 
@@ -26,12 +26,12 @@
 
   #dash { display:none; }
   header { background:linear-gradient(90deg,#2E2A26,#7c4e2d); color:white; padding:1rem 2rem; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,.3); }
-  header h1 { font-size:1.15rem; }
+  header h1 { font-size:1.1rem; }
   .btn-out { background:rgba(255,255,255,.15); color:white; border:1px solid rgba(255,255,255,.3); padding:.4rem .9rem; border-radius:6px; cursor:pointer; font-size:.85rem; }
   .btn-out:hover { background:rgba(255,255,255,.25); }
 
-  .tabs { display:flex; gap:4px; padding:1rem 2rem 0; background:var(--warm); border-bottom:3px solid var(--terra); flex-wrap:wrap; }
-  .tab { padding:.55rem 1.3rem; border-radius:8px 8px 0 0; border:none; background:transparent; color:var(--terra); font-size:.9rem; font-weight:600; cursor:pointer; }
+  .tabs { display:flex; gap:3px; padding:.75rem 2rem 0; background:var(--warm); border-bottom:3px solid var(--terra); flex-wrap:wrap; }
+  .tab { padding:.5rem 1.1rem; border-radius:8px 8px 0 0; border:none; background:transparent; color:var(--terra); font-size:.85rem; font-weight:600; cursor:pointer; }
   .tab:hover { background:rgba(196,103,58,.1); }
   .tab.active { background:var(--cream); }
 
@@ -46,57 +46,93 @@
   .btn-r { background:var(--rojo);   color:white; } .btn-r:hover { background:var(--rojo2); }
   .btn-o { background:var(--oro);    color:#2E2A26; } .btn-o:hover { background:#c4983b; }
   .btn-t { background:var(--terra);  color:white; } .btn-t:hover { background:var(--terra2); }
+  .btn-l { background:var(--lila);   color:white; } .btn-l:hover { background:#9a8ab5; }
 
-  /* Upload zone */
-  .upzone { border:2px dashed var(--terra); border-radius:10px; padding:1.4rem; text-align:center; cursor:pointer; margin-bottom:1rem; background:var(--cream); transition:background .2s; }
+  .upzone { border:2px dashed var(--terra); border-radius:10px; padding:1.2rem; text-align:center; cursor:pointer; margin-bottom:.75rem; background:var(--cream); transition:background .2s; }
   .upzone:hover { background:var(--warm); }
-  .upzone p { color:#999; font-size:.88rem; margin-top:.25rem; }
-  .upzone .ic { font-size:1.8rem; }
+  .upzone p { color:#999; font-size:.85rem; margin-top:.2rem; }
   .upzone input { display:none; }
+  .upzone .ic { font-size:1.6rem; }
 
-  /* Progress */
-  .progress-wrap { background:var(--warm); border-radius:20px; height:8px; margin:.5rem 0; overflow:hidden; display:none; }
+  .progress-wrap { background:var(--warm); border-radius:20px; height:7px; margin:.4rem 0 .75rem; overflow:hidden; display:none; }
   .progress-bar  { height:100%; background:var(--terra); border-radius:20px; transition:width .2s; width:0%; }
 
-  /* Photo grid */
-  .pgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:.65rem; margin-top:.65rem; }
+  .pgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:.6rem; margin-top:.6rem; }
   .pthumb { position:relative; border-radius:8px; overflow:hidden; aspect-ratio:1; background:var(--warm); border:3px solid transparent; }
   .pthumb.main { border-color:var(--oro); }
   .pthumb img  { width:100%; height:100%; object-fit:cover; display:block; }
-  .pthumb .pactions { position:absolute; inset:0; background:rgba(0,0,0,.55); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.35rem; opacity:0; transition:opacity .2s; }
+  .pthumb .pactions { position:absolute; inset:0; background:rgba(0,0,0,.55); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.3rem; opacity:0; transition:opacity .2s; }
   .pthumb:hover .pactions { opacity:1; }
-  .badge-main   { position:absolute; top:3px; left:3px; background:var(--oro); color:#2E2A26; font-size:.6rem; font-weight:700; padding:2px 5px; border-radius:4px; }
+  .badge-main   { position:absolute; top:3px; left:3px; background:var(--oro); color:#2E2A26; font-size:.58rem; font-weight:700; padding:2px 4px; border-radius:3px; }
   .badge-legacy { position:absolute; top:3px; right:3px; background:rgba(0,0,0,.45); color:white; font-size:.55rem; padding:2px 4px; border-radius:3px; }
 
-  textarea.hist { width:100%; padding:.7rem 1rem; border:2px solid var(--warm); border-radius:8px; resize:vertical; font-size:.93rem; font-family:inherit; min-height:110px; background:var(--cream); }
+  textarea.hist { width:100%; padding:.65rem 1rem; border:2px solid var(--warm); border-radius:8px; resize:vertical; font-size:.9rem; font-family:inherit; min-height:90px; background:var(--cream); }
   textarea.hist:focus { outline:none; border-color:var(--terra); }
 
   .slist { list-style:none; }
   .sitem { display:flex; align-items:center; gap:.65rem; padding:.55rem .7rem; border-radius:8px; margin-bottom:.3rem; background:var(--cream); border:1px solid var(--warm); }
-  .sitem span { flex:1; font-size:.87rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .sitem audio { height:28px; flex-shrink:0; }
-  .orig-badge { font-size:.65rem; background:var(--warm); padding:2px 7px; border-radius:10px; color:#888; flex-shrink:0; }
+  .sitem span { flex:1; font-size:.85rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .sitem audio { height:26px; flex-shrink:0; }
+  .orig-badge { font-size:.63rem; background:var(--warm); padding:2px 6px; border-radius:10px; color:#888; flex-shrink:0; }
 
-  .rox-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:.65rem; margin-top:.65rem; }
+  .rox-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:.6rem; margin-top:.6rem; }
   @media(max-width:650px){ .rox-grid{ grid-template-columns:repeat(3,1fr); } }
   .rslot { position:relative; aspect-ratio:1; border-radius:10px; overflow:hidden; background:var(--warm); border:2px dashed var(--terra); display:flex; flex-direction:column; align-items:center; justify-content:center; }
   .rslot.filled { border-style:solid; }
   .rslot img { width:100%; height:100%; object-fit:cover; }
-  .rslot .snum { position:absolute; top:4px; left:5px; font-size:.7rem; font-weight:700; color:var(--terra); }
-  .rslot .sempty { font-size:1.6rem; color:#bba; }
+  .rslot .snum { position:absolute; top:4px; left:5px; font-size:.68rem; font-weight:700; color:var(--terra); }
+  .rslot .sempty { font-size:1.5rem; color:#bba; }
   .rslot .sacts { position:absolute; inset:0; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; gap:.35rem; opacity:0; transition:opacity .2s; }
   .rslot:hover .sacts { opacity:1; }
   .rslot input { display:none; }
 
   .hero-prev { width:100%; max-height:200px; object-fit:cover; border-radius:8px; margin-bottom:.7rem; display:none; }
 
+  /* ── RECUERDOS ── */
+  .rec-animal {
+    border: 1px solid var(--warm); border-radius: 10px; margin-bottom: 1rem; overflow: hidden;
+  }
+  .rec-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .75rem 1rem; background: var(--warm); cursor: pointer; user-select: none;
+  }
+  .rec-header h3 { font-size: .95rem; color: var(--terra2); display: flex; align-items: center; gap: .5rem; }
+  .rec-chevron { font-size: .8rem; transition: transform .3s; }
+  .rec-body { display: none; padding: 1rem; }
+  .rec-body.open { display: block; }
+
+  /* ── GALERÍA PARA RECUERDOS (drag) ── */
+  .galeria-drag-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: .5rem; margin-top: .75rem; max-height: 320px; overflow-y: auto;
+    padding: .5rem; background: var(--cream); border-radius: 8px;
+    border: 1px solid var(--warm);
+  }
+  .drag-thumb {
+    aspect-ratio: 1; border-radius: 6px; overflow: hidden;
+    cursor: grab; border: 2px solid transparent; transition: border-color .2s, transform .2s;
+    position: relative;
+  }
+  .drag-thumb:hover { border-color: var(--terra); transform: scale(1.04); }
+  .drag-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .drag-thumb.dragging { opacity: .5; cursor: grabbing; }
+
+  /* Drop zones para recuerdos */
+  .drop-zone {
+    min-height: 60px; border: 2px dashed var(--lila); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .82rem; color: #aaa; margin-top: .5rem; transition: all .2s;
+    padding: .5rem;
+  }
+  .drop-zone.over { border-color: var(--terra); background: rgba(196,103,58,.06); color: var(--terra); }
+
   #toast { position:fixed; bottom:1.5rem; right:1.5rem; background:var(--salvia2); color:white; padding:.7rem 1.3rem; border-radius:8px; font-weight:600; box-shadow:0 4px 20px rgba(0,0,0,.3); transform:translateY(100px); opacity:0; transition:all .3s; z-index:9999; min-width:200px; text-align:center; }
   #toast.show { transform:translateY(0); opacity:1; }
   #toast.err  { background:var(--rojo2); }
 
-  .adiv { border-top:2px solid var(--warm); margin:1.5rem 0; padding-top:1.5rem; }
+  .adiv { border-top:2px solid var(--warm); margin:1.25rem 0; padding-top:1.25rem; }
   .adiv:first-child { border-top:none; margin-top:0; padding-top:0; }
-  .adiv h3 { font-size:1rem; color:var(--terra2); margin-bottom:1rem; }
+  .adiv h3 { font-size:.95rem; color:var(--terra2); margin-bottom:.75rem; }
 </style>
 </head>
 <body>
@@ -119,6 +155,7 @@
   </header>
   <div class="tabs">
     <button class="tab active" onclick="showTab('animales',this)">🐕 Animales</button>
+    <button class="tab" onclick="showTab('recuerdos',this)">🕊 Recuerdos</button>
     <button class="tab" onclick="showTab('galeria',this)">🖼 Galería</button>
     <button class="tab" onclick="showTab('musica',this)">🎵 Música</button>
     <button class="tab" onclick="showTab('hero',this)">🌅 Hero</button>
@@ -127,10 +164,30 @@
 
   <div class="panel active" id="panel-animales"></div>
 
+  <!-- RECUERDOS -->
+  <div class="panel" id="panel-recuerdos">
+    <div class="card">
+      <h2>🕊 Ya tenían su cuarto</h2>
+      <p style="font-size:.85rem;color:#999;margin-bottom:1rem">
+        Sube fotos directo a cada animal o arrástralas desde la Galería (tab de abajo).
+      </p>
+      <div id="recuerdos-list"></div>
+    </div>
+
+    <div class="card">
+      <h2>🖼 Arrastra desde la Galería</h2>
+      <p style="font-size:.85rem;color:#999;margin-bottom:.75rem">
+        Haz clic en cualquier foto de abajo y arrástrala al animal de arriba.
+      </p>
+      <div class="galeria-drag-grid" id="galeria-drag-grid"></div>
+    </div>
+  </div>
+
+  <!-- GALERÍA -->
   <div class="panel" id="panel-galeria">
     <div class="card">
       <h2>🖼 Galería — Instantes</h2>
-      <p style="font-size:.88rem;color:#999;margin-bottom:1rem">Sube fotos directamente a la galería. Se muestran en la sección "Instantes" de la página.</p>
+      <p style="font-size:.85rem;color:#999;margin-bottom:.75rem">Las fotos aparecen en la sección "Instantes" de la página.</p>
       <div class="upzone" onclick="document.getElementById('upl-galeria').click()">
         <div class="ic">📷</div>
         <p>Subir fotos a la galería (puedes elegir varias)</p>
@@ -141,10 +198,11 @@
     </div>
   </div>
 
+  <!-- MÚSICA -->
   <div class="panel" id="panel-musica">
     <div class="card">
       <h2>🎶 Loop musical general</h2>
-      <p style="font-size:.88rem;color:#999;margin-bottom:1rem">Los originales (fondo2–fondo6) están en el repo y no se borran.</p>
+      <p style="font-size:.85rem;color:#999;margin-bottom:.75rem">Los originales (fondo2–fondo6) están en el repo y no se borran.</p>
       <div class="upzone" onclick="document.getElementById('upl-loop').click()">
         <div class="ic">🎵</div><p>Subir canción al loop</p>
         <input type="file" id="upl-loop" accept="audio/*" onchange="uploadLoop(this)">
@@ -158,6 +216,7 @@
     </div>
   </div>
 
+  <!-- HERO -->
   <div class="panel" id="panel-hero">
     <div class="card">
       <h2>🌅 Foto hero principal</h2>
@@ -170,10 +229,11 @@
     </div>
   </div>
 
+  <!-- ROX -->
   <div class="panel" id="panel-rox">
     <div class="card">
       <h2>💛 La que paga las croquetas — 10 fotos</h2>
-      <p style="font-size:.88rem;color:#999;margin-bottom:.75rem">Haz click en cualquier slot para subir o cambiar.</p>
+      <p style="font-size:.85rem;color:#999;margin-bottom:.6rem">Haz click en cualquier slot para subir o cambiar.</p>
       <div class="rox-grid" id="rox-grid"></div>
     </div>
   </div>
@@ -182,45 +242,41 @@
 <div id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-//  CONFIG CLOUDINARY
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
+//  CLOUDINARY — upload directo desde el browser
+// ══════════════════════════════════════════════════════════
 const CLD_CLOUD  = 'dvrxzdabu';
-const CLD_PRESET = 'arca-de-rox';   // unsigned preset
+const CLD_PRESET = 'arca-de-rox';
 
-// Sube un File directo a Cloudinary, devuelve { url, publicId }
 async function uploadToCloudinary(file, folder, onProgress) {
   const fd = new FormData();
   fd.append('file', file);
   fd.append('upload_preset', CLD_PRESET);
   fd.append('folder', folder);
-
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLD_CLOUD}/upload`);
-    xhr.upload.onprogress = e => {
-      if (e.lengthComputable && onProgress) onProgress(Math.round(e.loaded / e.total * 100));
-    };
+    xhr.upload.onprogress = e => { if (e.lengthComputable && onProgress) onProgress(Math.round(e.loaded/e.total*100)); };
     xhr.onload = () => {
-      if (xhr.status === 200) {
-        const r = JSON.parse(xhr.responseText);
-        resolve({ url: r.secure_url, publicId: r.public_id });
-      } else {
-        reject(new Error('Cloudinary error: ' + xhr.status));
-      }
+      if (xhr.status === 200) { const r=JSON.parse(xhr.responseText); resolve({url:r.secure_url,publicId:r.public_id}); }
+      else reject(new Error('Cloudinary error: '+xhr.status));
     };
     xhr.onerror = () => reject(new Error('Error de red'));
     xhr.send(fd);
   });
 }
 
-// ═══════════════════════════════════════════════════════════
-//  UTILS
-// ═══════════════════════════════════════════════════════════
-const ANIMALS  = ['aquiles','copito','elvis'];
-const NAMES    = { aquiles:'Aquiles', copito:'La Copito', elvis:'Elvis' };
-const EMOJI    = { aquiles:'🐕', copito:'🐈', elvis:'🌭' };
+// ══════════════════════════════════════════════════════════
+//  CONSTANTES
+// ══════════════════════════════════════════════════════════
+const ANIMALS   = ['aquiles','copito','elvis'];
+const NAMES     = { aquiles:'Aquiles', copito:'La Copito', elvis:'Elvis' };
+const EMOJI_A   = { aquiles:'🐕', copito:'🐈', elvis:'🌭' };
 const ORIGINALS = ['fondo2.mp3','fondo3.mp3','fondo4.mp3','fondo5.mp3','fondo6.mp3'];
+
+const RECUERDOS = ['tigrillo','paquito','katy','campanita','osito','benito','lila'];
+const NAMES_R   = { tigrillo:'Tigrillo', paquito:'Paquito', katy:'Katy', campanita:'Campana', osito:'Osito', benito:'Benito', lila:'Lila' };
+const EMOJI_R   = { tigrillo:'🐱', paquito:'🦜', katy:'🐾', campanita:'🐾', osito:'🐾', benito:'🐱', lila:'🐾' };
 
 let toastT;
 function toast(msg, isErr=false) {
@@ -230,26 +286,24 @@ function toast(msg, isErr=false) {
 }
 
 function showProgress(id, pct) {
-  const wrap=document.getElementById('prog-'+id);
-  const bar =document.getElementById('progbar-'+id);
+  const wrap=document.getElementById('prog-'+id), bar=document.getElementById('progbar-'+id);
   if(!wrap||!bar) return;
   wrap.style.display='block'; bar.style.width=pct+'%';
-  if(pct>=100) setTimeout(()=>{ wrap.style.display='none'; bar.style.width='0%'; },800);
+  if(pct>=100) setTimeout(()=>{wrap.style.display='none';bar.style.width='0%';},800);
 }
 
 async function api(method, url, body=null) {
-  const opts={method, headers:body instanceof FormData?{}:{'Content-Type':'application/json'}};
+  const opts={method,headers:body instanceof FormData?{}:{'Content-Type':'application/json'}};
   if(body) opts.body=body instanceof FormData?body:JSON.stringify(body);
   const r=await fetch(url,opts);
   if(!r.ok){const e=await r.json().catch(()=>({error:r.statusText})); throw new Error(e.error||r.statusText);}
   return r.json();
 }
 
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  AUTH
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 async function checkSession(){try{const d=await api('GET','/api/admin/me'); if(d.isAdmin)showDash();}catch{}}
-
 async function doLogin(){
   const pw=document.getElementById('pw').value, er=document.getElementById('lerr');
   er.style.display='none';
@@ -257,23 +311,21 @@ async function doLogin(){
   catch{er.style.display='block'; document.getElementById('pw').value='';}
 }
 document.getElementById('pw').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-
 async function doLogout(){
   try{await api('POST','/api/admin/logout');}catch{}
   document.getElementById('dash').style.display='none';
   document.getElementById('login').style.display='flex';
   document.getElementById('pw').value='';
 }
-
 function showDash(){
   document.getElementById('login').style.display='none';
   document.getElementById('dash').style.display='block';
   init();
 }
 
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  TABS
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 function showTab(name,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
@@ -281,69 +333,121 @@ function showTab(name,btn){
   btn.classList.add('active');
 }
 
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  INIT
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 let cfg={};
 async function init(){
   buildAnimalHTML();
+  buildRecuerdosHTML();
   cfg=await api('GET','/api/config');
-  await Promise.all([loadAllPhotos(),loadAllStories(),loadLoopList(),loadAnimalSongs(),loadRox(),loadGaleria()]);
+  await Promise.all([
+    loadAllPhotos(), loadAllStories(),
+    loadLoopList(), loadAnimalSongs(),
+    loadRox(), loadGaleria(),
+    loadRecuerdosPhotos(), loadGaleriaDrag(),
+  ]);
   if(cfg.heroPhoto){const img=document.getElementById('hero-prev'); img.src=cfg.heroPhoto; img.style.display='block';}
 }
 
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  PANEL ANIMALES
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 function buildAnimalHTML(){
   document.getElementById('panel-animales').innerHTML='<div class="card">'+
     ANIMALS.map(a=>`
     <div class="adiv">
-      <h3>${EMOJI[a]} ${NAMES[a]}</h3>
+      <h3>${EMOJI_A[a]} ${NAMES[a]}</h3>
       <div class="upzone" onclick="document.getElementById('upl-${a}').click()">
         <div class="ic">📸</div><p>Subir fotos de ${NAMES[a]}</p>
         <input type="file" id="upl-${a}" accept="image/*" multiple onchange="uploadAnimalPhotos('${a}',this)">
       </div>
       <div class="progress-wrap" id="prog-${a}"><div class="progress-bar" id="progbar-${a}"></div></div>
       <div class="pgrid" id="grid-${a}"></div>
-      <div style="margin-top:1.1rem">
-        <p style="font-weight:600;font-size:.9rem;color:var(--terra2);margin-bottom:.45rem">📖 Historia</p>
+      <div style="margin-top:1rem">
+        <p style="font-weight:600;font-size:.88rem;color:var(--terra2);margin-bottom:.4rem">📖 Historia</p>
         <textarea class="hist" id="hist-${a}" placeholder="Escribe aquí lo que quieras contar sobre ${NAMES[a]}…"></textarea>
-        <button class="btn btn-g" style="margin-top:.45rem" onclick="saveStory('${a}')">💾 Guardar</button>
+        <button class="btn btn-g" style="margin-top:.4rem" onclick="saveStory('${a}')">💾 Guardar</button>
       </div>
     </div>`).join('')+'</div>';
 }
 
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
+//  PANEL RECUERDOS
+// ══════════════════════════════════════════════════════════
+function buildRecuerdosHTML(){
+  document.getElementById('recuerdos-list').innerHTML = RECUERDOS.map(r=>`
+    <div class="rec-animal" id="rec-wrap-${r}">
+      <div class="rec-header" onclick="toggleRec('${r}')">
+        <h3>${EMOJI_R[r]} ${NAMES_R[r]}</h3>
+        <span class="rec-chevron" id="chev-${r}">▼</span>
+      </div>
+      <div class="rec-body" id="rec-body-${r}">
+        <div class="upzone" onclick="document.getElementById('upl-rec-${r}').click()">
+          <div class="ic">📸</div><p>Subir fotos de ${NAMES_R[r]}</p>
+          <input type="file" id="upl-rec-${r}" accept="image/*" multiple onchange="uploadRecuerdo('${r}',this)">
+        </div>
+        <div class="progress-wrap" id="prog-rec-${r}"><div class="progress-bar" id="progbar-rec-${r}"></div></div>
+
+        <!-- Drop zone para arrastrar desde galería -->
+        <div class="drop-zone" id="drop-${r}"
+          ondragover="dragOver(event,'${r}')"
+          ondragleave="dragLeave('${r}')"
+          ondrop="dropOnAnimal(event,'${r}')">
+          📎 Arrastra una foto de la galería aquí
+        </div>
+
+        <div class="pgrid" id="grid-rec-${r}" style="margin-top:.5rem"></div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleRec(r){
+  const body=document.getElementById('rec-body-'+r);
+  const chev=document.getElementById('chev-'+r);
+  const open=body.classList.toggle('open');
+  chev.style.transform=open?'rotate(180deg)':'rotate(0deg)';
+}
+
+// ══════════════════════════════════════════════════════════
 //  FOTOS ANIMALES
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 async function loadAllPhotos(){ await Promise.all(ANIMALS.map(loadPhotos)); }
 
 async function loadPhotos(animal){
-  try{ const p=await api('GET',`/api/fotos/${animal}`); renderGrid(animal,p); }catch{}
+  try{ const p=await api('GET',`/api/fotos/${animal}`); renderGrid(`grid-${animal}`, p, animal, false); }catch{}
 }
 
-function renderGrid(animal, photos){
-  const grid=document.getElementById('grid-'+animal); if(!grid) return;
+async function loadRecuerdosPhotos(){
+  await Promise.all(RECUERDOS.map(async r=>{
+    try{ const p=await api('GET',`/api/fotos/${r}`); renderGrid(`grid-rec-${r}`, p, r, true); }catch{}
+  }));
+}
+
+function renderGrid(gridId, photos, animal, isRecuerdo){
+  const grid=document.getElementById(gridId); if(!grid) return;
   const mainId=cfg[animal]&&cfg[animal].mainPhoto;
   grid.innerHTML=photos.length
     ? photos.map(p=>{
-        const id=p.publicId||p.filename||p.url.split('/').pop();
+        const url=typeof p==='string'?p:p.url;
+        const pid=(typeof p==='object'&&p.publicId)?p.publicId:'';
+        const fn=(typeof p==='object'&&p.filename)?p.filename:url.split('/').pop();
+        const id=pid||fn;
         const isMn=id===mainId;
         return `
         <div class="pthumb ${isMn?'main':''}">
           ${isMn?'<span class="badge-main">⭐</span>':''}
           ${p.legacy?'<span class="badge-legacy">repo</span>':''}
-          <img src="${p.url}" loading="lazy" alt="">
+          <img src="${url}" loading="lazy" alt="">
           <div class="pactions">
-            <button class="btn btn-o" style="font-size:.7rem"
-              onclick="setMain('${animal}','${p.publicId||''}','${p.filename||p.url.split('/').pop()}')">⭐ Principal</button>
-            <button class="btn btn-r" style="font-size:.7rem"
-              onclick="delPhoto('${animal}','${p.publicId||''}','${p.filename||p.url.split('/').pop()}')">🗑 Borrar</button>
+            <button class="btn btn-o" style="font-size:.68rem"
+              onclick="setMain('${animal}','${pid}','${fn}')">⭐ Principal</button>
+            <button class="btn btn-r" style="font-size:.68rem"
+              onclick="delPhoto('${animal}','${pid}','${fn}','${isRecuerdo}')">🗑 Borrar</button>
           </div>
         </div>`;
       }).join('')
-    : '<p style="color:#bbb;font-size:.85rem">Sin fotos todavía</p>';
+    : '<p style="color:#bbb;font-size:.82rem">Sin fotos todavía</p>';
 }
 
 async function uploadAnimalPhotos(animal, input){
@@ -355,37 +459,101 @@ async function uploadAnimalPhotos(animal, input){
         pct=>showProgress(animal, Math.round((done/files.length+(pct/100/files.length))*100)));
       await api('POST',`/api/admin/fotos/${animal}`,{url,publicId});
       done++;
-    }catch(e){ toast('Error: '+e.message,true); }
+    }catch(e){toast('Error: '+e.message,true);}
   }
   showProgress(animal,100);
   cfg=await api('GET','/api/config');
   await loadPhotos(animal);
-  toast('✅ Fotos subidas');
-  input.value='';
+  toast('✅ Fotos subidas'); input.value='';
 }
 
-async function delPhoto(animal,publicId,filename){
+async function uploadRecuerdo(animal, input){
+  const files=Array.from(input.files); if(!files.length) return;
+  let done=0;
+  for(const file of files){
+    try{
+      const {url,publicId}=await uploadToCloudinary(file,`arca-de-rox/${animal}`,
+        pct=>showProgress(`rec-${animal}`, Math.round((done/files.length+(pct/100/files.length))*100)));
+      await api('POST',`/api/admin/fotos/${animal}`,{url,publicId});
+      done++;
+    }catch(e){toast('Error: '+e.message,true);}
+  }
+  showProgress(`rec-${animal}`,100);
+  cfg=await api('GET','/api/config');
+  await loadRecuerdosPhotos();
+  toast('✅ Fotos subidas'); input.value='';
+}
+
+async function delPhoto(animal, publicId, filename, isRecuerdo){
   if(!confirm('¿Borrar esta foto?')) return;
   await api('DELETE',`/api/admin/fotos/${animal}`, publicId?{publicId}:{filename});
   cfg=await api('GET','/api/config');
-  await loadPhotos(animal);
+  if(isRecuerdo==='true'||isRecuerdo===true) await loadRecuerdosPhotos();
+  else await loadPhotos(animal);
   toast('🗑 Foto borrada');
 }
 
-async function setMain(animal,publicId,filename){
+async function setMain(animal, publicId, filename){
   await api('PUT',`/api/admin/fotos/${animal}/main`, publicId?{publicId}:{filename});
   cfg=await api('GET','/api/config');
-  await loadPhotos(animal);
+  const isRec=RECUERDOS.includes(animal);
+  if(isRec) await loadRecuerdosPhotos(); else await loadPhotos(animal);
   toast('⭐ Foto principal actualizada');
 }
 
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
+//  DRAG & DROP desde galería a recuerdo
+// ══════════════════════════════════════════════════════════
+let dragData = null;
+
+async function loadGaleriaDrag(){
+  try{
+    const fotos=await api('GET','/api/galeria');
+    const grid=document.getElementById('galeria-drag-grid');
+    if(!grid) return;
+    grid.innerHTML=fotos.length
+      ? fotos.map(p=>`
+        <div class="drag-thumb" draggable="true"
+          ondragstart="dragStart(event,'${p.url}','${p.publicId||''}')">
+          <img src="${p.url}" loading="lazy" alt="">
+        </div>`).join('')
+      : '<p style="color:#bbb;font-size:.82rem;padding:.5rem">Primero sube fotos en la pestaña Galería</p>';
+  }catch{}
+}
+
+function dragStart(e, url, publicId){
+  dragData={url,publicId};
+  e.dataTransfer.effectAllowed='copy';
+}
+function dragOver(e, animal){
+  e.preventDefault();
+  document.getElementById('drop-'+animal).classList.add('over');
+}
+function dragLeave(animal){
+  document.getElementById('drop-'+animal).classList.remove('over');
+}
+async function dropOnAnimal(e, animal){
+  e.preventDefault();
+  document.getElementById('drop-'+animal).classList.remove('over');
+  if(!dragData) return;
+  try{
+    await api('POST',`/api/admin/fotos/${animal}/from-galeria`,dragData);
+    cfg=await api('GET','/api/config');
+    await loadRecuerdosPhotos();
+    toast(`📎 Foto asignada a ${NAMES_R[animal]}`);
+  }catch(err){toast('Error: '+err.message,true);}
+  dragData=null;
+}
+
+// ══════════════════════════════════════════════════════════
 //  HISTORIAS
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 async function loadAllStories(){
   try{
     const s=await api('GET','/api/stories');
-    ANIMALS.forEach(a=>{const ta=document.getElementById('hist-'+a); if(ta)ta.value=s[a]||'';});
+    [...ANIMALS,...RECUERDOS].forEach(a=>{
+      const ta=document.getElementById('hist-'+a); if(ta) ta.value=s[a]||'';
+    });
   }catch{}
 }
 async function saveStory(animal){
@@ -393,28 +561,23 @@ async function saveStory(animal){
   toast('💾 Historia guardada');
 }
 
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  GALERÍA
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 async function loadGaleria(){
   try{
     const fotos=await api('GET','/api/galeria');
-    renderGaleriaGrid(fotos);
+    const grid=document.getElementById('grid-galeria'); if(!grid) return;
+    grid.innerHTML=fotos.length
+      ? fotos.map(p=>`
+        <div class="pthumb">
+          <img src="${p.url}" loading="lazy" alt="">
+          <div class="pactions">
+            <button class="btn btn-r" style="font-size:.68rem" onclick="delGaleria('${p.publicId}')">🗑 Borrar</button>
+          </div>
+        </div>`).join('')
+      : '<p style="color:#bbb;font-size:.82rem">Sin fotos todavía</p>';
   }catch{}
-}
-
-function renderGaleriaGrid(fotos){
-  const grid=document.getElementById('grid-galeria'); if(!grid) return;
-  grid.innerHTML=fotos.length
-    ? fotos.map(p=>`
-      <div class="pthumb">
-        <img src="${p.url}" loading="lazy" alt="">
-        <div class="pactions">
-          <button class="btn btn-r" style="font-size:.7rem"
-            onclick="delGaleria('${p.publicId}')">🗑 Borrar</button>
-        </div>
-      </div>`).join('')
-    : '<p style="color:#bbb;font-size:.85rem">Sin fotos todavía</p>';
 }
 
 async function uploadGaleria(input){
@@ -423,27 +586,28 @@ async function uploadGaleria(input){
   for(const file of files){
     try{
       const {url,publicId}=await uploadToCloudinary(file,'arca-de-rox/galeria',
-        pct=>showProgress('galeria', Math.round((done/files.length+(pct/100/files.length))*100)));
+        pct=>showProgress('galeria',Math.round((done/files.length+(pct/100/files.length))*100)));
       await api('POST','/api/admin/galeria',{url,publicId});
       done++;
-    }catch(e){ toast('Error: '+e.message,true); }
+    }catch(e){toast('Error: '+e.message,true);}
   }
   showProgress('galeria',100);
   await loadGaleria();
-  toast('✅ Fotos subidas a la galería');
-  input.value='';
+  await loadGaleriaDrag();
+  toast('✅ Fotos subidas a la galería'); input.value='';
 }
 
 async function delGaleria(publicId){
   if(!confirm('¿Borrar esta foto de la galería?')) return;
   await api('DELETE','/api/admin/galeria',{publicId});
   await loadGaleria();
+  await loadGaleriaDrag();
   toast('🗑 Foto borrada');
 }
 
-// ═══════════════════════════════════════════════════════════
-//  LOOP MUSICAL
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
+//  LOOP
+// ══════════════════════════════════════════════════════════
 async function loadLoopList(){
   try{
     const songs=await api('GET','/api/audio/loop');
@@ -455,9 +619,8 @@ async function loadLoopList(){
       <li class="sitem">
         <span>🎵 ${name||url.split('/').pop()}</span>
         <audio controls src="${url}" preload="none"></audio>
-        ${original
-          ?`<span class="orig-badge">original</span>`
-          :`<button class="btn btn-r" style="font-size:.75rem" onclick="delLoop('${publicId}')">🗑</button>`}
+        ${original?`<span class="orig-badge">original</span>`
+                  :`<button class="btn btn-r" style="font-size:.72rem" onclick="delLoop('${publicId}')">🗑</button>`}
       </li>`).join('');
   }catch{}
 }
@@ -465,25 +628,23 @@ async function loadLoopList(){
 async function uploadLoop(input){
   const file=input.files[0]; if(!file) return;
   try{
-    toast('⏳ Subiendo canción...');
-    const {url,publicId}=await uploadToCloudinary(file,'arca-de-rox/loop',
-      pct=>showProgress('loop',pct));
+    toast('⏳ Subiendo...');
+    const {url,publicId}=await uploadToCloudinary(file,'arca-de-rox/loop',pct=>showProgress('loop',pct));
     await api('POST','/api/admin/audio/loop',{url,publicId,name:file.name});
-    await loadLoopList();
-    toast('🎵 Canción subida al loop');
-  }catch(e){ toast('Error: '+e.message,true); }
+    await loadLoopList(); toast('🎵 Canción subida');
+  }catch(e){toast('Error: '+e.message,true);}
   input.value='';
 }
 
 async function delLoop(publicId){
   if(!confirm('¿Borrar esta canción?')) return;
   await api('DELETE','/api/admin/audio/loop',{publicId});
-  await loadLoopList(); toast('🗑 Canción borrada');
+  await loadLoopList(); toast('🗑 Borrada');
 }
 
-// ═══════════════════════════════════════════════════════════
-//  CANCIONES POR ANIMAL
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
+//  CANCIONES ANIMAL
+// ══════════════════════════════════════════════════════════
 async function loadAnimalSongs(){
   try{
     const songs=await api('GET','/api/audio/canciones');
@@ -491,11 +652,11 @@ async function loadAnimalSongs(){
       const s=songs[a]||null;
       return `
       <div class="adiv">
-        <h3>${EMOJI[a]} ${NAMES[a]}
-          ${s?'<span style="font-size:.75rem;color:var(--salvia);margin-left:.5rem">✅ con canción</span>'
-             :'<span style="font-size:.75rem;color:#bbb;margin-left:.5rem">sin canción</span>'}
+        <h3>${EMOJI_A[a]} ${NAMES[a]}
+          ${s?'<span style="font-size:.72rem;color:var(--salvia);margin-left:.5rem">✅ con canción</span>'
+             :'<span style="font-size:.72rem;color:#bbb;margin-left:.5rem">sin canción</span>'}
         </h3>
-        ${s?`<audio controls src="${s.url}" preload="none" style="width:100%;height:30px;margin-bottom:.6rem"></audio>`:''}
+        ${s?`<audio controls src="${typeof s==='string'?s:s.url}" preload="none" style="width:100%;height:28px;margin-bottom:.5rem"></audio>`:''}
         <label class="btn btn-t" style="cursor:pointer;display:inline-flex;align-items:center;gap:.4rem">
           📤 ${s?'Cambiar':'Subir'} canción
           <input type="file" accept="audio/*" style="display:none" onchange="uploadAnimalSong('${a}',this)">
@@ -506,38 +667,36 @@ async function loadAnimalSongs(){
   }catch{}
 }
 
-async function uploadAnimalSong(animal, input){
+async function uploadAnimalSong(animal,input){
   const file=input.files[0]; if(!file) return;
   try{
-    toast('⏳ Subiendo canción...');
+    toast('⏳ Subiendo...');
     const {url,publicId}=await uploadToCloudinary(file,'arca-de-rox/canciones',
-      pct=>{ const w=document.getElementById('prog-song-'+animal); const b=document.getElementById('progbar-song-'+animal); if(w&&b){w.style.display='block';b.style.width=pct+'%';} });
+      pct=>{const w=document.getElementById(`prog-song-${animal}`),b=document.getElementById(`progbar-song-${animal}`);if(w&&b){w.style.display='block';b.style.width=pct+'%';}});
     await api('POST',`/api/admin/audio/${animal}`,{url,publicId});
-    await loadAnimalSongs();
-    toast(`🎵 Canción de ${NAMES[animal]} actualizada`);
-  }catch(e){ toast('Error: '+e.message,true); }
+    await loadAnimalSongs(); toast(`🎵 Canción de ${NAMES[animal]} actualizada`);
+  }catch(e){toast('Error: '+e.message,true);}
   input.value='';
 }
 
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  HERO
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 async function uploadHero(input){
   const file=input.files[0]; if(!file) return;
   try{
-    toast('⏳ Subiendo hero...');
-    const {url,publicId}=await uploadToCloudinary(file,'arca-de-rox/hero',
-      pct=>showProgress('hero',pct));
+    toast('⏳ Subiendo...');
+    const {url,publicId}=await uploadToCloudinary(file,'arca-de-rox/hero',pct=>showProgress('hero',pct));
     await api('POST','/api/admin/hero',{url,publicId});
     const img=document.getElementById('hero-prev'); img.src=url; img.style.display='block';
     toast('🌅 Hero actualizado');
-  }catch(e){ toast('Error: '+e.message,true); }
+  }catch(e){toast('Error: '+e.message,true);}
   input.value='';
 }
 
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  ROX
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 async function loadRox(){
   try{
     const slots=await api('GET','/api/rox');
@@ -549,26 +708,25 @@ async function loadRox(){
         <span class="snum">${n}</span>
         ${url?`<img src="${url}" alt="">`:`<span class="sempty">📷</span>`}
         <div class="sacts">
-          <label class="btn btn-t" style="font-size:.72rem;cursor:pointer">
+          <label class="btn btn-t" style="font-size:.7rem;cursor:pointer">
             ${url?'🔄':'➕'}
             <input type="file" accept="image/*" onchange="uploadRox(${n},this)">
           </label>
-          ${url?`<button class="btn btn-r" style="font-size:.72rem" onclick="delRox(${n})">🗑</button>`:''}
+          ${url?`<button class="btn btn-r" style="font-size:.7rem" onclick="delRox(${n})">🗑</button>`:''}
         </div>
       </div>`;
     }).join('');
-  }catch(e){ console.error('Rox:',e); }
+  }catch(e){console.error('Rox:',e);}
 }
 
-async function uploadRox(slot, input){
+async function uploadRox(slot,input){
   const file=input.files[0]; if(!file) return;
   try{
-    toast('⏳ Subiendo foto...');
+    toast('⏳ Subiendo...');
     const {url,publicId}=await uploadToCloudinary(file,'arca-de-rox/rox',null);
     await api('POST',`/api/admin/rox/${slot}`,{url,publicId});
-    await loadRox();
-    toast(`💛 Foto ${slot} actualizada`);
-  }catch(e){ toast('Error: '+e.message,true); }
+    await loadRox(); toast(`💛 Foto ${slot} actualizada`);
+  }catch(e){toast('Error: '+e.message,true);}
   input.value='';
 }
 
@@ -578,9 +736,7 @@ async function delRox(slot){
   await loadRox(); toast(`🗑 Foto ${slot} borrada`);
 }
 
-// ═══════════════════════════════════════════════════════════
-//  ARRANQUE
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 checkSession();
 </script>
 </body>

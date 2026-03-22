@@ -1,7 +1,7 @@
 // ══════════════════════════════════════════════════════════════
 //  El Arca de Rox — backend/index.js
-//  Las fotos van directo del navegador a Cloudinary (unsigned).
-//  El backend solo guarda URLs en JSON. Sin multer.
+//  Fotos → Cloudinary (unsigned, desde browser)
+//  JSON  → Railway Volume (/data)
 // ══════════════════════════════════════════════════════════════
 
 const express    = require('express');
@@ -13,9 +13,6 @@ const cloudinary = require('cloudinary').v2;
 const app  = express();
 const PORT = process.env.PORT || 3005;
 
-// ──────────────────────────────────────────────────────────────
-//  CLOUDINARY (solo para borrar assets desde el servidor)
-// ──────────────────────────────────────────────────────────────
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'dvrxzdabu',
   api_key:    process.env.CLOUDINARY_API_KEY,
@@ -27,9 +24,7 @@ function deleteFromCloudinary(publicId, resourceType = 'image') {
   return cloudinary.uploader.destroy(publicId, { resource_type: resourceType }).catch(() => {});
 }
 
-// ──────────────────────────────────────────────────────────────
-//  CONFIG
-// ──────────────────────────────────────────────────────────────
+// ── CONFIG ──────────────────────────────────────────────────
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'arca2024';
 const SESSION_SECRET = process.env.SESSION_SECRET || 'rox-super-secreta-2024';
 const DATA_DIR       = process.env.DATA_DIR || path.join(__dirname, '../data');
@@ -39,13 +34,13 @@ const AUDIO_DIR      = path.join(PUBLIC_DIR, 'audio');
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
 
-const ANIMALS = ['aquiles', 'copito', 'elvis'];
-const EXT_IMG  = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
-const EXT_AUD  = ['.mp3', '.ogg', '.wav', '.m4a'];
+const ANIMALS   = ['aquiles', 'copito', 'elvis'];
+const RECUERDOS = ['tigrillo', 'paquito', 'katy', 'campanita', 'osito', 'benito', 'lila'];
+const ALL_ANIMALS = [...ANIMALS, ...RECUERDOS];
+const EXT_IMG   = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
+const EXT_AUD   = ['.mp3', '.ogg', '.wav', '.m4a'];
 
-// ──────────────────────────────────────────────────────────────
-//  JSON DE ESTADO
-// ──────────────────────────────────────────────────────────────
+// ── JSON ────────────────────────────────────────────────────
 const STORIES_FILE = path.join(DATA_DIR, 'stories.json');
 const CONFIG_FILE  = path.join(DATA_DIR, 'config.json');
 
@@ -57,40 +52,34 @@ function writeJSON(file, data) {
   fs.writeFileSync(file, JSON.stringify(data, null, 2), 'utf8');
 }
 
-const defaultConfig = {
-  heroPhoto: null, heroPublicId: null,
-  aquiles:  { mainPhoto: null, photos: [] },
-  copito:   { mainPhoto: null, photos: [] },
-  elvis:    { mainPhoto: null, photos: [] },
-  rox:      { slots: Array(10).fill(null) },
-  galeria:  [],   // [{ url, publicId }]
-  loopSongs: [], animalSongs: {},
-};
-
 if (!fs.existsSync(STORIES_FILE))
-  writeJSON(STORIES_FILE, { aquiles: '', copito: '', elvis: '' });
-if (!fs.existsSync(CONFIG_FILE))
-  writeJSON(CONFIG_FILE, defaultConfig);
+  writeJSON(STORIES_FILE, Object.fromEntries(ALL_ANIMALS.map(a => [a, ''])));
 
-// Migrar config viejo
+if (!fs.existsSync(CONFIG_FILE))
+  writeJSON(CONFIG_FILE, {
+    heroPhoto: null, heroPublicId: null,
+    ...Object.fromEntries(ALL_ANIMALS.map(a => [a, { mainPhoto: null, photos: [] }])),
+    rox:       { slots: Array(10).fill(null) },
+    galeria:   [],
+    loopSongs: [], animalSongs: {},
+  });
+
 function migrateConfig() {
   const c = readJSON(CONFIG_FILE, {});
   let changed = false;
-  ANIMALS.forEach(a => {
+  ALL_ANIMALS.forEach(a => {
     if (!c[a]) { c[a] = { mainPhoto: null, photos: [] }; changed = true; }
     if (!Array.isArray(c[a].photos)) { c[a].photos = []; changed = true; }
   });
-  if (!Array.isArray(c.loopSongs))  { c.loopSongs = [];  changed = true; }
-  if (!c.animalSongs)               { c.animalSongs = {}; changed = true; }
-  if (!c.rox)                       { c.rox = { slots: Array(10).fill(null) }; changed = true; }
-  if (!Array.isArray(c.galeria))    { c.galeria = [];    changed = true; }
+  if (!Array.isArray(c.loopSongs)) { c.loopSongs = []; changed = true; }
+  if (!c.animalSongs)              { c.animalSongs = {}; changed = true; }
+  if (!c.rox)                      { c.rox = { slots: Array(10).fill(null) }; changed = true; }
+  if (!Array.isArray(c.galeria))   { c.galeria = []; changed = true; }
   if (changed) writeJSON(CONFIG_FILE, c);
 }
 migrateConfig();
 
-// ──────────────────────────────────────────────────────────────
-//  HELPERS — fotos legado del repo
-// ──────────────────────────────────────────────────────────────
+// ── HELPERS LEGADO ──────────────────────────────────────────
 function getLegacyPhotos(animal) {
   const dir = path.join(FOTOS_DIR, animal);
   if (!fs.existsSync(dir)) return [];
@@ -107,9 +96,7 @@ function getAllPhotos(animal) {
   return [...legacy.filter(p => !cloudUrls.has(p.url)), ...cloud];
 }
 
-// ──────────────────────────────────────────────────────────────
-//  MIDDLEWARE
-// ──────────────────────────────────────────────────────────────
+// ── MIDDLEWARE ──────────────────────────────────────────────
 app.set('trust proxy', 1);
 app.use((req, res, next) => { res.removeHeader('Accept-Ranges'); next(); });
 app.use(express.json({ limit: '1mb' }));
@@ -120,35 +107,26 @@ app.use(session({
 }));
 app.use(express.static(PUBLIC_DIR));
 
-// ──────────────────────────────────────────────────────────────
-//  AUTH
-// ──────────────────────────────────────────────────────────────
+// ── AUTH ────────────────────────────────────────────────────
 function requireAuth(req, res, next) {
   if (req.session && req.session.isAdmin) return next();
   res.status(401).json({ error: 'No autorizado' });
 }
 
 app.post('/api/admin/login', (req, res) => {
-  if (req.body.password === ADMIN_PASSWORD) {
-    req.session.isAdmin = true;
-    return res.json({ ok: true });
-  }
+  if (req.body.password === ADMIN_PASSWORD) { req.session.isAdmin = true; return res.json({ ok: true }); }
   res.status(401).json({ error: 'Contraseña incorrecta' });
 });
 app.post('/api/admin/logout', (req, res) => { req.session.destroy(() => res.json({ ok: true })); });
 app.get('/api/admin/me', (req, res) => { res.json({ isAdmin: !!(req.session && req.session.isAdmin) }); });
 
-// ──────────────────────────────────────────────────────────────
-//  API PÚBLICA
-// ──────────────────────────────────────────────────────────────
+// ── API PÚBLICA ─────────────────────────────────────────────
 
 app.get('/api/fotos', (req, res) => {
   const config = readJSON(CONFIG_FILE, {});
   let fotos = [];
-  ANIMALS.forEach(a => getAllPhotos(a).forEach(p => fotos.push(p.url)));
-  // Galería propia
+  ALL_ANIMALS.forEach(a => getAllPhotos(a).forEach(p => fotos.push(p.url)));
   (config.galeria || []).forEach(p => fotos.push(p.url));
-  // Recuerdos del repo
   const recDir = path.join(FOTOS_DIR, 'recuerdos');
   if (fs.existsSync(recDir))
     fs.readdirSync(recDir).filter(f => EXT_IMG.includes(path.extname(f).toLowerCase()))
@@ -158,7 +136,7 @@ app.get('/api/fotos', (req, res) => {
 
 app.get('/api/fotos/:animal', (req, res) => {
   const { animal } = req.params;
-  if (!ANIMALS.includes(animal)) return res.status(400).json({ error: 'Animal inválido' });
+  if (!ALL_ANIMALS.includes(animal)) return res.status(400).json({ error: 'Animal inválido' });
   res.json(getAllPhotos(animal));
 });
 
@@ -171,8 +149,7 @@ app.get('/api/stories', (req, res) => res.json(readJSON(STORIES_FILE, {})));
 app.get('/api/config',  (req, res) => res.json(readJSON(CONFIG_FILE,  {})));
 
 app.get('/api/audio/loop', (req, res) => {
-  const config = readJSON(CONFIG_FILE, {});
-  res.json(config.loopSongs || []);
+  res.json(readJSON(CONFIG_FILE, {}).loopSongs || []);
 });
 
 app.get('/api/audio/canciones', (req, res) => {
@@ -196,30 +173,30 @@ app.get('/api/rox', (req, res) => {
   res.json((config.rox && config.rox.slots) || Array(10).fill(null));
 });
 
-// ──────────────────────────────────────────────────────────────
-//  API ADMIN — recibe URLs de Cloudinary (ya subidas desde el browser)
-// ──────────────────────────────────────────────────────────────
+// ── API ADMIN ───────────────────────────────────────────────
 
-// ── HISTORIAS ──
+// HISTORIAS
 app.put('/api/admin/stories/:animal', requireAuth, (req, res) => {
   const { animal } = req.params;
-  if (!ANIMALS.includes(animal)) return res.status(400).json({ error: 'Animal inválido' });
+  if (!ALL_ANIMALS.includes(animal)) return res.status(400).json({ error: 'Animal inválido' });
   const s = readJSON(STORIES_FILE, {});
   s[animal] = req.body.text || '';
   writeJSON(STORIES_FILE, s);
   res.json({ ok: true });
 });
 
-// ── FOTOS ANIMALES — recibe { url, publicId } ya subidos a Cloudinary ──
+// FOTOS — recibe { url, publicId } ya subidos desde el browser
 app.post('/api/admin/fotos/:animal', requireAuth, (req, res) => {
   const { animal } = req.params;
-  if (!ANIMALS.includes(animal)) return res.status(400).json({ error: 'Animal inválido' });
+  if (!ALL_ANIMALS.includes(animal)) return res.status(400).json({ error: 'Animal inválido' });
   const { url, publicId } = req.body;
   if (!url) return res.status(400).json({ error: 'Sin URL' });
   const config = readJSON(CONFIG_FILE, {});
   if (!config[animal]) config[animal] = { mainPhoto: null, photos: [] };
   if (!Array.isArray(config[animal].photos)) config[animal].photos = [];
-  config[animal].photos.push({ url, publicId });
+  // Evitar duplicados
+  if (!config[animal].photos.find(p => p.url === url))
+    config[animal].photos.push({ url, publicId });
   writeJSON(CONFIG_FILE, config);
   res.json({ ok: true });
 });
@@ -227,7 +204,7 @@ app.post('/api/admin/fotos/:animal', requireAuth, (req, res) => {
 app.delete('/api/admin/fotos/:animal', requireAuth, async (req, res) => {
   const { animal } = req.params;
   const { publicId, filename } = req.body;
-  if (!ANIMALS.includes(animal)) return res.status(400).json({ error: 'Animal inválido' });
+  if (!ALL_ANIMALS.includes(animal)) return res.status(400).json({ error: 'Animal inválido' });
   if (publicId) {
     await deleteFromCloudinary(publicId);
     const config = readJSON(CONFIG_FILE, {});
@@ -249,7 +226,7 @@ app.delete('/api/admin/fotos/:animal', requireAuth, async (req, res) => {
 
 app.put('/api/admin/fotos/:animal/main', requireAuth, (req, res) => {
   const { animal } = req.params;
-  if (!ANIMALS.includes(animal)) return res.status(400).json({ error: 'Animal inválido' });
+  if (!ALL_ANIMALS.includes(animal)) return res.status(400).json({ error: 'Animal inválido' });
   const config = readJSON(CONFIG_FILE, {});
   if (!config[animal]) config[animal] = { mainPhoto: null, photos: [] };
   config[animal].mainPhoto = req.body.publicId || req.body.filename || null;
@@ -257,7 +234,22 @@ app.put('/api/admin/fotos/:animal/main', requireAuth, (req, res) => {
   res.json({ ok: true });
 });
 
-// ── HERO ──
+// Asignar foto de galería a un recuerdo
+app.post('/api/admin/fotos/:animal/from-galeria', requireAuth, (req, res) => {
+  const { animal } = req.params;
+  if (!RECUERDOS.includes(animal)) return res.status(400).json({ error: 'Solo para recuerdos' });
+  const { url, publicId } = req.body;
+  if (!url) return res.status(400).json({ error: 'Sin URL' });
+  const config = readJSON(CONFIG_FILE, {});
+  if (!config[animal]) config[animal] = { mainPhoto: null, photos: [] };
+  if (!Array.isArray(config[animal].photos)) config[animal].photos = [];
+  if (!config[animal].photos.find(p => p.url === url))
+    config[animal].photos.push({ url, publicId });
+  writeJSON(CONFIG_FILE, config);
+  res.json({ ok: true });
+});
+
+// HERO
 app.post('/api/admin/hero', requireAuth, async (req, res) => {
   const { url, publicId } = req.body;
   if (!url) return res.status(400).json({ error: 'Sin URL' });
@@ -269,7 +261,7 @@ app.post('/api/admin/hero', requireAuth, async (req, res) => {
   res.json({ ok: true, url });
 });
 
-// ── GALERÍA ──
+// GALERÍA
 app.post('/api/admin/galeria', requireAuth, (req, res) => {
   const { url, publicId } = req.body;
   if (!url) return res.status(400).json({ error: 'Sin URL' });
@@ -290,7 +282,7 @@ app.delete('/api/admin/galeria', requireAuth, async (req, res) => {
   res.json({ ok: true });
 });
 
-// ── LOOP ──
+// LOOP
 app.post('/api/admin/audio/loop', requireAuth, (req, res) => {
   const { url, publicId, name } = req.body;
   if (!url) return res.status(400).json({ error: 'Sin URL' });
@@ -310,7 +302,7 @@ app.delete('/api/admin/audio/loop', requireAuth, async (req, res) => {
   res.json({ ok: true });
 });
 
-// ── CANCIÓN ANIMAL ──
+// CANCIÓN ANIMAL
 app.post('/api/admin/audio/:animal', requireAuth, async (req, res) => {
   const { animal } = req.params;
   if (!ANIMALS.includes(animal)) return res.status(400).json({ error: 'Animal inválido' });
@@ -325,7 +317,7 @@ app.post('/api/admin/audio/:animal', requireAuth, async (req, res) => {
   res.json({ ok: true });
 });
 
-// ── ROX ──
+// ROX
 app.post('/api/admin/rox/:slot', requireAuth, async (req, res) => {
   const slot = parseInt(req.params.slot, 10);
   if (slot < 1 || slot > 10) return res.status(400).json({ error: 'Slot inválido' });

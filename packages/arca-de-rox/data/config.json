@@ -14,8 +14,48 @@
     "photos": []
   },
   "rox": {
-    "slots": [null, null, null, null, null, null, null, null, null, null]
+    "slots": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
   },
   "loopSongs": [],
-  "animalSongs": {}
+  "animalSongs": {},
+  "tigrillo": {
+    "mainPhoto": null,
+    "photos": []
+  },
+  "paquito": {
+    "mainPhoto": null,
+    "photos": []
+  },
+  "katy": {
+    "mainPhoto": null,
+    "photos": []
+  },
+  "campanita": {
+    "mainPhoto": null,
+    "photos": []
+  },
+  "osito": {
+    "mainPhoto": null,
+    "photos": []
+  },
+  "benito": {
+    "mainPhoto": null,
+    "photos": []
+  },
+  "lila": {
+    "mainPhoto": null,
+    "photos": []
+  },
+  "galeria": []
 }
