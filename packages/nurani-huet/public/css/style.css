@@ -40,7 +40,7 @@ nav.scrolled { background: transparent; box-shadow: none; backdrop-filter: none;
   font-size: 1.1rem;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: var(--marfil);
+  color: var(--burdeos);
   text-decoration: none;
   transition: color 0.4s;
 }
@@ -107,16 +107,16 @@ nav.scrolled { background: transparent; box-shadow: none; backdrop-filter: none;
 }
 .hamburger:hover span { background: var(--oro); }
 
-/* ─── NAV-DARK: fondo oscuro → todo claro ─────────────────────── */
-/* Estas reglas usan !important para ganar a nav.scrolled siempre */
+/* ─── NAV DIFERENCIAL: logo y links independientes ────────────── */
 
-nav.nav-dark .nav-logo                  { color: var(--marfil) !important; }
-nav.nav-dark .nav-links a               { color: var(--marfil) !important; }
-nav.nav-dark .nav-links a:hover         { color: var(--oro-claro) !important; }
-nav.nav-dark .hamburger span            { background: var(--marfil) !important; }
-nav.nav-dark .hamburger:hover span      { background: var(--oro-claro) !important; }
-nav.nav-dark .lang-current              { color: var(--marfil) !important; border-color: rgba(247,243,238,0.35) !important; }
-nav.nav-dark .lang-current:hover        { color: var(--oro-claro) !important; border-color: var(--oro-claro) !important; }
+nav.nav-logo-dark .nav-logo              { color: var(--marfil) !important; }
+
+nav.nav-links-dark .nav-links a          { color: var(--marfil) !important; }
+nav.nav-links-dark .nav-links a:hover    { color: var(--oro-claro) !important; }
+nav.nav-links-dark .hamburger span       { background: var(--marfil) !important; }
+nav.nav-links-dark .hamburger:hover span { background: var(--oro-claro) !important; }
+nav.nav-links-dark .lang-current         { color: var(--marfil) !important; border-color: rgba(247,243,238,.35) !important; }
+nav.nav-links-dark .lang-current:hover   { color: var(--oro-claro) !important; border-color: var(--oro-claro) !important; }
 
 /* ─── CURSOR ──────────────────────────────────────────────────── */
 
@@ -128,7 +128,7 @@ nav.nav-dark .lang-current:hover        { color: var(--oro-claro) !important; bo
   border-radius: 50%;
   position: fixed; top: 0; left: 0;
   pointer-events: none;
-  z-index: 999999999;
+  z-index: 99999;
   transform: translate(-50%, -50%);
   transition: transform 0.1s ease, background 0.3s;
 }
@@ -138,7 +138,7 @@ nav.nav-dark .lang-current:hover        { color: var(--oro-claro) !important; bo
   border-radius: 50%;
   position: fixed; top: 0; left: 0;
   pointer-events: none;
-  z-index: 999999998;
+  z-index: 99998;
   transform: translate(-50%, -50%);
   transition: width 0.3s ease, height 0.3s ease, opacity 0.3s;
   opacity: 0.6;
@@ -172,7 +172,6 @@ body.cursor-hover .cursor-ring { width: 44px; height: 44px; opacity: 0.4; }
   letter-spacing: 0.3em;
   color: var(--oro);
   cursor: none;
-  z-index: 10000000;
   transition: color 0.3s;
 }
 .menu-close:hover { color: var(--marfil); }
@@ -343,23 +342,84 @@ body.cursor-hover .cursor-ring { width: 44px; height: 44px; opacity: 0.4; }
 .sobre-text p { font-size: 1.05rem; line-height: 1.9; color: var(--texto-suave); margin-bottom: 1.2rem; }
 .sobre-text p strong { color: var(--texto); font-weight: 500; }
 
-/* ─── PRESENCIA ───────────────────────────────────────────────── */
+/* ─── EVENTOS ─────────────────────────────────────────────────── */
 
-#presencia { padding: 5rem 0; background: var(--crema); border-top: 1px solid var(--crema-oscura); border-bottom: 1px solid var(--crema-oscura); }
-.presencia-inner { max-width: 1200px; margin: 0 auto; padding: 0 4rem; }
-.presencia-header { text-align: center; margin-bottom: 4rem; }
+#eventos {
+  padding: 8rem 0;
+  background: var(--crema);
+  border-top: 1px solid var(--crema-oscura);
+  border-bottom: 1px solid var(--crema-oscura);
+}
 
-.paises-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 1px; background: var(--crema-oscura); border: 1px solid var(--crema-oscura); }
-.pais-item { background: var(--crema); padding: 2.5rem 1.5rem; text-align: center; transition: background 0.3s; }
-.pais-item:hover { background: var(--marfil); }
-.pais-flag { font-size: 2rem; margin-bottom: 0.8rem; display: block; }
-.pais-nombre { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-style: italic; color: var(--texto); }
+.eventos-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 4rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+}
 
-.generos-row { display: flex; justify-content: center; gap: 0; margin-top: 3rem; border: 1px solid var(--crema-oscura); }
-.genero-item { padding: 1.8rem 3rem; text-align: center; border-right: 1px solid var(--crema-oscura); flex: 1; }
-.genero-item:last-child { border-right: none; }
-.genero-label { font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.58rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--texto-muy-suave); margin-bottom: 0.4rem; }
-.genero-titulo { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-style: italic; color: var(--burdeos); }
+.eventos-header { margin-bottom: 2.5rem; }
+
+.eventos-lista {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.evento-item {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.4rem 0;
+  border-bottom: 1px solid var(--crema-oscura);
+  transition: background 0.3s;
+}
+
+.evento-item:first-child { border-top: 1px solid var(--crema-oscura); }
+
+.evento-fecha {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--oro);
+  min-width: 7rem;
+  white-space: nowrap;
+}
+
+.evento-sep {
+  width: 1px;
+  height: 2rem;
+  background: var(--crema-oscura);
+  flex-shrink: 0;
+}
+
+.evento-info { flex: 1; }
+
+.evento-programa {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--texto);
+  line-height: 1.3;
+  margin-bottom: 0.2rem;
+}
+
+.evento-lugar {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--texto-muy-suave);
+}
+
+/* Historial: ligeramente atenuado */
+.eventos-lista--pasados .evento-programa { color: var(--texto-suave); }
+.eventos-lista--pasados .evento-fecha    { color: var(--texto-muy-suave); }
 
 /* ─── MEDIEVAL MX ─────────────────────────────────────────────── */
 
@@ -482,9 +542,72 @@ footer p { font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0
 .menu-lang-btn:hover, .menu-lang-btn.active { color: var(--oro); }
 .menu-lang-sep { font-size: 0.7rem; color: var(--texto-muy-suave); opacity: 0.3; user-select: none; }
 
-/* ══════════════════════════════════════════════════════════════
-   RESPONSIVE — móvil (max 900px)
-══════════════════════════════════════════════════════════════ */
+/* ─── MUSIC PLAYER ────────────────────────────────────────────── */
+
+.music-player {
+  position: fixed;
+  bottom: 2.5rem;
+  left: 2.5rem;
+  z-index: 9999990;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.music-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(46, 30, 20, 0.85);
+  border: 1px solid rgba(184, 150, 90, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: none;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s;
+  backdrop-filter: blur(6px);
+  flex-shrink: 0;
+}
+
+.music-btn:hover {
+  background: rgba(46, 30, 20, 0.95);
+  border-color: var(--oro);
+  transform: scale(1.08);
+}
+
+.music-icon {
+  width: 16px;
+  height: 20px;
+  color: var(--oro);
+}
+
+.music-info {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--marfil);
+  background: rgba(46, 30, 20, 0.85);
+  border: 1px solid rgba(184, 150, 90, 0.25);
+  padding: 0.4rem 0.9rem;
+  backdrop-filter: blur(6px);
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+
+.music-info.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ══════════════════════════════════════════════════════════════ */
 
 @media (max-width: 900px) {
 
@@ -497,12 +620,12 @@ footer p { font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0
   .hamburger { display: flex !important; padding: 0.9rem; }
   .hamburger span { width: 28px; }
 
-  /* nav-dark en móvil — hamburguesa y logo claros */
-  nav.nav-dark .hamburger span   { background: var(--marfil) !important; }
-  nav.nav-dark .nav-logo         { color: var(--marfil) !important; }
+  /* nav diferencial en móvil */
+  nav.nav-logo-dark .nav-logo        { color: var(--marfil) !important; }
+  nav.nav-links-dark .hamburger span { background: var(--marfil) !important; }
 
   /* Estado base móvil: logo burdeos (sobre secciones claras) */
-  .nav-logo { color: var(--marfil); font-size: 1rem; }
+  .nav-logo { color: var(--burdeos); font-size: 1rem; }
 
   /* HERO móvil: foto full-screen, texto sobre fondo oscuro */
   .hero { grid-template-columns: 1fr; height: 100vh; }
@@ -535,7 +658,7 @@ footer p { font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0
   .sobre-inner,
   .medievalmx-inner,
   .contacto-inner { grid-template-columns: 1fr; gap: 3rem; padding: 0 1.5rem; }
-  .presencia-inner { padding: 0 1.5rem; }
+  .eventos-inner { grid-template-columns: 1fr; gap: 4rem; padding: 0 1.5rem; }
   .paises-grid { grid-template-columns: repeat(3,1fr); }
   .generos-row { flex-wrap: wrap; }
   .genero-item { flex: 1 1 45%; }
@@ -549,5 +672,3 @@ footer p { font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0
   .menu-overlay { padding: 4rem 2.5rem; }
   .menu-footer  { left: 2.5rem; }
 }
-
-

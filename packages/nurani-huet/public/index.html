@@ -17,7 +17,7 @@
   <div class="nav-right">
     <ul class="nav-links">
       <li><a href="#sobre"      data-i18n="nav-sobre">Sobre Nurani</a></li>
-      <li><a href="#presencia"  data-i18n="nav-presencia">Presencia</a></li>
+      <li><a href="#eventos"    data-i18n="nav-eventos">Eventos</a></li>
       <li><a href="#medievalmx" data-i18n="nav-medievalmx">Medieval MX</a></li>
       <li><a href="#galeria"    data-i18n="nav-galeria">Galería</a></li>
       <li><a href="#escuchame"  data-i18n="nav-escuchame">Escúchame</a></li>
@@ -45,7 +45,7 @@
   <button class="menu-close" id="menuClose" data-i18n="menu-cerrar">&#x2715; &nbsp; Cerrar</button>
   <nav class="menu-nav">
     <a href="#sobre"      class="menu-link" data-num="01" data-i18n="nav-sobre">Sobre Nurani</a>
-    <a href="#presencia"  class="menu-link" data-num="02" data-i18n="nav-presencia">Presencia</a>
+    <a href="#eventos"    class="menu-link" data-num="02" data-i18n="nav-eventos">Eventos</a>
     <a href="#medievalmx" class="menu-link" data-num="03" data-i18n="nav-medievalmx">Medieval MX</a>
     <a href="#escuchame"  class="menu-link" data-num="04" data-i18n="nav-escuchame">Escúchame</a>
     <a href="#galeria"    class="menu-link" data-num="05" data-i18n="nav-galeria">Galería</a>
@@ -104,26 +104,95 @@
   </div>
 </section>
 
-<section id="presencia">
-  <div class="presencia-inner">
-    <div class="presencia-header reveal">
-      <p class="section-label" data-i18n="presencia-label">Presencia internacional</p>
-      <h2 class="section-title" data-i18n="presencia-title">Escenarios <em>en cuatro países</em></h2>
-      <div class="ornament" style="justify-content:center;"><div class="ornament-line"></div><div class="ornament-diamond"></div><div class="ornament-line"></div></div>
+<section id="eventos">
+  <div class="eventos-inner">
+
+    <!-- PRÓXIMOS EVENTOS -->
+    <div class="eventos-bloque reveal">
+      <div class="eventos-header">
+        <p class="section-label" data-i18n="eventos-proximos-label">Próximos eventos</p>
+        <h2 class="section-title" data-i18n="eventos-proximos-title">En <em>escena</em></h2>
+        <div class="ornament"><div class="ornament-line"></div><div class="ornament-diamond"></div></div>
+      </div>
+      <ul class="eventos-lista">
+        <li class="evento-item">
+          <span class="evento-fecha">15 · 03 · 2025</span>
+          <div class="evento-sep"></div>
+          <div class="evento-info">
+            <p class="evento-programa">Cantata del Alma</p>
+            <p class="evento-lugar">Ciudad de México, México</p>
+          </div>
+        </li>
+        <li class="evento-item">
+          <span class="evento-fecha">22 · 04 · 2025</span>
+          <div class="evento-sep"></div>
+          <div class="evento-info">
+            <p class="evento-programa">Música Antigua en el Claustro</p>
+            <p class="evento-lugar">Guadalajara, México</p>
+          </div>
+        </li>
+        <li class="evento-item">
+          <span class="evento-fecha">10 · 06 · 2025</span>
+          <div class="evento-sep"></div>
+          <div class="evento-info">
+            <p class="evento-programa">Festival de Música Barroca</p>
+            <p class="evento-lugar">París, Francia</p>
+          </div>
+        </li>
+      </ul>
     </div>
-    <div class="paises-grid reveal">
-      <div class="pais-item"><span class="pais-flag">&#127474;&#127485;</span><p class="pais-nombre" data-i18n="pais-mexico">México</p></div>
-      <div class="pais-item"><span class="pais-flag">&#127467;&#127479;</span><p class="pais-nombre" data-i18n="pais-francia">Francia</p></div>
-      <div class="pais-item"><span class="pais-flag">&#127466;&#127480;</span><p class="pais-nombre" data-i18n="pais-espana">España</p></div>
-      <div class="pais-item"><span class="pais-flag">&#127473;&#127481;</span><p class="pais-nombre" data-i18n="pais-lituania">Lituania</p></div>
-      <div class="pais-item"><span class="pais-flag">&#127475;&#127473;</span><p class="pais-nombre" data-i18n="pais-paises-bajos">Países Bajos</p></div>
+
+    <!-- HISTORIAL -->
+    <div class="eventos-bloque reveal">
+      <div class="eventos-header">
+        <p class="section-label" data-i18n="eventos-historial-label">Historial</p>
+        <h2 class="section-title" data-i18n="eventos-historial-title">Conciertos <em>pasados</em></h2>
+        <div class="ornament"><div class="ornament-line"></div><div class="ornament-diamond"></div></div>
+      </div>
+      <ul class="eventos-lista eventos-lista--pasados">
+        <li class="evento-item">
+          <span class="evento-fecha">08 · 11 · 2024</span>
+          <div class="evento-sep"></div>
+          <div class="evento-info">
+            <p class="evento-programa">Oratorio de Navidad · Bach</p>
+            <p class="evento-lugar">Ciudad de México, México</p>
+          </div>
+        </li>
+        <li class="evento-item">
+          <span class="evento-fecha">03 · 09 · 2024</span>
+          <div class="evento-sep"></div>
+          <div class="evento-info">
+            <p class="evento-programa">Trouvères et Troubadours</p>
+            <p class="evento-lugar">Besalú, España</p>
+          </div>
+        </li>
+        <li class="evento-item">
+          <span class="evento-fecha">20 · 07 · 2024</span>
+          <div class="evento-sep"></div>
+          <div class="evento-info">
+            <p class="evento-programa">Equinox Project · Verano</p>
+            <p class="evento-lugar">Lyon, Francia</p>
+          </div>
+        </li>
+        <li class="evento-item">
+          <span class="evento-fecha">14 · 05 · 2024</span>
+          <div class="evento-sep"></div>
+          <div class="evento-info">
+            <p class="evento-programa">Música de Cámara · INBAL</p>
+            <p class="evento-lugar">Ciudad de México, México</p>
+          </div>
+        </li>
+        <li class="evento-item">
+          <span class="evento-fecha">02 · 03 · 2024</span>
+          <div class="evento-sep"></div>
+          <div class="evento-info">
+            <p class="evento-programa">Cantigas de Santa María</p>
+            <p class="evento-lugar">Vilnius, Lituania</p>
+          </div>
+        </li>
+      </ul>
     </div>
-    <div class="generos-row reveal">
-      <div class="genero-item"><p class="genero-label" data-i18n="genero-label">Repertorio</p><p class="genero-titulo" data-i18n="genero-cantata">Cantata Barroca</p></div>
-      <div class="genero-item"><p class="genero-label" data-i18n="genero-label">Repertorio</p><p class="genero-titulo" data-i18n="genero-medieval">Música Medieval</p></div>
-      <div class="genero-item"><p class="genero-label" data-i18n="genero-label">Repertorio</p><p class="genero-titulo" data-i18n="genero-opera">Ópera</p></div>
-      <div class="genero-item"><p class="genero-label" data-i18n="genero-label">Repertorio</p><p class="genero-titulo" data-i18n="genero-oratorio">Oratorio</p></div>
-    </div>
+
   </div>
 </section>
 
@@ -208,7 +277,27 @@
   <img src="" alt="" id="lightboxImg" />
 </div>
 
-<script>
+<!-- ─── MUSIC PLAYER ─────────────────────────────────────────── -->
+<div class="music-player" id="musicPlayer">
+  <button class="music-btn" id="musicBtn" aria-label="Reproducir música">
+    <svg class="music-icon music-icon--play" viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
+      <!-- Neuma: virga con punctum -->
+      <rect x="10" y="2" width="2.5" height="22" fill="currentColor"/>
+      <rect x="6" y="20" width="10" height="3.5" fill="currentColor"/>
+      <rect x="6" y="6"  width="10" height="3.5" fill="currentColor"/>
+    </svg>
+    <svg class="music-icon music-icon--pause" viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg" style="display:none">
+      <!-- Dos virgae = pausa -->
+      <rect x="4"  y="4" width="2.5" height="24" fill="currentColor"/>
+      <rect x="4"  y="4" width="9"   height="3"  fill="currentColor"/>
+      <rect x="14" y="4" width="2.5" height="24" fill="currentColor"/>
+      <rect x="14" y="4" width="9"   height="3"  fill="currentColor"/>
+    </svg>
+  </button>
+  <div class="music-info" id="musicInfo"></div>
+</div>
+
+<audio id="musicAudio" preload="none"></audio>
 (function () {
 
   /* ══════════════════════════════════════════════════════════════
@@ -229,9 +318,9 @@
       'sobre-p2':'Graduada de la especialidad <em>Medieval Music Research and Performance</em> en Medieval Music Besalú y la <strong>Universitat de Lleida</strong>, España, su trayectoria como solista se ha concentrado en la Cantata, la Ópera y el Oratorio del Barroco, así como en la Música Medieval.',
       'sobre-p3':'Ha cantado en los principales recintos de México y en ciudades de <strong>Francia, España, Lituania y Países Bajos</strong>. Ha colaborado con ensambles como Cappella Barroca de México, Armonicus Cuatro, Equinox Project (Francia) y Liminar.',
       'sobre-p4':'Durante nueve años estuvo al frente del <strong>Taller de Música Antigua para cantantes</strong> en el Conservatorio Nacional de Música. Actualmente es integrante del <strong>Coro de Madrigalistas del INBAL</strong>, tutora de la Academia de Música Antigua de la UNAM y titular del Taller de Música Medieval en la Facultad de Música.',
-      'presencia-label':'Presencia internacional','presencia-title':'Escenarios <em>en cuatro países</em>',
-      'pais-mexico':'México','pais-francia':'Francia','pais-espana':'España','pais-lituania':'Lituania','pais-paises-bajos':'Países Bajos',
-      'genero-label':'Repertorio','genero-cantata':'Cantata Barroca','genero-medieval':'Música Medieval','genero-opera':'Ópera','genero-oratorio':'Oratorio',
+      'nav-eventos':'Eventos',
+      'eventos-proximos-label':'Próximos eventos','eventos-proximos-title':'En <em>escena</em>',
+      'eventos-historial-label':'Historial','eventos-historial-title':'Conciertos <em>pasados</em>',
       'medievalmx-label':'Proyecto propio','medievalmx-title':'<em>Medieval MX</em>',
       'medievalmx-p1':'Fundado por Nurani Huet, <em>Medieval MX</em> es un proyecto artístico y académico dedicado a la interpretación, investigación y difusión en México de los repertorios tardomedievales y renacentistas tempranos.',
       'medievalmx-p2':'La iniciativa recupera músicas de los siglos XII al XVI y las lleva a escenarios contemporáneos con rigor histórico y sensibilidad viva, acercando el pasado sonoro a nuevos públicos.',
@@ -255,9 +344,9 @@
       'sobre-p2':"Diplômée de la spécialité <em>Medieval Music Research and Performance</em> à Medieval Music Besalú et à l'<strong>Universitat de Lleida</strong>, Espagne, sa carrière de soliste s'est concentrée sur la Cantate, l'Opéra et l'Oratorio baroques, ainsi que sur la Musique Médiévale.",
       'sobre-p3':"Elle a chanté dans les principales salles du Mexique et dans des villes de <strong>France, d'Espagne, de Lituanie et des Pays-Bas</strong>. Elle a collaboré avec des ensembles tels que Cappella Barroca de México, Armonicus Cuatro, Equinox Project (France) et Liminar.",
       'sobre-p4':"Pendant neuf ans, elle a dirigé l'<strong>Atelier de Musique Ancienne pour chanteurs</strong> au Conservatoire National de Musique. Elle est actuellement membre du <strong>Chœur de Madrigalistes de l'INBAL</strong>, tutrice de l'Académie de Musique Ancienne de l'UNAM et titulaire de l'Atelier de Musique Médiévale à la Faculté de Musique.",
-      'presencia-label':'Présence internationale','presencia-title':'Scènes <em>dans quatre pays</em>',
-      'pais-mexico':'Mexique','pais-francia':'France','pais-espana':'Espagne','pais-lituania':'Lituanie','pais-paises-bajos':'Pays-Bas',
-      'genero-label':'Répertoire','genero-cantata':'Cantate Baroque','genero-medieval':'Musique Médiévale','genero-opera':'Opéra','genero-oratorio':'Oratorio',
+      'nav-eventos':'Événements',
+      'eventos-proximos-label':'Prochains événements','eventos-proximos-title':'Sur <em>scène</em>',
+      'eventos-historial-label':'Historique','eventos-historial-title':'Concerts <em>passés</em>',
       'medievalmx-label':'Projet personnel','medievalmx-title':'<em>Medieval MX</em>',
       'medievalmx-p1':"Fondé par Nurani Huet, <em>Medieval MX</em> est un projet artistique et académique dédié à l'interprétation, la recherche et la diffusion au Mexique des répertoires tardo-médiévaux et de la Renaissance précoce.",
       'medievalmx-p2':"L'initiative récupère des musiques des XII<sup>e</sup> au XVI<sup>e</sup> siècles et les porte sur des scènes contemporaines avec rigueur historique et sensibilité vivante, rapprochant le passé sonore de nouveaux publics.",
@@ -281,9 +370,9 @@
       'sobre-p2':'Graduate of the <em>Medieval Music Research and Performance</em> specialty at Medieval Music Besalú and the <strong>Universitat de Lleida</strong>, Spain, her career as a soloist has focused on Baroque Cantata, Opera and Oratorio, as well as Medieval Music.',
       'sobre-p3':'She has performed at leading venues in Mexico and in cities across <strong>France, Spain, Lithuania and the Netherlands</strong>. She has collaborated with ensembles such as Cappella Barroca de México, Armonicus Cuatro, Equinox Project (France) and Liminar.',
       'sobre-p4':'For nine years she led the <strong>Early Music Workshop for singers</strong> at the National Conservatory of Music. She is currently a member of the <strong>INBAL Madrigal Choir</strong>, tutor at the UNAM Early Music Academy and director of the Medieval Music Workshop at the Faculty of Music.',
-      'presencia-label':'International presence','presencia-title':'Stages <em>across four countries</em>',
-      'pais-mexico':'Mexico','pais-francia':'France','pais-espana':'Spain','pais-lituania':'Lithuania','pais-paises-bajos':'Netherlands',
-      'genero-label':'Repertoire','genero-cantata':'Baroque Cantata','genero-medieval':'Medieval Music','genero-opera':'Opera','genero-oratorio':'Oratorio',
+      'nav-eventos':'Events',
+      'eventos-proximos-label':'Upcoming events','eventos-proximos-title':'On <em>stage</em>',
+      'eventos-historial-label':'History','eventos-historial-title':'Past <em>concerts</em>',
       'medievalmx-label':'Personal project','medievalmx-title':'<em>Medieval MX</em>',
       'medievalmx-p1':'Founded by Nurani Huet, <em>Medieval MX</em> is an artistic and academic project dedicated to the performance, research and promotion in Mexico of late-medieval and early-Renaissance repertoires.',
       'medievalmx-p2':'The initiative recovers music from the 12th to 16th centuries and brings it to contemporary stages with historical rigour and living sensitivity, bringing the sonic past to new audiences.',
@@ -307,9 +396,9 @@
       'sobre-p2':"Diplomata nella specialità <em>Medieval Music Research and Performance</em> a Medieval Music Besalú e all'<strong>Universitat de Lleida</strong>, Spagna, la sua carriera da solista si è concentrata sulla Cantata, l'Opera e l'Oratorio barocchi, oltre che sulla Musica Medievale.",
       'sobre-p3':'Ha cantato nelle principali sale del Messico e in città di <strong>Francia, Spagna, Lituania e Paesi Bassi</strong>. Ha collaborato con ensemble come Cappella Barroca de México, Armonicus Cuatro, Equinox Project (Francia) e Liminar.',
       'sobre-p4':"Per nove anni ha diretto il <strong>Laboratorio di Musica Antica per cantanti</strong> presso il Conservatorio Nazionale di Musica. Attualmente è membro del <strong>Coro di Madrigalisti dell'INBAL</strong>, tutrice dell'Accademia di Musica Antica dell'UNAM e titolare del Laboratorio di Musica Medievale presso la Facoltà di Musica.",
-      'presencia-label':'Presenza internazionale','presencia-title':'Palcoscenici <em>in quattro paesi</em>',
-      'pais-mexico':'Messico','pais-francia':'Francia','pais-espana':'Spagna','pais-lituania':'Lituania','pais-paises-bajos':'Paesi Bassi',
-      'genero-label':'Repertorio','genero-cantata':'Cantata Barocca','genero-medieval':'Musica Medievale','genero-opera':'Opera','genero-oratorio':'Oratorio',
+      'nav-eventos':'Eventi',
+      'eventos-proximos-label':'Prossimi eventi','eventos-proximos-title':'In <em>scena</em>',
+      'eventos-historial-label':'Storico','eventos-historial-title':'Concerti <em>passati</em>',
       'medievalmx-label':'Progetto personale','medievalmx-title':'<em>Medieval MX</em>',
       'medievalmx-p1':"Fondato da Nurani Huet, <em>Medieval MX</em> è un progetto artistico e accademico dedicato all'interpretazione, alla ricerca e alla diffusione in Messico dei repertori tardo-medievali e rinascimentali precoci.",
       'medievalmx-p2':"L'iniziativa recupera musiche dal XII al XVI secolo e le porta su palcoscenici contemporanei con rigore storico e sensibilità viva, avvicinando il passato sonoro a nuovi pubblici.",
@@ -333,9 +422,9 @@
       'sobre-p2':'Graduada na especialidade <em>Medieval Music Research and Performance</em> em Medieval Music Besalú e na <strong>Universitat de Lleida</strong>, Espanha, a sua trajetória como solista concentrou-se na Cantata, na Ópera e no Oratório Barrocos, bem como na Música Medieval.',
       'sobre-p3':'Cantou nos principais recintos do México e em cidades de <strong>França, Espanha, Lituânia e Países Baixos</strong>. Colaborou com conjuntos como Cappella Barroca de México, Armonicus Cuatro, Equinox Project (França) e Liminar.',
       'sobre-p4':'Durante nove anos esteve à frente do <strong>Ateliê de Música Antiga para cantores</strong> no Conservatório Nacional de Música. Atualmente é integrante do <strong>Coral de Madrigalistas do INBAL</strong>, tutora da Academia de Música Antiga da UNAM e titular do Ateliê de Música Medieval na Faculdade de Música.',
-      'presencia-label':'Presença internacional','presencia-title':'Palcos <em>em quatro países</em>',
-      'pais-mexico':'México','pais-francia':'França','pais-espana':'Espanha','pais-lituania':'Lituânia','pais-paises-bajos':'Países Baixos',
-      'genero-label':'Repertório','genero-cantata':'Cantata Barroca','genero-medieval':'Música Medieval','genero-opera':'Ópera','genero-oratorio':'Oratório',
+      'nav-eventos':'Eventos',
+      'eventos-proximos-label':'Próximos eventos','eventos-proximos-title':'Em <em>cena</em>',
+      'eventos-historial-label':'Histórico','eventos-historial-title':'Concertos <em>passados</em>',
       'medievalmx-label':'Projeto próprio','medievalmx-title':'<em>Medieval MX</em>',
       'medievalmx-p1':'Fundado por Nurani Huet, <em>Medieval MX</em> é um projeto artístico e académico dedicado à interpretação, investigação e divulgação no México dos repertórios tardo-medievais e renascentistas precoces.',
       'medievalmx-p2':'A iniciativa recupera músicas dos séculos XII ao XVI e leva-as a palcos contemporâneos com rigor histórico e sensibilidade viva, aproximando o passado sonoro de novos públicos.',
@@ -492,32 +581,40 @@
     return false;
   }
 
+  function sampleDark(x, y) {
+    navEl.style.pointerEvents = 'none';
+    var el = document.elementFromPoint(x, y);
+    navEl.style.pointerEvents = '';
+    return el ? isBgDark(el) : false;
+  }
+
   function updateNavDark() {
     if (!navEl) return;
-    var navH  = navEl.offsetHeight;
-    var midY  = navH / 2;
-    var midX  = window.innerWidth / 2;
-    var isDark = false;
+    var midY   = navEl.offsetHeight / 2;
+    var leftX  = navEl.offsetWidth * 0.10;
+    var rightX = navEl.offsetWidth * 0.80;
+    var logoDark, linksDark;
 
-    /* ¿Estamos sobre el hero? */
     if (heroEl) {
       var hr = heroEl.getBoundingClientRect();
       if (hr.top <= midY && hr.bottom > midY) {
-        /* En móvil la foto cubre todo → nav claro.
-           En desktop el texto está sobre marfil → nav oscuro. */
-        isDark = window.innerWidth <= 900;
-        navEl.classList.toggle('nav-dark', isDark);
+        if (window.innerWidth <= 900) {
+          logoDark  = true;
+          linksDark = true;
+        } else {
+          logoDark  = true;
+          linksDark = false;
+        }
+        navEl.classList.toggle('nav-logo-dark',  logoDark);
+        navEl.classList.toggle('nav-links-dark', linksDark);
         return;
       }
     }
 
-    /* Fuera del hero: samplear el elemento real detrás del nav */
-    navEl.style.pointerEvents = 'none';
-    var el = document.elementFromPoint(midX, midY);
-    navEl.style.pointerEvents = '';
-
-    if (el) isDark = isBgDark(el);
-    navEl.classList.toggle('nav-dark', isDark);
+    logoDark  = sampleDark(leftX,  midY);
+    linksDark = sampleDark(rightX, midY);
+    navEl.classList.toggle('nav-logo-dark',  logoDark);
+    navEl.classList.toggle('nav-links-dark', linksDark);
   }
 
   window.addEventListener('scroll', updateNavDark, { passive: true });
@@ -559,18 +656,65 @@
   });
 
   /* ══════════════════════════════════════════════════════════════
-     SCROLL SUAVE
+     MUSIC PLAYER
   ══════════════════════════════════════════════════════════════ */
-  document.querySelectorAll("a[href^='#']").forEach(function(anchor) {
-    anchor.addEventListener('click', function(e) {
-      var href = this.getAttribute('href');
-      if (!href || href === '#') return;
-      try {
-        var target = document.querySelector(href);
-        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
-      } catch(err) {}
+  var tracks = [
+    { src: 'audio/1.mp3', title: 'Imperayritz de la ciutat ioyosa' },
+    { src: 'audio/2.mp3', title: 'Mi palpita il cor · Händel' },
+    { src: 'audio/3.mp3', title: 'Ubi es o Domine · Isabella Leonarda' }
+  ];
+
+  var currentTrack = 0;
+  var isPlaying    = false;
+  var infoTimer    = null;
+
+  var audio      = document.getElementById('musicAudio');
+  var musicBtn   = document.getElementById('musicBtn');
+  var musicInfo  = document.getElementById('musicInfo');
+  var iconPlay   = musicBtn  ? musicBtn.querySelector('.music-icon--play')  : null;
+  var iconPause  = musicBtn  ? musicBtn.querySelector('.music-icon--pause') : null;
+
+  function showInfo(title) {
+    if (!musicInfo) return;
+    musicInfo.textContent = title;
+    musicInfo.classList.add('visible');
+    clearTimeout(infoTimer);
+    infoTimer = setTimeout(function() {
+      musicInfo.classList.remove('visible');
+    }, 3000);
+  }
+
+  function loadTrack(idx) {
+    if (!audio) return;
+    audio.src = tracks[idx].src;
+    showInfo(tracks[idx].title);
+  }
+
+  function togglePlay() {
+    if (!audio) return;
+    if (isPlaying) {
+      audio.pause();
+      isPlaying = false;
+      if (iconPlay)  iconPlay.style.display  = '';
+      if (iconPause) iconPause.style.display = 'none';
+    } else {
+      if (!audio.src || audio.src === window.location.href) loadTrack(currentTrack);
+      audio.play().catch(function(){});
+      isPlaying = true;
+      if (iconPlay)  iconPlay.style.display  = 'none';
+      if (iconPause) iconPause.style.display = '';
+    }
+  }
+
+  if (audio) {
+    audio.addEventListener('ended', function() {
+      currentTrack = (currentTrack + 1) % tracks.length;
+      loadTrack(currentTrack);
+      audio.play().catch(function(){});
     });
-  });
+  }
+
+  if (musicBtn) musicBtn.addEventListener('click', togglePlay);
 
 })();
 </script>
