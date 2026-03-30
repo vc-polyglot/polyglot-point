@@ -339,38 +339,6 @@
     @media(max-width:900px){.videos-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:600px){.videos-grid{grid-template-columns:1fr}}
 
-    /* --- CARTELES PROXIMOS --- */
-    .carteles-proximos{display:flex;flex-direction:column;gap:5rem;padding:2rem 0}
-    .cartel-slide{
-      position:relative;
-      width:100%;
-      max-width:820px;
-      margin:0 auto;
-      overflow:hidden;
-      background:#050505;
-      border-radius:4px;
-      box-shadow:0 8px 48px rgba(0,0,0,.7);
-    }
-    .cartel-slide img{
-      display:block;
-      width:100%;
-      height:auto;          /* imagen completa, sin recorte */
-      transition:transform .6s cubic-bezier(.25,.46,.45,.94), filter .6s ease;
-      cursor:zoom-in;
-      will-change:transform;
-    }
-    .cartel-slide:hover img{
-      transform:scale(1.04) translateY(-6px);
-      filter:brightness(1.08) saturate(1.15);
-    }
-    .cartel-slide::before,.cartel-slide::after{
-      content:'';position:absolute;left:0;right:0;height:14%;
-      z-index:2;pointer-events:none;
-    }
-    .cartel-slide::before{top:0;background:linear-gradient(to bottom,rgba(0,0,0,.45),transparent)}
-    .cartel-slide::after{bottom:0;background:linear-gradient(to top,rgba(0,0,0,.45),transparent)}
-    @media(max-width:768px){.cartel-slide{max-width:100%;border-radius:0}}
-
     /* --- CONCIERTOS --- */
     #conciertos{background:var(--negro);padding:8rem 4vw;color:var(--blanco);position:relative;overflow:hidden}
     .conciertos-header{max-width:1200px;margin:0 auto 3rem}
@@ -423,7 +391,6 @@
     <li><a href="#repertorio">Repertorio</a></li>
     <li><a href="#solistas">Solistas</a></li>
     <li><a href="#galeria">Galería</a></li>
-    <li><a href="#conciertos">Conciertos</a></li>
   </ul>
   <button class="hamburger" id="hamburger" aria-label="Menú">
     <span></span><span></span><span></span>
@@ -645,16 +612,6 @@
 
   <!-- PROXIMOS -->
   <div class="tab-panel active" id="tab-proximos">
-  <div class="carteles-proximos">
-    <div class="cartel-slide">
-      <img src="galeria-sinfonica/cartel-maffezzoli-coacalco-2026.jpg"
-           alt="Organo y orquesta Maffezzoli - Coacalco 2026" loading="eager"/>
-    </div>
-    <div class="cartel-slide">
-      <img src="galeria-sinfonica/cartel-san-ignacio.jpg"
-           alt="Concierto San Ignacio" loading="lazy"/>
-    </div>
-  </div>
     <div class="proximos-empty">
       <p>Pr&oacute;xima temporada en anuncio</p>
     </div>
@@ -1010,7 +967,6 @@
           <li><a href="#repertorio">Repertorio</a></li>
           <li><a href="#solistas">Solistas invitados</a></li>
           <li><a href="#galeria">Galería</a></li>
-    <li><a href="#conciertos">Conciertos</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -1115,7 +1071,7 @@
   const lb    = document.getElementById('lightbox');
   const lbImg = document.getElementById('lb-img');
   let lbIdx = 0;
-  function abrirLb(i){if(!FOTOS.length)return;lbIdx=i;lbImg.src=FOTOS_DIR+FOTOS[lbIdx];lbImg.style.filter="saturate(1.5) contrast(1.08) brightness(1.05)";lb.classList.add('active');document.body.style.overflow='hidden'}
+  function abrirLb(i){if(!FOTOS.length)return;lbIdx=i;lbImg.src=FOTOS_DIR+FOTOS[lbIdx];lb.classList.add('active');document.body.style.overflow='hidden'}
   document.getElementById('lb-close').onclick=()=>{lb.classList.remove('active');document.body.style.overflow=''};
   document.getElementById('lb-prev').onclick=()=>{lbIdx=(lbIdx-1+FOTOS.length)%FOTOS.length;lbImg.src=FOTOS_DIR+FOTOS[lbIdx]};
   document.getElementById('lb-next').onclick=()=>{lbIdx=(lbIdx+1)%FOTOS.length;lbImg.src=FOTOS_DIR+FOTOS[lbIdx]};
@@ -1175,43 +1131,9 @@
       }, 800);
     }, 10000);
   })();
-    /* -- LIGHTBOX GLOBAL (todas las fotos excepto hero) -- */
-  (function(){
-    var lb    = document.getElementById('lightbox');
-    var lbImg = document.getElementById('lb-img');
-    var pool  = [];
-    var idx   = 0;
+  </script>
 
-    function open(i){
-      idx = i;
-      lbImg.src = pool[i]; lbImg.style.filter = "saturate(1.5) contrast(1.08) brightness(1.05)";
-      lb.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    document.getElementById('lb-prev').addEventListener('click', function(){
-      idx = (idx - 1 + pool.length) % pool.length;
-      lbImg.src = pool[idx];
-    });
-    document.getElementById('lb-next').addEventListener('click', function(){
-      idx = (idx + 1) % pool.length;
-      lbImg.src = pool[idx];
-    });
-
-    document.addEventListener('DOMContentLoaded', function(){
-      /* recolectar todas las <img> fuera de #hero y #lightbox y #video-modal */
-      var imgs = document.querySelectorAll('img');
-      imgs.forEach(function(img){
-        if(img.closest('#hero') || img.closest('#lightbox') || img.closest('#video-modal')) return;
-        if(!img.src || img.src.indexOf('hqdefault') !== -1) return; /* excluir thumbs YouTube */
-        var i = pool.length;
-        pool.push(img.src);
-        img.style.cursor = 'zoom-in';
-        img.addEventListener('click', function(){ open(i); });
-      });
-    });
-  })();
-</script></body>
+</body>
 </html>
 
 
