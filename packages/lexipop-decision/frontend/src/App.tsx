@@ -100,7 +100,7 @@ function Nav({ screen, setScreen }: { screen: Screen; setScreen: (s: Screen) => 
     <nav style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
       background: "rgba(248,247,244,0.92)", backdropFilter: "blur(12px)",
-      borderBottom: "1px solid var(--border)", padding: "14px 32px",
+      borderBottom: "1px solid var(--border)", padding: "24px 32px",
       display: "flex", justifyContent: "space-between", alignItems: "center",
     }}>
       <button onClick={() => setScreen("home")} style={{
@@ -161,7 +161,7 @@ export default function App() {
 
   return (
     <>
-      <Nav screen={screen} setScreen={setScreen} />
+      {screen !== "home" && <Nav screen={screen} setScreen={setScreen} />}
       <main>
         {screen === "home"      && <Home onStart={() => setScreen("form")} onLearn={() => setScreen("learn")} />}
         {screen === "form"      && <DecisionForm onSubmit={handleSubmit} onBack={() => setScreen("home")} loading={loading} />}
