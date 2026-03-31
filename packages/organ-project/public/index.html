@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -15,20 +15,34 @@
       --warm-white: #FDF8F0; --stone: #A8997A;
     }
     html { scroll-behavior: smooth; }
-    body { background: var(--ink); color: var(--parchment); font-family: "Crimson Pro", Georgia, serif; overflow-x: hidden; }
+    body {
+      background: var(--ink);
+      color: var(--parchment);
+      font-family: "Crimson Pro", Georgia, serif;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+    a, button, .btn-primary, .btn-outline, .gallery-click, .evento-card, .nav-links a, .lang-btn, .contacto-link-val {
+      cursor: pointer;
+    }
+    a:hover, button:hover, .btn-primary:hover, .btn-outline:hover, .gallery-click:hover, .evento-card:hover {
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="27" viewBox="0 0 24 27"><path fill="%23C9A84C" d="M3,2 L21,13 L12,16 L3,2 Z M3,2 L12,16 L12,25 L3,2 Z M12,16 L21,13 L12,25 L12,16 Z"/></svg>'), pointer;
+    }
     body::before { content: ""; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 1000; opacity: 0.5; }
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.5rem 6vw; display: flex; align-items: center; justify-content: space-between; background: linear-gradient(to bottom, rgba(13,9,6,0.85), transparent); backdrop-filter: blur(2px); }
-    .nav-logo { font-family: "Playfair Display", serif; font-size: 1.3rem; font-weight: 700; color: var(--warm-white); text-decoration: none; display: flex; align-items: center; gap: 0.75rem; }
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-    .nav-links a { font-family: "EB Garamond", serif; font-size: 0.9rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--parchment); text-decoration: none; opacity: 0.8; transition: opacity 0.2s, color 0.2s; }
+    
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.2rem 6vw; display: flex; align-items: center; justify-content: space-between; background: linear-gradient(to bottom, rgba(13,9,6,0.9), rgba(13,9,6,0.4)); backdrop-filter: blur(8px); }
+    .nav-logo { font-family: "Playfair Display", serif; font-size: 1.2rem; font-weight: 700; color: var(--warm-white); text-decoration: none; display: flex; align-items: center; gap: 0.75rem; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-family: "EB Garamond", serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--parchment); text-decoration: none; opacity: 0.8; transition: opacity 0.2s, color 0.2s; }
     .nav-links a:hover { opacity: 1; color: var(--gold-light); }
-    .hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; }
+    
+    .hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; padding-top: 80px; }
     .hero-bg { position: absolute; inset: 0; background-image: url("RENDER_tamano_40_.jpg"); background-size: cover; background-position: center top; transform: scale(1.05); animation: ken-burns 25s ease-in-out infinite alternate; }
     @keyframes ken-burns { 0% { transform: scale(1.0) translate(0, 0); } 50% { transform: scale(1.15) translate(-2%, -1%); } 100% { transform: scale(1.08) translate(2%, 1%); } }
     .hero-gradient { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(13,9,6,0.2) 0%, rgba(13,9,6,0.0) 30%, rgba(80,10,10,0.3) 60%, rgba(13,9,6,0.97) 100%); }
-    .hero-content { position: relative; z-index: 2; padding: 12vh 6vw 8vh; max-width: 900px; }
+    .hero-content { position: relative; z-index: 2; padding: 8vh 6vw 8vh; max-width: 900px; margin-top: 40px; }
     .hero-eyebrow { font-family: "EB Garamond", serif; font-size: clamp(0.75rem, 1.5vw, 0.95rem); letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; opacity: 0; animation: fade-up 1s ease 0.3s forwards; }
-    .hero-title { font-family: "Playfair Display", serif; font-size: clamp(1.98rem, 5.28vw, 4.62rem); line-height: 0.95; font-weight: 900; color: var(--warm-white); margin-bottom: 0.3em; opacity: 0; animation: fade-up 1s ease 0.6s forwards; }
+    .hero-title { font-family: "Playfair Display", serif; font-size: clamp(2rem, 5.5vw, 4.8rem); line-height: 0.95; font-weight: 900; color: var(--warm-white); margin-bottom: 0.3em; opacity: 0; animation: fade-up 1s ease 0.6s forwards; }
     .hero-title em { font-style: italic; color: var(--gold-light); }
     .hero-subtitle { font-family: "Crimson Pro", serif; font-size: clamp(1.1rem, 2.5vw, 1.5rem); font-weight: 300; color: var(--parchment); max-width: 560px; line-height: 1.6; margin-bottom: 2.5rem; opacity: 0; animation: fade-up 1s ease 0.9s forwards; }
     .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; opacity: 0; animation: fade-up 1s ease 1.2s forwards; }
@@ -48,9 +62,27 @@
     .section-title em { font-style: italic; color: var(--gold-light); }
     .body-text { font-family: "Crimson Pro", serif; font-size: clamp(1.1rem, 1.5vw, 1.25rem); line-height: 1.8; color: var(--stone); margin-bottom: 1.5rem; }
     .body-text strong { color: var(--parchment); font-weight: 600; }
+    
+    /* PRÓXIMOS CONCIERTOS */
+    .proximos-conciertos {
+      background: linear-gradient(135deg, #0F0A07 0%, #0A0604 100%);
+      padding: 8vh 0;
+    }
+    .cartel-full {
+      width: 100%;
+      margin-top: 2rem;
+    }
+    .cartel-full img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+    
     .historia-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
     .historia-img-stack { position: relative; height: 600px; }
-    .historia-img-stack img { position: absolute; object-fit: cover; border: 3px solid rgba(201,168,76,0.15); }
+    .historia-img-stack img { position: absolute; object-fit: cover; border: 3px solid rgba(201,168,76,0.15); cursor: zoom-in; }
     .historia-img-stack .img-back { width: 75%; height: 75%; bottom: 0; left: 0; filter: brightness(0.7); }
     .historia-img-stack .img-front { width: 65%; height: 65%; top: 0; right: 0; filter: brightness(0.85); box-shadow: -20px 20px 60px rgba(0,0,0,0.6); }
     .historia-img-stack .img-label { position: absolute; bottom: 1rem; right: 1rem; background: var(--crimson); color: var(--warm-white); font-family: "EB Garamond", serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.4rem 0.8rem; }
@@ -72,11 +104,22 @@
     .gallery-mosaic { display: grid; grid-template-columns: 1.5fr 1fr 1fr; grid-template-rows: 280px 280px; gap: 8px; }
     .gallery-item { overflow: hidden; position: relative; }
     .gallery-item:first-child { grid-row: 1 / 3; }
-    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease, filter 0.4s; filter: brightness(0.75) saturate(0.9); }
-    .gallery-item:hover img { transform: scale(1.05); filter: brightness(0.9) saturate(1.1); }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.4s; filter: brightness(0.75) saturate(0.9); cursor: zoom-in; }
+    .gallery-item:hover img { transform: scale(1.06); filter: brightness(0.95) saturate(1.15); }
     .gallery-item .overlay { pointer-events: none; position: absolute; inset: 0; background: linear-gradient(to top, rgba(13,9,6,0.7), transparent); opacity: 0; transition: opacity 0.3s; display: flex; align-items: flex-end; padding: 1.5rem; }
     .gallery-item:hover .overlay { opacity: 1; }
     .overlay-text { font-family: "EB Garamond", serif; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-light); }
+    
+    /* EVENTOS PASADOS */
+    .eventos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
+    .evento-card { position: relative; overflow: hidden; border: 1px solid rgba(201,168,76,0.15); transition: border-color 0.3s, transform 0.3s; cursor: zoom-in; }
+    .evento-card:hover { border-color: rgba(201,168,76,0.4); transform: translateY(-4px); }
+    .evento-card img { width: 100%; display: block; transition: transform 0.5s ease, filter 0.4s; filter: brightness(0.85); }
+    .evento-card:hover img { transform: scale(1.03); filter: brightness(1); }
+    .evento-card .evento-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(13,9,6,0.9), transparent); padding: 1.5rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    .evento-card:hover .evento-overlay { opacity: 1; }
+    .evento-overlay-text { font-family: "EB Garamond", serif; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-light); }
+    
     #donar { position: relative; overflow: hidden; }
     #donar::before { content: ""; position: absolute; top: -200px; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(185,28,28,0.15), transparent 70%); pointer-events: none; }
     .donar-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; align-items: start; }
@@ -105,7 +148,6 @@
     .quienes-name { font-family: "Playfair Display", serif; font-size: 1.1rem; font-weight: 700; color: var(--warm-white); margin-bottom: 0.25rem; }
     .quienes-role { font-family: "EB Garamond", serif; font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
     .quienes-text { font-family: "Crimson Pro", serif; font-size: 1rem; color: var(--stone); line-height: 1.7; }
-    .quienes-flag { font-size: 2.5rem; line-height: 1; margin-bottom: 1rem; display: block; }
     #contacto { position: relative; overflow: hidden; }
     .contacto-bg { position: absolute; inset: 0; background-image: url("San_Ignacio__actualiad_.jpeg"); background-size: cover; background-position: center; opacity: 0.08; }
     .contacto-inner { position: relative; z-index: 2; text-align: center; }
@@ -118,12 +160,61 @@
     .footer-logo { font-family: "Playfair Display", serif; font-size: 0.95rem; color: var(--stone); }
     .footer-logo span { color: var(--crimson); font-style: italic; }
     .footer-legal { font-family: "Crimson Pro", serif; font-size: 0.85rem; color: rgba(168,153,122,0.5); text-align: right; max-width: 400px; line-height: 1.6; }
-    @keyframes lb-zoom { from { transform: scale(0.6); opacity: 0; filter: blur(12px); } to { transform: scale(1); opacity: 1; filter: blur(0); } }
+    
+    /* REPRODUCTOR */
+    .music-player {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: rgba(13,9,6,0.85);
+      backdrop-filter: blur(12px);
+      border-radius: 48px;
+      padding: 8px 16px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      border: 1px solid rgba(201,168,76,0.4);
+      transition: all 0.3s ease;
+    }
+    .music-player:hover {
+      border-color: var(--gold);
+      background: rgba(13,9,6,0.95);
+    }
+    .player-btn {
+      background: transparent;
+      border: none;
+      color: var(--parchment);
+      font-size: 1.3rem;
+      cursor: pointer;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s, transform 0.2s;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+    }
+    .player-btn:hover {
+      color: var(--gold-light);
+      transform: scale(1.1);
+    }
+    .player-track-info {
+      font-family: "Crimson Pro", serif;
+      font-size: 0.75rem;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+      max-width: 100px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     @keyframes fade-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     .reveal { opacity: 1; transform: none; transition: opacity 0.8s ease, transform 0.8s ease; }
     .js-ready .reveal { opacity: 0; transform: translateY(40px); }
     .js-ready .reveal.visible { opacity: 1; transform: translateY(0); }
-    /* RETO */
+
     .reto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
     .reto-stat { text-align: center; padding: 3rem; border: 1px solid rgba(185,28,28,0.4); background: rgba(127,29,29,0.1); position: relative; }
     .reto-stat::before { content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 40px; height: 3px; background: var(--crimson); }
@@ -133,45 +224,58 @@
     .reto-item { display: flex; align-items: flex-start; gap: 1rem; font-family: "Crimson Pro", serif; font-size: 1.05rem; color: var(--stone); line-height: 1.5; }
     .reto-item::before { content: "—"; color: var(--crimson); font-weight: 700; flex-shrink: 0; }
 
-    /* EVENTOS */
-    .eventos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
-    .evento-card { position: relative; overflow: hidden; border: 1px solid rgba(201,168,76,0.15); cursor: zoom-in; }
-    .evento-card img { width: 100%; display: block; transition: transform 0.5s ease, filter 0.4s; filter: brightness(0.85); }
-    .evento-card:hover img { transform: scale(1.03); filter: brightness(1); }
-    .evento-card .evento-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(13,9,6,0.9), transparent); padding: 1.5rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-    .evento-card:hover .evento-overlay { opacity: 1; }
-    .evento-overlay-text { font-family: "EB Garamond", serif; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-light); }
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      background: rgba(6, 3, 2, 0.72);
+      backdrop-filter: blur(22px) saturate(1.4);
+      cursor: zoom-out;
+      animation: lb-bg-in 0.3s ease forwards;
+    }
+    @keyframes lb-bg-in { from { opacity: 0; } to { opacity: 1; } }
+    #lightbox-img {
+      max-width: 92vw;
+      max-height: 92vh;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+      border: 1px solid rgba(201,168,76,0.18);
+      box-shadow: 0 30px 100px rgba(0,0,0,0.9);
+      animation: lb-zoom-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes lb-zoom-in {
+      from { opacity: 0; transform: scale(0.88); filter: blur(8px); }
+      to { opacity: 1; transform: scale(1); filter: blur(0); }
+    }
+    #lb-close {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.75rem;
+      font-family: "EB Garamond", serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245,237,216,0.55);
+      background: none;
+      border: 1px solid rgba(245,237,216,0.15);
+      padding: 0.3rem 0.8rem;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      z-index: 10000;
+    }
+    #lb-close:hover { color: var(--gold-light); border-color: var(--gold); }
 
     .lang-switcher { display: flex; gap: 0.4rem; align-items: center; margin-left: 1.5rem; }
     .lang-btn { font-family: "EB Garamond", serif; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--stone); background: transparent; border: 1px solid rgba(168,153,122,0.3); padding: 0.25rem 0.5rem; cursor: pointer; transition: all 0.2s; }
     .lang-btn:hover, .lang-btn.active { color: var(--gold-light); border-color: var(--gold); background: rgba(201,168,76,0.1); }
 
-    /* EVENTOS */
-    .eventos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
-    .evento-card { position: relative; overflow: hidden; border: 1px solid rgba(201,168,76,0.15); cursor: zoom-in; transition: border-color 0.3s, transform 0.3s; }
-    .evento-card:hover { border-color: rgba(201,168,76,0.4); transform: translateY(-4px); }
-    .evento-card img { width: 100%; display: block; transition: transform 0.5s ease, filter 0.4s; filter: brightness(0.85); }
-    .evento-card:hover img { transform: scale(1.03); filter: brightness(1); }
-    .evento-card .evento-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(13,9,6,0.9), transparent); padding: 1.5rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-    .evento-card:hover .evento-overlay { opacity: 1; }
-    .evento-overlay-text { font-family: "EB Garamond", serif; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-light); }
-
-    /* EL RETO */
-    .reto-inner { max-width: 800px; margin: 0 auto; text-align: center; }
-    .reto-cifra { font-family: "Playfair Display", serif; font-size: clamp(3rem, 8vw, 6rem); font-weight: 900; color: var(--crimson-light); line-height: 1; margin: 1.5rem 0 0.5rem; letter-spacing: -0.02em; }
-    .reto-cifra-label { font-family: "EB Garamond", serif; font-size: 0.85rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--stone); margin-bottom: 3rem; display: block; }
-    .reto-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; margin-top: 3rem; text-align: left; }
-    .reto-col { padding: 1.5rem; border-left: 2px solid rgba(185,28,28,0.4); }
-    .reto-col-title { font-family: "Playfair Display", serif; font-size: 1rem; font-weight: 700; color: var(--warm-white); margin-bottom: 0.5rem; }
-    .reto-col-text { font-family: "Crimson Pro", serif; font-size: 0.95rem; color: var(--stone); line-height: 1.6; }
-    @media (max-width: 900px) { .reto-cols { grid-template-columns: 1fr; } }
-    @media (max-width: 600px) { .eventos-grid { grid-template-columns: 1fr; } }
     @media (max-width: 900px) {
-      nav { flex-direction: row; align-items: center; padding: 1rem 6vw; }
-      nav .nav-links { display: none; flex-direction: column; gap: 0.75rem; width: 100%; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(13,9,6,0.97); z-index: 200; justify-content: center; align-items: center; padding: 2rem; }
-      nav .nav-links.open { display: flex; }
-      .hamburger { display: flex; flex-direction: column; gap: 5px; cursor: pointer; z-index: 300; }
-      .hamburger span { width: 24px; height: 2px; background: var(--warm-white); display: block; transition: 0.3s; }
+      nav { padding: 0.8rem 6vw; }
+      .hero-content { margin-top: 20px; padding: 6vh 6vw 6vh; }
       .historia-grid, .donar-grid, .quienes-grid, .reto-grid { grid-template-columns: 1fr; gap: 3rem; }
       .fases-grid { grid-template-columns: 1fr 1fr; gap: 3rem; }
       .fases-grid::before { display: none; }
@@ -180,6 +284,7 @@
       .contacto-links { gap: 2rem; }
       .countdown-units { gap: 1rem; }
       .lang-switcher { margin-left: 0; margin-top: 0.5rem; }
+      .eventos-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
     }
     @media (max-width: 600px) {
       .donar-card { padding: 1.5rem; }
@@ -187,13 +292,16 @@
       .donar-step strong { word-break: break-all; font-size: 0.9rem; }
       .btn-primary { font-size: 0.8rem; padding: 1rem 1rem; }
       .clabe-highlight { font-size: 1.1rem; letter-spacing: 0.05em; }
-      .hero-content { padding: 0 5vw 6vh; }
+      .hero-content { padding: 0 5vw 6vh; margin-top: 60px; }
       .fases-grid { grid-template-columns: 1fr; }
       .gallery-mosaic { grid-template-columns: 1fr; }
       .hero-ctas, .contacto-links { flex-direction: column; align-items: flex-start; }
       footer { flex-direction: column; }
       .footer-legal { text-align: left; }
       .countdown-bar { flex-direction: column; gap: 1rem; }
+      .music-player { bottom: 12px; right: 12px; padding: 6px 12px; }
+      .player-btn { width: 32px; height: 32px; font-size: 1.1rem; }
+      .eventos-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -201,16 +309,17 @@
 
 <nav>
   <a href="#" class="nav-logo">
-    <img src="LeO_73_grados.png" alt="LeO" style="height:150px;width:auto;object-fit:contain;" />
+    <img src="LeO_73_grados.png" alt="LeO" style="height:120px;width:auto;object-fit:contain;" />
     Un Nuevo Hogar para <em style="font-style:italic;color:var(--gold-light);margin-left:4px;">LeO</em>
   </a>
   <ul class="nav-links">
-    <li><a href="#historia" id="nav-historia">La Historia</a></li>
-    <li><a href="#fases" id="nav-proyecto">El Proyecto</a></li>
-    <li><a href="#galeria" id="nav-imagenes">Im&#225;genes</a></li>
-    <li><a href="#eventos" id="nav-eventos">Eventos</a></li>
-    <li><a href="#donar" id="nav-donar">Donar</a></li>
-    <li><a href="#contacto" id="nav-contacto">Contacto</a></li>
+    <li><a href="#historia">La Historia</a></li>
+    <li><a href="#fases">El Proyecto</a></li>
+    <li><a href="#galeria">Imágenes</a></li>
+    <li><a href="#proximos">Próximos</a></li>
+    <li><a href="#eventos">Eventos</a></li>
+    <li><a href="#donar">Donar</a></li>
+    <li><a href="#contacto">Contacto</a></li>
   </ul>
   <div class="lang-switcher">
     <button class="lang-btn" onclick="setLang('en')">EN</button>
@@ -224,22 +333,35 @@
   <div class="hero-bg"></div>
   <div class="hero-gradient"></div>
   <div class="hero-content">
-    <p class="hero-eyebrow" id="hero-eyebrow">Un proyecto cultural y espiritual &middot; Suiza &rarr; M&#233;xico</p>
+    <p class="hero-eyebrow" id="hero-eyebrow">Un proyecto cultural y espiritual · Suiza → México</p>
     <h1 class="hero-title" id="hero-title">La nueva voz<br>de San Ignacio<br><em>de Loyola</em></h1>
-    <p class="hero-subtitle" id="hero-sub">Un magn&#237;fico &#243;rgano tubular suizo busca hogar. Su templo en Ginebra ser&#225; demolido. M&#233;xico tiene la oportunidad &#250;nica de rescatarlo.</p>
+    <p class="hero-subtitle" id="hero-sub">Un magnífico órgano tubular suizo busca hogar. Su templo en Ginebra será demolido. México tiene la oportunidad única de rescatarlo.</p>
     <div class="hero-ctas">
       <a href="#donar" class="btn-primary" id="btn-donar">Donar ahora</a>
       <a href="#historia" class="btn-outline" id="btn-historia">Conocer la historia</a>
     </div>
   </div>
   <div class="countdown-bar">
-    <span class="countdown-label" id="cd-label1">Fecha l&#237;mite para el desmontaje en Ginebra</span>
+    <span class="countdown-label" id="cd-label1">Fecha límite para el desmontaje en Ginebra</span>
     <div class="countdown-units">
       <div class="countdown-unit"><span class="countdown-num" id="cd-months">--</span><span class="countdown-unit-label" id="cd-meses">Meses</span></div>
-      <div class="countdown-unit"><span class="countdown-num" id="cd-days">--</span><span class="countdown-unit-label" id="cd-dias">D&#237;as</span></div>
+      <div class="countdown-unit"><span class="countdown-num" id="cd-days">--</span><span class="countdown-unit-label" id="cd-dias">Días</span></div>
       <div class="countdown-unit"><span class="countdown-num" id="cd-hours">--</span><span class="countdown-unit-label" id="cd-horas">Horas</span></div>
     </div>
     <span class="countdown-label" id="cd-label2">Junio 2026</span>
+  </div>
+</section>
+
+<!-- PRÓXIMOS CONCIERTOS -->
+<section id="proximos" class="proximos-conciertos">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center; margin-bottom: 2rem;">
+      <span class="section-label">Próximos Conciertos</span>
+      <h2 class="section-title">Órgano & Orquesta<br><em></em></h2>
+    </div>
+    <div class="cartel-full reveal">
+      <img src="cartel_san_ignacio.jpg" alt="Cartel: Órgano & Orquesta - Maurizio Maffezzoli, Orquesta Sinfónica Juvenil de Tultepec" class="gallery-click">
+    </div>
   </div>
 </section>
 
@@ -247,16 +369,16 @@
   <div class="section-inner">
     <div class="historia-grid">
       <div class="historia-img-stack reveal">
-        <img class="img-back" src="Organo_de_la_Servette.jpg" alt="Organo en La Servette" />
-        <img class="img-front" src="RENDER_tamano_40_.jpg" alt="Render LeO en San Ignacio" />
-        <span class="img-label" id="img-label">Visualizaci&#243;n &middot; San Ignacio de Loyola</span>
+        <img class="img-back gallery-click" src="Organo_de_la_Servette.jpg" alt="Organo en La Servette" />
+        <img class="img-front gallery-click" src="RENDER_tamano_40_.jpg" alt="Render LeO en San Ignacio" />
+        <span class="img-label" id="img-label">Visualización · San Ignacio de Loyola</span>
       </div>
       <div class="reveal">
         <span class="section-label" id="sec-label-historia">La Historia de LeO</span>
         <h2 class="section-title" id="sec-title-historia">Una voz<br>que merece<br><em>volver a escucharse</em></h2>
-        <p class="body-text" id="hist-p1"><strong>LeO</strong> es un magn&#237;fico &#243;rgano tubular suizo, con tres teclados y miles de tubos, que durante d&#233;cadas llen&#243; de m&#250;sica y vida el templo de <strong>La Servette, en Ginebra</strong>. Hoy, ese templo est&#225; por ser demolido&#8230; y LeO necesita un nuevo hogar.</p>
-        <p class="body-text" id="hist-p2">El maestro <strong>Diego Innocenzi</strong>, organista en Ginebra, en el marco de los v&#237;nculos acad&#233;micos y art&#237;sticos establecidos con nuestra instituci&#243;n, invit&#243; a nuestro comit&#233; a participar en el concurso internacional para la asignaci&#243;n del &#243;rgano. Tras ese concurso, <strong>nuestro proyecto fue elegido</strong>.</p>
-        <p class="body-text" id="hist-p3">Nuestra meta: traer a LeO a M&#233;xico y darle una nueva vida en la <strong>Iglesia de San Ignacio de Loyola</strong>, en Polanco, donde el arte, la m&#250;sica y la fe vuelvan a encontrarse.</p>
+        <p class="body-text" id="hist-p1"><strong>LeO</strong> es un magnífico órgano tubular suizo, con tres teclados y miles de tubos, que durante décadas llenó de música y vida el templo de <strong>La Servette, en Ginebra</strong>. Hoy, ese templo está por ser demolido… y LeO necesita un nuevo hogar.</p>
+        <p class="body-text" id="hist-p2">El maestro <strong>Diego Innocenzi</strong>, organista en Ginebra, invitó a nuestro comité a participar en el concurso internacional para la asignación del órgano. Tras ese concurso, <strong>nuestro proyecto fue elegido</strong>.</p>
+        <p class="body-text" id="hist-p3">Nuestra meta: traer a LeO a México y darle una nueva vida en la <strong>Iglesia de San Ignacio de Loyola</strong>, en Polanco, donde el arte, la música y la fe vuelvan a encontrarse.</p>
       </div>
     </div>
   </div>
@@ -266,8 +388,8 @@
   <div class="quote-bg"></div>
   <div class="quote-inner">
     <span class="quote-mark">"</span>
-    <p class="quote-text" id="quote-text">Tu donativo se transforma en m&#250;sica.</p>
-    <span class="quote-attr">Un Nuevo Hogar para LeO &middot; nuevohogarparaleo.com</span>
+    <p class="quote-text" id="quote-text">Tu donativo se transforma en música.</p>
+    <span class="quote-attr">Un Nuevo Hogar para LeO · nuevohogarparaleo.com</span>
   </div>
 </div>
 
@@ -278,11 +400,11 @@
       <h2 class="section-title" id="sec-title-fases">Cinco fases<br>para <em>una sinfonía</em></h2>
     </div>
     <div class="fases-grid reveal">
-      <div class="fase-item"><div class="fase-num">I</div><p class="fase-title" id="fase1t">Adecuaciones estructurales</p><p class="fase-desc" id="fase1d">Reforzar el coro de San Ignacio: estructura, ac&#250;stica, condiciones el&#233;ctricas y clim&#225;ticas.</p></div>
-      <div class="fase-item"><div class="fase-num">II</div><p class="fase-title" id="fase2t">Desmontaje en Ginebra</p><p class="fase-desc" id="fase2d">Ejecuci&#243;n especializada pieza por pieza. Fecha l&#237;mite: junio de 2026.</p></div>
-      <div class="fase-item"><div class="fase-num">III</div><p class="fase-title" id="fase3t">Transporte internacional</p><p class="fase-desc" id="fase3d">Log&#237;stica y gesti&#243;n aduanal para un traslado integral y seguro a M&#233;xico.</p></div>
-      <div class="fase-item"><div class="fase-num">IV</div><p class="fase-title" id="fase4t">Instalaci&#243;n y restauraci&#243;n</p><p class="fase-desc" id="fase4d">Ensamblaje, reentonaci&#243;n y adaptaci&#243;n al nuevo espacio con organeros certificados.</p></div>
-      <div class="fase-item"><div class="fase-num">V</div><p class="fase-title" id="fase5t">Inauguraci&#243;n</p><p class="fase-desc" id="fase5d">Conciertos inaugurales, actividades acad&#233;micas y memoria documental del proyecto.</p></div>
+      <div class="fase-item"><div class="fase-num">I</div><p class="fase-title" id="fase1t">Adecuaciones estructurales</p><p class="fase-desc" id="fase1d">Reforzar el coro de San Ignacio: estructura, acústica, condiciones eléctricas y climáticas.</p></div>
+      <div class="fase-item"><div class="fase-num">II</div><p class="fase-title" id="fase2t">Desmontaje en Ginebra</p><p class="fase-desc" id="fase2d">Ejecución especializada pieza por pieza. Fecha límite: junio de 2026.</p></div>
+      <div class="fase-item"><div class="fase-num">III</div><p class="fase-title" id="fase3t">Transporte internacional</p><p class="fase-desc" id="fase3d">Logística y gestión aduanal para un traslado integral y seguro a México.</p></div>
+      <div class="fase-item"><div class="fase-num">IV</div><p class="fase-title" id="fase4t">Instalación y restauración</p><p class="fase-desc" id="fase4d">Ensamblaje, reentonación y adaptación al nuevo espacio con organeros certificados.</p></div>
+      <div class="fase-item"><div class="fase-num">V</div><p class="fase-title" id="fase5t">Inauguración</p><p class="fase-desc" id="fase5d">Conciertos inaugurales, actividades académicas y memoria documental del proyecto.</p></div>
     </div>
   </div>
 </section>
@@ -290,82 +412,84 @@
 <section id="galeria" style="padding: 10vh 0; background: #0A0604;">
   <div class="section-inner">
     <div class="galeria-header reveal">
-      <span class="section-label" id="sec-label-galeria">Las Im&#225;genes</span>
+      <span class="section-label" id="sec-label-galeria">Las Imágenes</span>
       <h2 class="section-title" id="sec-title-galeria">Dos mundos,<br><em>un instrumento</em></h2>
     </div>
     <div class="gallery-mosaic reveal">
-      <div class="gallery-item"><img src="Actualidad.jpeg" alt="Interior Iglesia San Ignacio" class="gallery-click" /><div class="overlay"><span class="overlay-text" id="ov1">San Ignacio &middot; Polanco, CDMX</span></div></div>
-      <div class="gallery-item"><img src="Organo_de_la_Servette.jpg" alt="LeO en La Servette" class="gallery-click" /><div class="overlay"><span class="overlay-text" id="ov2">LeO en La Servette &middot; Ginebra</span></div></div>
-      <div class="gallery-item"><img src="RENDER_tamano_40_.jpg" alt="Render LeO en San Ignacio" class="gallery-click" /><div class="overlay"><span class="overlay-text" id="ov3">Visualizaci&#243;n futura &middot; LeO en San Ignacio</span></div></div>
+      <div class="gallery-item"><img src="Actualidad.jpeg" alt="Interior Iglesia San Ignacio" class="gallery-click" /><div class="overlay"><span class="overlay-text" id="ov1">San Ignacio · Polanco, CDMX</span></div></div>
+      <div class="gallery-item"><img src="Organo_de_la_Servette.jpg" alt="LeO en La Servette" class="gallery-click" /><div class="overlay"><span class="overlay-text" id="ov2">LeO en La Servette · Ginebra</span></div></div>
+      <div class="gallery-item"><img src="RENDER_tamano_40_.jpg" alt="Render LeO en San Ignacio" class="gallery-click" /><div class="overlay"><span class="overlay-text" id="ov3">Visualización futura · LeO en San Ignacio</span></div></div>
       <div class="gallery-item"><img src="image.jpg" alt="Comunidad San Ignacio" class="gallery-click" /><div class="overlay"><span class="overlay-text" id="ov4">La comunidad de San Ignacio</span></div></div>
-      <div class="gallery-item"><img src="San_Ignacio__actualiad_.jpeg" alt="San Ignacio interior" class="gallery-click" /><div class="overlay"><span class="overlay-text" id="ov5">Interior &middot; San Ignacio de Loyola</span></div></div>
+      <div class="gallery-item"><img src="San_Ignacio__actualiad_.jpeg" alt="San Ignacio interior" class="gallery-click" /><div class="overlay"><span class="overlay-text" id="ov5">Interior · San Ignacio de Loyola</span></div></div>
     </div>
   </div>
 </section>
 
-<!-- EVENTOS -->
+<!-- CONCIERTOS PASADOS -->
 <section id="eventos" style="padding: 10vh 0; background: #0D0806;">
   <div class="section-inner">
     <div class="reveal" style="text-align:center; margin-bottom: 4rem;">
-      <span class="section-label">Eventos</span>
-      <h2 class="section-title">Conciertos<br><em>pasados</em></h2>
+      <span class="section-label">Conciertos Pasados</span>
+      <h2 class="section-title">Música que ya<br><em>vivió en San Ignacio</em></h2>
     </div>
     <div class="eventos-grid reveal">
       <div class="evento-card">
         <img src="afectos-romance-cartel.jpeg" alt="Cartel: Afectos y Romance" class="gallery-click" />
-        <div class="evento-overlay"><span class="evento-overlay-text">Afectos y Romance &middot; 12 febrero 2026</span></div>
+        <div class="evento-overlay"><span class="evento-overlay-text">Afectos y Romance · 12 febrero 2026</span></div>
       </div>
       <div class="evento-card">
         <img src="afectos-romance-programa.jpeg" alt="Programa: Afectos y Romance" class="gallery-click" />
-        <div class="evento-overlay"><span class="evento-overlay-text">Programa &middot; Bach &middot; Widor &middot; Tournemire</span></div>
+        <div class="evento-overlay"><span class="evento-overlay-text">Programa · Bach · Widor · Tournemire</span></div>
       </div>
       <div class="evento-card">
         <img src="callejo-gonzalez-cartel.jpeg" alt="Cartel: Callejo y González" class="gallery-click" />
-        <div class="evento-overlay"><span class="evento-overlay-text">Callejo &middot; Gonz&#225;lez Velasco &middot; 1 marzo 2026</span></div>
+        <div class="evento-overlay"><span class="evento-overlay-text">Callejo · González Velasco · 1 marzo 2026</span></div>
       </div>
       <div class="evento-card">
         <img src="callejo-gonzalez-programa.jpeg" alt="Programa: Callejo y González" class="gallery-click" />
-        <div class="evento-overlay"><span class="evento-overlay-text">Programa &middot; 1 marzo 2026</span></div>
+        <div class="evento-overlay"><span class="evento-overlay-text">Programa · 1 marzo 2026</span></div>
       </div>
       <div class="evento-card">
         <img src="orquesta-barroca-cartel.jpeg" alt="Cartel: Orquesta Barroca CNM" class="gallery-click" />
-        <div class="evento-overlay"><span class="evento-overlay-text">Orquesta Barroca CNM &middot; 12 marzo 2026</span></div>
+        <div class="evento-overlay"><span class="evento-overlay-text">Orquesta Barroca CNM · 12 marzo 2026</span></div>
       </div>
       <div class="evento-card">
         <img src="orquesta-barroca-programa.jpeg" alt="Programa: Orquesta Barroca CNM" class="gallery-click" />
-        <div class="evento-overlay"><span class="evento-overlay-text">Beethoven: Egmont &middot; Sinfonía No. 7</span></div>
+        <div class="evento-overlay"><span class="evento-overlay-text">Beethoven: Egmont · Sinfonía No. 7</span></div>
       </div>
       <div class="evento-card">
         <img src="tradicion-creacion-cartel.jpeg" alt="Cartel: Tradición y Creación" class="gallery-click" />
-        <div class="evento-overlay"><span class="evento-overlay-text">L&#243;pez Moreno &middot; V. Contreras &middot; 22 marzo 2026</span></div>
+        <div class="evento-overlay"><span class="evento-overlay-text">López Moreno · V. Contreras · 22 marzo 2026</span></div>
       </div>
       <div class="evento-card">
         <img src="tradicion-creacion-programa.jpeg" alt="Programa: Tradición y Creación" class="gallery-click" />
-        <div class="evento-overlay"><span class="evento-overlay-text">Tradici&#243;n y Creaci&#243;n &middot; Bach &middot; Mozart</span></div>
+        <div class="evento-overlay"><span class="evento-overlay-text">Tradición y Creación · Bach · Mozart</span></div>
       </div>
-    </div>
-  </div>
+      <div class="evento-card">
+        <img src="cartel_san_ignacio.jpg" alt="Cartel: San Ignacio" class="gallery-click" />
+        <div class="evento-overlay"><span class="evento-overlay-text">San Ignacio de Loyola · 2026</span></div>
+      </div>
+      </div>
 </section>
 
-<!-- EL RETO -->
 <section id="reto" style="padding: 10vh 0; background: linear-gradient(to bottom, #0D0806, var(--ink));">
   <div class="section-inner">
     <div class="reto-grid reveal">
       <div>
         <span class="section-label">El Reto</span>
         <h2 class="section-title">El instrumento<br>ya es nuestro.<br><em>El camino, no.</em></h2>
-        <p class="body-text">Este proyecto nace del coraz&#243;n de la comunidad de San Ignacio. Es un esfuerzo conjunto de la sociedad civil, la Iglesia y todos quienes queremos que este templo siga siendo un espacio vivo de fe, cultura y encuentro.</p>
-        <p class="body-text">El nuevo &#243;rgano servir&#225; tanto para la liturgia como para la formaci&#243;n de j&#243;venes m&#250;sicos y para abrir nuestras puertas a m&#225;s personas a trav&#233;s de la m&#250;sica. <strong>El &#243;rgano ya fue donado</strong> a trav&#233;s de un proceso formal de selecci&#243;n internacional. Lo que falta es tra&#233;rlo.</p>
+        <p class="body-text">Este proyecto nace del corazón de la comunidad de San Ignacio. Es un esfuerzo conjunto de la sociedad civil, la Iglesia y todos quienes queremos que este templo siga siendo un espacio vivo de fe, cultura y encuentro.</p>
+        <p class="body-text">El nuevo órgano servirá tanto para la liturgia como para la formación de jóvenes músicos y para abrir nuestras puertas a más personas a través de la música. <strong>El órgano ya fue donado</strong> a través de un proceso formal de selección internacional. Lo que falta es traerlo.</p>
       </div>
       <div>
         <div class="reto-stat">
           <span class="reto-amount">$5,000,000</span>
-          <span class="reto-amount-label">pesos &middot; costo estimado total</span>
+          <span class="reto-amount-label">pesos · costo estimado total</span>
           <div class="reto-items">
             <div class="reto-item">Desmontaje especializado en Ginebra</div>
-            <div class="reto-item">Transporte internacional y gesti&#243;n aduanal</div>
-            <div class="reto-item">Restauraci&#243;n e instalaci&#243;n por organeros certificados</div>
-            <div class="reto-item">Adecuaciones ac&#250;sticas y estructurales en San Ignacio</div>
+            <div class="reto-item">Transporte internacional y gestión aduanal</div>
+            <div class="reto-item">Restauración e instalación por organeros certificados</div>
+            <div class="reto-item">Adecuaciones acústicas y estructurales en San Ignacio</div>
           </div>
         </div>
         <div style="margin-top:2rem; text-align:center;">
@@ -381,29 +505,29 @@
     <div class="donar-grid">
       <div class="reveal">
         <div class="urgencia-badge"><span class="urgencia-dot"></span><span id="urgencia-text">Tiempo limitado</span></div>
-        <span class="section-label" id="sec-label-donar">C&#243;mo contribuir</span>
-        <h2 class="section-title" id="sec-title-donar">Tu donativo<br>se convierte<br>en <em>m&#250;sica</em></h2>
-        <p class="body-text" id="donar-p1">El &#243;rgano ya ha sido donado. Ahora, nuestro desaf&#237;o es financiar su <strong>traslado, restauraci&#243;n e instalaci&#243;n</strong>, un proceso minucioso que requiere cuidado artesanal y amor por el detalle.</p>
-        <p class="body-text" id="donar-p2">Cada aportaci&#243;n ayuda a que LeO llegue y cobre vida en su nuevo hogar. Puedes contribuir con donativos, servicios, materiales, o simplemente <strong>compartiendo este mensaje</strong> con quienes puedan hacerlo posible.</p>
-        <p class="body-text" id="donar-p3" style="color: var(--stone); font-size: 1rem;">Proyecto administrado por <strong style="color:var(--parchment)">Arte, Educaci&#243;n y Ecolog&#237;a A.C.</strong><br>Autorizaci&#243;n SAT No. 700-02-05-2017-03718</p>
+        <span class="section-label" id="sec-label-donar">Cómo contribuir</span>
+        <h2 class="section-title" id="sec-title-donar">Tu donativo<br>se convierte<br>en <em>música</em></h2>
+        <p class="body-text" id="donar-p1">El órgano ya ha sido donado. Ahora, nuestro desafío es financiar su <strong>traslado, restauración e instalación</strong>, un proceso minucioso que requiere cuidado artesanal y amor por el detalle.</p>
+        <p class="body-text" id="donar-p2">Cada aportación ayuda a que LeO llegue y cobre vida en su nuevo hogar. Puedes contribuir con donativos, servicios, materiales, o simplemente <strong>compartiendo este mensaje</strong> con quienes puedan hacerlo posible.</p>
+        <p class="body-text" id="donar-p3" style="color: var(--stone); font-size: 1rem;">Proyecto administrado por <strong style="color:var(--parchment)">Arte, Educación y Ecología A.C.</strong><br>Autorización SAT No. 700-02-05-2017-03718</p>
       </div>
       <div class="reveal">
         <div class="donar-card">
           <p class="donar-card-title" id="card-title">Realiza tu donativo</p>
-          <p class="donar-card-sub" id="card-sub">Transferencia bancaria &middot; Deducible de impuestos</p>
-          <div class="bank-detail"><p class="bank-label" id="label-benef">Beneficiario</p><p class="bank-value">Arte, Educaci&#243;n y Ecolog&#237;a A.C.</p></div>
+          <p class="donar-card-sub" id="card-sub">Transferencia bancaria · Deducible de impuestos</p>
+          <div class="bank-detail"><p class="bank-label" id="label-benef">Beneficiario</p><p class="bank-value">Arte, Educación y Ecología A.C.</p></div>
           <div class="bank-detail"><p class="bank-label" id="label-banco">Banco</p><p class="bank-value">Banamex</p></div>
           <div class="bank-detail"><p class="bank-label" id="label-clabe">CLABE interbancaria</p><span class="clabe-highlight">002290701634071732</span></div>
           <div class="donar-separator"></div>
-          <p class="donar-card-title" id="after-title" style="font-size:1.1rem; margin-bottom:1.5rem;">Despu&#233;s de tu transferencia:</p>
+          <p class="donar-card-title" id="after-title" style="font-size:1.1rem; margin-bottom:1.5rem;">Después de tu transferencia:</p>
           <div class="donar-steps">
-            <div class="donar-step" id="step1">Env&#237;a tu comprobante a <strong><a id="email-dona-step" href="#">dona&#64;nuevohogarparaleo.com</a></strong></div>
-            <div class="donar-step" id="step2">Adjunta tu Constancia de Situaci&#243;n Fiscal si deseas tu <strong>CFDI deducible</strong></div>
-            <div class="donar-step" id="step3">En m&#225;ximo <strong>5 d&#237;as h&#225;biles</strong> recibir&#225;s tu comprobante fiscal</div>
+            <div class="donar-step" id="step1">Envía tu comprobante a <strong>dona@nuevohogarparaleo.com</strong></div>
+            <div class="donar-step" id="step2">Adjunta tu Constancia de Situación Fiscal si deseas tu <strong>CFDI deducible</strong></div>
+            <div class="donar-step" id="step3">En máximo <strong>5 días hábiles</strong> recibirás tu comprobante fiscal</div>
           </div>
           <div class="donar-note" id="donar-note">Si no necesitas CFDI, basta con enviarnos tu comprobante. Registraremos tu donativo y te enviaremos un recibo con nuestro agradecimiento.</div>
           <br>
-          <a href="#" class="btn-primary" id="btn-email" style="display:block;text-align:center;">Escribir a dona&#64;nuevohogarparaleo.com</a>
+          <a href="#" class="btn-primary" id="btn-email" style="display:block;text-align:center;">Escribir a dona@nuevohogarparaleo.com</a>
         </div>
       </div>
     </div>
@@ -414,31 +538,31 @@
   <div class="section-inner">
     <div class="reveal" style="text-align:center; margin-bottom: 5rem;">
       <span class="section-label" id="sec-label-quienes">El Equipo</span>
-      <h2 class="section-title" id="sec-title-quienes">Qui&#233;nes hacen<br><em>posible esto</em></h2>
+      <h2 class="section-title" id="sec-title-quienes">Quiénes hacen<br><em>posible esto</em></h2>
     </div>
     <div class="quienes-grid reveal">
       <div class="quienes-card">
         <p class="quienes-name">Paroisse Protestante Rive Droite</p>
-        <p class="quienes-role" id="q1-role">Donantes originales &middot; Ginebra, Suiza</p>
-        <p class="quienes-text" id="q1-text">En sesi&#243;n del 11 de junio de 2025, el Consejo de la Parroquia eligi&#243; oficialmente a nuestra propuesta como ganadora del concurso internacional para recibir el &#243;rgano.</p>
+        <p class="quienes-role" id="q1-role">Donantes originales · Ginebra, Suiza</p>
+        <p class="quienes-text" id="q1-text">En sesión del 11 de junio de 2025, el Consejo de la Parroquia eligió oficialmente a nuestra propuesta como ganadora del concurso internacional para recibir el órgano.</p>
       </div>
       <div class="quienes-card">
         <div class="quienes-logo"><img src="Iglesia_de_san_ignacio_logotipo.png" alt="Iglesia San Ignacio de Loyola" /></div>
         <p class="quienes-name">Iglesia de San Ignacio de Loyola</p>
-        <p class="quienes-role" id="q2-role">Hogar receptor &middot; Polanco, CDMX</p>
-        <p class="quienes-text" id="q2-text">El P. Luis Gonz&#225;lez-Cos&#237;o Elcoro, SJ, Rector de la parroquia, ha aceptado oficialmente el instrumento con "esp&#237;ritu de responsabilidad, gratitud y esperanza".</p>
+        <p class="quienes-role" id="q2-role">Hogar receptor · Polanco, CDMX</p>
+        <p class="quienes-text" id="q2-text">El P. Luis González-Cosío Elcoro, SJ, Rector de la parroquia, ha aceptado oficialmente el instrumento con "espíritu de responsabilidad, gratitud y esperanza".</p>
       </div>
       <div class="quienes-card">
         <div class="quienes-logo"><img src="LeO_73_grados.png" alt="Un Nuevo Hogar para LeO" /></div>
-        <p class="quienes-name">Comit&#233; "Un Nuevo Hogar para LeO"</p>
-        <p class="quienes-role" id="q3-role">Coordinaci&#243;n del proyecto &middot; Ciudad de M&#233;xico</p>
-        <p class="quienes-text" id="q3-text">El comit&#233; gestiona la planeaci&#243;n integral del proyecto, encabezado por el maestro V&#237;ctor Contreras, concertista y profesor del Conservatorio Nacional de M&#250;sica, designado organista titular del instrumento.</p>
+        <p class="quienes-name">Comité "Un Nuevo Hogar para LeO"</p>
+        <p class="quienes-role" id="q3-role">Coordinación del proyecto · Ciudad de México</p>
+        <p class="quienes-text" id="q3-text">El comité gestiona la planeación integral del proyecto, encabezado por el maestro Víctor Contreras, concertista y profesor del Conservatorio Nacional de Música, designado organista titular del instrumento.</p>
       </div>
       <div class="quienes-card">
         <div class="quienes-logo"><img src="WhatsApp_Image_2026-02-28_at_1_15_45_PM.jpeg" alt="Arte Educacion y Ecologia AC" /></div>
-        <p class="quienes-name">Arte, Educaci&#243;n y Ecolog&#237;a A.C.</p>
-        <p class="quienes-role" id="q4-role">Administraci&#243;n transparente de fondos</p>
-        <p class="quienes-text" id="q4-text">Organismo responsable de la administraci&#243;n de los fondos y la emisi&#243;n de recibos fiscales deducibles de impuestos. Autorizaci&#243;n SAT No. 700-02-05-2017-03718.</p>
+        <p class="quienes-name">Arte, Educación y Ecología A.C.</p>
+        <p class="quienes-role" id="q4-role">Administración transparente de fondos</p>
+        <p class="quienes-text" id="q4-text">Organismo responsable de la administración de los fondos y la emisión de recibos fiscales deducibles de impuestos. Autorización SAT No. 700-02-05-2017-03718.</p>
       </div>
     </div>
   </div>
@@ -448,13 +572,13 @@
   <div class="contacto-bg"></div>
   <div class="section-inner">
     <div class="contacto-inner reveal">
-      <span class="section-label" id="sec-label-contacto">&#218;nete al proyecto</span>
-      <h2 class="section-title" id="sec-title-contacto">&#191;Quieres sumarte<br>a esta <em>historia</em>?</h2>
+      <span class="section-label" id="sec-label-contacto">Únete al proyecto</span>
+      <h2 class="section-title" id="sec-title-contacto">¿Quieres sumarte<br>a esta <em>historia</em>?</h2>
       <p class="body-text" id="contacto-p" style="max-width:600px; margin: 0 auto 3rem;">Puedes ayudar con donativos, servicios, materiales, o simplemente compartiendo este mensaje con quienes puedan hacerlo posible.</p>
       <div class="contacto-links">
         <div class="contacto-link-item">
           <span class="contacto-link-label" id="label-dona">Donativos</span>
-          <a href="#" id="email-dona-contacto" class="contacto-link-val">dona&#64;nuevohogarparaleo.com</a>
+          <a href="#" id="email-dona-contacto" class="contacto-link-val">dona@nuevohogarparaleo.com</a>
         </div>
         <div class="contacto-link-item">
           <span class="contacto-link-label" id="label-tel">Iglesia San Ignacio de Loyola</span>
@@ -462,24 +586,32 @@
         </div>
         <div class="contacto-link-item">
           <span class="contacto-link-label" id="label-mail">Correo de la parroquia</span>
-          <a href="#" id="email-amdg-contacto" class="contacto-link-val">amdg1&#64;prodigy.net.mx</a>
+          <a href="#" id="email-amdg-contacto" class="contacto-link-val">amdg1@prodigy.net.mx</a>
         </div>
       </div>
-      <a href="#" class="btn-primary" id="btn-contacto">Cont&#225;ctanos</a>
+      <a href="#" class="btn-primary" id="btn-contacto">Contáctanos</a>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="footer-logo">Un Nuevo Hogar para <span>LeO</span> &middot; nuevohogarparaleo.com</div>
-  <p class="footer-legal" id="footer-legal">Proyecto administrado por Arte, Educaci&#243;n y Ecolog&#237;a A.C.<br>Autorizaci&#243;n SAT No. 700-02-05-2017-03718 &middot; Donativos deducibles de impuestos.</p>
+  <div class="footer-logo">Un Nuevo Hogar para <span>LeO</span> · nuevohogarparaleo.com</div>
+  <p class="footer-legal" id="footer-legal">Proyecto administrado por Arte, Educación y Ecología A.C.<br>Autorización SAT No. 700-02-05-2017-03718 · Donativos deducibles de impuestos.</p>
 </footer>
 
-<div id="lightbox" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out;" onclick="this.style.display='none'">
-  <img id="lightbox-img" src="" style="max-width:92vw;max-height:92vh;object-fit:contain;pointer-events:none;user-select:none;animation:lb-zoom 1.2s ease;" ondragstart="return false" oncontextmenu="return false" />
+<div id="lightbox" onclick="closeLightbox(event)">
+  <button id="lb-close" onclick="closeLightbox()">Cerrar ×</button>
+  <img id="lightbox-img" src="" alt="" ondragstart="return false" oncontextmenu="return false" />
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<div class="music-player">
+  <button class="player-btn" id="playPauseBtn" title="Play/Pause">▶</button>
+  <button class="player-btn" id="prevBtn" title="Anterior">◀</button>
+  <button class="player-btn" id="nextBtn" title="Siguiente">▶▶</button>
+  <span class="player-track-info" id="trackInfo">ruidito leo</span>
+</div>
+
+<script>
 (function() {
   // COUNTDOWN
   function updateCountdown() {
@@ -517,70 +649,152 @@
   });
 
   // LIGHTBOX
+  function openLightbox(src) {
+    var lb = document.getElementById("lightbox");
+    var img = document.getElementById("lightbox-img");
+    img.src = src;
+    img.style.animation = "none";
+    img.offsetHeight;
+    img.style.animation = "";
+    lb.style.display = "flex";
+    document.body.style.overflow = "hidden";
+  }
+  window.closeLightbox = function(e) {
+    if (e && e.target === document.getElementById("lightbox-img")) return;
+    document.getElementById("lightbox").style.display = "none";
+    document.body.style.overflow = "";
+  };
   document.querySelectorAll(".gallery-click").forEach(function(img) {
-    img.style.cursor = "zoom-in";
     img.addEventListener("click", function(e) {
       e.stopPropagation();
-      document.getElementById("lightbox-img").src = img.src;
-      document.getElementById("lightbox").style.display = "flex";
+      openLightbox(img.src);
     });
   });
   document.addEventListener("keydown", function(e) {
-    if (e.key === "Escape") document.getElementById("lightbox").style.display = "none";
+    if (e.key === "Escape") {
+      document.getElementById("lightbox").style.display = "none";
+      document.body.style.overflow = "";
+    }
   });
 
-  // TRANSLATIONS
+  // REPRODUCTOR
+  const tracks = [
+    { name: "ruidito leo", url: "ruidito leo.mp3" },
+    { name: "final", url: "final.mp3" }
+  ];
+  let currentTrack = 0;
+  let audio = new Audio();
+  let isPlaying = false;
+  
+  const playPauseBtn = document.getElementById("playPauseBtn");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const trackInfo = document.getElementById("trackInfo");
+  
+  function loadTrack(index) {
+    audio.src = tracks[index].url;
+    trackInfo.textContent = tracks[index].name;
+    audio.load();
+    if (isPlaying) {
+      audio.play().catch(e => console.log("Autoplay bloqueado:", e));
+    }
+  }
+  
+  function playPause() {
+    if (isPlaying) {
+      audio.pause();
+      playPauseBtn.textContent = "▶";
+    } else {
+      audio.play().catch(e => console.log("Error al reproducir:", e));
+      playPauseBtn.textContent = "⏸";
+    }
+    isPlaying = !isPlaying;
+  }
+  
+  function nextTrack() {
+    currentTrack = (currentTrack + 1) % tracks.length;
+    loadTrack(currentTrack);
+    if (isPlaying) {
+      audio.play().catch(e => console.log("Error:", e));
+      playPauseBtn.textContent = "⏸";
+    } else {
+      playPauseBtn.textContent = "▶";
+    }
+  }
+  
+  function prevTrack() {
+    currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
+    loadTrack(currentTrack);
+    if (isPlaying) {
+      audio.play().catch(e => console.log("Error:", e));
+      playPauseBtn.textContent = "⏸";
+    } else {
+      playPauseBtn.textContent = "▶";
+    }
+  }
+  
+  audio.addEventListener("ended", function() {
+    nextTrack();
+  });
+  
+  playPauseBtn.addEventListener("click", playPause);
+  nextBtn.addEventListener("click", nextTrack);
+  prevBtn.addEventListener("click", prevTrack);
+  
+  loadTrack(0);
+
+  // TRANSLATIONS (ES, EN, FR, IT)
   var T = {
     es: {
-      navHistoria:"La Historia", navProyecto:"El Proyecto", navImagenes:"Im\u00e1genes", navDonar:"Donar", navContacto:"Contacto",
-      eyebrow:"Un proyecto cultural y espiritual \u00b7 Suiza \u2192 M\u00e9xico",
+      navHistoria:"La Historia", navProyecto:"El Proyecto", navImagenes:"Imágenes", navDonar:"Donar", navContacto:"Contacto",
+      eyebrow:"Un proyecto cultural y espiritual · Suiza → México",
       heroTitle:"La nueva voz<br>de San Ignacio<br><em>de Loyola</em>",
-      heroSub:"Un magn\u00edfico \u00f3rgano tubular suizo busca hogar. Su templo en Ginebra ser\u00e1 demolido. M\u00e9xico tiene la oportunidad \u00fanica de rescatarlo.",
+      heroSub:"Un magnífico órgano tubular suizo busca hogar. Su templo en Ginebra será demolido. México tiene la oportunidad única de rescatarlo.",
       btnDonar:"Donar ahora", btnHistoria:"Conocer la historia",
-      cdLabel1:"Fecha l\u00edmite para el desmontaje en Ginebra", cdLabel2:"Junio 2026",
-      cdMeses:"Meses", cdDias:"D\u00edas", cdHoras:"Horas",
+      cdLabel1:"Fecha límite para el desmontaje en Ginebra", cdLabel2:"Junio 2026",
+      cdMeses:"Meses", cdDias:"Días", cdHoras:"Horas",
       secLabelHistoria:"La Historia de LeO",
       secTitleHistoria:"Una voz<br>que merece<br><em>volver a escucharse</em>",
-      histP1:"<strong>LeO</strong> es un magn\u00edfico \u00f3rgano tubular suizo, con tres teclados y miles de tubos, que durante d\u00e9cadas llen\u00f3 de m\u00fasica y vida el templo de <strong>La Servette, en Ginebra</strong>. Hoy, ese templo est\u00e1 por ser demolido\u2026 y LeO necesita un nuevo hogar.",
-      histP2:"El maestro <strong>Diego Innocenzi</strong>, organista en Ginebra, en el marco de los v\u00ednculos acad\u00e9micos y art\u00edsticos establecidos con nuestra instituci\u00f3n, invit\u00f3 a nuestro comit\u00e9 a participar en el concurso internacional para la asignaci\u00f3n del \u00f3rgano. Tras ese concurso, <strong>nuestro proyecto fue elegido</strong>.",
-      histP3:"Nuestra meta: traer a LeO a M\u00e9xico y darle una nueva vida en la <strong>Iglesia de San Ignacio de Loyola</strong>, en Polanco, donde el arte, la m\u00fasica y la fe vuelvan a encontrarse.",
-      imgLabel:"Visualizaci\u00f3n \u00b7 San Ignacio de Loyola",
-      quoteText:"Tu donativo se transforma en m\u00fasica.",
+      histP1:"<strong>LeO</strong> es un magnífico órgano tubular suizo, con tres teclados y miles de tubos, que durante décadas llenó de música y vida el templo de <strong>La Servette, en Ginebra</strong>. Hoy, ese templo está por ser demolido… y LeO necesita un nuevo hogar.",
+      histP2:"El maestro <strong>Diego Innocenzi</strong>, organista en Ginebra, invitó a nuestro comité a participar en el concurso internacional para la asignación del órgano. Tras ese concurso, <strong>nuestro proyecto fue elegido</strong>.",
+      histP3:"Nuestra meta: traer a LeO a México y darle una nueva vida en la <strong>Iglesia de San Ignacio de Loyola</strong>, en Polanco, donde el arte, la música y la fe vuelvan a encontrarse.",
+      imgLabel:"Visualización · San Ignacio de Loyola",
+      quoteText:"Tu donativo se transforma en música.",
       secLabelFases:"El Proyecto", secTitleFases:"Cinco fases<br>para <em>una sinfonía</em>",
-      fase1t:"Adecuaciones estructurales", fase1d:"Reforzar el coro de San Ignacio: estructura, ac\u00fastica, condiciones el\u00e9ctricas y clim\u00e1ticas.",
-      fase2t:"Desmontaje en Ginebra", fase2d:"Ejecuci\u00f3n especializada pieza por pieza. Fecha l\u00edmite: junio de 2026.",
-      fase3t:"Transporte internacional", fase3d:"Log\u00edstica y gesti\u00f3n aduanal para un traslado integral y seguro a M\u00e9xico.",
-      fase4t:"Instalaci\u00f3n y restauraci\u00f3n", fase4d:"Ensamblaje, reentonaci\u00f3n y adaptaci\u00f3n al nuevo espacio con organeros certificados.",
-      fase5t:"Inauguraci\u00f3n", fase5d:"Conciertos inaugurales, actividades acad\u00e9micas y memoria documental del proyecto.",
-      secLabelGaleria:"Las Im\u00e1genes", secTitleGaleria:"Dos mundos,<br><em>un instrumento</em>",
-      ov1:"San Ignacio \u00b7 Polanco, CDMX", ov2:"LeO en La Servette \u00b7 Ginebra", ov3:"Visualizaci\u00f3n futura \u00b7 LeO en San Ignacio", ov4:"La comunidad de San Ignacio", ov5:"Interior \u00b7 San Ignacio de Loyola",
+      fase1t:"Adecuaciones estructurales", fase1d:"Reforzar el coro de San Ignacio: estructura, acústica, condiciones eléctricas y climáticas.",
+      fase2t:"Desmontaje en Ginebra", fase2d:"Ejecución especializada pieza por pieza. Fecha límite: junio de 2026.",
+      fase3t:"Transporte internacional", fase3d:"Logística y gestión aduanal para un traslado integral y seguro a México.",
+      fase4t:"Instalación y restauración", fase4d:"Ensamblaje, reentonación y adaptación al nuevo espacio con organeros certificados.",
+      fase5t:"Inauguración", fase5d:"Conciertos inaugurales, actividades académicas y memoria documental del proyecto.",
+      secLabelGaleria:"Las Imágenes", secTitleGaleria:"Dos mundos,<br><em>un instrumento</em>",
+      ov1:"San Ignacio · Polanco, CDMX", ov2:"LeO en La Servette · Ginebra", ov3:"Visualización futura · LeO en San Ignacio", ov4:"La comunidad de San Ignacio", ov5:"Interior · San Ignacio de Loyola",
       urgencia:"Tiempo limitado",
-      secLabelDonar:"C\u00f3mo contribuir", secTitleDonar:"Tu donativo<br>se convierte<br>en <em>m\u00fasica</em>",
-      donarP1:"El \u00f3rgano ya ha sido donado. Ahora, nuestro desaf\u00edo es financiar su <strong>traslado, restauraci\u00f3n e instalaci\u00f3n</strong>, un proceso minucioso que requiere cuidado artesanal y amor por el detalle.",
-      donarP2:"Cada aportaci\u00f3n ayuda a que LeO llegue y cobre vida en su nuevo hogar. Puedes contribuir con donativos, servicios, materiales, o simplemente <strong>compartiendo este mensaje</strong> con quienes puedan hacerlo posible.",
-      donarP3:"Proyecto administrado por <strong style=\"color:var(--parchment)\">Arte, Educaci\u00f3n y Ecolog\u00eda A.C.</strong><br>Autorizaci\u00f3n SAT No. 700-02-05-2017-03718",
-      cardTitle:"Realiza tu donativo", cardSub:"Transferencia bancaria \u00b7 Deducible de impuestos",
+      secLabelDonar:"Cómo contribuir", secTitleDonar:"Tu donativo<br>se convierte<br>en <em>música</em>",
+      donarP1:"El órgano ya ha sido donado. Ahora, nuestro desafío es financiar su <strong>traslado, restauración e instalación</strong>, un proceso minucioso que requiere cuidado artesanal y amor por el detalle.",
+      donarP2:"Cada aportación ayuda a que LeO llegue y cobre vida en su nuevo hogar. Puedes contribuir con donativos, servicios, materiales, o simplemente <strong>compartiendo este mensaje</strong> con quienes puedan hacerlo posible.",
+      donarP3:"Proyecto administrado por <strong style=\"color:var(--parchment)\">Arte, Educación y Ecología A.C.</strong><br>Autorización SAT No. 700-02-05-2017-03718",
+      cardTitle:"Realiza tu donativo", cardSub:"Transferencia bancaria · Deducible de impuestos",
       labelBenef:"Beneficiario", labelBanco:"Banco", labelClabe:"CLABE interbancaria",
-      afterTitle:"Despu\u00e9s de tu transferencia:",
-      step1:"Env\u00eda tu comprobante a <strong>dona@nuevohogarparaleo.com</strong>",
-      step2:"Adjunta tu Constancia de Situaci\u00f3n Fiscal si deseas tu <strong>CFDI deducible</strong>",
-      step3:"En m\u00e1ximo <strong>5 d\u00edas h\u00e1biles</strong> recibir\u00e1s tu comprobante fiscal",
+      afterTitle:"Después de tu transferencia:",
+      step1:"Envía tu comprobante a <strong>dona@nuevohogarparaleo.com</strong>",
+      step2:"Adjunta tu Constancia de Situación Fiscal si deseas tu <strong>CFDI deducible</strong>",
+      step3:"En máximo <strong>5 días hábiles</strong> recibirás tu comprobante fiscal",
       donarNote:"Si no necesitas CFDI, basta con enviarnos tu comprobante. Registraremos tu donativo y te enviaremos un recibo con nuestro agradecimiento.",
       btnEmail:"Escribir a dona@nuevohogarparaleo.com",
-      secLabelQuienes:"El Equipo", secTitleQuienes:"Qui\u00e9nes hacen<br><em>posible esto</em>",
-      q1role:"Donantes originales \u00b7 Ginebra, Suiza", q1text:"En sesi\u00f3n del 11 de junio de 2025, el Consejo de la Parroquia eligi\u00f3 oficialmente a nuestra propuesta como ganadora del concurso internacional para recibir el \u00f3rgano.",
-      q2role:"Hogar receptor \u00b7 Polanco, CDMX", q2text:"El P. Luis Gonz\u00e1lez-Cos\u00edo Elcoro, SJ, Rector de la parroquia, ha aceptado oficialmente el instrumento con \u201cesp\u00edritu de responsabilidad, gratitud y esperanza\u201d.",
-      q3role:"Coordinaci\u00f3n del proyecto \u00b7 Ciudad de M\u00e9xico", q3text:"El comit\u00e9 gestiona la planeaci\u00f3n integral del proyecto, encabezado por el maestro V\u00edctor Contreras, concertista y profesor del Conservatorio Nacional de M\u00fasica, designado organista titular del instrumento.",
-      q4role:"Administraci\u00f3n transparente de fondos", q4text:"Organismo responsable de la administraci\u00f3n de los fondos y la emisi\u00f3n de recibos fiscales deducibles de impuestos. Autorizaci\u00f3n SAT No. 700-02-05-2017-03718.",
-      secLabelContacto:"\u00danete al proyecto", secTitleContacto:"\u00bfQuieres sumarte<br>a esta <em>historia</em>?",
+      secLabelQuienes:"El Equipo", secTitleQuienes:"Quiénes hacen<br><em>posible esto</em>",
+      q1role:"Donantes originales · Ginebra, Suiza", q1text:"En sesión del 11 de junio de 2025, el Consejo de la Parroquia eligió oficialmente a nuestra propuesta como ganadora del concurso internacional para recibir el órgano.",
+      q2role:"Hogar receptor · Polanco, CDMX", q2text:"El P. Luis González-Cosío Elcoro, SJ, Rector de la parroquia, ha aceptado oficialmente el instrumento con \"espíritu de responsabilidad, gratitud y esperanza\".",
+      q3role:"Coordinación del proyecto · Ciudad de México", q3text:"El comité gestiona la planeación integral del proyecto, encabezado por el maestro Víctor Contreras, concertista y profesor del Conservatorio Nacional de Música, designado organista titular del instrumento.",
+      q4role:"Administración transparente de fondos", q4text:"Organismo responsable de la administración de los fondos y la emisión de recibos fiscales deducibles de impuestos. Autorización SAT No. 700-02-05-2017-03718.",
+      secLabelContacto:"Únete al proyecto", secTitleContacto:"¿Quieres sumarte<br>a esta <em>historia</em>?",
       contactoP:"Puedes ayudar con donativos, servicios, materiales, o simplemente compartiendo este mensaje con quienes puedan hacerlo posible.",
       labelDona:"Donativos", labelTel:"Iglesia San Ignacio de Loyola", labelMail:"Correo de la parroquia",
-      btnContacto:"Cont\u00e1ctanos",
-      footerLegal:"Proyecto administrado por Arte, Educaci\u00f3n y Ecolog\u00eda A.C.<br>Autorizaci\u00f3n SAT No. 700-02-05-2017-03718 \u00b7 Donativos deducibles de impuestos."
+      btnContacto:"Contáctanos",
+      footerLegal:"Proyecto administrado por Arte, Educación y Ecología A.C.<br>Autorización SAT No. 700-02-05-2017-03718 · Donativos deducibles de impuestos."
     },
     en: {
       navHistoria:"The Story", navProyecto:"The Project", navImagenes:"Gallery", navDonar:"Donate", navContacto:"Contact",
-      eyebrow:"A cultural and spiritual project \u00b7 Switzerland \u2192 Mexico",
+      eyebrow:"A cultural and spiritual project · Switzerland → Mexico",
       heroTitle:"The new voice<br>of San Ignacio<br><em>de Loyola</em>",
       heroSub:"A magnificent Swiss pipe organ needs a new home. Its Geneva temple will be demolished. Mexico has a unique opportunity to rescue it.",
       btnDonar:"Donate now", btnHistoria:"Learn the story",
@@ -591,7 +805,7 @@
       histP1:"<strong>LeO</strong> is a magnificent Swiss pipe organ, with three keyboards and thousands of pipes, that for decades filled the temple of <strong>La Servette, in Geneva</strong> with music and life. Today, that temple is about to be demolished and LeO needs a new home.",
       histP2:"Master <strong>Diego Innocenzi</strong>, organist in Geneva, invited our committee to participate in the international competition for the organ assignment. After that competition, <strong>our project was chosen</strong>.",
       histP3:"Our goal: bring LeO to Mexico and give it a new life at <strong>Iglesia de San Ignacio de Loyola</strong>, in Polanco, where art, music, and faith meet again.",
-      imgLabel:"Visualization \u00b7 San Ignacio de Loyola",
+      imgLabel:"Visualization · San Ignacio de Loyola",
       quoteText:"Your donation transforms into music.",
       secLabelFases:"The Project", secTitleFases:"Five phases<br>for <em>a symphony</em>",
       fase1t:"Structural adaptations", fase1d:"Reinforcing the choir loft at San Ignacio: structure, acoustics, electrical and climate conditions.",
@@ -600,13 +814,13 @@
       fase4t:"Installation and restoration", fase4d:"Assembly, retuning, and adaptation to the new space by certified organ builders.",
       fase5t:"Inauguration", fase5d:"Opening concerts, academic activities, and documentary record of the project.",
       secLabelGaleria:"The Images", secTitleGaleria:"Two worlds,<br><em>one instrument</em>",
-      ov1:"San Ignacio \u00b7 Polanco, CDMX", ov2:"LeO at La Servette \u00b7 Geneva", ov3:"Future vision \u00b7 LeO at San Ignacio", ov4:"The San Ignacio community", ov5:"Interior \u00b7 San Ignacio de Loyola",
+      ov1:"San Ignacio · Polanco, CDMX", ov2:"LeO at La Servette · Geneva", ov3:"Future vision · LeO at San Ignacio", ov4:"The San Ignacio community", ov5:"Interior · San Ignacio de Loyola",
       urgencia:"Limited time",
       secLabelDonar:"How to contribute", secTitleDonar:"Your donation<br>becomes<br><em>music</em>",
       donarP1:"The organ has already been donated. Now, our challenge is to fund its <strong>transport, restoration, and installation</strong>, a meticulous process requiring artisanal care and love for detail.",
       donarP2:"Every contribution helps LeO arrive and come to life in its new home. You can help with donations, services, materials, or simply <strong>sharing this message</strong> with those who can make it possible.",
       donarP3:"Project managed by <strong style=\"color:var(--parchment)\">Arte, Educaci\u00f3n y Ecolog\u00eda A.C.</strong><br>SAT Authorization No. 700-02-05-2017-03718",
-      cardTitle:"Make your donation", cardSub:"Bank transfer \u00b7 Tax deductible",
+      cardTitle:"Make your donation", cardSub:"Bank transfer · Tax deductible",
       labelBenef:"Beneficiary", labelBanco:"Bank", labelClabe:"Interbank CLABE",
       afterTitle:"After your transfer:",
       step1:"Send your receipt to <strong>dona@nuevohogarparaleo.com</strong>",
@@ -615,92 +829,92 @@
       donarNote:"If you don't need a tax invoice, just send us your receipt. We will register your donation and send you an acknowledgment.",
       btnEmail:"Write to dona@nuevohogarparaleo.com",
       secLabelQuienes:"The Team", secTitleQuienes:"Who makes<br><em>this possible</em>",
-      q1role:"Original donors \u00b7 Geneva, Switzerland", q1text:"In session on June 11, 2025, the Parish Council officially chose our proposal as the winner of the international competition to receive the organ.",
-      q2role:"Receiving home \u00b7 Polanco, CDMX", q2text:"Fr. Luis Gonz\u00e1lez-Cos\u00edo Elcoro, SJ, Rector of the parish, officially accepted the instrument with a spirit of responsibility, gratitude and hope.",
-      q3role:"Project coordination \u00b7 Mexico City", q3text:"The committee manages the integral planning of the project, led by maestro V\u00edctor Contreras, concert performer and professor at the National Conservatory of Music, designated as titular organist.",
+      q1role:"Original donors · Geneva, Switzerland", q1text:"In session on June 11, 2025, the Parish Council officially chose our proposal as the winner of the international competition to receive the organ.",
+      q2role:"Receiving home · Polanco, CDMX", q2text:"Fr. Luis Gonz\u00e1lez-Cos\u00edo Elcoro, SJ, Rector of the parish, officially accepted the instrument with a spirit of responsibility, gratitude and hope.",
+      q3role:"Project coordination · Mexico City", q3text:"The committee manages the integral planning of the project, led by maestro V\u00edctor Contreras, concert performer and professor at the National Conservatory of Music, designated as titular organist.",
       q4role:"Transparent fund administration", q4text:"Organization responsible for fund management and issuance of tax-deductible receipts. SAT Authorization No. 700-02-05-2017-03718.",
       secLabelContacto:"Join the project", secTitleContacto:"Want to be part<br>of this <em>story</em>?",
       contactoP:"You can help with donations, services, materials, or simply by sharing this message with those who can make it possible.",
       labelDona:"Donations", labelTel:"Iglesia San Ignacio de Loyola", labelMail:"Parish email",
       btnContacto:"Contact us",
-      footerLegal:"Project managed by Arte, Educaci\u00f3n y Ecolog\u00eda A.C.<br>SAT Authorization No. 700-02-05-2017-03718 \u00b7 Tax-deductible donations."
+      footerLegal:"Project managed by Arte, Educaci\u00f3n y Ecolog\u00eda A.C.<br>SAT Authorization No. 700-02-05-2017-03718 · Tax-deductible donations."
     },
     fr: {
-      navHistoria:"L\u2019Histoire", navProyecto:"Le Projet", navImagenes:"Galerie", navDonar:"Donner", navContacto:"Contact",
-      eyebrow:"Un projet culturel et spirituel \u00b7 Suisse \u2192 Mexique",
+      navHistoria:"L'Histoire", navProyecto:"Le Projet", navImagenes:"Galerie", navDonar:"Donner", navContacto:"Contact",
+      eyebrow:"Un projet culturel et spirituel · Suisse → Mexique",
       heroTitle:"La nouvelle voix<br>de San Ignacio<br><em>de Loyola</em>",
-      heroSub:"Un magnifique orgue \u00e0 tuyaux suisse cherche un foyer. Son temple \u00e0 Gen\u00e8ve sera d\u00e9moli. Le Mexique a l\u2019opportunit\u00e9 unique de le sauver.",
-      btnDonar:"Faire un don", btnHistoria:"D\u00e9couvrir l\u2019histoire",
-      cdLabel1:"Date limite pour le d\u00e9montage \u00e0 Gen\u00e8ve", cdLabel2:"Juin 2026",
+      heroSub:"Un magnifique orgue à tuyaux suisse cherche un foyer. Son temple à Genève sera démoli. Le Mexique a l'opportunité unique de le sauver.",
+      btnDonar:"Faire un don", btnHistoria:"Découvrir l'histoire",
+      cdLabel1:"Date limite pour le démontage à Genève", cdLabel2:"Juin 2026",
       cdMeses:"Mois", cdDias:"Jours", cdHoras:"Heures",
-      secLabelHistoria:"L\u2019Histoire de LeO",
-      secTitleHistoria:"Une voix<br>qui m\u00e9rite<br><em>d\u2019\u00eatre entendue</em>",
-      histP1:"<strong>LeO</strong> est un magnifique orgue \u00e0 tuyaux suisse, \u00e0 trois claviers et des milliers de tuyaux, qui pendant des d\u00e9cennies a rempli de musique et de vie le temple de <strong>La Servette, \u00e0 Gen\u00e8ve</strong>. Aujourd\u2019hui, ce temple est sur le point d\u2019\u00eatre d\u00e9moli\u2026 et LeO a besoin d\u2019un nouveau foyer.",
-      histP2:"Le ma\u00eetre <strong>Diego Innocenzi</strong>, organiste \u00e0 Gen\u00e8ve, a invit\u00e9 notre comit\u00e9 \u00e0 participer au concours international pour l\u2019attribution de l\u2019orgue. Apr\u00e8s ce concours, <strong>notre projet a \u00e9t\u00e9 s\u00e9lectionn\u00e9</strong>.",
-      histP3:"Notre objectif : amener LeO au Mexique et lui donner une nouvelle vie \u00e0 l\u2019<strong>Iglesia de San Ignacio de Loyola</strong>, \u00e0 Polanco, o\u00f9 l\u2019art, la musique et la foi se retrouvent.",
-      imgLabel:"Visualisation \u00b7 San Ignacio de Loyola",
+      secLabelHistoria:"L'Histoire de LeO",
+      secTitleHistoria:"Une voix<br>qui mérite<br><em>d'être entendue</em>",
+      histP1:"<strong>LeO</strong> est un magnifique orgue à tuyaux suisse, à trois claviers et des milliers de tuyaux, qui pendant des décennies a rempli de musique et de vie le temple de <strong>La Servette, à Genève</strong>. Aujourd'hui, ce temple est sur le point d'être démoli… et LeO a besoin d'un nouveau foyer.",
+      histP2:"Le maître <strong>Diego Innocenzi</strong>, organiste à Genève, a invité notre comité à participer au concours international pour l'attribution de l'orgue. Après ce concours, <strong>notre projet a été sélectionné</strong>.",
+      histP3:"Notre objectif : amener LeO au Mexique et lui donner une nouvelle vie à l'<strong>Iglesia de San Ignacio de Loyola</strong>, à Polanco, où l'art, la musique et la foi se retrouvent.",
+      imgLabel:"Visualisation · San Ignacio de Loyola",
       quoteText:"Votre don se transforme en musique.",
       secLabelFases:"Le Projet", secTitleFases:"Cinq phases<br>pour <em>une symphonie</em>",
-      fase1t:"Adaptations structurelles", fase1d:"Renforcement du ch\u0153ur de San Ignacio : structure, acoustique, conditions \u00e9lectriques et climatiques.",
-      fase2t:"D\u00e9montage \u00e0 Gen\u00e8ve", fase2d:"Ex\u00e9cution sp\u00e9cialis\u00e9e pi\u00e8ce par pi\u00e8ce. Date limite : juin 2026.",
-      fase3t:"Transport international", fase3d:"Logistique et gestion douani\u00e8re pour un transfert complet et s\u00e9curis\u00e9 vers le Mexique.",
-      fase4t:"Installation et restauration", fase4d:"Assemblage, r\u00e9harmonisation et adaptation au nouvel espace par des facteurs d\u2019orgues certifi\u00e9s.",
-      fase5t:"Inauguration", fase5d:"Concerts inauguraux, activit\u00e9s acad\u00e9miques et m\u00e9moire documentaire du projet.",
+      fase1t:"Adaptations structurelles", fase1d:"Renforcement du chœur de San Ignacio : structure, acoustique, conditions électriques et climatiques.",
+      fase2t:"Démontage à Genève", fase2d:"Exécution spécialisée pièce par pièce. Date limite : juin 2026.",
+      fase3t:"Transport international", fase3d:"Logistique et gestion douanière pour un transfert complet et sécurisé vers le Mexique.",
+      fase4t:"Installation et restauration", fase4d:"Assemblage, réharmonisation et adaptation au nouvel espace par des facteurs d'orgues certifiés.",
+      fase5t:"Inauguration", fase5d:"Concerts inauguraux, activités académiques et mémoire documentaire du projet.",
       secLabelGaleria:"Les Images", secTitleGaleria:"Deux mondes,<br><em>un instrument</em>",
-      ov1:"San Ignacio \u00b7 Polanco, CDMX", ov2:"LeO \u00e0 La Servette \u00b7 Gen\u00e8ve", ov3:"Vision future \u00b7 LeO \u00e0 San Ignacio", ov4:"La communaut\u00e9 de San Ignacio", ov5:"Int\u00e9rieur \u00b7 San Ignacio de Loyola",
-      urgencia:"Temps limit\u00e9",
+      ov1:"San Ignacio · Polanco, CDMX", ov2:"LeO à La Servette · Genève", ov3:"Vision future · LeO à San Ignacio", ov4:"La communauté de San Ignacio", ov5:"Intérieur · San Ignacio de Loyola",
+      urgencia:"Temps limité",
       secLabelDonar:"Comment contribuer", secTitleDonar:"Votre don<br>devient<br><em>musique</em>",
-      donarP1:"L\u2019orgue a d\u00e9j\u00e0 \u00e9t\u00e9 donn\u00e9. Notre d\u00e9fi est maintenant de financer son <strong>transport, sa restauration et son installation</strong>, un processus minutieux qui exige un soin artisanal et un amour du d\u00e9tail.",
-      donarP2:"Chaque contribution aide LeO \u00e0 arriver et \u00e0 prendre vie dans son nouveau foyer. Vous pouvez aider avec des dons, des services, des mat\u00e9riaux, ou simplement en <strong>partageant ce message</strong> avec ceux qui peuvent le rendre possible.",
-      donarP3:"Projet g\u00e9r\u00e9 par <strong style=\"color:var(--parchment)\">Arte, Educaci\u00f3n y Ecolog\u00eda A.C.</strong><br>Autorisation SAT No. 700-02-05-2017-03718",
-      cardTitle:"Faites votre don", cardSub:"Virement bancaire \u00b7 D\u00e9ductible des imp\u00f4ts",
-      labelBenef:"B\u00e9n\u00e9ficiaire", labelBanco:"Banque", labelClabe:"CLABE interbancaire",
-      afterTitle:"Apr\u00e8s votre virement :",
-      step1:"Envoyez votre re\u00e7u \u00e0 <strong>dona@nuevohogarparaleo.com</strong>",
-      step2:"Joignez votre attestation fiscale si vous souhaitez une <strong>facture d\u00e9ductible</strong>",
-      step3:"Sous <strong>5 jours ouvrables</strong> vous recevrez votre re\u00e7u fiscal",
-      donarNote:"Si vous n\u2019avez pas besoin de facture, envoyez-nous simplement votre re\u00e7u. Nous enregistrerons votre don et vous enverrons un accus\u00e9 de r\u00e9ception.",
-      btnEmail:"\u00c9crire \u00e0 dona@nuevohogarparaleo.com",
-      secLabelQuienes:"L\u2019\u00c9quipe", secTitleQuienes:"Qui rend<br><em>cela possible</em>",
-      q1role:"Donateurs originaux \u00b7 Gen\u00e8ve, Suisse", q1text:"En s\u00e9ance du 11 juin 2025, le Conseil de la Paroisse a officiellement choisi notre proposition comme gagnante du concours international pour recevoir l\u2019orgue.",
-      q2role:"Foyer r\u00e9cepteur \u00b7 Polanco, CDMX", q2text:"Le P. Luis Gonz\u00e1lez-Cos\u00edo Elcoro, SJ, Recteur de la paroisse, a officiellement accept\u00e9 l\u2019instrument avec un esprit de responsabilit\u00e9, de gratitude et d\u2019esp\u00e9rance.",
-      q3role:"Coordination du projet \u00b7 Mexico", q3text:"Le comit\u00e9 g\u00e8re la planification int\u00e9grale du projet, dirig\u00e9 par le ma\u00eetre V\u00edctor Contreras, concertiste et professeur au Conservatoire National de Musique, d\u00e9sign\u00e9 comme organiste titulaire.",
-      q4role:"Administration transparente des fonds", q4text:"Organisme responsable de la gestion des fonds et de l\u2019\u00e9mission de re\u00e7us fiscaux d\u00e9ductibles. Autorisation SAT No. 700-02-05-2017-03718.",
+      donarP1:"L'orgue a déjà été donné. Notre défi est maintenant de financer son <strong>transport, sa restauration et son installation</strong>, un processus minutieux qui exige un soin artisanal et un amour du détail.",
+      donarP2:"Chaque contribution aide LeO à arriver et à prendre vie dans son nouveau foyer. Vous pouvez aider avec des dons, des services, des matériaux, ou simplement en <strong>partageant ce message</strong> avec ceux qui peuvent le rendre possible.",
+      donarP3:"Projet géré par <strong style=\"color:var(--parchment)\">Arte, Educaci\u00f3n y Ecolog\u00eda A.C.</strong><br>Autorisation SAT No. 700-02-05-2017-03718",
+      cardTitle:"Faites votre don", cardSub:"Virement bancaire · Déductible des impôts",
+      labelBenef:"Bénéficiaire", labelBanco:"Banque", labelClabe:"CLABE interbancaire",
+      afterTitle:"Après votre virement :",
+      step1:"Envoyez votre reçu à <strong>dona@nuevohogarparaleo.com</strong>",
+      step2:"Joignez votre attestation fiscale si vous souhaitez une <strong>facture déductible</strong>",
+      step3:"Sous <strong>5 jours ouvrables</strong> vous recevrez votre reçu fiscal",
+      donarNote:"Si vous n'avez pas besoin de facture, envoyez-nous simplement votre reçu. Nous enregistrerons votre don et vous enverrons un accusé de réception.",
+      btnEmail:"Écrire à dona@nuevohogarparaleo.com",
+      secLabelQuienes:"L'Équipe", secTitleQuienes:"Qui rend<br><em>cela possible</em>",
+      q1role:"Donateurs originaux · Genève, Suisse", q1text:"En séance du 11 juin 2025, le Conseil de la Paroisse a officiellement choisi notre proposition comme gagnante du concours international pour recevoir l'orgue.",
+      q2role:"Foyer récepteur · Polanco, CDMX", q2text:"Le P. Luis Gonz\u00e1lez-Cos\u00edo Elcoro, SJ, Recteur de la paroisse, a officiellement accepté l'instrument avec un esprit de responsabilité, de gratitude et d'espérance.",
+      q3role:"Coordination du projet · Mexico", q3text:"Le comité gère la planification intégrale du projet, dirigé par le maître V\u00edctor Contreras, concertiste et professeur au Conservatoire National de Musique, désigné comme organiste titulaire.",
+      q4role:"Administration transparente des fonds", q4text:"Organisme responsable de la gestion des fonds et de l'émission de reçus fiscaux déductibles. Autorisation SAT No. 700-02-05-2017-03718.",
       secLabelContacto:"Rejoignez le projet", secTitleContacto:"Vous souhaitez<br>faire partie de cette <em>histoire</em> ?",
-      contactoP:"Vous pouvez aider avec des dons, des services, des mat\u00e9riaux, ou simplement en partageant ce message avec ceux qui peuvent le rendre possible.",
+      contactoP:"Vous pouvez aider avec des dons, des services, des matériaux, ou simplement en partageant ce message avec ceux qui peuvent le rendre possible.",
       labelDona:"Dons", labelTel:"Iglesia San Ignacio de Loyola", labelMail:"Courriel de la paroisse",
       btnContacto:"Nous contacter",
-      footerLegal:"Projet g\u00e9r\u00e9 par Arte, Educaci\u00f3n y Ecolog\u00eda A.C.<br>Autorisation SAT No. 700-02-05-2017-03718 \u00b7 Dons d\u00e9ductibles des imp\u00f4ts."
+      footerLegal:"Projet géré par Arte, Educaci\u00f3n y Ecolog\u00eda A.C.<br>Autorisation SAT No. 700-02-05-2017-03718 · Dons déductibles des impôts."
     },
     it: {
       navHistoria:"La Storia", navProyecto:"Il Progetto", navImagenes:"Galleria", navDonar:"Donare", navContacto:"Contatto",
-      eyebrow:"Un progetto culturale e spirituale \u00b7 Svizzera \u2192 Messico",
+      eyebrow:"Un progetto culturale e spirituale · Svizzera → Messico",
       heroTitle:"La nuova voce<br>di San Ignacio<br><em>de Loyola</em>",
-      heroSub:"Un magnifico organo a canne svizzero cerca casa. Il suo tempio a Ginevra sar\u00e0 demolito. Il Messico ha l\u2019opportunit\u00e0 unica di salvarlo.",
+      heroSub:"Un magnifico organo a canne svizzero cerca casa. Il suo tempio a Ginevra sarà demolito. Il Messico ha l'opportunità unica di salvarlo.",
       btnDonar:"Dona ora", btnHistoria:"Scopri la storia",
       cdLabel1:"Scadenza per lo smontaggio a Ginevra", cdLabel2:"Giugno 2026",
       cdMeses:"Mesi", cdDias:"Giorni", cdHoras:"Ore",
       secLabelHistoria:"La Storia di LeO",
       secTitleHistoria:"Una voce<br>che merita<br><em>di essere ascoltata</em>",
-      histP1:"<strong>LeO</strong> \u00e8 un magnifico organo a canne svizzero, con tre tastiere e migliaia di canne, che per decenni ha riempito di musica e vita il tempio di <strong>La Servette, a Ginevra</strong>. Oggi quel tempio sta per essere demolito\u2026 e LeO ha bisogno di una nuova casa.",
-      histP2:"Il maestro <strong>Diego Innocenzi</strong>, organista a Ginevra, ha invitato il nostro comitato a partecipare al concorso internazionale per l\u2019assegnazione dell\u2019organo. Dopo quel concorso, <strong>il nostro progetto \u00e8 stato scelto</strong>.",
+      histP1:"<strong>LeO</strong> è un magnifico organo a canne svizzero, con tre tastiere e migliaia di canne, che per decenni ha riempito di musica e vita il tempio di <strong>La Servette, a Ginevra</strong>. Oggi quel tempio sta per essere demolito… e LeO ha bisogno di una nuova casa.",
+      histP2:"Il maestro <strong>Diego Innocenzi</strong>, organista a Ginevra, ha invitato il nostro comitato a partecipare al concorso internazionale per l'assegnazione dell'organo. Dopo quel concorso, <strong>il nostro progetto è stato scelto</strong>.",
       histP3:"Il nostro obiettivo: portare LeO in Messico e dargli una nuova vita nella <strong>Iglesia de San Ignacio de Loyola</strong>, a Polanco, dove arte, musica e fede si incontrano di nuovo.",
-      imgLabel:"Visualizzazione \u00b7 San Ignacio de Loyola",
+      imgLabel:"Visualizzazione · San Ignacio de Loyola",
       quoteText:"La tua donazione si trasforma in musica.",
       secLabelFases:"Il Progetto", secTitleFases:"Cinque fasi<br>per <em>una sinfonia</em>",
       fase1t:"Adattamenti strutturali", fase1d:"Rinforzo del coro di San Ignacio: struttura, acustica, condizioni elettriche e climatiche.",
       fase2t:"Smontaggio a Ginevra", fase2d:"Esecuzione specializzata pezzo per pezzo. Scadenza: giugno 2026.",
       fase3t:"Trasporto internazionale", fase3d:"Logistica e gestione doganale per un trasferimento integrale e sicuro in Messico.",
       fase4t:"Installazione e restauro", fase4d:"Assemblaggio, accordatura e adattamento al nuovo spazio da parte di organari certificati.",
-      fase5t:"Inaugurazione", fase5d:"Concerti inaugurali, attivit\u00e0 accademiche e memoria documentaria del progetto.",
+      fase5t:"Inaugurazione", fase5d:"Concerti inaugurali, attività accademiche e memoria documentaria del progetto.",
       secLabelGaleria:"Le Immagini", secTitleGaleria:"Due mondi,<br><em>uno strumento</em>",
-      ov1:"San Ignacio \u00b7 Polanco, CDMX", ov2:"LeO a La Servette \u00b7 Ginevra", ov3:"Visione futura \u00b7 LeO a San Ignacio", ov4:"La comunit\u00e0 di San Ignacio", ov5:"Interno \u00b7 San Ignacio de Loyola",
+      ov1:"San Ignacio · Polanco, CDMX", ov2:"LeO a La Servette · Ginevra", ov3:"Visione futura · LeO a San Ignacio", ov4:"La comunità di San Ignacio", ov5:"Interno · San Ignacio de Loyola",
       urgencia:"Tempo limitato",
       secLabelDonar:"Come contribuire", secTitleDonar:"La tua donazione<br>diventa<br><em>musica</em>",
-      donarP1:"L\u2019organo \u00e8 gi\u00e0 stato donato. Ora la nostra sfida \u00e8 finanziare il suo <strong>trasporto, restauro e installazione</strong>, un processo meticoloso che richiede cura artigianale e amore per i dettagli.",
-      donarP2:"Ogni contributo aiuta LeO ad arrivare e prendere vita nella sua nuova casa. Puoi contribuire con donazioni, servizi, materiali, o semplicemente <strong>condividendo questo messaggio</strong> con chi pu\u00f2 renderlo possibile.",
+      donarP1:"L'organo è già stato donato. Ora la nostra sfida è finanziare il suo <strong>trasporto, restauro e installazione</strong>, un processo meticoloso che richiede cura artigianale e amore per i dettagli.",
+      donarP2:"Ogni contributo aiuta LeO ad arrivare e prendere vita nella sua nuova casa. Puoi contribuire con donazioni, servizi, materiali, o semplicemente <strong>condividendo questo messaggio</strong> con chi può renderlo possibile.",
       donarP3:"Progetto gestito da <strong style=\"color:var(--parchment)\">Arte, Educaci\u00f3n y Ecolog\u00eda A.C.</strong><br>Autorizzazione SAT No. 700-02-05-2017-03718",
-      cardTitle:"Fai la tua donazione", cardSub:"Bonifico bancario \u00b7 Detraibile dalle tasse",
+      cardTitle:"Fai la tua donazione", cardSub:"Bonifico bancario · Detraibile dalle tasse",
       labelBenef:"Beneficiario", labelBanco:"Banca", labelClabe:"CLABE interbancario",
       afterTitle:"Dopo il tuo bonifico:",
       step1:"Invia la tua ricevuta a <strong>dona@nuevohogarparaleo.com</strong>",
@@ -709,15 +923,15 @@
       donarNote:"Se non hai bisogno di fattura, inviaci semplicemente la tua ricevuta. Registreremo la tua donazione e ti invieremo una conferma.",
       btnEmail:"Scrivi a dona@nuevohogarparaleo.com",
       secLabelQuienes:"Il Team", secTitleQuienes:"Chi rende<br><em>possibile tutto questo</em>",
-      q1role:"Donatori originali \u00b7 Ginevra, Svizzera", q1text:"Nella seduta dell\u2019 11 giugno 2025, il Consiglio della Parrocchia ha ufficialmente scelto la nostra proposta come vincitrice del concorso internazionale per ricevere l\u2019organo.",
-      q2role:"Casa ricevente \u00b7 Polanco, CDMX", q2text:"P. Luis Gonz\u00e1lez-Cos\u00edo Elcoro, SJ, Rettore della parrocchia, ha ufficialmente accettato lo strumento con uno spirito di responsabilit\u00e0, gratitudine e speranza.",
-      q3role:"Coordinamento del progetto \u00b7 Citt\u00e0 del Messico", q3text:"Il comitato gestisce la pianificazione integrale del progetto, guidato dal maestro V\u00edctor Contreras, concertista e professore al Conservatorio Nazionale di Musica, designato organista titolare.",
-      q4role:"Amministrazione trasparente dei fondi", q4text:"Organismo responsabile della gestione dei fondi e dell\u2019emissione di ricevute fiscali deducibili. Autorizzazione SAT No. 700-02-05-2017-03718.",
+      q1role:"Donatori originali · Ginevra, Svizzera", q1text:"Nella seduta dell' 11 giugno 2025, il Consiglio della Parrocchia ha ufficialmente scelto la nostra proposta come vincitrice del concorso internazionale per ricevere l'organo.",
+      q2role:"Casa ricevente · Polanco, CDMX", q2text:"P. Luis Gonz\u00e1lez-Cos\u00edo Elcoro, SJ, Rettore della parrocchia, ha ufficialmente accettato lo strumento con uno spirito di responsabilità, gratitudine e speranza.",
+      q3role:"Coordinamento del progetto · Città del Messico", q3text:"Il comitato gestisce la pianificazione integrale del progetto, guidato dal maestro V\u00edctor Contreras, concertista e professore al Conservatorio Nazionale di Musica, designato organista titolare.",
+      q4role:"Amministrazione trasparente dei fondi", q4text:"Organismo responsabile della gestione dei fondi e dell'emissione di ricevute fiscali deducibili. Autorizzazione SAT No. 700-02-05-2017-03718.",
       secLabelContacto:"Unisciti al progetto", secTitleContacto:"Vuoi far parte<br>di questa <em>storia</em>?",
-      contactoP:"Puoi aiutare con donazioni, servizi, materiali, o semplicemente condividendo questo messaggio con chi pu\u00f2 renderlo possibile.",
+      contactoP:"Puoi aiutare con donazioni, servizi, materiali, o semplicemente condividendo questo messaggio con chi può renderlo possibile.",
       labelDona:"Donazioni", labelTel:"Iglesia San Ignacio de Loyola", labelMail:"Email della parrocchia",
       btnContacto:"Contattaci",
-      footerLegal:"Progetto gestito da Arte, Educaci\u00f3n y Ecolog\u00eda A.C.<br>Autorizzazione SAT No. 700-02-05-2017-03718 \u00b7 Donazioni deducibili dalle tasse."
+      footerLegal:"Progetto gestito da Arte, Educaci\u00f3n y Ecolog\u00eda A.C.<br>Autorizzazione SAT No. 700-02-05-2017-03718 · Donazioni deducibili dalle tasse."
     }
   };
 
@@ -754,4 +968,20 @@
     set("label-benef", d.labelBenef); set("label-banco", d.labelBanco); set("label-clabe", d.labelClabe);
     set("after-title", d.afterTitle);
     set("step1", d.step1, true); set("step2", d.step2, true); set("step3", d.step3, true);
-    set("donar-note", d.do
+    set("donar-note", d.donarNote);
+    set("btn-email", d.btnEmail);
+    set("sec-label-quienes", d.secLabelQuienes); set("sec-title-quienes", d.secTitleQuienes, true);
+    set("q1-role", d.q1role); set("q1-text", d.q1text, true);
+    set("q2-role", d.q2role); set("q2-text", d.q2text, true);
+    set("q3-role", d.q3role); set("q3-text", d.q3text, true);
+    set("q4-role", d.q4role); set("q4-text", d.q4text, true);
+    set("sec-label-contacto", d.secLabelContacto); set("sec-title-contacto", d.secTitleContacto, true);
+    set("contacto-p", d.contactoP);
+    set("label-dona", d.labelDona); set("label-tel", d.labelTel); set("label-mail", d.labelMail);
+    set("btn-contacto", d.btnContacto);
+    set("footer-legal", d.footerLegal, true);
+  };
+})();
+</script>
+</body>
+</html>
