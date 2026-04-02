@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { runDecisionEngine } from "./core/decisionEngine";
 import type { DecisionInput, AIAnalysis } from "./core/types";
+import { generateQuestions } from "./api-generate-questions";
 
 const router = Router();
 
@@ -9,21 +10,19 @@ router.get("/health", (_req, res) => {
   res.json({ status: "ok", app: "lexipop-decision" });
 });
 
+// ── Generate personalized questions ──────────────────────────────────────────
+router.post("/decision/generate-questions", generateQuestions);
+
 // ── Analyze decision ──────────────────────────────────────────────────────────
-// POST /api/decision/analyze
-// Flujo: validar → motor matemático → IA → respuesta unificada
 router.post("/decision/analyze", async (req, res) => {
   const input = req.body as DecisionInput;
 
-  // ── Validación mínima
   if (!input?.title || !input?.level || input?.probability === undefined) {
     return res.status(400).json({ error: "Faltan campos requeridos: title, level, probability." });
   }
 
-  // ── Capa 1: motor determinístico (sin red, sin IA)
   const metrics = runDecisionEngine(input);
 
-  // ── Capa 2: análisis IA
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     return res.status(500).json({ error: "OPENAI_API_KEY no configurada." });
@@ -101,7 +100,6 @@ MÉTRICAS CALCULADAS:
     try {
       analysis = JSON.parse(raw.replace(/```json|```/g, "").trim());
     } catch {
-      // Si la IA devuelve texto malformado, devolvemos estructura vacía sin romper
       analysis = {
         blindSpots:           ["No se pudo analizar en este momento."],
         riskAssessment:       raw,

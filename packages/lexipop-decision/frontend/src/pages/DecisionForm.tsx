@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { DecisionInput, DecisionLevel } from "../types";
+import { THEME } from "../theme/tokens";
 
 interface Props {
   onSubmit: (input: DecisionInput) => void;
@@ -7,545 +8,431 @@ interface Props {
   loading:  boolean;
 }
 
-// ── Tokens ────────────────────────────────────────────────────────────────────
-const T = {
-  primary:      "#000666",
-  primaryMid:   "#1a237e",
-  primaryFixed: "#e0e0ff",
-  surfaceLow:   "#f5f3ef",
-  surfaceCard:  "#ffffff",
-  surfaceHigh:  "#eae8e4",
-  teal:         "#beebe7",
-  water:        "#d2e6ef",
-  onSurface:    "#1b1c1a",
-  onMuted:      "#454652",
-  outline:      "#767683",
-  fontHead:     "'Newsreader', Georgia, serif",
-  fontBody:     "'Inter', system-ui, sans-serif",
-};
+type Step = "type" | "describe" | "details";
 
-// ── Categorías y sub-opciones ─────────────────────────────────────────────────
-const CATEGORIES: {
-  id: DecisionLevel;
-  label: string;
-  accent: string;
-  emoji: string;
-  subs: string[];
-}[] = [
-  {
-    id: "cotidiana", label: "Cotidiana", accent: T.teal, emoji: "🌿",
-    subs: [
-      "Salud y bienestar",
-      "Hogar o vivienda",
-      "Compra importante",
-      "Hábitos o rutinas",
-      "Relaciones personales",
-    ],
-  },
-  {
-    id: "carrera", label: "Carrera", accent: T.primaryFixed, emoji: "🎯",
-    subs: [
-      "Cambio de trabajo",
-      "Estudios o formación",
-      "Emprendimiento",
-      "Proyecto o ascenso",
-      "Trabajo freelance",
-    ],
-  },
-  {
-    id: "financiera", label: "Financiera", accent: T.water, emoji: "💡",
-    subs: [
-      "Inversión o ahorro",
-      "Deuda o crédito",
-      "Seguro o protección",
-      "Gasto mayor",
-      "Retiro o patrimonio",
-    ],
-  },
+const LEVELS: { id: DecisionLevel; label: string; img: string }[] = [
+  { id: "cotidiana",  label: "Cotidiana",  img: "/cotidianas.png"  },
+  { id: "carrera",    label: "Carrera",    img: "/carrera.png"     },
+  { id: "financiera", label: "Financiera", img: "/financieras.png" },
 ];
 
-const defaultInput: DecisionInput = {
-  title: "", level: "cotidiana",
-  altA: "", altB: "",
-  probability: 60, valueSuccess: 10000, valueFailure: -2000,
-  worstScenario: "", worstSeverity: 5,
-  reversibilityScore: 5, revertCost: 0,
-  impact6m: "", impact3y: "",
-  opportunityCost: 0, opportunityDesc: "",
+const TYPE_EXAMPLES: Record<DecisionLevel, string[]> = {
+  cotidiana: [
+    "Levantarme temprano o quedarme en la cama",
+    "Hacer ejercicio o no",
+    "Comer saludable o comida rápida",
+    "Ahorrar dinero o gastarlo",
+    "Estudiar o procrastinar",
+    "Dormir temprano o desvelarme",
+  ],
+  carrera: [
+    "Aceptar una oferta de trabajo",
+    "Renunciar para emprender",
+    "Cambiar de industria",
+    "Hacer una maestría o seguir trabajando",
+    "Pedir un ascenso o moverme a otra empresa",
+  ],
+  financiera: [
+    "Invertir en acciones o pagar deudas",
+    "Comprar casa o seguir rentando",
+    "Invertir en un negocio propio",
+    "Ahorrar para el retiro o gastar ahora",
+    "Pedir un préstamo para invertir",
+  ],
 };
 
-// ── Sub-componentes ───────────────────────────────────────────────────────────
-function Collapse({ title, children }: { title: string; children: React.ReactNode }) {
-  const [open, setOpen] = useState(true);
-  return (
-    <div style={{ borderRadius: 16, marginBottom: 12, overflow: "hidden", background: T.surfaceCard }}>
-      <button
-        onClick={() => setOpen(!open)}
-        style={{
-          width: "100%", background: open ? T.surfaceLow : T.surfaceCard,
-          border: "none", padding: "1rem 1.25rem",
-          display: "flex", justifyContent: "space-between", alignItems: "center",
-          cursor: "pointer", transition: "background 200ms",
-        }}
-      >
-        <span style={{ fontFamily: T.fontHead, fontStyle: "italic", fontSize: "1rem", fontWeight: 600, color: T.primary }}>
-          {title}
-        </span>
-        <span style={{
-          color: T.outline, fontSize: "0.85rem",
-          transform: open ? "rotate(180deg)" : "none",
-          transition: "transform 200ms",
-        }}>▾</span>
-      </button>
-      {open && (
-        <div style={{ padding: "1.25rem 1.25rem 0.5rem", background: T.surfaceCard }}>
-          {children}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function SliderRow({ label, value, onChange, min = 0, max = 100, suffix = "%" }: {
-  label: string; value: number; onChange: (v: number) => void;
-  min?: number; max?: number; suffix?: string;
+// ── LevelCard con hover ───────────────────────────────────
+function LevelCard({ id, label, img, selected, onSelect }: {
+  id: string; label: string; img: string; selected: boolean; onSelect: () => void;
 }) {
-  const pct = ((value - min) / (max - min)) * 100;
+  const [hovered, setHovered] = useState(false);
+  const active = selected || hovered;
   return (
-    <div style={{ marginBottom: "1.5rem" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.625rem" }}>
-        <label style={{ fontSize: "0.8125rem", fontWeight: 500, color: T.onMuted, fontFamily: T.fontBody }}>
-          {label}
-        </label>
-        <span style={{ fontSize: "1.1rem", fontWeight: 700, color: T.primary, fontFamily: T.fontHead }}>
-          {value}{suffix}
-        </span>
-      </div>
-      <input
-        type="range" min={min} max={max} value={value}
-        onChange={e => onChange(Number(e.target.value))}
-        style={{
-          width: "100%", height: "0.5rem",
-          background: `linear-gradient(to right, ${T.primary} ${pct}%, ${T.surfaceHigh} ${pct}%)`,
-          borderRadius: 9999, appearance: "none", WebkitAppearance: "none",
-          cursor: "pointer", outline: "none",
-        }}
-      />
-    </div>
-  );
-}
-
-function TextField({ label, value, onChange, placeholder, multi }: {
-  label: string; value: string; onChange: (v: string) => void;
-  placeholder?: string; multi?: boolean;
-}) {
-  const [focused, setFocused] = useState(false);
-  const base: React.CSSProperties = {
-    width: "100%", padding: "0.875rem 1rem",
-    background: focused ? "#fff" : T.surfaceLow,
-    border: `1.5px solid ${focused ? T.primary : "transparent"}`,
-    borderRadius: 10,
-    fontSize: "1rem", color: T.onSurface, fontFamily: T.fontBody,
-    outline: "none", transition: "all 200ms", boxSizing: "border-box",
-    boxShadow: focused ? "0 0 0 3px rgba(0,6,102,0.08)" : "none",
-  };
-  return (
-    <div style={{ marginBottom: "1.25rem" }}>
-      <label style={{
-        display: "block", fontSize: "0.6875rem", fontWeight: 600,
-        textTransform: "uppercase", letterSpacing: "0.12em",
-        color: focused ? T.primary : T.onMuted,
-        fontFamily: T.fontBody, marginBottom: "0.5rem",
-        transition: "color 200ms",
-      }}>{label}</label>
-      {multi
-        ? <textarea rows={2} value={value} onChange={e => onChange(e.target.value)}
-            placeholder={placeholder} style={{ ...base, resize: "vertical" as const }}
-            onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} />
-        : <input type="text" value={value} onChange={e => onChange(e.target.value)}
-            placeholder={placeholder} style={base}
-            onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} />
-      }
-    </div>
-  );
-}
-
-// NumberField: type="text" — acepta negativos, comas, cualquier signo
-function NumberField({ label, value, onChange, prefix = "$" }: {
-  label: string; value: number; onChange: (v: number) => void; prefix?: string;
-}) {
-  const [focused, setFocused] = useState(false);
-  const [raw, setRaw]         = useState(String(value));
-
-  function handleChange(s: string) {
-    setRaw(s);
-    const n = parseFloat(s.replace(/,/g, ""));
-    if (!isNaN(n)) onChange(n);
-  }
-
-  function handleBlur() {
-    setFocused(false);
-    const n = parseFloat(raw.replace(/,/g, ""));
-    if (!isNaN(n)) setRaw(String(n));
-  }
-
-  return (
-    <div style={{ marginBottom: "1.25rem" }}>
-      <label style={{
-        display: "block", fontSize: "0.6875rem", fontWeight: 600,
-        textTransform: "uppercase", letterSpacing: "0.12em",
-        color: focused ? T.primary : T.onMuted,
-        fontFamily: T.fontBody, marginBottom: "0.5rem",
-        transition: "color 200ms",
-      }}>{label}</label>
-      <div style={{ position: "relative" }}>
-        <span style={{
-          position: "absolute", left: "0.875rem", top: "50%", transform: "translateY(-50%)",
-          color: T.outline, fontSize: "0.875rem", fontFamily: T.fontBody, pointerEvents: "none",
-        }}>{prefix}</span>
-        <input
-          type="text"
-          inputMode="decimal"
-          value={raw}
-          onChange={e => handleChange(e.target.value)}
-          onFocus={() => setFocused(true)}
-          onBlur={handleBlur}
+    <button
+      onClick={onSelect}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        border: `2px solid ${selected ? THEME.primary : hovered ? THEME.primaryDim : "transparent"}`,
+        borderRadius: 20,
+        background: selected ? THEME.surfaceCard : THEME.surfaceLow,
+        padding: 0, cursor: "pointer", transition: "all 180ms",
+        overflow: "hidden", display: "flex",
+        flexDirection: "column" as const, alignItems: "center",
+        boxShadow: active ? "0 6px 20px rgba(0,6,102,0.14)" : "none",
+        transform: hovered && !selected ? "translateY(-2px)" : "none",
+      }}
+    >
+      <div style={{ width: "100%", aspectRatio: "3 / 4", overflow: "hidden", background: THEME.surfaceLow }}>
+        <img
+          src={img} alt={label}
           style={{
-            width: "100%", padding: "0.875rem 1rem 0.875rem 2rem",
-            background: focused ? "#fff" : T.surfaceLow,
-            border: `1.5px solid ${focused ? T.primary : "transparent"}`,
-            borderRadius: 10,
-            fontSize: "1rem", color: T.onSurface, fontFamily: T.fontBody,
-            outline: "none", transition: "all 200ms", boxSizing: "border-box",
-            boxShadow: focused ? "0 0 0 3px rgba(0,6,102,0.08)" : "none",
+            width: "100%", height: "100%", objectFit: "cover",
+            objectPosition: "top",
+            display: "block",
+            transition: "transform 200ms",
+            transform: hovered ? "scale(1.04)" : "scale(1)",
           }}
         />
       </div>
-    </div>
+      <div style={{
+        padding: "0.75rem 0.5rem", width: "100%", textAlign: "center" as const,
+        background: selected ? THEME.primary : "transparent",
+        transition: "background 180ms",
+      }}>
+        <span style={{
+          fontFamily: THEME.fontBody, fontSize: "0.875rem", fontWeight: 600,
+          color: selected ? "#ffffff" : hovered ? THEME.primary : THEME.onMuted,
+          transition: "color 180ms",
+        }}>
+          {label}
+        </span>
+      </div>
+    </button>
   );
 }
 
-// ── Componente principal ──────────────────────────────────────────────────────
-export default function DecisionForm({ onSubmit, onBack, loading }: Props) {
-  const [step,        setStep]        = useState<1 | 2>(1);
-  const [form,        setForm]        = useState<DecisionInput>(defaultInput);
-  const [selectedSub, setSelectedSub] = useState<string | null>(null);
-  const [otraText,    setOtraText]    = useState("");
+// ── Preguntas dinámicas ────────────────────────────────────
+interface Questions {
+  optionAQuestion:       string;
+  optionBQuestion:       string;
+  probabilityQuestion:   string;
+  worstScenarioQuestion: string;
+  reversibilityQuestion: string;
+  opportunityQuestion:   string;
+}
 
-  const set = <K extends keyof DecisionInput>(k: K) => (v: DecisionInput[K]) =>
-    setForm(prev => ({ ...prev, [k]: v }));
+function DynamicQuestions({ title, level, form, setForm, onSubmit, loading }: {
+  title:    string;
+  level:    DecisionLevel;
+  form:     Partial<DecisionInput>;
+  setForm:  (f: Partial<DecisionInput>) => void;
+  onSubmit: (input: DecisionInput) => void;
+  loading:  boolean;
+}) {
+  const [questions, setQuestions]           = useState<Questions | null>(null);
+  const [loadingQuestions, setLoadingQ]     = useState(true);
+  const [error, setError]                   = useState(false);
 
-  const activeCat = CATEGORIES.find(c => c.id === form.level)!;
+  useEffect(() => {
+    fetch("/api/decision/generate-questions", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ title, level }),
+    })
+      .then(r => r.json())
+      .then(data => { setQuestions(data); setLoadingQ(false); })
+      .catch(() => { setError(true); setLoadingQ(false); });
+  }, [title, level]);
 
-  function syncTitle(sub: string | null, otra: string) {
-    const t = sub === "otra" ? otra : (sub ?? "");
-    setForm(prev => ({ ...prev, title: t }));
-  }
+  if (loadingQuestions) return (
+    <div style={{ textAlign: "center", padding: "3rem 0" }}>
+      <div style={{
+        width: "3rem", height: "3rem", borderRadius: "50%",
+        background: THEME.surfaceLow,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        margin: "0 auto 1rem",
+        animation: "pulse 1.5s ease-in-out infinite",
+      }}>
+        <span className="material-symbols-outlined" style={{ color: THEME.outline }}>psychology</span>
+      </div>
+      <div style={{ fontFamily: THEME.fontHead, fontStyle: "italic", fontSize: "1.1rem", color: THEME.primary }}>
+        Generando preguntas personalizadas…
+      </div>
+      <div style={{ fontSize: "0.875rem", color: THEME.outline, marginTop: "0.4rem" }}>
+        Esto toma unos segundos
+      </div>
+    </div>
+  );
 
-  function pickCategory(id: DecisionLevel) {
-    setSelectedSub(null);
-    setOtraText("");
-    setForm(prev => ({ ...prev, level: id, title: "" }));
-  }
+  if (error || !questions) return (
+    <div style={{ color: THEME.error, textAlign: "center", padding: "2rem" }}>
+      Error cargando preguntas. Recarga la página.
+    </div>
+  );
 
-  function pickSub(sub: string) {
-    setSelectedSub(sub);
-    setOtraText("");
-    syncTitle(sub, "");
-  }
+  const canSubmit = (form.altA?.trim().length ?? 0) > 5 && (form.altB?.trim().length ?? 0) > 5;
 
-  function pickOtra() {
-    setSelectedSub("otra");
-    syncTitle("otra", otraText);
-  }
+  const inputStyle = {
+    width: "100%", padding: "0.75rem 1rem",
+    background: THEME.surfaceLow, border: "none",
+    borderBottom: `2px solid rgba(118,118,131,0.15)`,
+    borderRadius: "0.5rem 0.5rem 0 0",
+    fontSize: "1rem", fontFamily: THEME.fontBody, color: THEME.onSurface,
+    outline: "none", resize: "vertical" as const,
+  };
 
-  const effectiveTitle = selectedSub === "otra" ? otraText : (selectedSub ?? "");
-  const canContinue    = effectiveTitle.trim().length > 2;
-  const canSubmit      = form.altA.trim().length > 5;
+  const labelStyle = {
+    display: "block", fontSize: "0.75rem", fontWeight: 600 as const,
+    color: THEME.onMuted, marginBottom: "0.5rem", lineHeight: 1.4,
+  };
+
+  const fieldWrap = { marginBottom: "1.5rem" };
 
   return (
-    <div style={{
-      maxWidth: 600, margin: "0 auto",
-      padding: "7rem 1.5rem 7rem",
-      fontFamily: T.fontBody,
-    }}>
+    <>
+      <h2 style={{
+        fontFamily: THEME.fontHead, fontStyle: "italic",
+        fontSize: "clamp(1.6rem, 5vw, 2rem)",
+        fontWeight: 600, color: THEME.primary, marginBottom: "0.5rem",
+      }}>
+        Analizando tu decisión
+      </h2>
+      <p style={{ color: THEME.onMuted, fontSize: "0.9375rem", marginBottom: "2rem", lineHeight: 1.6 }}>
+        Responde estas preguntas para un análisis personalizado.
+      </p>
 
-      {/* Back */}
-      <button
-        onClick={step === 1 ? onBack : () => setStep(1)}
-        style={{
-          background: "none", border: "none", cursor: "pointer",
-          color: T.outline, fontSize: "0.8125rem", marginBottom: "2rem",
-          display: "flex", alignItems: "center", gap: "0.4rem",
-          fontFamily: T.fontBody, padding: 0,
-        }}
-      >
-        ← {step === 1 ? "Inicio" : "Paso anterior"}
-      </button>
-
-      {/* Progress */}
-      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "2.5rem" }}>
-        {[1, 2].map(n => (
-          <div key={n} style={{
-            height: 3, flex: 1, borderRadius: 9999,
-            background: n <= step ? T.primary : T.surfaceHigh,
-            transition: "background 300ms",
-          }} />
-        ))}
+      <div style={fieldWrap}>
+        <label style={labelStyle}>{questions.optionAQuestion}</label>
+        <input type="text" value={form.altA ?? ""} style={inputStyle}
+          onChange={e => setForm({ ...form, altA: e.target.value })}
+          placeholder="Describe los cambios concretos…" />
       </div>
 
-      {/* ── PASO 1 ── */}
-      {step === 1 && (
+      <div style={fieldWrap}>
+        <label style={labelStyle}>{questions.optionBQuestion}</label>
+        <input type="text" value={form.altB ?? ""} style={inputStyle}
+          onChange={e => setForm({ ...form, altB: e.target.value })}
+          placeholder="Describe los cambios concretos…" />
+      </div>
+
+      <div style={fieldWrap}>
+        <label style={labelStyle}>{questions.probabilityQuestion}</label>
+        <input type="range" min={0} max={100} value={form.probability ?? 60}
+          onChange={e => setForm({ ...form, probability: Number(e.target.value) })}
+          style={{
+            width: "100%", height: "0.5rem", borderRadius: 9999,
+            appearance: "none", WebkitAppearance: "none", cursor: "pointer", outline: "none",
+            background: `linear-gradient(to right, ${THEME.primary} ${form.probability ?? 60}%, ${THEME.surfaceHigh} 0%)`,
+          }}
+        />
+        <div style={{ textAlign: "center", marginTop: "0.4rem", fontWeight: 700, color: THEME.primary, fontFamily: THEME.fontHead }}>
+          {form.probability ?? 60}%
+        </div>
+      </div>
+
+      <div style={fieldWrap}>
+        <label style={labelStyle}>{questions.worstScenarioQuestion}</label>
+        <textarea rows={2} value={form.worstScenario ?? ""} style={inputStyle}
+          onChange={e => setForm({ ...form, worstScenario: e.target.value })}
+          placeholder="Sé honesto, no dramatices…" />
+      </div>
+
+      <div style={fieldWrap}>
+        <label style={labelStyle}>{questions.reversibilityQuestion}</label>
+        <input type="range" min={0} max={10} value={form.reversibilityScore ?? 5}
+          onChange={e => setForm({ ...form, reversibilityScore: Number(e.target.value) })}
+          style={{
+            width: "100%", height: "0.5rem", borderRadius: 9999,
+            appearance: "none", WebkitAppearance: "none", cursor: "pointer", outline: "none",
+            background: `linear-gradient(to right, ${THEME.primary} ${((form.reversibilityScore ?? 5) / 10) * 100}%, ${THEME.surfaceHigh} 0%)`,
+          }}
+        />
+        <div style={{ textAlign: "center", marginTop: "0.4rem", fontWeight: 700, color: THEME.primary, fontFamily: THEME.fontHead }}>
+          {form.reversibilityScore ?? 5}/10
+        </div>
+      </div>
+
+      <div style={fieldWrap}>
+        <label style={labelStyle}>{questions.opportunityQuestion}</label>
+        <textarea rows={2} value={form.opportunityDesc ?? ""} style={inputStyle}
+          onChange={e => setForm({ ...form, opportunityDesc: e.target.value })}
+          placeholder="¿Qué dejas de hacer si eliges esto?" />
+      </div>
+
+      <button
+        disabled={!canSubmit || loading}
+        onClick={() => onSubmit({ ...form, title, level } as DecisionInput)}
+        style={{
+          width: "100%",
+          background: canSubmit && !loading
+            ? `linear-gradient(160deg, ${THEME.primary} 0%, ${THEME.primaryMid} 100%)`
+            : THEME.surfaceHigh,
+          color: canSubmit && !loading ? "#ffffff" : THEME.outline,
+          border: "none", padding: "1rem", borderRadius: THEME.radius.lg,
+          fontSize: "1rem", fontWeight: 600, fontFamily: THEME.fontBody,
+          cursor: canSubmit && !loading ? "pointer" : "not-allowed",
+          boxShadow: canSubmit && !loading ? "0 8px 24px rgba(0,6,102,0.18)" : "none",
+          display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem",
+          transition: "all 200ms",
+        }}
+      >
+        {loading ? "Analizando…" : (
+          <>
+            Evaluar decisión
+            <span className="material-symbols-outlined" style={{ fontSize: "1.1rem" }}>query_stats</span>
+          </>
+        )}
+      </button>
+    </>
+  );
+}
+
+// ── Componente principal ───────────────────────────────────
+export default function DecisionForm({ onSubmit, onBack, loading }: Props) {
+  const [step,        setStep]       = useState<Step>("type");
+  const [level,       setLevel]      = useState<DecisionLevel>("cotidiana");
+  const [title,       setTitle]      = useState("");
+  const [customTitle, setCustomTitle] = useState("");
+  const [form,        setForm]       = useState<Partial<DecisionInput>>({
+    altA: "", altB: "",
+    probability: 60, valueSuccess: 10000, valueFailure: -2000,
+    worstScenario: "", worstSeverity: 5,
+    reversibilityScore: 5, revertCost: 0,
+    impact6m: "", impact3y: "",
+    opportunityCost: 0, opportunityDesc: "",
+  });
+
+  function goBack() {
+    if (step === "type")     return onBack();
+    if (step === "describe") return setStep("type");
+    if (step === "details")  return setStep("describe");
+  }
+
+  // Tecla Escape o Alt+ArrowLeft → atrás dentro de la app
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape" || (e.altKey && e.key === "ArrowLeft")) {
+        e.preventDefault();
+        goBack();
+      }
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [step]);
+
+  const backLabel = step === "type" ? "Inicio" : "Atrás";
+
+  return (
+    <div style={{ maxWidth: 600, margin: "0 auto", padding: "5.5rem 1.5rem 7rem", fontFamily: THEME.fontBody }}>
+
+      {/* Back */}
+      <button onClick={goBack} style={{
+        background: "none", border: "none", cursor: "pointer",
+        color: THEME.outline, fontSize: "0.8125rem", marginBottom: "2rem",
+        display: "flex", alignItems: "center", gap: "0.4rem",
+        fontFamily: THEME.fontBody, padding: 0,
+      }}>
+        ← {backLabel}
+      </button>
+
+      {/* ── PASO 1: Tipo ── */}
+      {step === "type" && (
         <>
           <h2 style={{
-            fontFamily: T.fontHead, fontStyle: "italic",
+            fontFamily: THEME.fontHead, fontStyle: "italic",
             fontSize: "clamp(1.75rem, 6vw, 2.25rem)",
-            fontWeight: 600, color: T.primary, marginBottom: "0.4rem",
+            fontWeight: 600, color: THEME.primary, marginBottom: "0.5rem",
           }}>
-            Define la decisión
+            ¿Qué tipo de decisión es?
           </h2>
-          <p style={{ color: T.onMuted, fontSize: "0.9375rem", marginBottom: "2rem", lineHeight: 1.6 }}>
-            Sé específico. Una decisión bien definida es la mitad del análisis.
+          <p style={{ color: THEME.onMuted, fontSize: "1rem", marginBottom: "2rem", lineHeight: 1.6 }}>
+            Elige una categoría para obtener ejemplos relevantes.
           </p>
 
-          {/* Categorías */}
-          <label style={{
-            display: "block", fontSize: "0.6875rem", fontWeight: 600,
-            textTransform: "uppercase", letterSpacing: "0.12em",
-            color: T.onMuted, fontFamily: T.fontBody, marginBottom: "0.75rem",
-          }}>¿Qué tipo de decisión es?</label>
-
-          <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.25rem" }}>
-            {CATEGORIES.map(cat => (
-              <button
-                key={cat.id}
-                onClick={() => pickCategory(cat.id)}
-                style={{
-                  flex: 1, padding: "0.875rem 0.25rem",
-                  borderRadius: 12,
-                  border: `1.5px solid ${form.level === cat.id ? T.primary : "transparent"}`,
-                  background: form.level === cat.id ? T.surfaceCard : T.surfaceLow,
-                  cursor: "pointer", transition: "all 150ms", textAlign: "center",
-                  boxShadow: form.level === cat.id ? "0 2px 12px rgba(0,6,102,0.1)" : "none",
-                }}
-              >
-                <div style={{ fontSize: "1.375rem", marginBottom: "0.3rem" }}>{cat.emoji}</div>
-                <div style={{
-                  fontSize: "0.8125rem", fontWeight: 600,
-                  color: form.level === cat.id ? T.primary : T.onMuted,
-                  fontFamily: T.fontBody,
-                }}>{cat.label}</div>
-                <div style={{
-                  width: "1.25rem", height: "3px", borderRadius: 9999,
-                  background: cat.accent, margin: "0.4rem auto 0",
-                }} />
-              </button>
-            ))}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem" }}>
+            {LEVELS.map(({ id, label, img }) => {
+              const selected = level === id;
+              return (
+                <LevelCard
+                  key={id}
+                  id={id}
+                  label={label}
+                  img={img}
+                  selected={selected}
+                  onSelect={() => { setLevel(id); setStep("describe"); }}
+                />
+              );
+            })}
           </div>
+        </>
+      )}
 
-          {/* Sub-opciones */}
-          <div style={{
-            borderRadius: 14,
-            background: T.surfaceLow,
-            padding: "1rem",
-            marginBottom: "1.25rem",
+      {/* ── PASO 2: Elegir o escribir ── */}
+      {step === "describe" && (
+        <>
+          <h2 style={{
+            fontFamily: THEME.fontHead, fontStyle: "italic",
+            fontSize: "clamp(1.75rem, 6vw, 2.25rem)",
+            fontWeight: 600, color: THEME.primary, marginBottom: "0.5rem",
           }}>
-            <label style={{
-              display: "block", fontSize: "0.6875rem", fontWeight: 600,
-              textTransform: "uppercase", letterSpacing: "0.12em",
-              color: T.onMuted, fontFamily: T.fontBody, marginBottom: "0.75rem",
-            }}>¿Sobre qué trata?</label>
+            ¿Qué decisión tienes pendiente?
+          </h2>
+          <p style={{ color: THEME.onMuted, fontSize: "1rem", marginBottom: "2rem", lineHeight: 1.6 }}>
+            Elige un ejemplo o escribe tu propia situación.
+          </p>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem" }}>
-              {activeCat.subs.map(sub => (
-                <button
-                  key={sub}
-                  onClick={() => pickSub(sub)}
-                  style={{
-                    padding: "0.75rem 1rem",
-                    borderRadius: 10,
-                    border: `1.5px solid ${selectedSub === sub ? T.primary : "transparent"}`,
-                    background: selectedSub === sub ? T.surfaceCard : "rgba(255,255,255,0.6)",
-                    cursor: "pointer", textAlign: "left",
-                    fontSize: "0.9375rem", fontWeight: 500,
-                    color: selectedSub === sub ? T.primary : T.onMuted,
-                    fontFamily: T.fontBody,
-                    transition: "all 150ms",
-                    display: "flex", alignItems: "center", justifyContent: "space-between",
-                    boxShadow: selectedSub === sub ? "0 2px 8px rgba(0,6,102,0.08)" : "none",
-                  }}
-                >
-                  {sub}
-                  {selectedSub === sub && <span style={{ color: T.primary, fontSize: "0.875rem" }}>✓</span>}
+          <div style={{ marginBottom: "2rem" }}>
+            <div style={{ fontSize: "0.625rem", fontWeight: 700, color: THEME.outline, letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "0.875rem" }}>
+              Ejemplos
+            </div>
+            <div style={{ display: "flex", flexDirection: "column" as const, gap: "0.5rem" }}>
+              {TYPE_EXAMPLES[level].map(example => (
+                <button key={example} onClick={() => { setTitle(example); setStep("details"); }} style={{
+                  background: THEME.surfaceLow, border: "none",
+                  borderRadius: THEME.radius.lg, padding: "0.875rem 1rem",
+                  textAlign: "left" as const, cursor: "pointer",
+                  fontSize: "0.9375rem", color: THEME.onSurface,
+                  fontFamily: THEME.fontBody, transition: "all 150ms",
+                  display: "flex", alignItems: "center", justifyContent: "space-between",
+                }}>
+                  <span>{example}</span>
+                  <span className="material-symbols-outlined" style={{ fontSize: "1rem", color: THEME.outline, flexShrink: 0 }}>
+                    chevron_right
+                  </span>
                 </button>
               ))}
-
-              {/* Otra */}
-              <button
-                onClick={pickOtra}
-                style={{
-                  padding: "0.75rem 1rem",
-                  borderRadius: 10,
-                  border: `1.5px solid ${selectedSub === "otra" ? T.primary : "transparent"}`,
-                  background: selectedSub === "otra" ? T.surfaceCard : "rgba(255,255,255,0.6)",
-                  cursor: "pointer", textAlign: "left",
-                  fontSize: "0.9375rem", fontWeight: 500,
-                  color: selectedSub === "otra" ? T.primary : T.onMuted,
-                  fontFamily: T.fontBody,
-                  transition: "all 150ms",
-                }}
-              >
-                Otra…
-              </button>
-
-              {selectedSub === "otra" && (
-                <textarea
-                  autoFocus
-                  rows={2}
-                  value={otraText}
-                  onChange={e => {
-                    setOtraText(e.target.value);
-                    syncTitle("otra", e.target.value);
-                  }}
-                  placeholder="Describe tu decisión aquí…"
-                  style={{
-                    width: "100%", padding: "0.875rem 1rem",
-                    background: "#fff",
-                    border: `1.5px solid ${T.primary}`,
-                    borderRadius: 10,
-                    fontSize: "1rem", color: T.onSurface, fontFamily: T.fontBody,
-                    outline: "none", resize: "vertical" as const,
-                    boxShadow: "0 0 0 3px rgba(0,6,102,0.08)",
-                    boxSizing: "border-box", marginTop: "0.25rem",
-                  }}
-                />
-              )}
             </div>
           </div>
 
-          {/* Preview */}
-          {canContinue && (
-            <div style={{
-              padding: "0.875rem 1rem",
-              background: "rgba(0,6,102,0.05)",
-              borderRadius: 10,
-              marginBottom: "1.25rem",
-              borderLeft: `3px solid ${T.primary}`,
-            }}>
-              <div style={{ fontSize: "0.6875rem", fontWeight: 600, color: T.primary, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "0.25rem", fontFamily: T.fontBody }}>
-                Tu decisión
-              </div>
-              <div style={{ fontSize: "0.9375rem", color: T.onSurface, fontFamily: T.fontBody }}>
-                {effectiveTitle}
-              </div>
+          <div style={{ borderTop: `1px solid rgba(198,197,212,0.25)`, paddingTop: "1.5rem" }}>
+            <div style={{ fontSize: "0.625rem", fontWeight: 700, color: THEME.outline, letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "0.875rem" }}>
+              O escribe la tuya
             </div>
-          )}
-
-          <button
-            disabled={!canContinue}
-            onClick={() => setStep(2)}
-            style={{
-              width: "100%",
-              background: canContinue
-                ? `linear-gradient(180deg, ${T.primary} 0%, ${T.primaryMid} 100%)`
-                : T.surfaceHigh,
-              color: canContinue ? "#ffffff" : T.outline,
-              border: "none", padding: "1rem", borderRadius: 12,
-              fontSize: "1rem", fontWeight: 600, fontFamily: T.fontBody,
-              cursor: canContinue ? "pointer" : "not-allowed",
-              transition: "all 200ms",
-              boxShadow: canContinue ? "0 8px 24px rgba(0,6,102,0.2)" : "none",
-            }}
-          >
-            Continuar →
-          </button>
+            <textarea rows={2} value={customTitle}
+              onChange={e => setCustomTitle(e.target.value)}
+              placeholder="Ej: Debería mudarme a otra ciudad por trabajo"
+              style={{
+                width: "100%", padding: "0.875rem",
+                background: THEME.surfaceLow, border: "none",
+                borderBottom: `2px solid rgba(118,118,131,0.15)`,
+                borderRadius: "0.5rem 0.5rem 0 0",
+                fontSize: "1rem", fontFamily: THEME.fontBody,
+                resize: "vertical" as const, marginBottom: "1rem", outline: "none",
+              }}
+            />
+            <button
+              onClick={() => { if (customTitle.trim()) { setTitle(customTitle.trim()); setStep("details"); } }}
+              disabled={!customTitle.trim()}
+              style={{
+                width: "100%",
+                background: customTitle.trim()
+                  ? `linear-gradient(160deg, ${THEME.primary} 0%, ${THEME.primaryMid} 100%)`
+                  : THEME.surfaceHigh,
+                color: customTitle.trim() ? "#ffffff" : THEME.outline,
+                border: "none", padding: "0.875rem",
+                borderRadius: THEME.radius.lg,
+                fontSize: "1rem", fontWeight: 600, fontFamily: THEME.fontBody,
+                cursor: customTitle.trim() ? "pointer" : "not-allowed",
+                boxShadow: customTitle.trim() ? "0 8px 24px rgba(0,6,102,0.18)" : "none",
+                transition: "all 200ms",
+              }}
+            >
+              Usar esta decisión
+            </button>
+          </div>
         </>
       )}
 
-      {/* ── PASO 2 ── */}
-      {step === 2 && (
-        <>
-          <h2 style={{
-            fontFamily: T.fontHead, fontStyle: "italic",
-            fontSize: "clamp(1.75rem, 6vw, 2.25rem)",
-            fontWeight: 600, color: T.primary, marginBottom: "0.4rem",
-          }}>
-            Estructura la decisión
-          </h2>
-          <p style={{ color: T.onMuted, fontSize: "0.9375rem", marginBottom: "1.75rem", lineHeight: 1.6 }}>
-            Cada campo que rellenas entrena tu razonamiento.
-          </p>
-
-          <Collapse title="Impacto">
-            <TextField label="¿Qué cambia si decides A (sí / hacerlo)?"
-              value={form.altA} onChange={set("altA")}
-              placeholder="Describe los cambios concretos" multi />
-            <TextField label="¿Qué cambia si decides B (no / alternativa)?"
-              value={form.altB} onChange={set("altB")}
-              placeholder="Describe los cambios concretos" multi />
-          </Collapse>
-
-          <Collapse title="Riesgo">
-            <SliderRow label="Probabilidad de que funcione"
-              value={form.probability} onChange={set("probability")} />
-            <NumberField label="Valor si funciona"
-              value={form.valueSuccess} onChange={set("valueSuccess")} />
-            <NumberField label="Valor si falla (puede ser negativo)"
-              value={form.valueFailure} onChange={set("valueFailure")} />
-            <TextField label="Describe el peor escenario posible"
-              value={form.worstScenario} onChange={set("worstScenario")}
-              placeholder="Sé honesto, no dramatices" multi />
-            <SliderRow label="Severidad del peor escenario"
-              value={form.worstSeverity} onChange={set("worstSeverity")}
-              min={1} max={10} suffix="/10" />
-          </Collapse>
-
-          <Collapse title="Reversibilidad">
-            <SliderRow label="¿Qué tan fácil es deshacerla?"
-              value={form.reversibilityScore} onChange={set("reversibilityScore")}
-              min={0} max={10} suffix="/10" />
-            <NumberField label="Costo estimado de revertir la decisión"
-              value={form.revertCost} onChange={set("revertCost")} />
-          </Collapse>
-
-          <Collapse title="Horizonte temporal">
-            <TextField label="¿Cómo te afecta en 6 meses?"
-              value={form.impact6m} onChange={set("impact6m")}
-              placeholder="Impacto a corto plazo" multi />
-            <TextField label="¿Cómo te afecta en 3 años?"
-              value={form.impact3y} onChange={set("impact3y")}
-              placeholder="Impacto a largo plazo" multi />
-          </Collapse>
-
-          <Collapse title="Costo de oportunidad">
-            <TextField label="¿Qué dejas de hacer si eliges A?"
-              value={form.opportunityDesc} onChange={set("opportunityDesc")}
-              placeholder="La mejor alternativa que sacrificas" multi />
-            <NumberField label="Valor estimado de lo que sacrificas"
-              value={form.opportunityCost} onChange={set("opportunityCost")} />
-          </Collapse>
-
-          <button
-            disabled={!canSubmit || loading}
-            onClick={() => onSubmit(form)}
-            style={{
-              width: "100%", marginTop: "0.5rem",
-              background: canSubmit && !loading
-                ? `linear-gradient(180deg, ${T.primary} 0%, ${T.primaryMid} 100%)`
-                : T.surfaceHigh,
-              color: canSubmit && !loading ? "#ffffff" : T.outline,
-              border: "none", padding: "1.1rem", borderRadius: 12,
-              fontSize: "1rem", fontWeight: 600, fontFamily: T.fontBody,
-              cursor: canSubmit && !loading ? "pointer" : "not-allowed",
-              transition: "all 200ms",
-              boxShadow: canSubmit && !loading ? "0 8px 24px rgba(0,6,102,0.2)" : "none",
-              letterSpacing: "-0.01em",
-            }}
-          >
-            {loading ? "Analizando…" : "Evaluar decisión →"}
-          </button>
-        </>
+      {/* ── PASO 3: Preguntas IA ── */}
+      {step === "details" && (
+        <DynamicQuestions
+          title={title} level={level}
+          form={form} setForm={setForm}
+          onSubmit={onSubmit} loading={loading}
+        />
       )}
+
     </div>
   );
 }

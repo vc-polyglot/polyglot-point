@@ -22,6 +22,7 @@
       <li><a href="#galeria"    data-i18n="nav-galeria">Galería</a></li>
       <li><a href="#escuchame"  data-i18n="nav-escuchame">Escúchame</a></li>
       <li><a href="#contacto"   data-i18n="nav-contacto">Contacto</a></li>
+      <li><a href="#bitacora"   data-i18n="nav-bitacora">Bitácora</a></li>
     </ul>
     <div class="lang-selector">
       <button class="lang-current" id="langToggle" aria-label="Idioma / Language">ES</button>
@@ -50,6 +51,7 @@
     <a href="#escuchame"  class="menu-link" data-num="04" data-i18n="nav-escuchame">Escúchame</a>
     <a href="#galeria"    class="menu-link" data-num="05" data-i18n="nav-galeria">Galería</a>
     <a href="#contacto"   class="menu-link" data-num="06" data-i18n="nav-contacto">Contacto</a>
+    <a href="#bitacora"   class="menu-link" data-num="07" data-i18n="nav-bitacora">Bitácora</a>
   </nav>
   <div class="menu-lang">
     <button data-lang="es" class="menu-lang-btn active">ES</button>
@@ -107,46 +109,11 @@
 <section id="eventos">
   <div class="eventos-inner">
 
-    <!-- PRÓXIMOS EVENTOS -->
-    <div class="eventos-bloque reveal">
-      <div class="eventos-header">
-        <p class="section-label" data-i18n="eventos-proximos-label">Próximos eventos</p>
-        <h2 class="section-title" data-i18n="eventos-proximos-title">En <em>escena</em></h2>
-        <div class="ornament"><div class="ornament-line"></div><div class="ornament-diamond"></div></div>
-      </div>
-      <ul class="eventos-lista">
-        <li class="evento-item">
-          <span class="evento-fecha">15 · 03 · 2025</span>
-          <div class="evento-sep"></div>
-          <div class="evento-info">
-            <p class="evento-programa">Cantata del Alma</p>
-            <p class="evento-lugar">Ciudad de México, México</p>
-          </div>
-        </li>
-        <li class="evento-item">
-          <span class="evento-fecha">22 · 04 · 2025</span>
-          <div class="evento-sep"></div>
-          <div class="evento-info">
-            <p class="evento-programa">Música Antigua en el Claustro</p>
-            <p class="evento-lugar">Guadalajara, México</p>
-          </div>
-        </li>
-        <li class="evento-item">
-          <span class="evento-fecha">10 · 06 · 2025</span>
-          <div class="evento-sep"></div>
-          <div class="evento-info">
-            <p class="evento-programa">Festival de Música Barroca</p>
-            <p class="evento-lugar">París, Francia</p>
-          </div>
-        </li>
-      </ul>
-    </div>
-
     <!-- HISTORIAL -->
     <div class="eventos-bloque reveal">
       <div class="eventos-header">
-        <p class="section-label" data-i18n="eventos-historial-label">Historial</p>
-        <h2 class="section-title" data-i18n="eventos-historial-title">Conciertos <em>pasados</em></h2>
+        <p class="section-label" data-i18n="eventos-historial-label">Actividad reciente</p>
+        <h2 class="section-title" data-i18n="eventos-historial-title">Conciertos <em>y actividad</em></h2>
         <div class="ornament"><div class="ornament-line"></div><div class="ornament-diamond"></div></div>
       </div>
       <ul class="eventos-lista eventos-lista--pasados">
@@ -232,6 +199,274 @@
   </div>
 </section>
 
+
+<section id="bitacora">
+  <div class="bitacora-header-wrap">
+    <p class="section-label" data-i18n="bitacora-label">Taller de Música Antigua</p>
+    <h2 class="section-title" data-i18n="bitacora-title">Bitácora <em>de conciertos</em></h2>
+    <p class="bitacora-intro" data-i18n="bitacora-intro">Nueve años de actividad pedagógica y artística en el Conservatorio Nacional de Música · 2016–2024</p>
+  </div>
+  <div class="bitacora-strip-wrap">
+    <div class="bitacora-strip" id="bitacoraStrip">
+      <div class="bcard" data-num="30" data-desc="Recital. Taller de Música Antigua. Cátedra de la maestra Nurani Huet. Miércoles 29, 17 h. Mayo 2024. Salón 6, Conservatorio Nacional de Música. Presidente Masaryk 582, col. Polanco, CDMX. Entrada libre.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/30.jpg" alt="Cartel 30" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2024</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="29" data-desc="Conociendo la voz. Fundamentos anatómicos de la producción vocal. Imparte: Salvador Márquez Garay, Certificado en Pedagogía Vocal. Miércoles 19, 17 h. Abril 2024. Sala 34 Alfredo Bablot, Conservatorio Nacional de Música. Coordinación: maestra Nurani Huet.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/29.jpg" alt="Cartel 29" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2024</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="28" data-desc="Clase magistral de Música Medieval. Imparte: Ensamble Egeria (España). Lunes 25 de septiembre, 15:00–18:30 h. Sala 34 Alfredo Bablot, Conservatorio Nacional de Música. Coordinación: maestra Nurani Huet. Ciudad de México, 2023. Entrada libre.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/28.jpg" alt="Cartel 28" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2023</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="27" data-desc="Taller Aula Medieval: &quot;En Terras Despanya&quot;. Imparte: Ensamble Egeria (España). Del 18 al 22 de septiembre. Organizan: Conservatorio Nacional de Música (INBAL) y Facultad de Música (UNAM). Coordinación: maestra Nurani Huet.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/27.jpg" alt="Cartel 27" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2023</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="26" data-desc="Recital. Taller de Música Antigua. Cátedra de la maestra Nurani Huet. Maestro Antonio Ortega, continuista. Lunes 19, 16 h. Junio 2023. Sala 34 Alfredo Bablot, Conservatorio Nacional de Música. Entrada libre.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/26.jpg" alt="Cartel 26" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2023</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="25" data-desc="Concierto. Orquesta Barroca del Conservatorio Nacional de Música. Maestro Víctor Contreras, director. Solistas del Taller de Música Antigua. Maestra Nurani Huet, directora. Jueves 25, 17 h. Mayo 2023. Auditorio Silvestre Revueltas, CNM. Entrada libre.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/25.jpg" alt="Cartel 25" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2023</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="24" data-desc="Curso Introducción al Bajo Continuo. Imparte: Miguel Cicero, docente de la cátedra de clavecín. Diciembre 2022. Sala 34 Alfredo Bablot, Conservatorio Nacional de Música. Coordinación: Maestra Nurani Huet. Entrada libre.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/24.jpg" alt="Cartel 24" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2022</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="23" data-desc="Ciclo Jóvenes en la Música. Obras de Antonio Vivaldi y Giovanni Girolamo Kapsberger. Taller de Música Antigua del CNM. Nurani Huet, profesora. Domingo 31 de julio, 16:00 h. Capilla de la Biblioteca Miguel Lerdo de Tejada, Centro Histórico, CDMX. En colaboración con la Coordinación Nacional de Música y Ópera de INBAL.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/23.jpg" alt="Cartel 23" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2022</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="22" data-desc="Collage documental de los alumnos del Taller de Música Antigua durante la pandemia. Sesiones virtuales, 2020–2021.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/22.jpg" alt="Cartel 22" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2021</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="21" data-desc="Resumen documental. Ciclo Escolar 2020–2021. Taller de Música Antigua. Cátedra de la maestra Nurani Huet. Transmisión virtual. Miércoles 14, 12 h. @ConservatorioMX. Julio de 2021. Entrada libre.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/21.jpg" alt="Cartel 21" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2021</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="20" data-desc="Un viaje al universo sonoro de la Edad Media. Clase magistral de canto medieval. Imparte: Maria Jonas. Viernes 9 de julio. México 12 h / España 19 h. @ConservatorioMX. Dirección: Mara Aranda y Nurani Huet. 2021. Entrada libre.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/20.jpg" alt="Cartel 20" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2021</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="19" data-desc="Un viaje al universo sonoro de la Edad Media. Clase magistral de organetto. Imparte: Cristina Alís. Jueves 8 de julio. México 12 h / España 19 h. @ConservatorioMX. Dirección: Mara Aranda y Nurani Huet. 2021. Entrada libre.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/19.jpg" alt="Cartel 19" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2021</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="18" data-desc="Un viaje al universo sonoro de la Edad Media. Clase magistral de arpa medieval. Imparte: Manuel Vilas. Miércoles 7 de julio. México 12 h / España 19 h. @ConservatorioMX. Dirección: Mara Aranda y Nurani Huet. 2021. Entrada libre.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/18.jpg" alt="Cartel 18" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2021</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="17" data-desc="Un viaje al universo sonoro de la Edad Media. Ciclo de clases magistrales de música medieval. Organizado por el CNM (México) en colaboración con el CIMM de la Valldigna (Valencia, España). Del 6 al 9 de julio. Dirección: Mara Aranda y Nurani Huet. Ciudad de México, 2021.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/17.jpg" alt="Cartel 17" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2021</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="16" data-desc="&quot;Miraculous Love's wounding&quot; de Tomas Morley. Taller de Música Antigua del Conservatorio Nacional de Música. Cátedra de la maestra Nurani Huet. Transmisión virtual. Jueves 25, 18 h. LIVE @ConservatorioMX. Marzo de 2021. Entrada libre.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/16.jpg" alt="Cartel 16" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2021</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="15" data-desc="Ensamble Vocal de Música Antigua. Conservatorio Nacional de Música.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/15.jpg" alt="Cartel 15" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2019</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="14" data-desc="Convocatoria Ensamble Vocal de Música Antigua. Dirigido a cantantes interesados en repertorio vocal temprano (Renacimiento y Barroco). Cupo limitado a 10 cantantes. Audiciones: jueves 29 de agosto, 16 h, salón 6. Responsables: Maestra Nurani Huet, Maestro Víctor Contreras.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/14.jpg" alt="Cartel 14" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2019</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="13" data-desc="Alumnos de Música Antigua del Conservatorio Nacional de Música. Coordinación: Miguel Cicero y Nurani Huet. Obras de Bach, Buxtehude, De Cabezón y Sweelinck. Domingo 21, 12 h. Biblioteca Lerdo de Tejada, SHCP. República de El Salvador 49, Centro Histórico. Julio de 2019. Entrada libre.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/13.jpg" alt="Cartel 13" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2019</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="12" data-desc="II Festival de Música Antigua. Conservatorio Nacional de Música. Del 20 al 24 de mayo. En el marco de la Semana Internacional de la Educación Artística. Coordinación: Miguel Cicero y Nurani Huet. Entrada libre.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/12.jpg" alt="Cartel 12" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2019</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="11" data-desc="II Festival de Música Antigua. Conservatorio Nacional de Música. Del 20 al 24 de mayo, en el marco de la Semana Internacional de la Educación Artística. Talleres, conferencias, clases magistrales y conciertos. Participan: Horacio Franco, Nurani Huet, Vincent Touzet, Víctor Contreras y más. Coordinación: Miguel Cicero y Nurani Huet. Entrada libre.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/11.jpg" alt="Cartel 11" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2019</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="10" data-desc="Recital del Taller de Música Antigua. Cátedra de la Maestra Nurani Huet. Obras de Alfonso X, Frescobaldi, Caccini, Cenci, Le Camus, Schutz y Bach. Miércoles 3, 13 h. Sala 34 Alfredo Bablot. Abril de 2019. Entrada libre. Conservatorio Nacional de Música.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/10.jpg" alt="Cartel 10" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2019</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="09" data-desc="Reconocimiento del Ayuntamiento de Metepec 2016–2018. Otorgado al Ensamble de Música Antigua del Conservatorio Nacional de Música por su participación en el XXVIII Festival Internacional de Arte y Cultura Quimera 2018.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/09.jpg" alt="Cartel 09" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2018</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="08" data-desc="Jóvenes en la Música | Julio 2018. Alumnos de los Talleres de Música Antigua del Conservatorio Nacional de Música. Coordinación: Nurani Huet, Miguel Cícero y Víctor Contreras. Obras de Frescobaldi, Strozzi, Castello, Caccini, Sweelinck, Buxtehude, Dandrieu, Dufay, Viadana, Monteverdi, Telemann, Porpora y Rameau. Sábado 21, 16 h. Fondo Histórico Ortiz Mena, Palacio Nacional. Entrada libre.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/08.jpg" alt="Cartel 08" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2018</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="07" data-desc="Ciclo de Clases Magistrales de Danzas Históricas. Primera Edición: pavana, gallarda y zarabanda. Imparte: Maestra Margarita Dardón. Coordinación: Maestra Nurani Huet. Miércoles 23 de mayo, 14 a 16:30 h. Sala 120 &quot;Carlos J. Meneses&quot;. Ciudad de México, 2018. Entrada libre.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/07.jpg" alt="Cartel 07" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2018</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="06" data-desc="Recital de Música Antigua. Alumnos de la Maestra Nurani Huet. Miércoles 21 de febrero, 16 h. Sala 34 &quot;Alfredo Bablot&quot;. Programa de música para el año escolar 2023/24. Conservatorio Nacional de Música. Entrada libre.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/06.jpg" alt="Cartel 06" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2024</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="05" data-desc="Festival de Música Antigua. Coordinación: Miguel Cicero y Nurani Huet. Conservatorio Nacional de Música. Enero. Av. Presidente Masaryk No. 582, col. Polanco, Ciudad de México.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/05.jpg" alt="Cartel 05" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2017</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="04" data-desc="Las colores de la voz · Música de Cámara. Marzo de 2017. Coordinación Nacional de Música y Ópera. Sala Manuel M. Ponce (Palacio de Bellas Artes) y Salón de Recepciones (Museo Nacional de Arte).">
+        <div class="bcard-inner">
+          <img src="img/bitacora/04.jpg" alt="Cartel 04" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2017</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="03" data-desc="Concierto del Taller de Música Antigua. De los maestros Nurani Huet y Miguel Cicero. Martes 5, 16 h. Auditorio &quot;Silvestre Revueltas&quot;. Diciembre de 2017. Entrada libre.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/03.jpg" alt="Cartel 03" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2017</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="02" data-desc="Instrumenta Oaxaca 2016. Las músicas de Oaxaca. Diálogos entre la oralidad y la música escrita. Del 15 al 27 de noviembre. Programa desarrollado a partir del ECMO (Etnografías de las Culturas Musicales de Oaxaca).">
+        <div class="bcard-inner">
+          <img src="img/bitacora/02.jpg" alt="Cartel 02" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2016</span>
+          </div>
+        </div>
+      </div>
+      <div class="bcard" data-num="01" data-desc="Recital del Taller de Música Antigua para cantantes. Maestra Nurani Huet. Obras de Machaut, Merula, Vivaldi, Bach, Händel y Porpora. 22 de febrero de 2017, 16 h. Sala 34 &quot;Alfredo Bablot&quot;, Conservatorio Nacional de Música. Ciudad de México.">
+        <div class="bcard-inner">
+          <img src="img/bitacora/01.jpg" alt="Cartel 01" loading="lazy" />
+          <div class="bcard-overlay">
+            <span class="bcard-year">2017</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIGHTBOX BITÁCORA -->
+<div class="blight" id="blight">
+  <button class="blight-close" id="blightClose">&#x2715;</button>
+  <button class="blight-prev" id="blightPrev">&#8592;</button>
+  <button class="blight-next" id="blightNext">&#8594;</button>
+  <div class="blight-inner">
+    <img src="" alt="" id="blightImg" />
+    <div class="blight-info">
+      <span class="blight-num" id="blightNum"></span>
+      <p class="blight-desc" id="blightDesc"></p>
+    </div>
+  </div>
+</div>
+
+
 <section id="galeria">
   <div class="galeria-header-wrap">
     <p class="section-label" data-i18n="galeria-label">Galería</p>
@@ -253,7 +488,7 @@
   <div class="contacto-inner">
     <div class="contacto-text reveal">
       <p class="section-label" data-i18n="contacto-label">Contacto</p>
-      <h2 class="section-title" style="color:var(--marfil);" data-i18n="contacto-title">Invitaciones<br><em style="color:var(--oro-claro);">&amp; colaboraciones</em></h2>
+      <h2 class="section-title" style="color:var(--marfil);" data-i18n="contacto-title">Conciertos &amp; festivales<br><em style="color:var(--oro-claro);">academia y prensa</em></h2>
       <div class="ornament"><div class="ornament-line" style="background:var(--oro);"></div><div class="ornament-diamond" style="background:var(--oro);"></div></div>
       <p data-i18n="contacto-p">Para contrataciones, colaboraciones artísticas,<br>proyectos académicos o prensa:</p>
       <a href="#" class="contacto-email">nuranihuet&#64;gmail&#46;com</a>
@@ -340,9 +575,10 @@
       'tag-interpretacion':'Interpretación','tag-investigacion':'Investigación','tag-difusion':'Difusión académica','tag-siglos':'Siglos XII–XVI','tag-mexico':'México',
       'escuchame-label':'Canal oficial','escuchame-title':'Escúchame <em>cantar</em>','escuchame-link':'Ver canal completo en YouTube',
       'galeria-label':'Galería','galeria-title':'Momentos <em>en escena</em>','galeria-expand':'Ver completa',
-      'contacto-label':'Contacto','contacto-title':'Invitaciones<br><em style="color:var(--oro-claro);">&amp; colaboraciones</em>',
+      'contacto-label':'Contacto','contacto-title':'Conciertos &amp; festivales<br><em style="color:var(--oro-claro);">academia y prensa</em>',
       'contacto-p':'Para contrataciones, colaboraciones artísticas,<br>proyectos académicos o prensa:',
       'footer-rights':'&copy; 2025 Nurani Huet &middot; Todos los derechos reservados',
+      'nav-bitacora':'Bitácora','bitacora-label':'Taller de Música Antigua','bitacora-title':'Bitácora <em>de conciertos</em>','bitacora-intro':'Nueve años de actividad pedagógica y artística en el Conservatorio Nacional de Música · 2016–2024',
       'footer-sub':'Mezzosoprano &middot; México &middot; Barroco &middot; Medieval'
     },
     fr: {
@@ -366,9 +602,10 @@
       'tag-interpretacion':'Interprétation','tag-investigacion':'Recherche','tag-difusion':'Diffusion académique','tag-siglos':'XII<sup>e</sup>–XVI<sup>e</sup> s.','tag-mexico':'Mexique',
       'escuchame-label':'Chaîne officielle','escuchame-title':'Écoutez-moi <em>chanter</em>','escuchame-link':'Voir la chaîne complète sur YouTube',
       'galeria-label':'Galerie','galeria-title':'Moments <em>sur scène</em>','galeria-expand':'Voir en grand',
-      'contacto-label':'Contact','contacto-title':'Engagements<br><em style="color:var(--oro-claro);">&amp; collaborations</em>',
+      'contacto-label':'Contact','contacto-title':'Concerts &amp; festivals<br><em style="color:var(--oro-claro);">académique et presse</em>',
       'contacto-p':'Pour des engagements, des collaborations artistiques,<br>des projets académiques ou la presse&nbsp;:',
       'footer-rights':'&copy; 2025 Nurani Huet &middot; Tous droits réservés',
+      'nav-bitacora':'Archive','bitacora-label':'Atelier de Musique Ancienne','bitacora-title':'Archive <em>de concerts</em>','bitacora-intro':'Neuf ans d\'activité pédagogique et artistique au Conservatoire National de Musique · 2016–2024',
       'footer-sub':'Mezzo-soprano &middot; Mexique &middot; Baroque &middot; Médiéval'
     },
     en: {
@@ -392,9 +629,10 @@
       'tag-interpretacion':'Performance','tag-investigacion':'Research','tag-difusion':'Academic dissemination','tag-siglos':'12th–16th centuries','tag-mexico':'Mexico',
       'escuchame-label':'Official channel','escuchame-title':'Listen to me <em>sing</em>','escuchame-link':'View full channel on YouTube',
       'galeria-label':'Gallery','galeria-title':'Moments <em>on stage</em>','galeria-expand':'View full',
-      'contacto-label':'Contact','contacto-title':'Bookings<br><em style="color:var(--oro-claro);">&amp; collaborations</em>',
+      'contacto-label':'Contact','contacto-title':'Concerts &amp; festivals<br><em style="color:var(--oro-claro);">academia and press</em>',
       'contacto-p':'For bookings, artistic collaborations,<br>academic projects or press:',
       'footer-rights':'&copy; 2025 Nurani Huet &middot; All rights reserved',
+      'nav-bitacora':'Archive','bitacora-label':'Early Music Workshop','bitacora-title':'Concert <em>archive</em>','bitacora-intro':'Nine years of pedagogical and artistic activity at the National Conservatory of Music · 2016–2024',
       'footer-sub':'Mezzo-soprano &middot; Mexico &middot; Baroque &middot; Medieval'
     },
     it: {
@@ -418,9 +656,10 @@
       'tag-interpretacion':'Interpretazione','tag-investigacion':'Ricerca','tag-difusion':'Diffusione accademica','tag-siglos':'Sec. XII–XVI','tag-mexico':'Messico',
       'escuchame-label':'Canale ufficiale','escuchame-title':'Ascoltami <em>cantare</em>','escuchame-link':'Visualizza il canale completo su YouTube',
       'galeria-label':'Galleria','galeria-title':'Momenti <em>in scena</em>','galeria-expand':'Vedi intera',
-      'contacto-label':'Contatti','contacto-title':'Ingaggi<br><em style="color:var(--oro-claro);">&amp; collaborazioni</em>',
+      'contacto-label':'Contatti','contacto-title':'Concerti &amp; festival<br><em style="color:var(--oro-claro);">accademia e stampa</em>',
       'contacto-p':'Per ingaggi, collaborazioni artistiche,<br>progetti accademici o stampa:',
       'footer-rights':'&copy; 2025 Nurani Huet &middot; Tutti i diritti riservati',
+      'nav-bitacora':'Archivio','bitacora-label':'Laboratorio di Musica Antica','bitacora-title':'Archivio <em>dei concerti</em>','bitacora-intro':'Nove anni di attività pedagogica e artistica al Conservatorio Nazionale di Musica · 2016–2024',
       'footer-sub':'Mezzosoprano &middot; Messico &middot; Barocco &middot; Medievale'
     },
     pt: {
@@ -444,9 +683,10 @@
       'tag-interpretacion':'Interpretação','tag-investigacion':'Investigação','tag-difusion':'Difusão académica','tag-siglos':'Séc. XII–XVI','tag-mexico':'México',
       'escuchame-label':'Canal oficial','escuchame-title':'Ouça-me <em>cantar</em>','escuchame-link':'Ver canal completo no YouTube',
       'galeria-label':'Galeria','galeria-title':'Momentos <em>em cena</em>','galeria-expand':'Ver completa',
-      'contacto-label':'Contacto','contacto-title':'Convites<br><em style="color:var(--oro-claro);">&amp; colaborações</em>',
+      'contacto-label':'Contacto','contacto-title':'Concertos &amp; festivais<br><em style="color:var(--oro-claro);">académico e imprensa</em>',
       'contacto-p':'Para contratações, colaborações artísticas,<br>projetos académicos ou imprensa:',
       'footer-rights':'&copy; 2025 Nurani Huet &middot; Todos os direitos reservados',
+      'nav-bitacora':'Arquivo','bitacora-label':'Ateliê de Música Antiga','bitacora-title':'Arquivo <em>de concertos</em>','bitacora-intro':'Nove anos de atividade pedagógica e artística no Conservatório Nacional de Música · 2016–2024',
       'footer-sub':'Mezzosoprano &middot; México &middot; Barroco &middot; Medieval'
     }
   };
@@ -665,7 +905,7 @@
   }
 
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') { closeLightbox(); closeMenu(); }
+    if (e.key === 'Escape') { closeLightbox(); closeBlight(); closeMenu(); }
   });
 
   /* ══════════════════════════════════════════════════════════════
@@ -744,6 +984,55 @@
   if (musicPrev) musicPrev.addEventListener('click', function() { playTrack(currentTrack - 1); });
   if (musicNext) musicNext.addEventListener('click', function() { playTrack(currentTrack + 1); });
   if (musicBtn)  musicBtn.addEventListener('click', togglePlay);
+
+
+  /* ══════════════════════════════════════════════════════════════
+     LIGHTBOX BITÁCORA
+  ══════════════════════════════════════════════════════════════ */
+  var bcards      = Array.from(document.querySelectorAll('.bcard'));
+  var blight      = document.getElementById('blight');
+  var blightImg   = document.getElementById('blightImg');
+  var blightDesc  = document.getElementById('blightDesc');
+  var blightNum   = document.getElementById('blightNum');
+  var blightClose = document.getElementById('blightClose');
+  var blightPrev  = document.getElementById('blightPrev');
+  var blightNext  = document.getElementById('blightNext');
+  var bCurrentIdx = 0;
+
+  function openBlight(idx) {
+    if (!blight || !bcards[idx]) return;
+    bCurrentIdx = idx;
+    var card = bcards[idx];
+    var num  = card.getAttribute('data-num');
+    blightImg.src  = 'img/bitacora/' + num + '.jpg';
+    blightDesc.textContent = card.getAttribute('data-desc');
+    blightNum.textContent  = num + ' / 30';
+    blight.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeBlight() {
+    if (!blight) return;
+    blight.classList.remove('open');
+    if (blightImg) blightImg.src = '';
+    document.body.style.overflow = '';
+  }
+
+  function navBlight(dir) {
+    bCurrentIdx = (bCurrentIdx + dir + bcards.length) % bcards.length;
+    openBlight(bCurrentIdx);
+  }
+
+  bcards.forEach(function(card, idx) {
+    card.addEventListener('click', function() { openBlight(idx); });
+    card.addEventListener('mouseenter', function() { document.body.classList.add('cursor-hover'); });
+    card.addEventListener('mouseleave', function()  { document.body.classList.remove('cursor-hover'); });
+  });
+
+  if (blightClose) blightClose.addEventListener('click', closeBlight);
+  if (blightPrev)  blightPrev.addEventListener('click',  function() { navBlight(-1); });
+  if (blightNext)  blightNext.addEventListener('click',  function() { navBlight(1); });
+  if (blight)      blight.addEventListener('click', function(e) { if (e.target === blight) closeBlight(); });
 
   /* ══════════════════════════════════════════════════════════════
      SCROLL SUAVE

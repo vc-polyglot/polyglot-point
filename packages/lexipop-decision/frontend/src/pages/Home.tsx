@@ -68,7 +68,7 @@ export default function Home({ onStart, onLearn, decisions = [] }: HomeProps) {
       </header>
 
       {/* MAIN */}
-      <main style={{ maxWidth: 480, margin: "0 auto", padding: "5.5rem 1.5rem 6rem" }}>
+      <main style={{ maxWidth: 480, margin: "0 auto", padding: "6.5rem 1.5rem 6rem" }}>
 
         <section style={{ marginBottom: "2.5rem" }}>
           <p style={{
@@ -106,17 +106,6 @@ export default function Home({ onStart, onLearn, decisions = [] }: HomeProps) {
             Analizar una decisión
           </button>
 
-          <button onClick={onLearn} style={{
-            width: "100%", marginTop: "0.75rem",
-            background: T.surfaceLow, border: "none", borderRadius: 14,
-            padding: "0.9rem 1.5rem",
-            fontSize: "0.9375rem", fontWeight: 500, color: T.onMuted,
-            fontFamily: T.fontBody, cursor: "pointer",
-            display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem",
-          }}>
-            <span className="material-symbols-outlined" style={{ fontSize: "1.1rem" }}>menu_book</span>
-            Cómo funciona decidir
-          </button>
         </section>
 
         <div style={{ height: 1, background: "rgba(198,197,212,0.2)", marginBottom: "2rem" }} />
