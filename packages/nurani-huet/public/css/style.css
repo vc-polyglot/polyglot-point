@@ -603,3 +603,192 @@ footer p { font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0
   .blight-inner img { max-width: 90vw; max-height: 55vh; }
   .blight-info { padding-top: 0; }
 }
+
+/* ─── MEDIEVALMX EXPANDIDO ──────────────────────────────────────── */
+
+.mmx-expanded {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 4rem 8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+}
+
+.mmx-block {}
+
+.mmx-body {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.25rem;
+  line-height: 1.9;
+  color: var(--texto-suave);
+  margin-top: 1rem;
+}
+
+/* Integrantes */
+.mmx-members {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.mmx-member {
+  border-top: 1px solid var(--crema-oscura);
+  padding-top: 1.2rem;
+}
+
+.mmx-member-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--texto);
+  margin-bottom: 0.3rem;
+}
+
+.mmx-member-role {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--oro);
+}
+
+/* Acordeón repertorio */
+.mmx-accordion {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid var(--crema-oscura);
+}
+
+.mmx-acc-item {
+  border-bottom: 1px solid var(--crema-oscura);
+}
+
+.mmx-acc-btn {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem;
+  font-style: italic;
+  color: var(--texto);
+  padding: 1.2rem 0;
+  cursor: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: color 0.3s;
+}
+
+.mmx-acc-btn::after {
+  content: '+';
+  font-style: normal;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  color: var(--oro);
+  transition: transform 0.3s;
+}
+
+.mmx-acc-btn.open::after {
+  transform: rotate(45deg);
+}
+
+.mmx-acc-btn:hover { color: var(--burdeos); }
+
+.mmx-acc-body {
+  display: none;
+  padding: 0 0 1.5rem 1rem;
+}
+
+.mmx-acc-body.open { display: block; }
+
+.mmx-acc-body ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mmx-acc-body li {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.1rem;
+  color: var(--texto-suave);
+  line-height: 1.5;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.mmx-acc-body li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--oro);
+}
+
+.mmx-acc-body li em {
+  color: var(--texto-muy-suave);
+  font-size: 0.95rem;
+}
+
+/* Agenda */
+.mmx-agenda {
+  list-style: none;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.mmx-agenda li {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem;
+  font-style: italic;
+  color: var(--texto-suave);
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.mmx-agenda li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--oro);
+  font-style: normal;
+  font-size: 1rem;
+}
+
+/* Cita */
+.mmx-quote-block {
+  border-left: 2px solid var(--oro);
+  padding-left: 2.5rem;
+}
+
+.mmx-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  font-style: italic;
+  color: var(--texto);
+  line-height: 1.75;
+  quotes: none;
+  margin-bottom: 1rem;
+}
+
+.mmx-quote-credit {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  color: var(--texto-muy-suave);
+}
+
+/* Responsive mmx */
+@media (max-width: 900px) {
+  .mmx-expanded { padding: 0 1.5rem 5rem; gap: 3.5rem; }
+  .mmx-members { grid-template-columns: 1fr; gap: 1.5rem; }
+  .mmx-quote-block { padding-left: 1.5rem; }
+}
