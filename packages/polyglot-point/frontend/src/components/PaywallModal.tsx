@@ -1,4 +1,5 @@
 ﻿import React, { useState } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { useAuth } from '../auth/AuthContext';
 import { paywallTranslations, getBrowserLanguage } from '../i18n/paywall';
 import '../styles/paywall-modal.css';
@@ -14,18 +15,79 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
   const auth = useAuth();
   const lang = getBrowserLanguage();
   const t = paywallTranslations[lang as keyof typeof paywallTranslations].paywall;
-  
+
   const [selectedPlan, setSelectedPlan] = useState<PlanKey>('premium_monthly');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubscribe = async () => {
-    setIsLoading(true);
+  // ── Android: verificar compra en backend ─────────────────────────────────
+  const verifyAndroidPurchase = async (purchaseToken: string) => {
+    try {
+      const res = await fetch('/billing/verify-purchase', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          purchaseToken,
+          productId: 'polyglot_point_pro_monthly',
+        }),
+      });
+      if (!res.ok) {
+        console.error('[verify-purchase] status:', res.status);
+      }
+    } catch (err) {
+      console.error('[verify-purchase] error:', err);
+    }
+  };
+
+  // ── Android: flujo Google Play ────────────────────────────────────────────
+  const handleAndroidPurchase = () => {
+    const CdvPurchase = (window as any).CdvPurchase;
+    if (!CdvPurchase) {
+      console.error('[PaywallModal] CdvPurchase no disponible');
+      setIsLoading(false);
+      return;
+    }
+
+    const store = CdvPurchase.store;
+
+    store.register([{
+      id: 'polyglot_point_pro_monthly',
+      type: CdvPurchase.ProductType.PAID_SUBSCRIPTION,
+      platform: CdvPurchase.Platform.GOOGLE_PLAY,
+    }]);
+
+    store.when()
+      .approved((transaction: any) => {
+        transaction.verify();
+      })
+      .verified((receipt: any) => {
+        receipt.finish();
+        const token =
+          receipt.purchaseToken ||
+          receipt.transaction?.purchaseToken ||
+          receipt.nativePurchase?.purchaseToken ||
+          '';
+        verifyAndroidPurchase(token);
+      });
+
+    store.initialize([CdvPurchase.Platform.GOOGLE_PLAY]).then(() => {
+      const product = store.get(
+        'polyglot_point_pro_monthly',
+        CdvPurchase.Platform.GOOGLE_PLAY
+      );
+      if (product) {
+        product.getOffer()?.order();
+      }
+      setIsLoading(false);
+    });
+  };
+
+  // ── Web: flujo Stripe ────────────────────────────────────────────────────
+  const handleWebCheckout = async () => {
     try {
       const response = await fetch('/billing/create-checkout-session', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ plan: selectedPlan }),
       });
@@ -41,6 +103,18 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
       alert(t.errors.checkoutFailed);
       setIsLoading(false);
     }
+  };
+
+  // ── Punto de entrada del botón ───────────────────────────────────────────
+  const handleSubscribe = async () => {
+    setIsLoading(true);
+
+    if (Capacitor.isNativePlatform()) {
+      handleAndroidPurchase();
+      return;
+    }
+
+    await handleWebCheckout();
   };
 
   const handleLogout = async () => {
@@ -122,18 +196,9 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
               <span className="period">/mes</span>
             </div>
             <ul className="plan-features">
-              <li>
-                <span className="checkmark">✓</span>
-                <span className="highlight">50 mensajes diarios</span>
-              </li>
-              <li>
-                <span className="checkmark">✓</span>
-                <span>6 idiomas completos</span>
-              </li>
-              <li>
-                <span className="checkmark">✓</span>
-                <span>Correcciones detalladas</span>
-              </li>
+              <li><span className="checkmark">✓</span><span className="highlight">50 mensajes diarios</span></li>
+              <li><span className="checkmark">✓</span><span>6 idiomas completos</span></li>
+              <li><span className="checkmark">✓</span><span>Correcciones detalladas</span></li>
             </ul>
           </div>
 
@@ -152,18 +217,9 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
               <span className="savings">(≈ $12.50/mes)</span>
             </div>
             <ul className="plan-features">
-              <li>
-                <span className="checkmark">✓</span>
-                <span>Todo lo de Premium</span>
-              </li>
-              <li>
-                <span className="checkmark">✓</span>
-                <span className="highlight">2 meses gratis</span>
-              </li>
-              <li>
-                <span className="checkmark">✓</span>
-                <span>Ahorras $30 al año</span>
-              </li>
+              <li><span className="checkmark">✓</span><span>Todo lo de Premium</span></li>
+              <li><span className="checkmark">✓</span><span className="highlight">2 meses gratis</span></li>
+              <li><span className="checkmark">✓</span><span>Ahorras $30 al año</span></li>
             </ul>
           </div>
 
@@ -181,18 +237,9 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
               <span className="period">/mes</span>
             </div>
             <ul className="plan-features">
-              <li>
-                <span className="checkmark">✓</span>
-                <span className="highlight">150 mensajes diarios</span>
-              </li>
-              <li>
-                <span className="checkmark">✓</span>
-                <span>Modelos IA avanzados</span>
-              </li>
-              <li>
-                <span className="checkmark">✓</span>
-                <span>Soporte prioritario</span>
-              </li>
+              <li><span className="checkmark">✓</span><span className="highlight">150 mensajes diarios</span></li>
+              <li><span className="checkmark">✓</span><span>Modelos IA avanzados</span></li>
+              <li><span className="checkmark">✓</span><span>Soporte prioritario</span></li>
             </ul>
           </div>
         </div>
