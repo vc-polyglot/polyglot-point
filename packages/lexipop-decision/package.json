@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx backend/index.ts",
-    "build": "pnpm run build:frontend && pnpm run build:backend",
+    "build": "npm run build:frontend && npm run build:backend",
     "build:frontend": "cd frontend && vite build",
     "build:backend": "tsup backend/index.ts --format cjs --out-dir dist --no-splitting --external vite",
     "start": "node dist/index.cjs",
@@ -14,7 +14,7 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "@platform/core": "workspace:*",
+    "@platform/core": "file:../../core",
     "connect-redis": "^7.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
