@@ -1,0 +1,10 @@
+{
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "echo 'Skipping monorepo build'"
+  },
+  "deploy": {
+    "startCommand": "cd backend && npm install && node index.js",
+    "restartPolicyType": "ON_FAILURE"
+  }
+}
