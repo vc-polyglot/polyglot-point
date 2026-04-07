@@ -1,0 +1,12 @@
+{
+  "name": "polyglot-point",
+  "version": "1.0.0",
+  "main": "dist/index.cjs",
+  "scripts": {
+    "build": "mkdir dist 2>nul & echo console.log('polyglotpoint running'); > dist/index.cjs",
+    "start": "node dist/index.cjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
