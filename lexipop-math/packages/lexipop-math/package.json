@@ -1,0 +1,9 @@
+{
+  "name": "lexipop-math",
+  "version": "1.0.0",
+  "main": "dist/index.cjs",
+  "scripts": {
+    "build": "mkdir dist 2>nul & echo console.log('lexipop-math running'); > dist/index.cjs",
+    "start": "node dist/index.cjs"
+  }
+}
