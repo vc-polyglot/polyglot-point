@@ -1,14 +1,5 @@
-﻿{
+{
   "name": "@platform/organ-project",
   "version": "1.0.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "dev": "node backend/index.js",
-    "start": "node backend/index.js"
-  },
-  "dependencies": {
-    "express": "^4.21.1",
-    "sharp": "^0.33.3"
-  }
+  "private": true
 }
