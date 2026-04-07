@@ -1,5 +1,6 @@
 ﻿import { useState, useEffect, useRef } from 'react';
 import './MathExercise.css';
+import { Capacitor } from '@capacitor/core';
 
 type Language = 'es' | 'en' | 'fr' | 'de' | 'pt' | 'it';
 type Section   = 'aritmetica' | 'algebra' | 'funciones';

@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function generateQuestions(req: Request, res: Response) {
   try {
@@ -13,53 +11,58 @@ export async function generateQuestions(req: Request, res: Response) {
       return res.status(400).json({ error: "Faltan title o level" });
     }
 
-    const prompt = `
-Eres un asistente que ayuda a tomar mejores decisiones.
+    const levelContext = {
+      cotidiana:  "decisión cotidiana de bajo riesgo",
+      carrera:    "decisión profesional o vocacional",
+      financiera: "decisión financiera o de inversión",
+    }[level as string] ?? "decisión";
 
-Contexto:
-- Decisión: "${title}"
-- Tipo: ${level === "cotidiana" ? "cotidiana (bajo riesgo)" : level === "carrera" ? "profesional" : "financiera"}
+    const prompt = `Eres un coach de toma de decisiones. El usuario está evaluando esta ${levelContext}:
 
-Genera 4 preguntas clave para analizar esta decisión, basadas en:
-1. Impacto: ¿Qué cambia con cada opción?
-2. Riesgo: ¿Qué probabilidad asignas? ¿Cuál es el peor escenario?
-3. Reversibilidad: ¿Qué tan fácil es deshacerla?
-4. Costo de oportunidad: ¿Qué sacrificas?
+"${title}"
 
-Responde SOLO con un objeto JSON válido con esta estructura:
+Tu tarea es generar 6 preguntas que lo ayuden a REFLEXIONAR sobre su situación específica.
+
+REGLAS ESTRICTAS:
+- Las preguntas deben ser INTROSPECTIVAS, no descriptivas
+- NO repitas el título en las preguntas
+- NO preguntes "¿qué beneficios tiene X?" — pregunta "¿qué cambia en tu vida si...?"
+- La pregunta de probabilidad debe pedir una estimación personal honesta, no técnica
+- La pregunta de reversibilidad debe hacer pensar en consecuencias reales, no abstractas
+- Usa "tú" directo, tono conversacional, máximo 15 palabras por pregunta
+
+Responde SOLO con JSON válido, sin markdown:
 {
-  "optionAQuestion": "pregunta para describir qué pasa si elige A",
-  "optionBQuestion": "pregunta para describir qué pasa si elige B",
-  "probabilityQuestion": "pregunta sobre probabilidad de éxito",
-  "worstScenarioQuestion": "pregunta sobre el peor escenario",
-  "reversibilityQuestion": "pregunta sobre qué tan reversible es",
-  "opportunityQuestion": "pregunta sobre qué sacrifica"
-}
-
-No incluyas texto adicional fuera del JSON.
-`;
+  "optionAQuestion": "pregunta sobre qué cambia en su vida si dice sí / lo hace",
+  "optionBQuestion": "pregunta sobre qué cambia en su vida si dice no / no lo hace",
+  "probabilityQuestion": "pregunta para que estime honestamente cuántas probabilidades tiene de que salga bien",
+  "worstScenarioQuestion": "pregunta sobre el peor resultado real que podría vivir",
+  "reversibilityQuestion": "pregunta sobre qué tan fácil sería dar marcha atrás si sale mal",
+  "opportunityQuestion": "pregunta sobre qué está dejando ir al tomar esta decisión"
+}`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [{ role: "user", content: prompt }],
-      temperature: 0.7,
-      max_tokens: 300,
+      temperature: 0.6,
+      max_tokens: 400,
     });
 
-    const content = completion.choices[0].message.content;
-    const questions = JSON.parse(content || "{}");
+    const content = completion.choices[0].message.content ?? "{}";
+    const clean   = content.replace(/```json|```/g, "").trim();
+    const questions = JSON.parse(clean);
 
     res.json(questions);
+
   } catch (error) {
     console.error("Error generando preguntas:", error);
-    // Fallback preguntas genéricas
     res.json({
-      optionAQuestion: "¿Qué cambia si decides hacerlo?",
-      optionBQuestion: "¿Qué cambia si decides no hacerlo?",
-      probabilityQuestion: "¿Qué probabilidad le asignas (0-100%) a que funcione?",
-      worstScenarioQuestion: "¿Cuál es el peor escenario posible?",
-      reversibilityQuestion: "¿Qué tan fácil es deshacer esta decisión (0-10)?",
-      opportunityQuestion: "¿Qué estás sacrificando al elegir esto?",
+      optionAQuestion:       "¿Qué cambia en tu vida si decides hacerlo?",
+      optionBQuestion:       "¿Qué cambia en tu vida si decides no hacerlo?",
+      probabilityQuestion:   "De cada 10 veces que has tomado una decisión así, ¿cuántas te han salido bien?",
+      worstScenarioQuestion: "¿Qué es lo peor que podría pasarte realmente si sale mal?",
+      reversibilityQuestion: "Si en 6 meses te arrepientes, ¿qué tan fácil sería dar marcha atrás?",
+      opportunityQuestion:   "¿Qué estás dejando ir al elegir esto?",
     });
   }
 }

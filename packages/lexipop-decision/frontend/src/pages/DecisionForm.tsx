@@ -41,12 +41,10 @@ const TYPE_EXAMPLES: Record<DecisionLevel, string[]> = {
   ],
 };
 
-// ── LevelCard con hover ───────────────────────────────────
 function LevelCard({ id, label, img, selected, onSelect }: {
   id: string; label: string; img: string; selected: boolean; onSelect: () => void;
 }) {
   const [hovered, setHovered] = useState(false);
-  const active = selected || hovered;
   return (
     <button
       onClick={onSelect}
@@ -54,41 +52,86 @@ function LevelCard({ id, label, img, selected, onSelect }: {
       onMouseLeave={() => setHovered(false)}
       style={{
         border: `2px solid ${selected ? THEME.primary : hovered ? THEME.primaryDim : "transparent"}`,
-        borderRadius: 20,
-        background: selected ? THEME.surfaceCard : THEME.surfaceLow,
+        borderRadius: 20, background: selected ? THEME.surfaceCard : THEME.surfaceLow,
         padding: 0, cursor: "pointer", transition: "all 180ms",
-        overflow: "hidden", display: "flex",
-        flexDirection: "column" as const, alignItems: "center",
-        boxShadow: active ? "0 6px 20px rgba(0,6,102,0.14)" : "none",
+        overflow: "hidden", display: "flex", flexDirection: "column" as const, alignItems: "center",
+        boxShadow: selected || hovered ? "0 6px 20px rgba(0,6,102,0.14)" : "none",
         transform: hovered && !selected ? "translateY(-2px)" : "none",
       }}
     >
       <div style={{ width: "100%", aspectRatio: "3 / 4", overflow: "hidden", background: THEME.surfaceLow }}>
-        <img
-          src={img} alt={label}
-          style={{
-            width: "100%", height: "100%", objectFit: "cover",
-            objectPosition: "top",
-            display: "block",
-            transition: "transform 200ms",
-            transform: hovered ? "scale(1.04)" : "scale(1)",
-          }}
-        />
+        <img src={img} alt={label} style={{
+          width: "100%", height: "100%", objectFit: "cover", objectPosition: "top",
+          display: "block", transition: "transform 200ms",
+          transform: hovered ? "scale(1.04)" : "scale(1)",
+        }} />
       </div>
       <div style={{
         padding: "0.75rem 0.5rem", width: "100%", textAlign: "center" as const,
-        background: selected ? THEME.primary : "transparent",
-        transition: "background 180ms",
+        background: selected ? THEME.primary : "transparent", transition: "background 180ms",
       }}>
         <span style={{
           fontFamily: THEME.fontBody, fontSize: "0.875rem", fontWeight: 600,
           color: selected ? "#ffffff" : hovered ? THEME.primary : THEME.onMuted,
           transition: "color 180ms",
-        }}>
-          {label}
-        </span>
+        }}>{label}</span>
       </div>
     </button>
+  );
+}
+
+// ── Slider sin default ─────────────────────────────────────
+function SliderField({ label, value, onChange, max = 100, suffix = "%" }: {
+  label: string; value: number | undefined;
+  onChange: (v: number) => void; max?: number; suffix?: string;
+}) {
+  const touched = value !== undefined;
+  const display = touched ? value! : Math.round(max / 2);
+  const pct     = (display / max) * 100;
+
+  return (
+    <div style={{ marginBottom: "1.75rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "0.625rem" }}>
+        <label style={{
+          fontSize: "0.8125rem", fontWeight: 600, color: THEME.onMuted,
+          lineHeight: 1.45, fontFamily: THEME.fontBody, flex: 1,
+        }}>{label}</label>
+        {touched ? (
+          <span style={{
+            fontWeight: 700, color: THEME.primary, fontFamily: THEME.fontHead,
+            fontSize: "1.1rem", flexShrink: 0, marginLeft: "0.75rem",
+          }}>{value}{suffix}</span>
+        ) : (
+          <span style={{
+            fontSize: "0.75rem", color: THEME.outline,
+            fontStyle: "italic", flexShrink: 0, marginLeft: "0.75rem",
+          }}>sin respuesta</span>
+        )}
+      </div>
+
+      <input
+        type="range" min={0} max={max} value={display}
+        onChange={e => onChange(Number(e.target.value))}
+        style={{
+          width: "100%", height: "0.5rem", borderRadius: 9999,
+          appearance: "none", WebkitAppearance: "none",
+          cursor: "pointer", outline: "none",
+          background: touched
+            ? `linear-gradient(to right, ${THEME.primary} ${pct}%, ${THEME.surfaceHigh} 0%)`
+            : THEME.surfaceHigh,
+          opacity: touched ? 1 : 0.4,
+          transition: "background 200ms, opacity 200ms",
+        }}
+      />
+      {!touched && (
+        <p style={{
+          textAlign: "center", fontSize: "0.6875rem", color: THEME.outline,
+          marginTop: "0.4rem", fontStyle: "italic",
+        }}>
+          Mueve para responder — si no lo tocas no se incluye en el análisis
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -102,37 +145,47 @@ interface Questions {
   opportunityQuestion:   string;
 }
 
-function DynamicQuestions({ title, level, form, setForm, onSubmit, loading }: {
-  title:    string;
-  level:    DecisionLevel;
-  form:     Partial<DecisionInput>;
-  setForm:  (f: Partial<DecisionInput>) => void;
-  onSubmit: (input: DecisionInput) => void;
-  loading:  boolean;
+interface FormState {
+  altA:               string;
+  altB:               string;
+  probability:        number | undefined;
+  worstScenario:      string;
+  reversibilityScore: number | undefined;
+  opportunityDesc:    string;
+}
+
+function DynamicQuestions({ title, level, onSubmit, loading }: {
+  title: string; level: DecisionLevel;
+  onSubmit: (input: DecisionInput) => void; loading: boolean;
 }) {
-  const [questions, setQuestions]           = useState<Questions | null>(null);
-  const [loadingQuestions, setLoadingQ]     = useState(true);
-  const [error, setError]                   = useState(false);
+  const [questions, setQuestions] = useState<Questions | null>(null);
+  const [loadingQ,  setLoadingQ]  = useState(true);
+  const [error,     setError]     = useState(false);
+  const [form, setForm] = useState<FormState>({
+    altA: "", altB: "",
+    probability:        undefined,
+    worstScenario:      "",
+    reversibilityScore: undefined,
+    opportunityDesc:    "",
+  });
 
   useEffect(() => {
     fetch("/api/decision/generate-questions", {
-      method:  "POST",
+      method: "POST",
       headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify({ title, level }),
+      body: JSON.stringify({ title, level }),
     })
       .then(r => r.json())
       .then(data => { setQuestions(data); setLoadingQ(false); })
       .catch(() => { setError(true); setLoadingQ(false); });
   }, [title, level]);
 
-  if (loadingQuestions) return (
+  if (loadingQ) return (
     <div style={{ textAlign: "center", padding: "3rem 0" }}>
       <div style={{
         width: "3rem", height: "3rem", borderRadius: "50%",
-        background: THEME.surfaceLow,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        margin: "0 auto 1rem",
-        animation: "pulse 1.5s ease-in-out infinite",
+        background: THEME.surfaceLow, display: "flex",
+        alignItems: "center", justifyContent: "center", margin: "0 auto 1rem",
       }}>
         <span className="material-symbols-outlined" style={{ color: THEME.outline }}>psychology</span>
       </div>
@@ -151,7 +204,11 @@ function DynamicQuestions({ title, level, form, setForm, onSubmit, loading }: {
     </div>
   );
 
-  const canSubmit = (form.altA?.trim().length ?? 0) > 5 && (form.altB?.trim().length ?? 0) > 5;
+  const canSubmit =
+    form.altA.trim().length > 5 &&
+    form.altB.trim().length > 5 &&
+    form.probability        !== undefined &&
+    form.reversibilityScore !== undefined;
 
   const inputStyle = {
     width: "100%", padding: "0.75rem 1rem",
@@ -163,86 +220,92 @@ function DynamicQuestions({ title, level, form, setForm, onSubmit, loading }: {
   };
 
   const labelStyle = {
-    display: "block", fontSize: "0.75rem", fontWeight: 600 as const,
-    color: THEME.onMuted, marginBottom: "0.5rem", lineHeight: 1.4,
+    display: "block", fontSize: "0.8125rem", fontWeight: 600 as const,
+    color: THEME.onMuted, marginBottom: "0.625rem",
+    lineHeight: 1.45, fontFamily: THEME.fontBody,
   };
-
-  const fieldWrap = { marginBottom: "1.5rem" };
 
   return (
     <>
+      {/* Contexto — decisión siempre visible */}
+      <div style={{
+        background: THEME.primary, borderRadius: 12,
+        padding: "0.875rem 1.25rem", marginBottom: "2rem",
+      }}>
+        <div style={{
+          fontSize: "0.5625rem", fontWeight: 700, color: "rgba(255,255,255,0.6)",
+          letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "0.3rem",
+        }}>Tu decisión</div>
+        <div style={{
+          fontFamily: THEME.fontHead, fontStyle: "italic",
+          fontSize: "1.05rem", color: "#ffffff", lineHeight: 1.3,
+        }}>{title}</div>
+      </div>
+
       <h2 style={{
         fontFamily: THEME.fontHead, fontStyle: "italic",
-        fontSize: "clamp(1.6rem, 5vw, 2rem)",
+        fontSize: "clamp(1.5rem, 5vw, 1.875rem)",
         fontWeight: 600, color: THEME.primary, marginBottom: "0.5rem",
       }}>
-        Analizando tu decisión
+        Cuéntame más
       </h2>
       <p style={{ color: THEME.onMuted, fontSize: "0.9375rem", marginBottom: "2rem", lineHeight: 1.6 }}>
-        Responde estas preguntas para un análisis personalizado.
+        Responde lo que puedas. Los sliders grises no se incluyen en el análisis si no los tocas.
       </p>
 
-      <div style={fieldWrap}>
+      <div style={{ marginBottom: "1.75rem" }}>
         <label style={labelStyle}>{questions.optionAQuestion}</label>
-        <input type="text" value={form.altA ?? ""} style={inputStyle}
-          onChange={e => setForm({ ...form, altA: e.target.value })}
+        <input type="text" value={form.altA} style={inputStyle}
+          onChange={e => setForm(f => ({ ...f, altA: e.target.value }))}
           placeholder="Describe los cambios concretos…" />
       </div>
 
-      <div style={fieldWrap}>
+      <div style={{ marginBottom: "1.75rem" }}>
         <label style={labelStyle}>{questions.optionBQuestion}</label>
-        <input type="text" value={form.altB ?? ""} style={inputStyle}
-          onChange={e => setForm({ ...form, altB: e.target.value })}
+        <input type="text" value={form.altB} style={inputStyle}
+          onChange={e => setForm(f => ({ ...f, altB: e.target.value }))}
           placeholder="Describe los cambios concretos…" />
       </div>
 
-      <div style={fieldWrap}>
-        <label style={labelStyle}>{questions.probabilityQuestion}</label>
-        <input type="range" min={0} max={100} value={form.probability ?? 60}
-          onChange={e => setForm({ ...form, probability: Number(e.target.value) })}
-          style={{
-            width: "100%", height: "0.5rem", borderRadius: 9999,
-            appearance: "none", WebkitAppearance: "none", cursor: "pointer", outline: "none",
-            background: `linear-gradient(to right, ${THEME.primary} ${form.probability ?? 60}%, ${THEME.surfaceHigh} 0%)`,
-          }}
-        />
-        <div style={{ textAlign: "center", marginTop: "0.4rem", fontWeight: 700, color: THEME.primary, fontFamily: THEME.fontHead }}>
-          {form.probability ?? 60}%
-        </div>
-      </div>
+      <SliderField
+        label={questions.probabilityQuestion}
+        value={form.probability}
+        onChange={v => setForm(f => ({ ...f, probability: v }))}
+        max={100} suffix="%"
+      />
 
-      <div style={fieldWrap}>
+      <div style={{ marginBottom: "1.75rem" }}>
         <label style={labelStyle}>{questions.worstScenarioQuestion}</label>
-        <textarea rows={2} value={form.worstScenario ?? ""} style={inputStyle}
-          onChange={e => setForm({ ...form, worstScenario: e.target.value })}
+        <textarea rows={2} value={form.worstScenario} style={inputStyle}
+          onChange={e => setForm(f => ({ ...f, worstScenario: e.target.value }))}
           placeholder="Sé honesto, no dramatices…" />
       </div>
 
-      <div style={fieldWrap}>
-        <label style={labelStyle}>{questions.reversibilityQuestion}</label>
-        <input type="range" min={0} max={10} value={form.reversibilityScore ?? 5}
-          onChange={e => setForm({ ...form, reversibilityScore: Number(e.target.value) })}
-          style={{
-            width: "100%", height: "0.5rem", borderRadius: 9999,
-            appearance: "none", WebkitAppearance: "none", cursor: "pointer", outline: "none",
-            background: `linear-gradient(to right, ${THEME.primary} ${((form.reversibilityScore ?? 5) / 10) * 100}%, ${THEME.surfaceHigh} 0%)`,
-          }}
-        />
-        <div style={{ textAlign: "center", marginTop: "0.4rem", fontWeight: 700, color: THEME.primary, fontFamily: THEME.fontHead }}>
-          {form.reversibilityScore ?? 5}/10
-        </div>
-      </div>
+      <SliderField
+        label={questions.reversibilityQuestion}
+        value={form.reversibilityScore}
+        onChange={v => setForm(f => ({ ...f, reversibilityScore: v }))}
+        max={10} suffix="/10"
+      />
 
-      <div style={fieldWrap}>
+      <div style={{ marginBottom: "1.75rem" }}>
         <label style={labelStyle}>{questions.opportunityQuestion}</label>
-        <textarea rows={2} value={form.opportunityDesc ?? ""} style={inputStyle}
-          onChange={e => setForm({ ...form, opportunityDesc: e.target.value })}
+        <textarea rows={2} value={form.opportunityDesc} style={inputStyle}
+          onChange={e => setForm(f => ({ ...f, opportunityDesc: e.target.value }))}
           placeholder="¿Qué dejas de hacer si eliges esto?" />
       </div>
 
       <button
         disabled={!canSubmit || loading}
-        onClick={() => onSubmit({ ...form, title, level } as DecisionInput)}
+        onClick={() => onSubmit({
+          title, level,
+          altA:               form.altA,
+          altB:               form.altB,
+          probability:        form.probability!,
+          worstScenario:      form.worstScenario,
+          reversibilityScore: form.reversibilityScore!,
+          opportunityDesc:    form.opportunityDesc,
+        } as DecisionInput)}
         style={{
           width: "100%",
           background: canSubmit && !loading
@@ -258,8 +321,7 @@ function DynamicQuestions({ title, level, form, setForm, onSubmit, loading }: {
         }}
       >
         {loading ? "Analizando…" : (
-          <>
-            Evaluar decisión
+          <>Evaluar decisión
             <span className="material-symbols-outlined" style={{ fontSize: "1.1rem" }}>query_stats</span>
           </>
         )}
@@ -270,18 +332,10 @@ function DynamicQuestions({ title, level, form, setForm, onSubmit, loading }: {
 
 // ── Componente principal ───────────────────────────────────
 export default function DecisionForm({ onSubmit, onBack, loading }: Props) {
-  const [step,        setStep]       = useState<Step>("type");
-  const [level,       setLevel]      = useState<DecisionLevel>("cotidiana");
-  const [title,       setTitle]      = useState("");
+  const [step,        setStep]        = useState<Step>("type");
+  const [level,       setLevel]       = useState<DecisionLevel>("cotidiana");
+  const [title,       setTitle]       = useState("");
   const [customTitle, setCustomTitle] = useState("");
-  const [form,        setForm]       = useState<Partial<DecisionInput>>({
-    altA: "", altB: "",
-    probability: 60, valueSuccess: 10000, valueFailure: -2000,
-    worstScenario: "", worstSeverity: 5,
-    reversibilityScore: 5, revertCost: 0,
-    impact6m: "", impact3y: "",
-    opportunityCost: 0, opportunityDesc: "",
-  });
 
   function goBack() {
     if (step === "type")     return onBack();
@@ -289,7 +343,6 @@ export default function DecisionForm({ onSubmit, onBack, loading }: Props) {
     if (step === "details")  return setStep("describe");
   }
 
-  // Tecla Escape o Alt+ArrowLeft → atrás dentro de la app
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
       if (e.key === "Escape" || (e.altKey && e.key === "ArrowLeft")) {
@@ -301,63 +354,46 @@ export default function DecisionForm({ onSubmit, onBack, loading }: Props) {
     return () => window.removeEventListener("keydown", handleKey);
   }, [step]);
 
-  const backLabel = step === "type" ? "Inicio" : "Atrás";
-
   return (
     <div style={{ maxWidth: 600, margin: "0 auto", padding: "5.5rem 1.5rem 7rem", fontFamily: THEME.fontBody }}>
 
-      {/* Back */}
       <button onClick={goBack} style={{
         background: "none", border: "none", cursor: "pointer",
         color: THEME.outline, fontSize: "0.8125rem", marginBottom: "2rem",
         display: "flex", alignItems: "center", gap: "0.4rem",
         fontFamily: THEME.fontBody, padding: 0,
       }}>
-        ← {backLabel}
+        ← {step === "type" ? "Inicio" : "Atrás"}
       </button>
 
-      {/* ── PASO 1: Tipo ── */}
       {step === "type" && (
         <>
           <h2 style={{
             fontFamily: THEME.fontHead, fontStyle: "italic",
             fontSize: "clamp(1.75rem, 6vw, 2.25rem)",
             fontWeight: 600, color: THEME.primary, marginBottom: "0.5rem",
-          }}>
-            ¿Qué tipo de decisión es?
-          </h2>
+          }}>¿Qué tipo de decisión es?</h2>
           <p style={{ color: THEME.onMuted, fontSize: "1rem", marginBottom: "2rem", lineHeight: 1.6 }}>
             Elige una categoría para obtener ejemplos relevantes.
           </p>
-
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem" }}>
-            {LEVELS.map(({ id, label, img }) => {
-              const selected = level === id;
-              return (
-                <LevelCard
-                  key={id}
-                  id={id}
-                  label={label}
-                  img={img}
-                  selected={selected}
-                  onSelect={() => { setLevel(id); setStep("describe"); }}
-                />
-              );
-            })}
+            {LEVELS.map(({ id, label, img }) => (
+              <LevelCard key={id} id={id} label={label} img={img}
+                selected={level === id}
+                onSelect={() => { setLevel(id); setStep("describe"); }}
+              />
+            ))}
           </div>
         </>
       )}
 
-      {/* ── PASO 2: Elegir o escribir ── */}
       {step === "describe" && (
         <>
           <h2 style={{
             fontFamily: THEME.fontHead, fontStyle: "italic",
             fontSize: "clamp(1.75rem, 6vw, 2.25rem)",
             fontWeight: 600, color: THEME.primary, marginBottom: "0.5rem",
-          }}>
-            ¿Qué decisión tienes pendiente?
-          </h2>
+          }}>¿Qué decisión tienes pendiente?</h2>
           <p style={{ color: THEME.onMuted, fontSize: "1rem", marginBottom: "2rem", lineHeight: 1.6 }}>
             Elige un ejemplo o escribe tu propia situación.
           </p>
@@ -377,9 +413,7 @@ export default function DecisionForm({ onSubmit, onBack, loading }: Props) {
                   display: "flex", alignItems: "center", justifyContent: "space-between",
                 }}>
                   <span>{example}</span>
-                  <span className="material-symbols-outlined" style={{ fontSize: "1rem", color: THEME.outline, flexShrink: 0 }}>
-                    chevron_right
-                  </span>
+                  <span className="material-symbols-outlined" style={{ fontSize: "1rem", color: THEME.outline, flexShrink: 0 }}>chevron_right</span>
                 </button>
               ))}
             </div>
@@ -410,29 +444,23 @@ export default function DecisionForm({ onSubmit, onBack, loading }: Props) {
                   ? `linear-gradient(160deg, ${THEME.primary} 0%, ${THEME.primaryMid} 100%)`
                   : THEME.surfaceHigh,
                 color: customTitle.trim() ? "#ffffff" : THEME.outline,
-                border: "none", padding: "0.875rem",
-                borderRadius: THEME.radius.lg,
+                border: "none", padding: "0.875rem", borderRadius: THEME.radius.lg,
                 fontSize: "1rem", fontWeight: 600, fontFamily: THEME.fontBody,
                 cursor: customTitle.trim() ? "pointer" : "not-allowed",
                 boxShadow: customTitle.trim() ? "0 8px 24px rgba(0,6,102,0.18)" : "none",
                 transition: "all 200ms",
               }}
-            >
-              Usar esta decisión
-            </button>
+            >Usar esta decisión</button>
           </div>
         </>
       )}
 
-      {/* ── PASO 3: Preguntas IA ── */}
       {step === "details" && (
         <DynamicQuestions
           title={title} level={level}
-          form={form} setForm={setForm}
           onSubmit={onSubmit} loading={loading}
         />
       )}
-
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Router } from 'express';
+﻿import { Router } from 'express';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { db } from './db';
@@ -88,7 +88,7 @@ router.post('/exercise/complete', async (req, res) => {
   return res.json({ blocked: false, count: newCount });
 });
 
-// RESET — solo para usuarios pro
+// RESET â€” solo para usuarios pro
 router.post('/exercise/reset', async (req, res) => {
   if (!req.user) return res.status(401).json({ error: 'Not authenticated' });
 
@@ -135,7 +135,7 @@ router.post('/checkout', async (req, res) => {
   }
 });
 
-// ⚠️  Esta ruta necesita raw body — asegúrate de que en tu index/server principal
+// âš ï¸  Esta ruta necesita raw body â€” asegÃºrate de que en tu index/server principal
 //     tengas ANTES de express.json():
 //     app.use('/api/math/stripe/webhook', express.raw({ type: 'application/json' }));
 router.post('/stripe/webhook', async (req, res) => {
@@ -153,7 +153,7 @@ router.post('/stripe/webhook', async (req, res) => {
 
   switch (event.type) {
 
-    // ✅ Pago completado → activar isPro
+    // âœ… Pago completado â†’ activar isPro
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session;
       const userId = session.metadata?.userId;
@@ -163,12 +163,12 @@ router.post('/stripe/webhook', async (req, res) => {
         await db.update(users)
           .set({ isPro: true, stripeCustomerId: customerId, updatedAt: new Date() })
           .where(eq(users.id, userId));
-        console.log(`✅ Usuario ${userId} activado como Pro`);
+        console.log(`âœ… Usuario ${userId} activado como Pro`);
       }
       break;
     }
 
-    // ❌ Suscripción cancelada → quitar isPro
+    // âŒ SuscripciÃ³n cancelada â†’ quitar isPro
     case 'customer.subscription.deleted': {
       const subscription = event.data.object as Stripe.Subscription;
       const customerId = subscription.customer as string;
@@ -176,7 +176,7 @@ router.post('/stripe/webhook', async (req, res) => {
       await db.update(users)
         .set({ isPro: false, updatedAt: new Date() })
         .where(eq(users.stripeCustomerId, customerId));
-      console.log(`❌ Suscripción cancelada para customer ${customerId}`);
+      console.log(`âŒ SuscripciÃ³n cancelada para customer ${customerId}`);
       break;
     }
   }
