@@ -1,4 +1,0 @@
-{
-  "build": "pnpm install && pnpm run build",
-  "start": "node dist/index.cjs"
-}

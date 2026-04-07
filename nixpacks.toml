@@ -1,0 +1,15 @@
+[phases.setup]
+nixPkgs = ["nodejs_22"]
+cmds = ["npm install -g pnpm@latest"]
+
+[phases.install]
+cmds = ["pnpm install --no-frozen-lockfile"]
+
+[phases.build]
+cmds = ["cd packages/lexipop-decision && pnpm run build"]
+
+[start]
+cmd = "cd packages/lexipop-decision && node dist/index.cjs"
+
+[build.env]
+NODE_ENV = "production"
