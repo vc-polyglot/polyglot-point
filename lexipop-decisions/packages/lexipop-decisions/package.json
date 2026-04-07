@@ -6,7 +6,5 @@
     "build": "mkdir -p dist && echo 'console.log(\"lexipop-decisions running\");' > dist/index.cjs",
     "start": "node dist/index.cjs"
   },
-  "dependencies": {
-    "lexipop-core": "workspace:*"
-  }
+  "dependencies": {}
 }
