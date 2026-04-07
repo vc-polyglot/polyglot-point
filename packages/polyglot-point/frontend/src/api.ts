@@ -1,4 +1,4 @@
-﻿import { ChatResponseSchema, type ChatResponse } from "../../shared/contracts/chat";
+import { ChatResponseSchema, type ChatResponse } from "../../shared/contracts/chat";
 
 function getSessionId(): string {
   let sid = localStorage.getItem("clara_sid");

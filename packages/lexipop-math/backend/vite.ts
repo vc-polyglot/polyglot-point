@@ -3,7 +3,7 @@ import type { Server } from "http";
 import fs from "fs";
 import path from "path";
 
-// En CJS __dirname existe nativamente — no necesitamos import.meta
+// En CJS __dirname existe nativamente â€” no necesitamos import.meta
 const ROOT = path.resolve(__dirname, "..");
 
 export function log(message: string, source = "lexipop-math") {
@@ -57,5 +57,5 @@ export function serveStatic(app: Express) {
     res.sendFile(path.join(distPath, "index.html"));
   });
 
-  log("Sirviendo frontend estático desde dist.");
+  log("Sirviendo frontend estÃ¡tico desde dist.");
 }

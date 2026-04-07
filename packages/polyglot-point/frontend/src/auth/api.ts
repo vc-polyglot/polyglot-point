@@ -1,4 +1,4 @@
-﻿import type { MeResponse } from "./types"
+import type { MeResponse } from "./types"
 
 async function jsonFetch<T>(input: RequestInfo, init?: RequestInit): Promise<T> {
   const res = await fetch(input, {

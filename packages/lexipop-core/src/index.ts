@@ -1,3 +1,3 @@
-﻿export * from './multiplication';
+export * from './multiplication';
 
 export * from './mentalStrategy';

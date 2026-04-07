@@ -44,7 +44,7 @@ class OpenAIService {
         const timeoutMs = attempt === 1 ? 15000 : 25000;
         const file = new File([audioBuffer], "audio.webm", { type: "audio/webm" });
         
-        console.log(`🎯 TRANSCRIPTION ATTEMPT ${attempt}/${MAX_RETRIES}: ${audioSizeKB.toFixed(1)}KB audio`);
+        console.log(`ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¯ TRANSCRIPTION ATTEMPT ${attempt}/${MAX_RETRIES}: ${audioSizeKB.toFixed(1)}KB audio`);
         
         const timeoutPromise = new Promise((_, reject) => {
           timeoutHandler = setTimeout(() => {
@@ -69,14 +69,14 @@ class OpenAIService {
         const rawText = typeof transcription === 'string' ? transcription : (transcription as any).text;
         const detectedLanguage = 'auto';
         
-        console.log(`🎯 WHISPER DETECTED LANGUAGE: ${detectedLanguage}`);
-        console.log(`🎯 RAW TRANSCRIPTION: "${rawText}"`);
+        console.log(`ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¯ WHISPER DETECTED LANGUAGE: ${detectedLanguage}`);
+        console.log(`ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¯ RAW TRANSCRIPTION: "${rawText}"`);
         
-        console.log(`🎯 CRITICAL: RAW WHISPER OUTPUT: "${rawText}"`);
-        console.log(`🎯 CRITICAL: INPUT LENGTH: ${rawText.length} characters`);
+        console.log(`ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¯ CRITICAL: RAW WHISPER OUTPUT: "${rawText}"`);
+        console.log(`ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¯ CRITICAL: INPUT LENGTH: ${rawText.length} characters`);
         
         if (!rawText || rawText.length === 0) {
-          console.log(`🚨 EMPTY TRANSCRIPTION: No speech detected`);
+          console.log(`ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨ EMPTY TRANSCRIPTION: No speech detected`);
           throw new Error('NO_SPEECH_DETECTED');
         }
         
@@ -97,24 +97,24 @@ class OpenAIService {
         const isHallucination = whisperHallucinations.some(pattern => pattern.test(rawText));
         
         if (isHallucination) {
-          console.log(`🚨 WHISPER HALLUCINATION DETECTED: "${rawText}"`);
+          console.log(`ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨ WHISPER HALLUCINATION DETECTED: "${rawText}"`);
           throw new Error('WHISPER_HALLUCINATION');
         }
         
-        const isEmoji = rawText === '😋' || rawText.length === 2 && rawText.charCodeAt(0) >= 0xD800;
+        const isEmoji = rawText === 'ÃƒÂ°Ã…Â¸Ã‹Å“Ã¢â‚¬Â¹' || rawText.length === 2 && rawText.charCodeAt(0) >= 0xD800;
         const isSingleCharNonsense = rawText.length === 1 && !/[a-zA-Z0-9]/.test(rawText);
         
         if (isEmoji || isSingleCharNonsense) {
-          console.log(`🚨 INVALID INPUT: Single emoji or nonsense character detected: "${rawText}"`);
+          console.log(`ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨ INVALID INPUT: Single emoji or nonsense character detected: "${rawText}"`);
           throw new Error('NO_SPEECH_DETECTED');
         }
         
         let correctedText = rawText;
-        console.log(`🔍 PRESERVING ORIGINAL WHISPER TRANSCRIPTION: "${rawText}"`);
+        console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â PRESERVING ORIGINAL WHISPER TRANSCRIPTION: "${rawText}"`);
         
-        console.log(`🎯 CRITICAL: CONTAINS MULTIPLE LANGUAGES: ${mixedLanguagePreserver.detectAutoTranslation(correctedText)}`);
+        console.log(`ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¯ CRITICAL: CONTAINS MULTIPLE LANGUAGES: ${mixedLanguagePreserver.detectAutoTranslation(correctedText)}`);
         
-        console.log(`🔍 CHECKING INPUT QUALITY AND WHISPER AUTO-TRANSLATION...`);
+        console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â CHECKING INPUT QUALITY AND WHISPER AUTO-TRANSLATION...`);
         
         let patternMatched = false;
         let lowQualityInput = false;
@@ -128,7 +128,7 @@ class OpenAIService {
         
         const hasIncoherentMixing = (
           /\b(le casa|la house|il maison|der casa)\b/i.test(correctedText) ||
-          /\b(est muy|is molto|ist très)\b/i.test(correctedText)
+          /\b(est muy|is molto|ist trÃƒÆ’Ã‚Â¨s)\b/i.test(correctedText)
         );
         
         const hasExcessiveRepetition = (
@@ -139,22 +139,22 @@ class OpenAIService {
         lowQualityInput = hasFragmentedSyntax && (hasIncoherentMixing || hasExcessiveRepetition);
         
         const isAutoTranslatedText = (
-          (/^[A-Za-z\s,¿¡\?\.\-']+$/.test(correctedText) && 
+          (/^[A-Za-z\s,Ãƒâ€šÃ‚Â¿Ãƒâ€šÃ‚Â¡\?\.\-']+$/.test(correctedText) && 
            correctedText.length > 50 && 
            /^(Hola|Hello|Ciao|Bonjour|Hallo)\s+Clara/i.test(correctedText) &&
-           (/\b(apreciar|hablar|contigo|estresada|querías)\b/i.test(correctedText))) ||
-          (/\b(adesso|je suis|affamé|parce que|décidé)\b/g.test(correctedText) &&
+           (/\b(apreciar|hablar|contigo|estresada|querÃƒÆ’Ã‚Â­as)\b/i.test(correctedText))) ||
+          (/\b(adesso|je suis|affamÃƒÆ’Ã‚Â©|parce que|dÃƒÆ’Ã‚Â©cidÃƒÆ’Ã‚Â©)\b/g.test(correctedText) &&
            !(/\badesso\b/.test(correctedText) && /\bje suis\b/.test(correctedText))) ||
           (correctedText.length > 80 && 
-           /\b(wake up|petit déjeuner|travailler|affamé)\b/i.test(correctedText) &&
+           /\b(wake up|petit dÃƒÆ’Ã‚Â©jeuner|travailler|affamÃƒÆ’Ã‚Â©)\b/i.test(correctedText) &&
            !/\b(adesso|ora|stamattina)\b/i.test(correctedText))
         );
         
-        console.log(`🎯 INPUT QUALITY ASSESSMENT: Low quality = ${lowQualityInput}, Auto-translated = ${isAutoTranslatedText}`);
+        console.log(`ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¯ INPUT QUALITY ASSESSMENT: Low quality = ${lowQualityInput}, Auto-translated = ${isAutoTranslatedText}`);
         
         if (isAutoTranslatedText) {
-          console.log(`🚨 SUSPECTED WHISPER AUTO-TRANSLATION: Long Spanish-only text from likely mixed input`);
-          console.log(`🔄 RECONSTRUCTING MIXED LANGUAGE CONTENT...`);
+          console.log(`ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨ SUSPECTED WHISPER AUTO-TRANSLATION: Long Spanish-only text from likely mixed input`);
+          console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ¢â‚¬Å¾ RECONSTRUCTING MIXED LANGUAGE CONTENT...`);
           
           let reconstructed = correctedText;
           
@@ -162,25 +162,25 @@ class OpenAIService {
             reconstructed = reconstructed.replace(/^Hola Clara/, "Hello Clara");
           }
           
-          reconstructed = reconstructed.replace(/\bapreciaría\b/g, "would appreciate");
+          reconstructed = reconstructed.replace(/\bapreciarÃƒÆ’Ã‚Â­a\b/g, "would appreciate");
           reconstructed = reconstructed.replace(/\bmuy contento\b/g, "molto contento");
           reconstructed = reconstructed.replace(/\bhablar contigo\b/g, "parlare con te");
-          reconstructed = reconstructed.replace(/\bestuve muy estresada\b/g, "j'étais très stressée");
+          reconstructed = reconstructed.replace(/\bestuve muy estresada\b/g, "j'ÃƒÆ’Ã‚Â©tais trÃƒÆ’Ã‚Â¨s stressÃƒÆ’Ã‚Â©e");
           
-          reconstructed = reconstructed.replace(/\bdesperté tarde\b/g, "wake up late");
-          reconstructed = reconstructed.replace(/\bni siquiera desayuné\b/g, "n'ai même pas pris le petit déjeuner");
-          reconstructed = reconstructed.replace(/\bera demasiado tarde\b/g, "c'était trop tard");
-          reconstructed = reconstructed.replace(/\bdecidí ir a trabajar\b/g, "j'ai décidé de venir travailler");
-          reconstructed = reconstructed.replace(/\bahora tengo hambre\b/g, "adesso je suis affamé");
-          reconstructed = reconstructed.replace(/\btanto que decidí comer\b/g, "autant que j'ai décidé de manger");
+          reconstructed = reconstructed.replace(/\bdespertÃƒÆ’Ã‚Â© tarde\b/g, "wake up late");
+          reconstructed = reconstructed.replace(/\bni siquiera desayunÃƒÆ’Ã‚Â©\b/g, "n'ai mÃƒÆ’Ã‚Âªme pas pris le petit dÃƒÆ’Ã‚Â©jeuner");
+          reconstructed = reconstructed.replace(/\bera demasiado tarde\b/g, "c'ÃƒÆ’Ã‚Â©tait trop tard");
+          reconstructed = reconstructed.replace(/\bdecidÃƒÆ’Ã‚Â­ ir a trabajar\b/g, "j'ai dÃƒÆ’Ã‚Â©cidÃƒÆ’Ã‚Â© de venir travailler");
+          reconstructed = reconstructed.replace(/\bahora tengo hambre\b/g, "adesso je suis affamÃƒÆ’Ã‚Â©");
+          reconstructed = reconstructed.replace(/\btanto que decidÃƒÆ’Ã‚Â­ comer\b/g, "autant que j'ai dÃƒÆ’Ã‚Â©cidÃƒÆ’Ã‚Â© de manger");
           
           if (reconstructed !== correctedText) {
             correctedText = reconstructed;
             patternMatched = true;
-            console.log(`✅ Reconstructed 4+ language mixed content: "${correctedText}"`);
+            console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ Reconstructed 4+ language mixed content: "${correctedText}"`);
           }
         } else {
-          console.log(`✅ No auto-translation detected - preserving original: "${correctedText}"`);
+          console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ No auto-translation detected - preserving original: "${correctedText}"`);
         }
         
         const wasSTTCorrected = patternMatched;
@@ -194,8 +194,8 @@ class OpenAIService {
         const preservationResult = mixedLanguagePreserver.processTranscription(correctedText);
         
         if (preservationResult.wasAutoTranslated) {
-          console.log(`🚨 AUTO-TRANSLATION DETECTED: Original mixed-language input converted to single language`);
-          console.log(`📝 RECONSTRUCTED MIXED INPUT: "${preservationResult.text}"`);
+          console.log(`ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨ AUTO-TRANSLATION DETECTED: Original mixed-language input converted to single language`);
+          console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â RECONSTRUCTED MIXED INPUT: "${preservationResult.text}"`);
         }
         
         const finalText = preservationResult.text;
@@ -220,7 +220,7 @@ class OpenAIService {
         const isFalseContent = falsePhrases.some(phrase => normalizedText.includes(phrase));
         
         if (isFalseContent && rawText.trim().length < 50) {
-          console.log(`🚨 FALSE CONTENT DETECTED - Whisper invented: "${rawText}"`);
+          console.log(`ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨ FALSE CONTENT DETECTED - Whisper invented: "${rawText}"`);
           throw new Error('SILENCE_WITH_FALSE_CONTENT');
         }
 
@@ -237,7 +237,7 @@ class OpenAIService {
       } catch (error: any) {
         if (timeoutHandler) clearTimeout(timeoutHandler);
         
-        console.error(`🚨 TRANSCRIPTION ATTEMPT ${attempt} FAILED:`, error.message);
+        console.error(`ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨ TRANSCRIPTION ATTEMPT ${attempt} FAILED:`, error.message);
         
         if (attempt === MAX_RETRIES) {
           throw new Error(`Transcription failed after ${MAX_RETRIES} attempts: ${error.message}`);
@@ -261,7 +261,7 @@ class OpenAIService {
     let timeoutHandler: NodeJS.Timeout | undefined;
     
     try {
-      console.log(`🚨 CRITICAL: Bot MUST respond in language: ${language}`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨ CRITICAL: Bot MUST respond in language: ${language}`);
       
       const timeoutPromise = new Promise((_, reject) => {
         timeoutHandler = setTimeout(() => {
@@ -279,7 +279,7 @@ class OpenAIService {
       return response as ConversationResponse;
     } catch (error: any) {
       if (timeoutHandler) clearTimeout(timeoutHandler);
-      console.error('🚨 CRITICAL ERROR in OpenAI API:', error);
+      console.error('ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨ CRITICAL ERROR in OpenAI API:', error);
       
       const isTimeout = error.message.includes('TIMEOUT');
       const errorMessage = isTimeout 
@@ -295,12 +295,12 @@ class OpenAIService {
   }
 
   private detectMultipleLanguages(text: string): boolean {
-    const spanish = /\b(hola|como|que|por|con|una|para|son|pero|todo|bien|muy|cuando|donde|porque|gracias|quiero|hablar|español|me|gustaría|aprender)\b/i.test(text);
+    const spanish = /\b(hola|como|que|por|con|una|para|son|pero|todo|bien|muy|cuando|donde|porque|gracias|quiero|hablar|espaÃƒÆ’Ã‚Â±ol|me|gustarÃƒÆ’Ã‚Â­a|aprender)\b/i.test(text);
     const english = /\b(hello|how|are|you|want|speak|english|because|can't|find|someone|practice|would|like|learn|help|me|with|to)\b/i.test(text);
-    const french = /\b(bonjour|comment|que|pour|avec|une|sont|mais|tout|bien|très|quand|où|parce|merci|voudrais|parler|français)\b/i.test(text);
-    const italian = /\b(ciao|come|che|per|con|una|sono|ma|tutto|bene|molto|quando|dove|perché|grazie|vorrei|parlare|italiano)\b/i.test(text);
-    const german = /\b(hallo|wie|dass|für|mit|eine|sind|aber|alles|gut|sehr|wann|wo|weil|danke|möchte|sprechen|deutsch)\b/i.test(text);
-    const portuguese = /\b(olá|como|que|para|com|uma|são|mas|tudo|bem|muito|quando|onde|porque|obrigado|gostaria|falar|português)\b/i.test(text);
+    const french = /\b(bonjour|comment|que|pour|avec|une|sont|mais|tout|bien|trÃƒÆ’Ã‚Â¨s|quand|oÃƒÆ’Ã‚Â¹|parce|merci|voudrais|parler|franÃƒÆ’Ã‚Â§ais)\b/i.test(text);
+    const italian = /\b(ciao|come|che|per|con|una|sono|ma|tutto|bene|molto|quando|dove|perchÃƒÆ’Ã‚Â©|grazie|vorrei|parlare|italiano)\b/i.test(text);
+    const german = /\b(hallo|wie|dass|fÃƒÆ’Ã‚Â¼r|mit|eine|sind|aber|alles|gut|sehr|wann|wo|weil|danke|mÃƒÆ’Ã‚Â¶chte|sprechen|deutsch)\b/i.test(text);
+    const portuguese = /\b(olÃƒÆ’Ã‚Â¡|como|que|para|com|uma|sÃƒÆ’Ã‚Â£o|mas|tudo|bem|muito|quando|onde|porque|obrigado|gostaria|falar|portuguÃƒÆ’Ã‚Âªs)\b/i.test(text);
     
     const languageCount = [spanish, english, french, italian, german, portuguese].filter(Boolean).length;
     return languageCount > 1;
@@ -327,8 +327,8 @@ class OpenAIService {
       language = 'en';
     }
     
-    console.log(`🎯 CLARA LANGUAGE CONFIRMED: ${language} (${languageNames[language as keyof typeof languageNames]})`);
-    console.log(`🎯 CLARA MUST RESPOND IN: ${languageNames[language as keyof typeof languageNames]?.toUpperCase()}`);
+    console.log(`ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¯ CLARA LANGUAGE CONFIRMED: ${language} (${languageNames[language as keyof typeof languageNames]})`);
+    console.log(`ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¯ CLARA MUST RESPOND IN: ${languageNames[language as keyof typeof languageNames]?.toUpperCase()}`);
 
     const finalSystemPrompt = customSystemPrompt || `You are Clara, a conversational language learning partner specializing in ${languageNames[language as keyof typeof languageNames]}.
 
@@ -347,7 +347,7 @@ CRITICAL ANTI-REPETITION RULES:
 RESPONSE STRATEGY:
 
 FOR UNCLEAR INPUT (like "CONVERSACION" or technical phrases):
-- Ask for clarification: "No entendí bien eso. ¿Podrías explicarme qué quisiste decir?"
+- Ask for clarification: "No entendÃƒÆ’Ã‚Â­ bien eso. Ãƒâ€šÃ‚Â¿PodrÃƒÆ’Ã‚Â­as explicarme quÃƒÆ’Ã‚Â© quisiste decir?"
 - Show curiosity about their intent
 - Don't assume or ignore
 
@@ -385,11 +385,11 @@ If the input is unclear, ask for clarification in ${languageNames[language as ke
       .trim();
 
     const responseLanguage = this.detectResponseLanguage(sanitizedContent);
-    console.log(`🚨 CRITICAL VALIDATION: Response language detected: ${responseLanguage}, Required: ${language}`);
+    console.log(`ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨ CRITICAL VALIDATION: Response language detected: ${responseLanguage}, Required: ${language}`);
     
     if (responseLanguage !== language && responseLanguage !== 'unknown') {
-      console.error(`🚨 CRITICAL LANGUAGE VIOLATION: Clara responded in ${responseLanguage}, required ${language}`);
-      console.error(`🚨 REGENERATING RESPONSE IN CORRECT LANGUAGE...`);
+      console.error(`ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨ CRITICAL LANGUAGE VIOLATION: Clara responded in ${responseLanguage}, required ${language}`);
+      console.error(`ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨ REGENERATING RESPONSE IN CORRECT LANGUAGE...`);
       
       const strictPrompt = `CRITICAL OVERRIDE: You MUST respond ONLY in ${languageNames[language as keyof typeof languageNames]}. The user said: "${userMessage}". Respond naturally but EXCLUSIVELY in ${languageNames[language as keyof typeof languageNames]}. Do not use any other language.`;
       
@@ -408,7 +408,7 @@ If the input is unclear, ask for clarification in ${languageNames[language as ke
         .replace(/\*\*([^*]+)\*\*/g, '$1')
         .trim();
       
-      console.log(`✅ CORRECTED RESPONSE: "${correctedSanitized}"`);
+      console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ CORRECTED RESPONSE: "${correctedSanitized}"`);
       return {
         content: correctedSanitized,
         corrections: [],
@@ -424,15 +424,15 @@ If the input is unclear, ask for clarification in ${languageNames[language as ke
   }
 
   private detectResponseLanguage(text: string): string {
-    console.log(`🔍 LANGUAGE DETECTION: Analyzing text "${text}"`);
+    console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â LANGUAGE DETECTION: Analyzing text "${text}"`);
     
     const patterns = {
-      es: /\b(disculpa|perdón|sigamos|practicando|español|puedes|repetir|dijiste|estoy|tratando|aprender|pero|tengo|nadie|quien|practicar|gustaria|muy|bien|si|gracias|hola|como|estas|continuemos)\b/i,
+      es: /\b(disculpa|perdÃƒÆ’Ã‚Â³n|sigamos|practicando|espaÃƒÆ’Ã‚Â±ol|puedes|repetir|dijiste|estoy|tratando|aprender|pero|tengo|nadie|quien|practicar|gustaria|muy|bien|si|gracias|hola|como|estas|continuemos)\b/i,
       en: /\b(sorry|continue|practicing|english|repeat|hi|how|you|today|trying|learn|anyone|practice|hello|thank)\b/i,
-      fr: /\b(désolé|continuons|pratiquer|français|répéter|salut|bonjour|comment|allez|bien|oui|merci)\b/i,
+      fr: /\b(dÃƒÆ’Ã‚Â©solÃƒÆ’Ã‚Â©|continuons|pratiquer|franÃƒÆ’Ã‚Â§ais|rÃƒÆ’Ã‚Â©pÃƒÆ’Ã‚Â©ter|salut|bonjour|comment|allez|bien|oui|merci)\b/i,
       it: /\b(scusa|continuiamo|praticare|italiano|ripetere|ciao|come|stai|bene|grazie)\b/i,
       de: /\b(entschuldigung|weiter|deutsch|wiederholen|hallo|wie|geht|ihnen|gut|danke)\b/i,
-      pt: /\b(desculpa|continuar|praticando|português|repetir|olá|como|está|bem|obrigado)\b/i
+      pt: /\b(desculpa|continuar|praticando|portuguÃƒÆ’Ã‚Âªs|repetir|olÃƒÆ’Ã‚Â¡|como|estÃƒÆ’Ã‚Â¡|bem|obrigado)\b/i
     };
 
     const scores: { [key: string]: number } = {};
@@ -440,66 +440,66 @@ If the input is unclear, ask for clarification in ${languageNames[language as ke
       const matches = text.match(pattern) || [];
       scores[lang] = matches.length;
       if (matches.length > 0) {
-        console.log(`🔍 ${lang.toUpperCase()}: ${matches.length} matches`);
+        console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â ${lang.toUpperCase()}: ${matches.length} matches`);
       }
     }
 
     const maxScore = Math.max(...Object.values(scores));
     if (maxScore === 0) {
-      console.log(`🔍 DETECTION RESULT: unknown`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â DETECTION RESULT: unknown`);
       return 'unknown';
     }
     
     const detectedLang = Object.entries(scores).find(([_, score]) => score === maxScore)?.[0] || 'unknown';
-    console.log(`🔍 DETECTION RESULT: ${detectedLang}`);
+    console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â DETECTION RESULT: ${detectedLang}`);
     return detectedLang;
   }
 
   private detectAndFixAutoTranslation(text: string, detectedLanguage: string): string {
-    console.log(`🔍 AUTO-TRANSLATION CHECK: Detected="${detectedLanguage}", Text="${text}"`);
+    console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â AUTO-TRANSLATION CHECK: Detected="${detectedLanguage}", Text="${text}"`);
     
     if (text.includes('hola') && text.includes('quiero') && text.includes('cocina')) {
-      console.log(`🚨 PORTUGUESE-TO-SPANISH AUTO-TRANSLATION DETECTED`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨ PORTUGUESE-TO-SPANISH AUTO-TRANSLATION DETECTED`);
       const corrected = text
         .replace(/hola/gi, 'Oi')
         .replace(/todo bien/gi, 'tudo bem')
         .replace(/quiero/gi, 'Eu quero')
         .replace(/aprender como se dicen/gi, 'aprender como se dizem')
-        .replace(/que hay en la cocina/gi, 'que há na cozinha')
+        .replace(/que hay en la cocina/gi, 'que hÃƒÆ’Ã‚Â¡ na cozinha')
         .replace(/puedes ayudarme/gi, 'Pode me ajudar?');
-      console.log(`✅ Reconstructed Portuguese: "${corrected}"`);
+      console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ Reconstructed Portuguese: "${corrected}"`);
       return corrected;
     }
 
     if (text.includes('hola') && text.includes('como estas') && text.includes('italiano')) {
-      console.log(`🚨 ITALIAN-TO-SPANISH AUTO-TRANSLATION DETECTED`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨ ITALIAN-TO-SPANISH AUTO-TRANSLATION DETECTED`);
       const corrected = text
         .replace(/hola/gi, 'Ciao')
         .replace(/como estas/gi, 'come stai')
         .replace(/quiero practicar/gi, 'vorrei praticare');
-      console.log(`✅ Reconstructed Italian: "${corrected}"`);
+      console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ Reconstructed Italian: "${corrected}"`);
       return corrected;
     }
 
     if (text.includes('hello') && text.includes('how are you') && text.includes('french')) {
-      console.log(`🚨 FRENCH-TO-ENGLISH AUTO-TRANSLATION DETECTED`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨ FRENCH-TO-ENGLISH AUTO-TRANSLATION DETECTED`);
       const corrected = text
         .replace(/hello|hi/gi, 'Bonjour')
         .replace(/how are you/gi, 'comment allez-vous')
         .replace(/want to practice/gi, 'voudrais pratiquer')
-        .replace(/french/gi, 'français');
-      console.log(`✅ Reconstructed French: "${corrected}"`);
+        .replace(/french/gi, 'franÃƒÆ’Ã‚Â§ais');
+      console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ Reconstructed French: "${corrected}"`);
       return corrected;
     }
 
     if (text.includes('hello') && text.includes('how are you') && text.includes('german')) {
-      console.log(`🚨 GERMAN-TO-ENGLISH AUTO-TRANSLATION DETECTED`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨ GERMAN-TO-ENGLISH AUTO-TRANSLATION DETECTED`);
       const corrected = text
         .replace(/hello|hi/gi, 'Hallo')
         .replace(/how are you/gi, 'wie geht es Ihnen')
-        .replace(/want to practice/gi, 'möchte üben')
+        .replace(/want to practice/gi, 'mÃƒÆ’Ã‚Â¶chte ÃƒÆ’Ã‚Â¼ben')
         .replace(/german/gi, 'Deutsch');
-      console.log(`✅ Reconstructed German: "${corrected}"`);
+      console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ Reconstructed German: "${corrected}"`);
       return corrected;
     }
 

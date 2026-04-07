@@ -117,7 +117,7 @@ function validateChatRequest(body: unknown): {
 
 /**
  * POST /api/chat
- * Handler copiado exactamente del index.ts original (líneas 418-555)
+ * Handler copiado exactamente del index.ts original (lÃƒÆ’Ã‚Â­neas 418-555)
  */
 export async function chatHandler(req: Request, res: Response) {
   const startTime = Date.now();
@@ -293,7 +293,7 @@ export async function chatHandler(req: Request, res: Response) {
         issues: parsedOut.error.issues 
       }));
     } else {
-      console.error("[CONTRACT] ChatResponse inválido", parsedOut.error.issues);
+      console.error("[CONTRACT] ChatResponse invÃƒÆ’Ã‚Â¡lido", parsedOut.error.issues);
     }
     return res.status(500).json({
       claraResponse: "",

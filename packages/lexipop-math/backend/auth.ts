@@ -4,7 +4,7 @@ import { db } from "./db";
 import { users } from "./schema";
 import { eq } from "drizzle-orm";
 
-// ─── Serialize / Deserialize ──────────────────────────────────────────────────
+// â”€â”€â”€ Serialize / Deserialize â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 passport.serializeUser((user: any, done) => {
   done(null, user.id);
 });
@@ -18,7 +18,7 @@ passport.deserializeUser(async (id: number, done) => {
   }
 });
 
-// ─── Google Strategy ─────────────────────────────────────────────────────────
+// â”€â”€â”€ Google Strategy â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const GOOGLE_CLIENT_ID     = process.env.GOOGLE_CLIENT_ID     || "";
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || "";
 const CALLBACK_URL         = process.env.GOOGLE_CALLBACK_URL  || "/auth/google/callback";

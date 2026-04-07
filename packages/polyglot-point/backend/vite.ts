@@ -1,8 +1,8 @@
-﻿import path from "path";
+import path from "path";
 import express, { Request, Response } from "express";
 
 /**
- * En producción:
+ * En producciÃƒÂ³n:
  *  - Sirve frontend compilado desde dist/public
  * En desarrollo:
  *  - El frontend lo sirve Vite (5173)
@@ -12,7 +12,7 @@ export function setupVite(app: express.Express, _server?: any) {
 
   if (isProduction) {
     serveStatic(app);
-    console.log("setupVite ejecutado (modo producción)");
+    console.log("setupVite ejecutado (modo producciÃƒÂ³n)");
     return;
   }
 
@@ -20,15 +20,15 @@ export function setupVite(app: express.Express, _server?: any) {
 }
 
 /**
- * Sirve archivos estáticos y maneja fallback SPA correctamente
+ * Sirve archivos estÃƒÂ¡ticos y maneja fallback SPA correctamente
  */
 export function serveStatic(app: express.Express) {
-  // 🔥 CORREGIDO: usar __dirname para que funcione en monorepo Railway
+  // Ã°Å¸â€Â¥ CORREGIDO: usar __dirname para que funcione en monorepo Railway
   const publicPath = path.resolve(__dirname, "../dist/public");
 
-  console.log("Sirviendo estáticos desde:", publicPath);
+  console.log("Sirviendo estÃƒÂ¡ticos desde:", publicPath);
 
-  // 1) Servir archivos estáticos reales
+  // 1) Servir archivos estÃƒÂ¡ticos reales
   app.use(
     express.static(publicPath, {
       fallthrough: true,

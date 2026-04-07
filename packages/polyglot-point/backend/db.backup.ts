@@ -1,4 +1,4 @@
-﻿import "dotenv/config";
+import "dotenv/config";
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "../shared/schema";
@@ -57,7 +57,7 @@ async function ensureTables() {
       await db.execute(sql`CREATE UNIQUE INDEX users_google_id_unique ON users (google_id)`);
       await db.execute(sql`CREATE UNIQUE INDEX users_apple_id_unique ON users (apple_id)`);
       
-      console.log("[db] Tabla 'users' creada con índices");
+      console.log("[db] Tabla 'users' creada con ÃƒÂ­ndices");
     } else {
       console.log("[db] Tabla 'users' ya existe");
     }

@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 
 export default function PaywallPreview({ onClose }: { onClose: () => void }) {
   return (
@@ -13,8 +13,8 @@ export default function PaywallPreview({ onClose }: { onClose: () => void }) {
             <div className="plan-name">Premium</div>
             <div className="plan-price"> / mes</div>
           </div>
-          <div className="plan-desc">50 mensajes/día, correcciones completas, historial.</div>
-          <div className="plan-note">Ideal para práctica diaria</div>
+          <div className="plan-desc">50 mensajes/dÃƒÂ­a, correcciones completas, historial.</div>
+          <div className="plan-note">Ideal para prÃƒÂ¡ctica diaria</div>
         </div>
 
         <div className="plan-option">
@@ -26,7 +26,7 @@ export default function PaywallPreview({ onClose }: { onClose: () => void }) {
           <div className="plan-note">Para power users</div>
         </div>
 
-        <button className="btn-subscribe" onClick={() => alert('DEV preview: aquí iría Stripe')}>
+        <button className="btn-subscribe" onClick={() => alert('DEV preview: aquÃƒÂ­ irÃƒÂ­a Stripe')}>
           Continuar (preview)
         </button>
 

@@ -16,11 +16,11 @@ interface LoginProps {
 }
 
 const T = {
-  es: { title: 'Bienvenido a LexiPop Math', subtitle: 'Entrena tu mente con matemáticas mentales', loginBtn: 'Continuar con Google', loading: 'Cargando...' },
+  es: { title: 'Bienvenido a LexiPop Math', subtitle: 'Entrena tu mente con matemÃ¡ticas mentales', loginBtn: 'Continuar con Google', loading: 'Cargando...' },
   en: { title: 'Welcome to LexiPop Math', subtitle: 'Train your mind with mental math', loginBtn: 'Continue with Google', loading: 'Loading...' },
-  fr: { title: 'Bienvenue à LexiPop Math', subtitle: 'Entraînez votre esprit avec des mathématiques mentales', loginBtn: 'Continuer avec Google', loading: 'Chargement...' },
+  fr: { title: 'Bienvenue Ã  LexiPop Math', subtitle: 'EntraÃ®nez votre esprit avec des mathÃ©matiques mentales', loginBtn: 'Continuer avec Google', loading: 'Chargement...' },
   de: { title: 'Willkommen bei LexiPop Math', subtitle: 'Trainiere deinen Geist mit Kopfrechnen', loginBtn: 'Mit Google fortfahren', loading: 'Laden...' },
-  pt: { title: 'Bem-vindo ao LexiPop Math', subtitle: 'Treine sua mente com matemática mental', loginBtn: 'Continuar com Google', loading: 'Carregando...' },
+  pt: { title: 'Bem-vindo ao LexiPop Math', subtitle: 'Treine sua mente com matemÃ¡tica mental', loginBtn: 'Continuar com Google', loading: 'Carregando...' },
   it: { title: 'Benvenuto a LexiPop Math', subtitle: 'Allena la tua mente con la matematica mentale', loginBtn: 'Continua con Google', loading: 'Caricamento...' }
 };
 
@@ -30,7 +30,7 @@ export default function Login({ onLoginSuccess, lang }: LoginProps) {
   const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/math';
 
   useEffect(() => {
-    // Verificar si ya está autenticado
+    // Verificar si ya estÃ¡ autenticado
     fetch(`${API_BASE}/auth/me`, { credentials: 'include' })
       .then(res => res.ok ? res.json() : null)
       .then(data => {

@@ -16,12 +16,12 @@ async function openRealCheckout(plan: "premium" | "pro") {
 
     window.location.href = data.url;
   } catch {
-    alert("Checkout REAL falló");
+    alert("Checkout REAL fallÃƒÆ’Ã‚Â³");
   }
 }
 
 export default function DevDrawer() {
-  // ?? NO SUBIR A PRODUCCI�N
+  // ?? NO SUBIR A PRODUCCIÃƒâ€œN
   if (process.env.NODE_ENV !== "development") return null;
   
   const [open, setOpen] = useState(false);
@@ -104,10 +104,10 @@ export default function DevDrawer() {
               Checkout REAL (Stripe)
             </div>
             <button style={btn} onClick={() => openRealCheckout("premium")}>
-              Abrir Checkout REAL – Premium
+              Abrir Checkout REAL ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ Premium
             </button>
             <button style={btn} onClick={() => openRealCheckout("pro")}>
-              Abrir Checkout REAL – Pro
+              Abrir Checkout REAL ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ Pro
             </button>
           </div>
         )}

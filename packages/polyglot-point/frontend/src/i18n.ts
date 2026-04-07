@@ -1,4 +1,4 @@
-﻿export const translations = {
+export const translations = {
   es: {
     title: "Polyglot Point",
     phrases: [
@@ -16,30 +16,30 @@
     loginWithGoogle: "Continuar con Google",
     loginWithApple: "Continuar con Apple",
     paywall: {
-      title: "¿Te está sirviendo?",
-      subtitle: "Clara está lista para seguir. ¿Y tú?",
+      title: "Ã‚Â¿Te estÃƒÂ¡ sirviendo?",
+      subtitle: "Clara estÃƒÂ¡ lista para seguir. Ã‚Â¿Y tÃƒÂº?",
       premiumLabel: "Premium",
       premiumPrice: "$18/mes",
-      premiumDesc: "50 mensajes al día, todos los idiomas",
+      premiumDesc: "50 mensajes al dÃƒÂ­a, todos los idiomas",
       proLabel: "Pro",
       proPrice: "$29/mes",
-      proBadge: "Más popular",
+      proBadge: "MÃƒÂ¡s popular",
       proDesc: "4,500 mensajes/mes + rollover + respuestas largas",
-      proNote: "Sin límite diario",
+      proNote: "Sin lÃƒÂ­mite diario",
       subscribe: "Seguir practicando",
-      maybeLater: "Quizás después",
-      warning15: "Te quedan 5 mensajes hoy. ¿Quieres seguir sin límite?",
-      postPayment: "¡Listo! Ya puedes seguir practicando"
+      maybeLater: "QuizÃƒÂ¡s despuÃƒÂ©s",
+      warning15: "Te quedan 5 mensajes hoy. Ã‚Â¿Quieres seguir sin lÃƒÂ­mite?",
+      postPayment: "Ã‚Â¡Listo! Ya puedes seguir practicando"
     },
     error: {
-      title: "¡Ups! Algo salió mal",
-      message: "Clara se tropezó con un cable. Ya la estamos levantando.",
+      title: "Ã‚Â¡Ups! Algo saliÃƒÂ³ mal",
+      message: "Clara se tropezÃƒÂ³ con un cable. Ya la estamos levantando.",
       retry: "Intentar de nuevo",
-      contact: "Si esto sigue pasando, escríbenos a soporte@polyglotpoint.com"
+      contact: "Si esto sigue pasando, escrÃƒÂ­benos a soporte@polyglotpoint.com"
     },
     privacy: "Privacidad",
-    terms: "Términos",
-    onboarding: "Escribe algo en el idioma que quieras practicar y te ayudo a mejorarlo. ¡Sin pena, aquí se vale equivocarse!"
+    terms: "TÃƒÂ©rminos",
+    onboarding: "Escribe algo en el idioma que quieras practicar y te ayudo a mejorarlo. Ã‚Â¡Sin pena, aquÃƒÂ­ se vale equivocarse!"
   },
   en: {
     title: "Polyglot Point",
@@ -86,7 +86,7 @@
   fr: {
     title: "Polyglot Point",
     phrases: [
-      "Écris. Apprends. Progresse.",
+      "Ãƒâ€°cris. Apprends. Progresse.",
       "Pratique sans peur",
       "Ta langue, ton rythme",
       "Apprends en faisant"
@@ -96,34 +96,34 @@
     send: "Envoyer",
     sending: "Envoi...",
     messagesLeft: "Messages aujourd'hui",
-    logout: "Déconnexion",
+    logout: "DÃƒÂ©connexion",
     loginWithGoogle: "Continuer avec Google",
     loginWithApple: "Continuer avec Apple",
     paywall: {
-      title: "Ça te sert?",
-      subtitle: "Clara est prête à continuer. Et toi?",
+      title: "Ãƒâ€¡a te sert?",
+      subtitle: "Clara est prÃƒÂªte ÃƒÂ  continuer. Et toi?",
       premiumLabel: "Premium",
       premiumPrice: "18$/mois",
       premiumDesc: "50 messages par jour, toutes les langues",
       proLabel: "Pro",
       proPrice: "29$/mois",
       proBadge: "Le plus populaire",
-      proDesc: "4 500 messages/mois + report + réponses longues",
+      proDesc: "4 500 messages/mois + report + rÃƒÂ©ponses longues",
       proNote: "Sans limite quotidienne",
-      subscribe: "Continuer à pratiquer",
-      maybeLater: "Peut-être plus tard",
+      subscribe: "Continuer ÃƒÂ  pratiquer",
+      maybeLater: "Peut-ÃƒÂªtre plus tard",
       warning15: "Il te reste 5 messages aujourd'hui. Tu veux continuer sans limite?",
-      postPayment: "C'est fait! Tu peux continuer à pratiquer"
+      postPayment: "C'est fait! Tu peux continuer ÃƒÂ  pratiquer"
     },
     error: {
-      title: "Oups! Quelque chose s'est mal passé",
-      message: "Clara a trébuché sur un câble. On la relève.",
-      retry: "Réessayer",
-      contact: "Si ça continue, écris-nous à soporte@polyglotpoint.com"
+      title: "Oups! Quelque chose s'est mal passÃƒÂ©",
+      message: "Clara a trÃƒÂ©buchÃƒÂ© sur un cÃƒÂ¢ble. On la relÃƒÂ¨ve.",
+      retry: "RÃƒÂ©essayer",
+      contact: "Si ÃƒÂ§a continue, ÃƒÂ©cris-nous ÃƒÂ  soporte@polyglotpoint.com"
     },
-    privacy: "Confidentialité",
+    privacy: "ConfidentialitÃƒÂ©",
     terms: "Conditions",
-    onboarding: "Écris quelque chose dans la langue que tu veux pratiquer et je t'aide à l'améliorer. Sans gêne, ici on a le droit de se tromper!"
+    onboarding: "Ãƒâ€°cris quelque chose dans la langue que tu veux pratiquer et je t'aide ÃƒÂ  l'amÃƒÂ©liorer. Sans gÃƒÂªne, ici on a le droit de se tromper!"
   },
   it: {
     title: "Polyglot Point",
@@ -143,13 +143,13 @@
     loginWithApple: "Continua con Apple",
     paywall: {
       title: "Ti sta servendo?",
-      subtitle: "Clara è pronta a continuare. E tu?",
+      subtitle: "Clara ÃƒÂ¨ pronta a continuare. E tu?",
       premiumLabel: "Premium",
       premiumPrice: "18$/mese",
       premiumDesc: "50 messaggi al giorno, tutte le lingue",
       proLabel: "Pro",
       proPrice: "29$/mese",
-      proBadge: "Più popolare",
+      proBadge: "PiÃƒÂ¹ popolare",
       proDesc: "4.500 messaggi/mese + rollover + risposte lunghe",
       proNote: "Senza limite giornaliero",
       subscribe: "Continua a praticare",
@@ -158,20 +158,20 @@
       postPayment: "Fatto! Puoi continuare a praticare"
     },
     error: {
-      title: "Ops! Qualcosa è andato storto",
-      message: "Clara è inciampata in un cavo. La stiamo rialzando.",
+      title: "Ops! Qualcosa ÃƒÂ¨ andato storto",
+      message: "Clara ÃƒÂ¨ inciampata in un cavo. La stiamo rialzando.",
       retry: "Riprova",
       contact: "Se continua, scrivici a soporte@polyglotpoint.com"
     },
     privacy: "Privacy",
     terms: "Termini",
-    onboarding: "Scrivi qualcosa nella lingua che vuoi praticare e ti aiuto a migliorarlo. Senza vergogna, qui si può sbagliare!"
+    onboarding: "Scrivi qualcosa nella lingua che vuoi praticare e ti aiuto a migliorarlo. Senza vergogna, qui si puÃƒÂ² sbagliare!"
   },
   de: {
     title: "Polyglot Point",
     phrases: [
       "Schreib. Lern. Verbessere.",
-      "Übe ohne Angst",
+      "ÃƒÅ“be ohne Angst",
       "Deine Sprache, dein Tempo",
       "Lerne durch Tun"
     ],
@@ -192,22 +192,22 @@
       proLabel: "Pro",
       proPrice: "29$/Monat",
       proBadge: "Am beliebtesten",
-      proDesc: "4.500 Nachrichten/Monat + Übertrag + längere Antworten",
+      proDesc: "4.500 Nachrichten/Monat + ÃƒÅ“bertrag + lÃƒÂ¤ngere Antworten",
       proNote: "Kein Tageslimit",
-      subscribe: "Weiter üben",
-      maybeLater: "Vielleicht später",
+      subscribe: "Weiter ÃƒÂ¼ben",
+      maybeLater: "Vielleicht spÃƒÂ¤ter",
       warning15: "Du hast noch 5 Nachrichten heute. Willst du unbegrenzt weitermachen?",
-      postPayment: "Fertig! Du kannst jetzt weiter üben"
+      postPayment: "Fertig! Du kannst jetzt weiter ÃƒÂ¼ben"
     },
     error: {
       title: "Ups! Etwas ist schiefgelaufen",
-      message: "Clara ist über ein Kabel gestolpert. Wir helfen ihr auf.",
+      message: "Clara ist ÃƒÂ¼ber ein Kabel gestolpert. Wir helfen ihr auf.",
       retry: "Erneut versuchen",
       contact: "Wenn das weiterhin passiert, schreib uns an soporte@polyglotpoint.com"
     },
     privacy: "Datenschutz",
     terms: "AGB",
-    onboarding: "Schreib etwas in der Sprache, die du üben möchtest, und ich helfe dir, es zu verbessern. Keine Scheu, hier darf man Fehler machen!"
+    onboarding: "Schreib etwas in der Sprache, die du ÃƒÂ¼ben mÃƒÂ¶chtest, und ich helfe dir, es zu verbessern. Keine Scheu, hier darf man Fehler machen!"
   },
   pt: {
     title: "Polyglot Point",
@@ -226,30 +226,30 @@
     loginWithGoogle: "Continuar com Google",
     loginWithApple: "Continuar com Apple",
     paywall: {
-      title: "Está te ajudando?",
-      subtitle: "Clara está pronta para continuar. E você?",
+      title: "EstÃƒÂ¡ te ajudando?",
+      subtitle: "Clara estÃƒÂ¡ pronta para continuar. E vocÃƒÂª?",
       premiumLabel: "Premium",
-      premiumPrice: "$18/mês",
+      premiumPrice: "$18/mÃƒÂªs",
       premiumDesc: "50 mensagens por dia, todos os idiomas",
       proLabel: "Pro",
-      proPrice: "$29/mês",
+      proPrice: "$29/mÃƒÂªs",
       proBadge: "Mais popular",
-      proDesc: "4.500 mensagens/mês + acúmulo + respostas longas",
-      proNote: "Sem limite diário",
+      proDesc: "4.500 mensagens/mÃƒÂªs + acÃƒÂºmulo + respostas longas",
+      proNote: "Sem limite diÃƒÂ¡rio",
       subscribe: "Continuar praticando",
       maybeLater: "Talvez depois",
-      warning15: "Você tem 5 mensagens restantes hoje. Quer continuar sem limite?",
-      postPayment: "Pronto! Você pode continuar praticando"
+      warning15: "VocÃƒÂª tem 5 mensagens restantes hoje. Quer continuar sem limite?",
+      postPayment: "Pronto! VocÃƒÂª pode continuar praticando"
     },
     error: {
       title: "Ops! Algo deu errado",
-      message: "Clara tropeçou em um cabo. Estamos levantando ela.",
+      message: "Clara tropeÃƒÂ§ou em um cabo. Estamos levantando ela.",
       retry: "Tentar novamente",
       contact: "Se isso continuar, escreva para soporte@polyglotpoint.com"
     },
     privacy: "Privacidade",
     terms: "Termos",
-    onboarding: "Escreva algo no idioma que você quer praticar e eu te ajudo a melhorar. Sem vergonha, aqui pode errar!"
+    onboarding: "Escreva algo no idioma que vocÃƒÂª quer praticar e eu te ajudo a melhorar. Sem vergonha, aqui pode errar!"
   }
 };
 

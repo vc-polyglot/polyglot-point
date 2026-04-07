@@ -1,4 +1,4 @@
-﻿import React from "react"
+import React from "react"
 import { goGoogleLogin } from "./api"
 import { useAuth } from "./AuthContext"
 
@@ -119,7 +119,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
   if (loading) {
     return (
       <div className="min-h-svh flex items-center justify-center text-sm text-muted-foreground">
-        Cargando…
+        CargandoÃ¢â‚¬Â¦
       </div>
     )
   }

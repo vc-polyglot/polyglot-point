@@ -25,7 +25,7 @@ function App() {
   };
 
   const handleReset = async () => {
-    if (!confirm('¿Reiniciar tu contador de ejercicios desde cero?')) return;
+    if (!confirm('Â¿Reiniciar tu contador de ejercicios desde cero?')) return;
     await fetch('/api/math/exercise/reset', { method: 'POST', credentials: 'include' });
     // Forzar reload para que MathExercise arranque limpio
     localStorage.removeItem('lexipop-v4');
@@ -54,7 +54,7 @@ function App() {
               fontSize: '13px',
             }}
           >
-            🔄 RESET
+            ðŸ”„ RESET
           </button>
         )}
         <button

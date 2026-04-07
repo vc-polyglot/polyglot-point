@@ -1,4 +1,4 @@
-﻿import { pgTable, text, serial, integer, boolean, timestamp, varchar, jsonb, index } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, varchar, jsonb, index } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -24,7 +24,7 @@ export const users = pgTable("users", {
   premiumMessagesToday: integer("premium_messages_today").notNull().default(0),
   premiumLastResetDate: varchar("premium_last_reset_date", { length: 10 }), // "YYYY-MM-DD"
   
-  // Reloj de recarga (source-of-truth: Stripe si hay suscripción; fallback interno si lo necesitas)
+  // Reloj de recarga (source-of-truth: Stripe si hay suscripciÃƒÂ³n; fallback interno si lo necesitas)
   lastRefillDate: timestamp("last_refill_date").defaultNow().notNull(),
   nextRefillAt: timestamp("next_refill_at"), // se setea por backend/webhook si decides usarlo
 
@@ -78,7 +78,7 @@ export const messages = pgTable("messages", {
   corrected: text("corrected"),
   explanations: jsonb("explanations").$type<string[]>(),
 
-  // Telemetría (opcional pero útil)
+  // TelemetrÃƒÂ­a (opcional pero ÃƒÂºtil)
   tokensUsed: integer("tokens_used"),
   model: varchar("model", { length: 50 }),
 
@@ -101,7 +101,7 @@ export const messagePurchases = pgTable("message_purchases", {
   createdAtIdx: index("message_purchases_created_at_idx").on(t.createdAt),
 }));
 
-// ========== HISTORIAL DE CAMBIOS DE PLAN (fase 2 / auditoría) ==========
+// ========== HISTORIAL DE CAMBIOS DE PLAN (fase 2 / auditorÃƒÂ­a) ==========
 export const planChanges = pgTable("plan_changes", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
@@ -123,11 +123,11 @@ export const PLAN_CONFIG = {
     ceiling: 20,
     priceMonthlyCents: 0,
     renewable: false,      // NO se renueva nunca
-    dailyLimit: null,      // Sin límite diario
+    dailyLimit: null,      // Sin lÃƒÂ­mite diario
     rollover: false,
   },
   premium: {
-    baseMessages: 50,      // V5.0: 50/día
+    baseMessages: 50,      // V5.0: 50/dÃƒÂ­a
     maxTokens: 1500,
     contextTurns: 2,
     ceiling: 50,           // No acumula
@@ -143,8 +143,8 @@ export const PLAN_CONFIG = {
     ceiling: 11250,        // V5.0: techo 2.5x
     priceMonthlyCents: 2900, // $29
     renewable: true,
-    dailyLimit: null,      // SIN límite diario
-    rollover: true,        // SÍ acumula
+    dailyLimit: null,      // SIN lÃƒÂ­mite diario
+    rollover: true,        // SÃƒÂ acumula
     priorityQueue: true,
   },
 } as const;
@@ -208,7 +208,7 @@ export type InsertPlanChange = z.infer<typeof insertPlanChangeSchema>;
 
 export type PlanType = keyof typeof PLAN_CONFIG;
 
-// ========== SCHEMAS DE VALIDACIÓN ==========
+// ========== SCHEMAS DE VALIDACIÃƒâ€œN ==========
 export const planTypeSchema = z.enum(["freemium", "premium", "pro"]);
 export const languageSchema = z.enum(["es", "en", "fr", "it", "de", "pt"]);
 

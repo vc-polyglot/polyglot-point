@@ -1,25 +1,25 @@
-﻿export type Intent = "CONVERSACION" | "CORRECCION" | "PREGUNTA";
+export type Intent = "CONVERSACION" | "CORRECCION" | "PREGUNTA";
 
 type InferIntentParams = {
-  // Texto que mandó el usuario (ya recortado o sin recortar, da igual)
+  // Texto que mandÃƒÂ³ el usuario (ya recortado o sin recortar, da igual)
   input: string;
-  // Idioma activo (es/en/fr/it/de/pt). Sirve para detectar signos como ¿? etc.
+  // Idioma activo (es/en/fr/it/de/pt). Sirve para detectar signos como Ã‚Â¿? etc.
   language?: string;
 };
 
 function looksLikeQuestion(text: string): boolean {
   const t = text.trim();
 
-  // Signos de interrogación
-  if (t.includes("?") || t.includes("¿")) return true;
+  // Signos de interrogaciÃƒÂ³n
+  if (t.includes("?") || t.includes("Ã‚Â¿")) return true;
 
-  // Preguntas típicas por palabra inicial (multilenguaje básico)
+  // Preguntas tÃƒÂ­picas por palabra inicial (multilenguaje bÃƒÂ¡sico)
   const start = t.toLowerCase();
   const startsWith = [
-    "qué", "que ", "cómo", "como ", "cuál", "cual ", "cuándo", "cuando ",
-    "dónde", "donde ", "por qué", "porque ", "why ", "what ", "how ",
+    "quÃƒÂ©", "que ", "cÃƒÂ³mo", "como ", "cuÃƒÂ¡l", "cual ", "cuÃƒÂ¡ndo", "cuando ",
+    "dÃƒÂ³nde", "donde ", "por quÃƒÂ©", "porque ", "why ", "what ", "how ",
     "when ", "where ", "which ", "qui ", "quoi ", "comment ", "quand ",
-    "où ", "dove ", "perché", "perche", "che ", "come ", "quando ",
+    "oÃƒÂ¹ ", "dove ", "perchÃƒÂ©", "perche", "che ", "come ", "quando ",
     "wo ", "was ", "wie ", "wann ", "woher ", "dove ", "porque ",
   ];
 
@@ -29,24 +29,24 @@ function looksLikeQuestion(text: string): boolean {
 function looksLikeCorrectionRequest(text: string): boolean {
   const t = text.toLowerCase();
 
-  // Peticiones explícitas de corrección Y explicación
+  // Peticiones explÃƒÂ­citas de correcciÃƒÂ³n Y explicaciÃƒÂ³n
   const triggers = [
-    // Corrección (español)
-    "corrige", "corrígeme", "corregir", "corrección",
-    "revisa", "revísame", "revisar",
-    "mejorar", "mejóralo", "mejora",
-    "gramática", "ortografía", "ortografia",
+    // CorrecciÃƒÂ³n (espaÃƒÂ±ol)
+    "corrige", "corrÃƒÂ­geme", "corregir", "correcciÃƒÂ³n",
+    "revisa", "revÃƒÂ­same", "revisar",
+    "mejorar", "mejÃƒÂ³ralo", "mejora",
+    "gramÃƒÂ¡tica", "ortografÃƒÂ­a", "ortografia",
     
-    // Explicación (español)
-    "explica", "explícame", "explicar", "explicación", "explique",
-    "ayúdame", "ayuda", "ayudar",
+    // ExplicaciÃƒÂ³n (espaÃƒÂ±ol)
+    "explica", "explÃƒÂ­came", "explicar", "explicaciÃƒÂ³n", "explique",
+    "ayÃƒÂºdame", "ayuda", "ayudar",
     
-    // Inglés
+    // InglÃƒÂ©s
     "rewrite", "correct", "fix my", "proofread",
     "explain", "explain to me", "explanation",
     "help me", "help with",
     
-    // Francés
+    // FrancÃƒÂ©s
     "corriger", "corrige-moi", "corriger mon",
     "explique", "explique-moi", "expliquer", "explication",
     "aide", "aide-moi",
@@ -56,21 +56,21 @@ function looksLikeCorrectionRequest(text: string): boolean {
     "spiega", "spiegami", "spiegare", "spiegazione",
     "aiuta", "aiutami",
     
-    // Alemán
+    // AlemÃƒÂ¡n
     "korrigiere", "rechtschreibung", "grammatik",
-    "erkläre", "erklär mir", "erklären", "erklärung",
+    "erklÃƒÂ¤re", "erklÃƒÂ¤r mir", "erklÃƒÂ¤ren", "erklÃƒÂ¤rung",
     "hilf", "hilf mir",
     
-    // Portugués
+    // PortuguÃƒÂ©s
     "corrige", "corrige-me",
-    "explica", "explica-me", "explicar", "explicação",
+    "explica", "explica-me", "explicar", "explicaÃƒÂ§ÃƒÂ£o",
     "ajuda", "ajuda-me",
   ];
 
   if (triggers.some((k) => t.includes(k))) return true;
 
-  // Si el texto es largo tipo párrafo sin signos de pregunta, suele ser corrección.
-  // (heurística suave, no absoluta)
+  // Si el texto es largo tipo pÃƒÂ¡rrafo sin signos de pregunta, suele ser correcciÃƒÂ³n.
+  // (heurÃƒÂ­stica suave, no absoluta)
   const len = text.trim().length;
   if (len >= 120 && !looksLikeQuestion(text)) return true;
 

@@ -12,9 +12,9 @@ if (!connectionString) {
         // Cualquier llamada tipo db.loQueSea(...) devuelve una promesa resuelta
         return async (..._args: any[]) => {
           if (prop === "getDailyUsage") {
-            return 0; // para l�mites diarios, devuelve 0 uso
+            return 0; // para lÃƒÂ­mites diarios, devuelve 0 uso
           }
-          return; // las dem�s funciones no hacen nada
+          return; // las demÃƒÂ¡s funciones no hacen nada
         };
       },
     }
@@ -22,7 +22,7 @@ if (!connectionString) {
 
   dbImpl = fakeDb;
 } else {
-  // TODO: implementaci�n real de tu ORM cuando definas la DB
+  // TODO: implementaciÃƒÂ³n real de tu ORM cuando definas la DB
   // Ejemplo con Prisma:
   //
   // import { PrismaClient } from "@prisma/client";

@@ -20,10 +20,10 @@ export class MixedLanguagePreserver {
     // 2. Perfect grammar that doesn't match learner speech
     // 3. Missing typical code-switching patterns
     
-    const hasSpanishWords = /\b(hola|como|estas|quiero|hablar|español|porque|no|puedo|encontrar|alguien|para|practicar|me|gustaría|aprender)\b/i.test(transcribedText);
+    const hasSpanishWords = /\b(hola|como|estas|quiero|hablar|espaÃƒÆ’Ã‚Â±ol|porque|no|puedo|encontrar|alguien|para|practicar|me|gustarÃƒÆ’Ã‚Â­a|aprender)\b/i.test(transcribedText);
     const hasEnglishWords = /\b(hello|how|are|you|want|speak|english|because|can't|find|someone|practice|would|like|learn)\b/i.test(transcribedText);
-    const hasFrenchWords = /\b(bonjour|comment|vous|voudrais|parler|français|parce|que|peux|pas|trouver|quelqu'un|pratiquer)\b/i.test(transcribedText);
-    const hasItalianWords = /\b(ciao|come|stai|vorrei|parlare|italiano|perché|non|posso|trovare|qualcuno|praticare)\b/i.test(transcribedText);
+    const hasFrenchWords = /\b(bonjour|comment|vous|voudrais|parler|franÃƒÆ’Ã‚Â§ais|parce|que|peux|pas|trouver|quelqu'un|pratiquer)\b/i.test(transcribedText);
+    const hasItalianWords = /\b(ciao|come|stai|vorrei|parlare|italiano|perchÃƒÆ’Ã‚Â©|non|posso|trovare|qualcuno|praticare)\b/i.test(transcribedText);
     
     const languageCount = [hasSpanishWords, hasEnglishWords, hasFrenchWords, hasItalianWords].filter(Boolean).length;
     
@@ -39,7 +39,7 @@ export class MixedLanguagePreserver {
    * Generate warning message when auto-translation is detected
    */
   generatePreservationWarning(): string {
-    return "⚠️ DETECTED: Input was auto-translated. Original mixed-language speech not preserved.";
+    return "ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â DETECTED: Input was auto-translated. Original mixed-language speech not preserved.";
   }
   
   /**
@@ -55,10 +55,10 @@ export class MixedLanguagePreserver {
     // Replace common auto-translations with likely original mixed patterns
     const replacements = [
       { from: /^Hi Clara,/i, to: "Hola Clara," },
-      { from: /how are you/i, to: "¿cómo estás?" },
+      { from: /how are you/i, to: "Ãƒâ€šÃ‚Â¿cÃƒÆ’Ã‚Â³mo estÃƒÆ’Ã‚Â¡s?" },
       { from: /I want to practice/i, to: "I want to practicar" },
-      { from: /I would like to learn Spanish/i, to: "Me gustaría aprender español" },
-      { from: /Do you help me/i, to: "¿Me ayudas?" }
+      { from: /I would like to learn Spanish/i, to: "Me gustarÃƒÆ’Ã‚Â­a aprender espaÃƒÆ’Ã‚Â±ol" },
+      { from: /Do you help me/i, to: "Ãƒâ€šÃ‚Â¿Me ayudas?" }
     ];
     
     replacements.forEach(replacement => {
@@ -79,7 +79,7 @@ export class MixedLanguagePreserver {
     const wasAutoTranslated = this.detectAutoTranslation(transcribedText);
     
     if (wasAutoTranslated) {
-      console.log("🚨 AUTO-TRANSLATION DETECTED - Attempting reconstruction");
+      console.log("ÃƒÂ°Ã…Â¸Ã…Â¡Ã‚Â¨ AUTO-TRANSLATION DETECTED - Attempting reconstruction");
       const reconstructed = this.attemptReconstruction(transcribedText);
       
       return {

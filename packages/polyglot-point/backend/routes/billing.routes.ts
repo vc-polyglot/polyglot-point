@@ -1,4 +1,4 @@
-﻿import { Router, Request, Response } from 'express';
+import { Router, Request, Response } from 'express';
 import { stripeService } from '../services/stripe.service';
 import { db } from '../db';
 import { users, PLAN_CONFIG } from '../../shared/schema';
@@ -20,7 +20,7 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
     const user = req.user as any;
     const { plan } = req.body;
     if (plan !== 'premium' && plan !== 'pro') {
-      return res.status(400).json({ error: 'Plan inválido. Usa "premium" o "pro"' });
+      return res.status(400).json({ error: 'Plan invÃƒÂ¡lido. Usa "premium" o "pro"' });
     }
     const [dbUser] = await db.select().from(users).where(eq(users.id, user.id));
     console.log("[Checkout DEBUG]", {
@@ -67,11 +67,11 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
     return res.json(result);
   } catch (error) {
     console.error('Checkout error:', error);
-    return res.status(500).json({ error: 'Error al crear sesión de pago' });
+    return res.status(500).json({ error: 'Error al crear sesiÃƒÂ³n de pago' });
   }
 });
 
-// ── Google Play: verificar compra ─────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ Google Play: verificar compra Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 router.post('/verify-purchase', async (req: Request, res: Response) => {
   try {
     if (!req.isAuthenticated || !req.isAuthenticated() || !req.user) {
@@ -86,7 +86,7 @@ router.post('/verify-purchase', async (req: Request, res: Response) => {
 
     console.log('[verify-purchase]', { userId: user.id, productId, purchaseToken: purchaseToken.slice(0, 20) + '...' });
 
-    // TODO: cuando llegue Service Account JSON, agregar verificación con googleapis:
+    // TODO: cuando llegue Service Account JSON, agregar verificaciÃƒÂ³n con googleapis:
     // const { google } = await import('googleapis');
     // const auth = new google.auth.GoogleAuth({ keyFile: '...', scopes: ['https://www.googleapis.com/auth/androidpublisher'] });
     // const androidpublisher = google.androidpublisher({ version: 'v3', auth });

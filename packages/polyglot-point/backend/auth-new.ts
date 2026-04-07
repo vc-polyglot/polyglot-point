@@ -4,7 +4,7 @@ import { db } from "./db-new";
 import { users } from "../shared/schema";
 import { eq } from "drizzle-orm";
 
-// Configuraci�n de Google OAuth
+// ConfiguraciÃƒÂ³n de Google OAuth
 passport.use(
   new GoogleStrategy(
     {

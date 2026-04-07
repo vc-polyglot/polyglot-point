@@ -15,12 +15,12 @@ export const users = pgTable("lm_users", {
   googleId: text("google_id").notNull().unique(),
   avatarUrl: text("avatar_url"),
 
-  // 🔹 Progreso
+  // ðŸ”¹ Progreso
   exercisesCount: integer("exercises_count")
     .notNull()
     .default(0),
 
-  // 🔹 Stripe
+  // ðŸ”¹ Stripe
   stripeCustomerId: text("stripe_customer_id"),
   stripeSubscriptionId: text("stripe_subscription_id"),
 
@@ -29,7 +29,7 @@ export const users = pgTable("lm_users", {
 
   subscriptionEndsAt: timestamp("subscription_ends_at"),
 
-  // 🔹 Acceso rápido (cache lógico)
+  // ðŸ”¹ Acceso rÃ¡pido (cache lÃ³gico)
   isPro: boolean("is_pro")
     .notNull()
     .default(false),

@@ -13,7 +13,7 @@ const ALLOWED_ORIGINS = [
   'http://localhost:5173',
   'http://localhost:5174',
   'http://localhost:3000',
-  // Agrega aquí tu dominio de Vercel cuando lo tengas:
+  // Agrega aquÃ­ tu dominio de Vercel cuando lo tengas:
   // 'https://lexipop-math.vercel.app',
   // 'https://polyglot-point.vercel.app',
 ];
@@ -30,7 +30,7 @@ app.use(cors({
   credentials: true
 }));
 
-// Stripe webhook necesita el body RAW — va ANTES de express.json()
+// Stripe webhook necesita el body RAW â€” va ANTES de express.json()
 app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
 
 // Body parsers

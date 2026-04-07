@@ -1,4 +1,4 @@
-﻿import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useAuth } from "./auth/AuthContext";
 import { fetchChat, fetchUsage } from "./api";
 import { translations, Language } from "./i18n";

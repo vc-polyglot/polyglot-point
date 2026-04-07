@@ -13,7 +13,7 @@ export class UniversalErrorDetector {
    */
   async detectBasicErrors(userInput: string, language: string): Promise<Array<{wrong: string, correct: string}>> {
     try {
-      console.log(`🔍 BASIC ERROR DETECTION: Analyzing "${userInput}" in ${language}`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â BASIC ERROR DETECTION: Analyzing "${userInput}" in ${language}`);
       
       // Skip error detection for common valid greetings and short phrases
       const validCommonPhrases = [
@@ -21,7 +21,7 @@ export class UniversalErrorDetector {
         'hola', 'buenos', 'buenas', 'dias', 'tardes', 'noches',
         'bonjour', 'bonsoir', 'salut', 'ciao', 'buongiorno', 'buonasera',
         'hallo', 'guten', 'tag', 'abend', 'ola', 'bom', 'dia', 'tarde', 'noite',
-        'yes', 'no', 'si', 'oui', 'non', 'ja', 'nein', 'sim', 'nao', 'não',
+        'yes', 'no', 'si', 'oui', 'non', 'ja', 'nein', 'sim', 'nao', 'nÃƒÆ’Ã‚Â£o',
         'thanks', 'thank', 'you', 'gracias', 'merci', 'grazie', 'danke', 'obrigado',
         'fine', 'bien', 'bene', 'gut', 'okay', 'ok'
       ];
@@ -33,16 +33,16 @@ export class UniversalErrorDetector {
         const words = trimmedInput.split(/\s+/);
         return words.length <= 3 && words.some(word => word === phrase);
       })) {
-        console.log(`✅ SKIPPING ERROR DETECTION: "${userInput}" is a valid common phrase`);
+        console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ SKIPPING ERROR DETECTION: "${userInput}" is a valid common phrase`);
         return [];
       }
       
       const prompt = `Analyze this user input for basic errors in spelling, grammar, capitalization, and syntax. Look for:
 
-1. Spelling mistakes (hawo → how, LIOKE → like)
-2. Incorrect capitalization (aRE → are)
-3. Grammar errors (IS DIFFICULT FOR MY → it's difficult for me)
-4. Wrong word usage (YOU NOW → you know)
+1. Spelling mistakes (hawo ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ how, LIOKE ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ like)
+2. Incorrect capitalization (aRE ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ are)
+3. Grammar errors (IS DIFFICULT FOR MY ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ it's difficult for me)
+4. Wrong word usage (YOU NOW ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ you know)
 5. Missing words or articles
 6. Incorrect verb forms
 
@@ -84,15 +84,15 @@ Focus on obvious mistakes that any native speaker would immediately notice.`;
       const result = JSON.parse(response.choices[0].message.content || '{"hasErrors": false, "errors": []}');
       
       if (result.hasErrors && result.errors) {
-        console.log(`✅ BASIC ERRORS FOUND: ${result.errors.length} errors`);
-        console.log(`🔧 CORRECTED SENTENCE: ${result.correctedSentence || 'Not provided'}`);
+        console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ BASIC ERRORS FOUND: ${result.errors.length} errors`);
+        console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â§ CORRECTED SENTENCE: ${result.correctedSentence || 'Not provided'}`);
         return result.errors.map((error: any) => ({
           wrong: error.wrong,
           correct: error.correct
         }));
       }
 
-      console.log(`✅ NO BASIC ERRORS DETECTED`);
+      console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ NO BASIC ERRORS DETECTED`);
       return [];
       
     } catch (error) {
@@ -107,7 +107,7 @@ Focus on obvious mistakes that any native speaker would immediately notice.`;
    */
   async detectArtificialConstructions(userInput: string, language: string): Promise<Array<{wrong: string, correct: string}>> {
     try {
-      console.log(`🔍 UNIVERSAL ERROR DETECTION: Analyzing "${userInput}" in ${language}`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â UNIVERSAL ERROR DETECTION: Analyzing "${userInput}" in ${language}`);
       
       const prompt = `Analyze this user input for artificial/robotic constructions that don't sound natural to native speakers. Look for:
 
@@ -153,15 +153,15 @@ Focus only on making speech sound natural and fluent, not on minor grammar detai
       const result = JSON.parse(response.choices[0].message.content || '{"hasErrors": false, "errors": []}');
       
       if (result.hasErrors && result.errors?.length > 0) {
-        console.log(`✅ UNIVERSAL DETECTOR FOUND ${result.errors.length} artificial constructions`);
+        console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ UNIVERSAL DETECTOR FOUND ${result.errors.length} artificial constructions`);
         return result.errors;
       } else {
-        console.log(`✅ UNIVERSAL DETECTOR: Input sounds natural`);
+        console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ UNIVERSAL DETECTOR: Input sounds natural`);
         return [];
       }
       
     } catch (error) {
-      console.log(`❌ Universal error detection failed:`, error);
+      console.log(`ÃƒÂ¢Ã‚ÂÃ…â€™ Universal error detection failed:`, error);
       return [];
     }
   }

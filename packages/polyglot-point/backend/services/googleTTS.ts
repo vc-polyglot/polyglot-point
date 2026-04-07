@@ -1,4 +1,4 @@
-﻿import textToSpeech from "@google-cloud/text-to-speech";
+import textToSpeech from "@google-cloud/text-to-speech";
 import { safeJsonParse } from "../utils/safeJson";
 
 const { TextToSpeechClient } = textToSpeech;
@@ -6,7 +6,7 @@ const { TextToSpeechClient } = textToSpeech;
 type GoogleCredentials = {
   client_email: string;
   private_key: string;
-  // agrega más campos si quieres tiparlo más estricto
+  // agrega mÃƒÂ¡s campos si quieres tiparlo mÃƒÂ¡s estricto
 };
 
 const rawCreds = process.env.GOOGLE_APPLICATION_CREDENTIALS;
@@ -14,7 +14,7 @@ const rawCreds = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 let credentials: GoogleCredentials | null = null;
 
 // Si la variable empieza con "{", asumimos que es JSON embebido y lo parseamos de forma segura.
-// Si es una ruta a archivo o está vacía, NO llamamos JSON.parse y dejamos que el SDK se encargue.
+// Si es una ruta a archivo o estÃƒÂ¡ vacÃƒÂ­a, NO llamamos JSON.parse y dejamos que el SDK se encargue.
 if (rawCreds && rawCreds.trim().startsWith("{")) {
   credentials = safeJsonParse<GoogleCredentials | null>(
     rawCreds,
@@ -23,11 +23,11 @@ if (rawCreds && rawCreds.trim().startsWith("{")) {
   );
 }
 
-// Cliente TTS: si hay credenciales parseadas, se pasan explícitas;
+// Cliente TTS: si hay credenciales parseadas, se pasan explÃƒÂ­citas;
 // si no, Google usa la ruta o las Application Default Credentials.
 export const ttsClient = credentials
   ? new TextToSpeechClient({ credentials })
   : new TextToSpeechClient();
 
-// Compatibilidad con el código existente que importaba { googleTTSService }
+// Compatibilidad con el cÃƒÂ³digo existente que importaba { googleTTSService }
 export const googleTTSService = ttsClient;

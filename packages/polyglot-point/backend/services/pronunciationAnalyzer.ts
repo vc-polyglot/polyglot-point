@@ -32,20 +32,20 @@ export class PronunciationAnalyzer {
       { heard: "focus", intended: "focus", tip: "Stress on the first syllable: FOcus" }
     ],
     es: [
-      { heard: "pero", intended: "perro", tip: "Rueda la 'rr' con más fuerza" },
+      { heard: "pero", intended: "perro", tip: "Rueda la 'rr' con mÃƒÆ’Ã‚Â¡s fuerza" },
       { heard: "casa", intended: "caza", tip: "La 's' es sorda, la 'z' es sonora" },
-      { heard: "beso", intended: "peso", tip: "La 'b' se pronuncia más suave" },
+      { heard: "beso", intended: "peso", tip: "La 'b' se pronuncia mÃƒÆ’Ã‚Â¡s suave" },
       { heard: "ola", intended: "hola", tip: "No olvides la 'h' aspirada" },
-      { heard: "año", intended: "ano", tip: "La 'ñ' es importante en español" }
+      { heard: "aÃƒÆ’Ã‚Â±o", intended: "ano", tip: "La 'ÃƒÆ’Ã‚Â±' es importante en espaÃƒÆ’Ã‚Â±ol" }
     ],
     fr: [
-      { heard: "tu", intended: "tout", tip: "La 'u' francesa es más cerrada" },
+      { heard: "tu", intended: "tout", tip: "La 'u' francesa es mÃƒÆ’Ã‚Â¡s cerrada" },
       { heard: "bon", intended: "bonne", tip: "La 'n' final se pronuncia en femenino" },
       { heard: "rue", intended: "roue", tip: "Diferencia entre 'u' y 'ou'" },
       { heard: "vin", intended: "vain", tip: "Nasales diferentes: 'in' vs 'ain'" }
     ],
     it: [
-      { heard: "casa", intended: "cassa", tip: "La doble 's' se pronuncia más fuerte" },
+      { heard: "casa", intended: "cassa", tip: "La doble 's' se pronuncia mÃƒÆ’Ã‚Â¡s fuerte" },
       { heard: "ano", intended: "anno", tip: "La doble 'n' es importante" },
       { heard: "polo", intended: "pollo", tip: "La doble 'l' se pronuncia diferente" }
     ],
@@ -55,8 +55,8 @@ export class PronunciationAnalyzer {
       { heard: "wine", intended: "wein", tip: "La 'w' alemana suena como 'v'" }
     ],
     pt: [
-      { heard: "casa", intended: "caça", tip: "La 'ç' tiene sonido de 's'" },
-      { heard: "ano", intended: "ânho", tip: "El sonido nasal es importante" },
+      { heard: "casa", intended: "caÃƒÆ’Ã‚Â§a", tip: "La 'ÃƒÆ’Ã‚Â§' tiene sonido de 's'" },
+      { heard: "ano", intended: "ÃƒÆ’Ã‚Â¢nho", tip: "El sonido nasal es importante" },
       { heard: "nossa", intended: "nossa", tip: "La doble 's' es sorda" }
     ]
   };
@@ -168,11 +168,11 @@ Respond with JSON:
   private generatePronunciationFeedback(issue: PronunciationIssue, language: string): string {
     const templates = {
       en: `I heard "${issue.originalWord}", but I think you meant "${issue.intendedWord}". ${issue.suggestion} Would you like to try saying it again?`,
-      es: `Escuché "${issue.originalWord}", pero creo que querías decir "${issue.intendedWord}". ${issue.suggestion} ¿Quieres intentar decirlo otra vez?`,
-      fr: `J'ai entendu "${issue.originalWord}", mais je pense que vous vouliez dire "${issue.intendedWord}". ${issue.suggestion} Voulez-vous essayer de le dire à nouveau?`,
+      es: `EscuchÃƒÆ’Ã‚Â© "${issue.originalWord}", pero creo que querÃƒÆ’Ã‚Â­as decir "${issue.intendedWord}". ${issue.suggestion} Ãƒâ€šÃ‚Â¿Quieres intentar decirlo otra vez?`,
+      fr: `J'ai entendu "${issue.originalWord}", mais je pense que vous vouliez dire "${issue.intendedWord}". ${issue.suggestion} Voulez-vous essayer de le dire ÃƒÆ’Ã‚Â  nouveau?`,
       it: `Ho sentito "${issue.originalWord}", ma penso che volevi dire "${issue.intendedWord}". ${issue.suggestion} Vuoi provare a dirlo di nuovo?`,
-      de: `Ich hörte "${issue.originalWord}", aber ich denke, Sie meinten "${issue.intendedWord}". ${issue.suggestion} Möchten Sie es noch einmal versuchen?`,
-      pt: `Ouvi "${issue.originalWord}", mas acho que você queria dizer "${issue.intendedWord}". ${issue.suggestion} Quer tentar dizer novamente?`
+      de: `Ich hÃƒÆ’Ã‚Â¶rte "${issue.originalWord}", aber ich denke, Sie meinten "${issue.intendedWord}". ${issue.suggestion} MÃƒÆ’Ã‚Â¶chten Sie es noch einmal versuchen?`,
+      pt: `Ouvi "${issue.originalWord}", mas acho que vocÃƒÆ’Ã‚Âª queria dizer "${issue.intendedWord}". ${issue.suggestion} Quer tentar dizer novamente?`
     };
 
     return templates[language] || templates.en;

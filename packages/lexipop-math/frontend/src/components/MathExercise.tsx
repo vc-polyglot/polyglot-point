@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './MathExercise.css';
 import { Capacitor } from '@capacitor/core';
 

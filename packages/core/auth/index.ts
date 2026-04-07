@@ -1,4 +1,4 @@
-﻿import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 export interface IAuthService {
   validateToken(token: string): Promise<any>;

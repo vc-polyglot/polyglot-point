@@ -4,7 +4,7 @@ import { db } from "./db";
 import { users } from "../shared/schema";
 import { eq } from "drizzle-orm";
 
-// Solo usa variables _X (las que están en Railway)
+// Solo usa variables _X (las que estÃ¡n en Railway)
 const __cid = ((process.env.GOOGLE_CLIENT_ID_X || process.env.GOOGLE_CLIENT_ID || '')).trim();
 const __csec = ((process.env.GOOGLE_CLIENT_SECRET_X || process.env.GOOGLE_CLIENT_SECRET || '')).trim();
 const __cb = (
@@ -45,7 +45,7 @@ if (!__cid || !__csec) {
             .where(eq(users.googleId, profile.id))
             .then((r) => r[0]);
           if (!user) {
-            // Buscar por email (por si ya existe con otro método)
+            // Buscar por email (por si ya existe con otro mÃ©todo)
             user = await db
               .select()
               .from(users)

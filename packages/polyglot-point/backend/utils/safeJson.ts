@@ -1,4 +1,4 @@
-﻿export const safeJsonParse = <T>(
+export const safeJsonParse = <T>(
   jsonString: string | null | undefined,
   defaultValue: T,
   context?: string
@@ -6,7 +6,7 @@
   try {
     if (!jsonString || !jsonString.trim()) {
       if (context) {
-        console.warn(`⚠️ Empty JSON string in ${context}`);
+        console.warn(`Ã¢Å¡Â Ã¯Â¸Â Empty JSON string in ${context}`);
       }
       return defaultValue;
     }
@@ -16,7 +16,7 @@
     if (process.env.NODE_ENV === "development" && context) {
       const preview =
         jsonString.length > 200 ? `${jsonString.substring(0, 200)}...` : jsonString;
-      console.log(`✅ JSON parsed successfully in ${context}:`, preview);
+      console.log(`Ã¢Å“â€¦ JSON parsed successfully in ${context}:`, preview);
     }
 
     return result as T;
@@ -25,7 +25,7 @@
     const preview = str.length > 200 ? `${str.substring(0, 200)}...` : str;
 
     console.error(
-      `❌ JSON parse error${context ? ` in ${context}` : ""}:`,
+      `Ã¢ÂÅ’ JSON parse error${context ? ` in ${context}` : ""}:`,
       error,
       "String length:",
       str.length,

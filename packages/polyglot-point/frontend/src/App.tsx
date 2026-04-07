@@ -7,21 +7,21 @@ import { translations, Language } from "./i18n";
 import "./styles/index.css";
 
 const IDIOMAS: { codigo: Language; nombre: string; }[] = [
-  { codigo: "es", nombre: "Español" },
+  { codigo: "es", nombre: "EspaÃƒÆ’Ã‚Â±ol" },
   { codigo: "en", nombre: "English" },
-  { codigo: "fr", nombre: "Français" },
+  { codigo: "fr", nombre: "FranÃƒÆ’Ã‚Â§ais" },
   { codigo: "it", nombre: "Italiano" },
   { codigo: "de", nombre: "Deutsch" },
-  { codigo: "pt", nombre: "Português" },
+  { codigo: "pt", nombre: "PortuguÃƒÆ’Ã‚Âªs" },
 ];
 
 const PLACEHOLDER_BY_LANG: Record<Language, string> = {
-  es: "Tu conversación empieza aquí",
+  es: "Tu conversaciÃƒÆ’Ã‚Â³n empieza aquÃƒÆ’Ã‚Â­",
   en: "Your conversation starts here",
   fr: "Ta conversation commence ici",
   it: "La tua conversazione inizia qui",
-  de: "Dein Gespräch beginnt hier",
-  pt: "A tua conversa começa aqui",
+  de: "Dein GesprÃƒÆ’Ã‚Â¤ch beginnt hier",
+  pt: "A tua conversa comeÃƒÆ’Ã‚Â§a aqui",
 };
 
 type Message = {
@@ -49,7 +49,7 @@ const getBrowserLanguage = (): Language => {
   return "en";
 };
 
-// FUNCIÓN QUE SÍ FUNCIONA - parsea markdown simple
+// FUNCIÃƒÆ’Ã¢â‚¬Å“N QUE SÃƒÆ’Ã‚Â FUNCIONA - parsea markdown simple
 const parseMarkdown = (text: string): React.ReactNode => {
   if (!text || typeof text !== 'string') return text;
   
@@ -76,7 +76,7 @@ const parseMarkdown = (text: string): React.ReactNode => {
       }
     }
     
-    // Encontrar *itálica* (solo si no es **)
+    // Encontrar *itÃƒÆ’Ã‚Â¡lica* (solo si no es **)
     if (text.startsWith('*', i) && text[i + 1] !== '*') {
       // Guardar texto plano acumulado
       if (currentPlain) {
@@ -84,7 +84,7 @@ const parseMarkdown = (text: string): React.ReactNode => {
         currentPlain = '';
       }
       
-      // Buscar cierre de itálica
+      // Buscar cierre de itÃƒÆ’Ã‚Â¡lica
       const endItalic = text.indexOf('*', i + 1);
       if (endItalic !== -1) {
         const italicText = text.substring(i + 1, endItalic);
@@ -94,12 +94,12 @@ const parseMarkdown = (text: string): React.ReactNode => {
       }
     }
     
-    // Carácter normal
+    // CarÃƒÆ’Ã‚Â¡cter normal
     currentPlain += text[i];
     i++;
   }
   
-  // Añadir cualquier texto plano restante
+  // AÃƒÆ’Ã‚Â±adir cualquier texto plano restante
   if (currentPlain) {
     result.push(currentPlain);
   }
@@ -142,10 +142,10 @@ const App: React.FC = () => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const responseScrollRef = useRef<HTMLDivElement | null>(null);
 
-  // 🎯 FUNCIÓN MEJORADA DE SCROLL SUAVE
+  // ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¯ FUNCIÃƒÆ’Ã¢â‚¬Å“N MEJORADA DE SCROLL SUAVE
   const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
     if (responseScrollRef.current) {
-      // Usar scrollTo en lugar de scrollIntoView para más control
+      // Usar scrollTo en lugar de scrollIntoView para mÃƒÆ’Ã‚Â¡s control
       responseScrollRef.current.scrollTo({
         top: responseScrollRef.current.scrollHeight,
         behavior: behavior
@@ -192,9 +192,9 @@ const App: React.FC = () => {
     setPhraseFade(true);
   }, [practiceLanguage]);
 
-  // 🎯 SCROLL AUTOMÁTICO MEJORADO - Se ejecuta cada vez que cambian los mensajes
+  // ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¯ SCROLL AUTOMÃƒÆ’Ã‚ÂTICO MEJORADO - Se ejecuta cada vez que cambian los mensajes
   useEffect(() => {
-    // Pequeño delay para asegurar que el DOM se haya actualizado
+    // PequeÃƒÆ’Ã‚Â±o delay para asegurar que el DOM se haya actualizado
     const timeoutId = setTimeout(() => {
       scrollToBottom('smooth');
     }, 100);
@@ -246,14 +246,14 @@ const App: React.FC = () => {
       // Agregar mensaje del usuario
       setMessages((prev) => [...prev, { id: msgId, userText: clean, response: null }]);
       
-      // 🎯 Scroll inmediato después de agregar el mensaje del usuario
+      // ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¯ Scroll inmediato despuÃƒÆ’Ã‚Â©s de agregar el mensaje del usuario
       setTimeout(() => scrollToBottom('smooth'), 150);
       
       try {
         const res = await fetchChat(clean, practiceLanguage);
         setMessages((prev) => prev.map((m) => (m.id === msgId ? { ...m, response: res } : m)));
         
-        // 🎯 Scroll suave después de recibir la respuesta
+        // ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¯ Scroll suave despuÃƒÆ’Ã‚Â©s de recibir la respuesta
         setTimeout(() => scrollToBottom('smooth'), 200);
         
         if (typeof res.remainingMessages === "number") {
@@ -317,7 +317,7 @@ const App: React.FC = () => {
         <div className="login-artistic-content">
           <div className="login-glass-panel" style={{ margin: '0 auto' }}>
             <h1 className="login-glass-heading">Polyglot Point</h1>
-            <p className="login-glass-text">Conviértete en un políglota</p>
+            <p className="login-glass-text">ConviÃƒÆ’Ã‚Â©rtete en un polÃƒÆ’Ã‚Â­glota</p>
           </div>
         </div>
       </div>
@@ -339,8 +339,8 @@ const App: React.FC = () => {
           </div>
           <div className="login-artistic-right">
             <div className="login-glass-panel">
-              <h1 className="login-glass-heading">Inicia sesión</h1>
-              <p className="login-glass-text">Conviértete en un políglota</p>
+              <h1 className="login-glass-heading">Inicia sesiÃƒÆ’Ã‚Â³n</h1>
+              <p className="login-glass-text">ConviÃƒÆ’Ã‚Â©rtete en un polÃƒÆ’Ã‚Â­glota</p>
               <button className="btn-oauth btn-google" onClick={handleLogin}>
                 <svg className="oauth-icon" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -387,7 +387,7 @@ const App: React.FC = () => {
               >
                 <span className="lang-code">{activeIdioma.codigo.toUpperCase()}</span>
                 <span className="lang-name">{activeIdioma.nombre}</span>
-                <span className={`dropdown-arrow ${langDropdownOpen ? "open" : ""}`} aria-hidden="true">▼</span>
+                <span className={`dropdown-arrow ${langDropdownOpen ? "open" : ""}`} aria-hidden="true">ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â¼</span>
               </button>
               {langDropdownOpen && (
                 <div className="lang-dropdown-menu" role="listbox" aria-label="Available languages">
@@ -428,7 +428,7 @@ const App: React.FC = () => {
             <div className="response-card">
               {error ? (
                 <div className="error-state">
-                  <div className="error-icon">⚠️</div>
+                  <div className="error-icon">ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â</div>
                   <h3>{uiT.error?.title || "Error"}</h3>
                   <p>{uiT.error?.message || "Something went wrong"}</p>
                   <button className="btn-retry" onClick={handleRetry}>

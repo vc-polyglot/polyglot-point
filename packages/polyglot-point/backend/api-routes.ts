@@ -42,10 +42,10 @@ router.get('/me', (req, res) => {
 // Logout
 router.post('/logout', (req, res) => {
   req.logout((err) => {
-    if (err) return res.status(500).json({ error: "Error al cerrar sesión" });
+    if (err) return res.status(500).json({ error: "Error al cerrar sesiÃƒÆ’Ã‚Â³n" });
     req.session.destroy((err2) => {
-      if (err2) return res.status(500).json({ error: "Error destruyendo sesión" });
-      res.json({ message: "Sesión cerrada" });
+      if (err2) return res.status(500).json({ error: "Error destruyendo sesiÃƒÆ’Ã‚Â³n" });
+      res.json({ message: "SesiÃƒÆ’Ã‚Â³n cerrada" });
     });
   });
 });

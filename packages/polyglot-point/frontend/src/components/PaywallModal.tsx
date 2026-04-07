@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { useAuth } from '../auth/AuthContext';
 import { paywallTranslations, getBrowserLanguage } from '../i18n/paywall';
@@ -19,7 +19,7 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
   const [selectedPlan, setSelectedPlan] = useState<PlanKey>('premium_monthly');
   const [isLoading, setIsLoading] = useState(false);
 
-  // ── Android: verificar compra en backend ─────────────────────────────────
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Android: verificar compra en backend Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
   const verifyAndroidPurchase = async (purchaseToken: string) => {
     try {
       const res = await fetch('/billing/verify-purchase', {
@@ -39,7 +39,7 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
     }
   };
 
-  // ── Android: flujo Google Play ────────────────────────────────────────────
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Android: flujo Google Play Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
   const handleAndroidPurchase = () => {
     const CdvPurchase = (window as any).CdvPurchase;
     if (!CdvPurchase) {
@@ -82,7 +82,7 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
     });
   };
 
-  // ── Web: flujo Stripe ────────────────────────────────────────────────────
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Web: flujo Stripe Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
   const handleWebCheckout = async () => {
     try {
       const response = await fetch('/billing/create-checkout-session', {
@@ -105,7 +105,7 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
     }
   };
 
-  // ── Punto de entrada del botón ───────────────────────────────────────────
+  // Ã¢â€â‚¬Ã¢â€â‚¬ Punto de entrada del botÃƒÂ³n Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
   const handleSubscribe = async () => {
     setIsLoading(true);
 
@@ -118,7 +118,7 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
   };
 
   const handleLogout = async () => {
-    if (confirm('¿Seguro que quieres cerrar sesión?')) {
+    if (confirm('Ã‚Â¿Seguro que quieres cerrar sesiÃƒÂ³n?')) {
       if (auth?.logout) {
         await auth.logout();
       } else {
@@ -164,7 +164,7 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
             </svg>
-            <span>Práctica sin límites</span>
+            <span>PrÃƒÂ¡ctica sin lÃƒÂ­mites</span>
           </div>
           <div className="benefit-item">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -185,7 +185,7 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
             className={`plan-card ${selectedPlan === 'premium_monthly' ? 'selected' : ''} popular`}
             onClick={() => setSelectedPlan('premium_monthly')}
           >
-            <span className="popular-badge">Más popular</span>
+            <span className="popular-badge">MÃƒÂ¡s popular</span>
             <div className="plan-header">
               <h3>{getPlanName('premium_monthly')}</h3>
               <p>{getPlanDescription('premium_monthly')}</p>
@@ -196,9 +196,9 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
               <span className="period">/mes</span>
             </div>
             <ul className="plan-features">
-              <li><span className="checkmark">✓</span><span className="highlight">50 mensajes diarios</span></li>
-              <li><span className="checkmark">✓</span><span>6 idiomas completos</span></li>
-              <li><span className="checkmark">✓</span><span>Correcciones detalladas</span></li>
+              <li><span className="checkmark">Ã¢Å“â€œ</span><span className="highlight">50 mensajes diarios</span></li>
+              <li><span className="checkmark">Ã¢Å“â€œ</span><span>6 idiomas completos</span></li>
+              <li><span className="checkmark">Ã¢Å“â€œ</span><span>Correcciones detalladas</span></li>
             </ul>
           </div>
 
@@ -213,13 +213,13 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
             <div className="plan-price">
               <span className="currency">$</span>
               <span className="amount">149.99</span>
-              <span className="period">/año</span>
-              <span className="savings">(≈ $12.50/mes)</span>
+              <span className="period">/aÃƒÂ±o</span>
+              <span className="savings">(Ã¢â€°Ë† $12.50/mes)</span>
             </div>
             <ul className="plan-features">
-              <li><span className="checkmark">✓</span><span>Todo lo de Premium</span></li>
-              <li><span className="checkmark">✓</span><span className="highlight">2 meses gratis</span></li>
-              <li><span className="checkmark">✓</span><span>Ahorras $30 al año</span></li>
+              <li><span className="checkmark">Ã¢Å“â€œ</span><span>Todo lo de Premium</span></li>
+              <li><span className="checkmark">Ã¢Å“â€œ</span><span className="highlight">2 meses gratis</span></li>
+              <li><span className="checkmark">Ã¢Å“â€œ</span><span>Ahorras $30 al aÃƒÂ±o</span></li>
             </ul>
           </div>
 
@@ -237,9 +237,9 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
               <span className="period">/mes</span>
             </div>
             <ul className="plan-features">
-              <li><span className="checkmark">✓</span><span className="highlight">150 mensajes diarios</span></li>
-              <li><span className="checkmark">✓</span><span>Modelos IA avanzados</span></li>
-              <li><span className="checkmark">✓</span><span>Soporte prioritario</span></li>
+              <li><span className="checkmark">Ã¢Å“â€œ</span><span className="highlight">150 mensajes diarios</span></li>
+              <li><span className="checkmark">Ã¢Å“â€œ</span><span>Modelos IA avanzados</span></li>
+              <li><span className="checkmark">Ã¢Å“â€œ</span><span>Soporte prioritario</span></li>
             </ul>
           </div>
         </div>

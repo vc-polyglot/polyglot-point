@@ -1,4 +1,4 @@
-﻿export type DomainId = 'ARITHMETIC' | 'ALGEBRA' | 'FUNCTIONS';
+export type DomainId = 'ARITHMETIC' | 'ALGEBRA' | 'FUNCTIONS';
 export type ReflexId = 'ARITH_MULT';
 
 export type DifficultySettings = {
@@ -75,7 +75,7 @@ export function generateMultiplicationExercise(diff: DifficultySettings): Exerci
     exerciseId: makeId(),
     domain: 'ARITHMETIC',
     reflexId: 'ARITH_MULT',
-    prompt: a + ' × ' + b + ' = ?',
+    prompt: a + ' Ã— ' + b + ' = ?',
     operands: [a, b],
     correctAnswer,
     subpatternId,

@@ -39,7 +39,7 @@ export class LanguageManager {
               (global as any).preferredLanguage = globalLang;
               if (globalLang !== this.currentLanguage) {
                 this.currentLanguage = globalLang;
-                console.log(`📁 LOADED LANGUAGE FROM FILE: ${globalLang}`);
+                console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â LOADED LANGUAGE FROM FILE: ${globalLang}`);
               }
             }
           });
@@ -51,9 +51,9 @@ export class LanguageManager {
     
     if (globalLang) {
       this.currentLanguage = globalLang;
-      console.log(`🏗️ LANGUAGE MANAGER CREATED - Loaded: ${this.currentLanguage}`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã‚ÂÃ¢â‚¬â€ÃƒÂ¯Ã‚Â¸Ã‚Â LANGUAGE MANAGER CREATED - Loaded: ${this.currentLanguage}`);
     } else {
-      console.log(`🏗️ LANGUAGE MANAGER CREATED - Default: ${this.currentLanguage}`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã‚ÂÃ¢â‚¬â€ÃƒÂ¯Ã‚Â¸Ã‚Â LANGUAGE MANAGER CREATED - Default: ${this.currentLanguage}`);
     }
   }
 
@@ -65,26 +65,26 @@ export class LanguageManager {
       const { storage } = await import('../storage.js');
       const settings = await storage.getSessionSettings(sessionId);
       
-      console.log(`🔍 SESSION SETTINGS CHECK for ${sessionId}:`, settings);
+      console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â SESSION SETTINGS CHECK for ${sessionId}:`, settings);
       
       if (settings && settings.language && settings.language !== this.currentLanguage) {
-        console.log(`🔄 INITIALIZING LANGUAGE MANAGER FROM SESSION: ${this.currentLanguage} → ${settings.language}`);
+        console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ¢â‚¬Å¾ INITIALIZING LANGUAGE MANAGER FROM SESSION: ${this.currentLanguage} ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ ${settings.language}`);
         this.currentLanguage = settings.language;
-        console.log(`✅ LANGUAGE MANAGER SYNCHRONIZED TO SESSION: ${this.currentLanguage}`);
+        console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ LANGUAGE MANAGER SYNCHRONIZED TO SESSION: ${this.currentLanguage}`);
       } else {
         // Try to load from localStorage or global preference
-        console.log(`🔍 CHECKING GLOBAL LANGUAGE PREFERENCES...`);
+        console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â CHECKING GLOBAL LANGUAGE PREFERENCES...`);
         const globalLang = (global as any).preferredLanguage;
         if (globalLang && globalLang !== this.currentLanguage) {
-          console.log(`🔄 LOADING FROM GLOBAL PREFERENCE: ${this.currentLanguage} → ${globalLang}`);
+          console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ¢â‚¬Å¾ LOADING FROM GLOBAL PREFERENCE: ${this.currentLanguage} ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ ${globalLang}`);
           this.currentLanguage = globalLang;
-          console.log(`✅ LANGUAGE MANAGER SET FROM GLOBAL: ${this.currentLanguage}`);
+          console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ LANGUAGE MANAGER SET FROM GLOBAL: ${this.currentLanguage}`);
         } else {
-          console.log(`⚠️ No saved language preference found, using default: ${this.currentLanguage}`);
+          console.log(`ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â No saved language preference found, using default: ${this.currentLanguage}`);
         }
       }
     } catch (error) {
-      console.log(`⚠️ Could not initialize language from session, using default: ${this.currentLanguage}`);
+      console.log(`ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â Could not initialize language from session, using default: ${this.currentLanguage}`);
     }
   }
 
@@ -98,7 +98,7 @@ export class LanguageManager {
     const modulesSynced: string[] = [];
     const errors: string[] = [];
 
-    console.log(`🔄 LANGUAGE CHANGE INITIATED: ${oldLanguage} → ${newLanguage} for session ${sessionId}`);
+    console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ¢â‚¬Å¾ LANGUAGE CHANGE INITIATED: ${oldLanguage} ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ ${newLanguage} for session ${sessionId}`);
     
     // Block new operations during language change
     this.isChangingLanguage = true;
@@ -106,36 +106,36 @@ export class LanguageManager {
 
     try {
       // 1. Clear session context to prevent language contamination
-      console.log(`🧹 CLEARING SESSION CONTEXT...`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã‚Â§Ã‚Â¹ CLEARING SESSION CONTEXT...`);
       await this.clearSessionContext(sessionId);
       modulesSynced.push('session_context');
 
       // 2. Reset STT module
-      console.log(`🎤 RESETTING STT MODULE...`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¤ RESETTING STT MODULE...`);
       await this.resetSTTModule(newLanguage);
       modulesSynced.push('stt');
 
       // 3. Reset TTS module  
-      console.log(`🔊 RESETTING TTS MODULE...`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ…Â  RESETTING TTS MODULE...`);
       await this.resetTTSModule(newLanguage);
       modulesSynced.push('tts');
 
       // 4. Update Clara's language context
-      console.log(`🤖 UPDATING CLARA LANGUAGE CONTEXT...`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã‚Â¤Ã¢â‚¬â€œ UPDATING CLARA LANGUAGE CONTEXT...`);
       await this.updateClaraLanguage(newLanguage);
       modulesSynced.push('clara');
 
       // 5. Reset conversation history
-      console.log(`💬 RESETTING CONVERSATION HISTORY...`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬â„¢Ã‚Â¬ RESETTING CONVERSATION HISTORY...`);
       await this.resetConversationHistory(sessionId);
       modulesSynced.push('conversation');
 
       // 6. Update current language - CRITICAL STATE CHANGE
-      console.log(`🔧 UPDATING INTERNAL LANGUAGE STATE: ${this.currentLanguage} → ${newLanguage}`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â§ UPDATING INTERNAL LANGUAGE STATE: ${this.currentLanguage} ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ ${newLanguage}`);
       this.currentLanguage = newLanguage;
       
       // 7. Save language globally for persistence across reconnections  
-      console.log(`🌐 SAVING LANGUAGE GLOBALLY...`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â SAVING LANGUAGE GLOBALLY...`);
       (global as any).preferredLanguage = newLanguage;
       
       // Also save to file for server restart persistence
@@ -144,22 +144,22 @@ export class LanguageManager {
         const path = require('path');
         const langFile = path.join(process.cwd(), '.language-preference');
         fs.writeFileSync(langFile, newLanguage);
-        console.log(`📁 LANGUAGE SAVED TO FILE: ${newLanguage}`);
+        console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â LANGUAGE SAVED TO FILE: ${newLanguage}`);
       } catch (error) {
-        console.log(`⚠️ Could not save language to file: ${error}`);
+        console.log(`ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â Could not save language to file: ${error}`);
       }
       
-      console.log(`✅ GLOBAL LANGUAGE PREFERENCE SET: ${newLanguage}`);
+      console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ GLOBAL LANGUAGE PREFERENCE SET: ${newLanguage}`);
       
       // 8. CRITICAL: Save language to session storage to prevent contamination
-      console.log(`💾 SAVING LANGUAGE TO SESSION STORAGE...`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬â„¢Ã‚Â¾ SAVING LANGUAGE TO SESSION STORAGE...`);
       await this.saveLanguageToSession(sessionId, newLanguage);
       modulesSynced.push('session_storage');
       
-      console.log(`🔧 LANGUAGE STATE UPDATED: ${this.currentLanguage}`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â§ LANGUAGE STATE UPDATED: ${this.currentLanguage}`);
       
-      console.log(`✅ LANGUAGE CHANGE COMPLETED: ${oldLanguage} → ${newLanguage}`);
-      console.log(`🔧 MODULES SYNCED: ${modulesSynced.join(', ')}`);
+      console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ LANGUAGE CHANGE COMPLETED: ${oldLanguage} ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ ${newLanguage}`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â§ MODULES SYNCED: ${modulesSynced.join(', ')}`);
 
       return {
         success: true,
@@ -173,7 +173,7 @@ export class LanguageManager {
     } catch (error: any) {
       const errorMsg = `Language change failed: ${error.message}`;
       errors.push(errorMsg);
-      console.error(`❌ LANGUAGE CHANGE FAILED: ${errorMsg}`);
+      console.error(`ÃƒÂ¢Ã‚ÂÃ…â€™ LANGUAGE CHANGE FAILED: ${errorMsg}`);
       
       return {
         success: false,
@@ -200,7 +200,7 @@ export class LanguageManager {
    * Get current active language
    */
   getCurrentLanguage(): string {
-    console.log(`🔍 LANGUAGE MANAGER QUERY: Current language = ${this.currentLanguage}`);
+    console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â LANGUAGE MANAGER QUERY: Current language = ${this.currentLanguage}`);
     return this.currentLanguage;
   }
 
@@ -283,9 +283,9 @@ export class LanguageManager {
       }
       
       await storage.saveSessionSettings(sessionId, settings);
-      console.log(`💾 LANGUAGE SAVED TO SESSION: ${language}`);
+      console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬â„¢Ã‚Â¾ LANGUAGE SAVED TO SESSION: ${language}`);
     } catch (error) {
-      console.error(`❌ Failed to save language to session: ${error}`);
+      console.error(`ÃƒÂ¢Ã‚ÂÃ…â€™ Failed to save language to session: ${error}`);
       throw error;
     }
   }

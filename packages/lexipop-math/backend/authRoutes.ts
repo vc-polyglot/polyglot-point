@@ -5,13 +5,13 @@ const router = Router();
 
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
 
-// ── Initiate Google OAuth flow ────────────────────────────────────────────────
+// â”€â”€ Initiate Google OAuth flow â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 router.get(
   "/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
-// ── Google OAuth callback ─────────────────────────────────────────────────────
+// â”€â”€ Google OAuth callback â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: `${CLIENT_URL}/login?error=oauth` }),
@@ -20,7 +20,7 @@ router.get(
   }
 );
 
-// ── Logout (GET — for redirect from OAuth provider) ──────────────────────────
+// â”€â”€ Logout (GET â€” for redirect from OAuth provider) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 router.get("/logout", (req: Request, res: Response) => {
   req.logout(() => {
     res.redirect(`${CLIENT_URL}/`);

@@ -49,7 +49,7 @@ const SESSION_SECRET =
 
 if (isProduction && !process.env.SESSION_SECRET) {
   console.error(
-    "[WARN] SESSION_SECRET faltante en producción; usando secreto efímero. Configura SESSION_SECRET en Railway."
+    "[WARN] SESSION_SECRET faltante en producciÃ³n; usando secreto efÃ­mero. Configura SESSION_SECRET en Railway."
   );
 }
 
@@ -203,7 +203,7 @@ const sessionOptions: session.SessionOptions = {
 
 async function initRedisSessionStore(): Promise<void> {
   if (!process.env.REDIS_URL) {
-    if (isProduction) console.warn("REDIS_URL no configurado en producción (MemoryStore no recomendado)");
+    if (isProduction) console.warn("REDIS_URL no configurado en producciÃ³n (MemoryStore no recomendado)");
     return;
   }
 
@@ -317,14 +317,14 @@ function timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 
 function targetLanguageName(code: string): string {
   const LANG: Record<string, string> = {
-    es: "español",
-    en: "inglés",
-    fr: "francés",
+    es: "espaÃ±ol",
+    en: "inglÃ©s",
+    fr: "francÃ©s",
     it: "italiano",
-    de: "alemán",
-    pt: "portugués",
+    de: "alemÃ¡n",
+    pt: "portuguÃ©s",
   };
-  return LANG[code] || "español";
+  return LANG[code] || "espaÃ±ol";
 }function readLangFromBody(req: Record<string, unknown>): string {
   const cand =
     (typeof (req as any).language === "string" && (req as any).language) ||
@@ -580,7 +580,7 @@ async function chatHandler(req: Request, res: Response) {
     if (isProduction) {
       console.error(JSON.stringify({ type: "contract_violation", requestId, sessionKey, language, time: responseTime, issues: parsedOut.error.issues }));
     } else {
-      console.error("[CONTRACT] ChatResponse inv�lido", parsedOut.error.issues);
+      console.error("[CONTRACT] ChatResponse invï¿½lido", parsedOut.error.issues);
     }
     return res.status(500).json({
       claraResponse: "",
@@ -667,16 +667,16 @@ async function chatHandler(req: Request, res: Response) {
   res.status(401).json({ error: "No autenticado" });
 });app.post("/api/logout", (req: Request, res: Response) => {
     req.logout((err) => {
-      if (err) return res.status(500).json({ error: "Error al cerrar sesión" });
+      if (err) return res.status(500).json({ error: "Error al cerrar sesiÃ³n" });
       req.session.destroy((err2) => {
-        if (err2) return res.status(500).json({ error: "Error destruyendo sesión" });
+        if (err2) return res.status(500).json({ error: "Error destruyendo sesiÃ³n" });
         res.clearCookie("connect.sid", {
           path: "/",
           secure: isProduction,
           sameSite: isProduction ? "none" : "lax",
           httpOnly: true,
         });
-        res.json({ message: "Sesión cerrada" });
+        res.json({ message: "SesiÃ³n cerrada" });
       });
     });
   });

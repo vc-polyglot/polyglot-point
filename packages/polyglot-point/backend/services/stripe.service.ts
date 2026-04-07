@@ -1,4 +1,4 @@
-﻿import Stripe from "stripe";
+import Stripe from "stripe";
 
 function getStripe(): Stripe {
   const key = process.env.STRIPE_SECRET_KEY;

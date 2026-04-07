@@ -10,15 +10,15 @@ export interface LTError {
 // Cache en memoria para evitar llamadas repetidas
 const errorCache = new Map<string, LTError[]>();
 
-// Configuración
+// ConfiguraciÃƒÆ’Ã‚Â³n
 const LT_API_URL = process.env.LANGUAGETOOL_API_URL || 'https://api.languagetool.org/v2/check';
 const LT_API_KEY = process.env.LANGUAGETOOL_API_KEY; // opcional, solo si tienes premium
 
 /**
  * Valida texto con LanguageTool API
  * @param text - Texto a validar
- * @param lang - Código de idioma (es, en, fr, it, de, pt)
- * @returns Array de errores encontrados (vacío si no hay errores o si falla)
+ * @param lang - CÃƒÆ’Ã‚Â³digo de idioma (es, en, fr, it, de, pt)
+ * @returns Array de errores encontrados (vacÃƒÆ’Ã‚Â­o si no hay errores o si falla)
  */
 export async function validateText(text: string, lang: string): Promise<LTError[]> {
   // Normalizar texto para cache (lowercase, trim)
@@ -26,12 +26,12 @@ export async function validateText(text: string, lang: string): Promise<LTError[
   
   // 1. Revisar cache primero
   if (errorCache.has(cacheKey)) {
-    console.log('✅ LanguageTool cache hit:', cacheKey);
+    console.log('ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ LanguageTool cache hit:', cacheKey);
     return errorCache.get(cacheKey)!;
   }
 
   try {
-    console.log('🔍 LanguageTool validating:', text);
+    console.log('ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â LanguageTool validating:', text);
     
     // 2. Llamar a LanguageTool API
     const response = await fetch(LT_API_URL, {
@@ -48,13 +48,13 @@ export async function validateText(text: string, lang: string): Promise<LTError[
 
     // 3. Manejar rate limit (429)
     if (response.status === 429) {
-      console.warn('⚠️ LanguageTool rate limit reached - continuing without corrections');
+      console.warn('ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â LanguageTool rate limit reached - continuing without corrections');
       return [];
     }
 
     // 4. Manejar otros errores HTTP
     if (!response.ok) {
-      console.error('❌ LanguageTool API error:', response.status, response.statusText);
+      console.error('ÃƒÂ¢Ã‚ÂÃ…â€™ LanguageTool API error:', response.status, response.statusText);
       return [];
     }
 
@@ -69,30 +69,30 @@ export async function validateText(text: string, lang: string): Promise<LTError[
       explanation: match.shortMessage || match.message.substring(0, 50)
     }));
 
-    // 7. Cachear resultado (incluso si está vacío)
+    // 7. Cachear resultado (incluso si estÃƒÆ’Ã‚Â¡ vacÃƒÆ’Ã‚Â­o)
     errorCache.set(cacheKey, errors);
     
-    console.log(`✅ LanguageTool found ${errors.length} errors`);
+    console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ LanguageTool found ${errors.length} errors`);
     return errors;
 
   } catch (error) {
-    console.error('❌ LanguageTool exception:', error);
-    // En caso de error de red u otro, devolver array vacío
-    // Clara seguirá funcionando, solo sin correcciones
+    console.error('ÃƒÂ¢Ã‚ÂÃ…â€™ LanguageTool exception:', error);
+    // En caso de error de red u otro, devolver array vacÃƒÆ’Ã‚Â­o
+    // Clara seguirÃƒÆ’Ã‚Â¡ funcionando, solo sin correcciones
     return [];
   }
 }
 
 /**
- * Limpiar cache (útil para testing o liberar memoria)
+ * Limpiar cache (ÃƒÆ’Ã‚Âºtil para testing o liberar memoria)
  */
 export function clearCache(): void {
   errorCache.clear();
-  console.log('🗑️ LanguageTool cache cleared');
+  console.log('ÃƒÂ°Ã…Â¸Ã¢â‚¬â€Ã¢â‚¬ËœÃƒÂ¯Ã‚Â¸Ã‚Â LanguageTool cache cleared');
 }
 
 /**
- * Obtener estadísticas del cache (útil para monitoreo)
+ * Obtener estadÃƒÆ’Ã‚Â­sticas del cache (ÃƒÆ’Ã‚Âºtil para monitoreo)
  */
 export function getCacheStats() {
   return {
