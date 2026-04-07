@@ -85,7 +85,7 @@ importers:
   packages/lexipop-decision:
     dependencies:
       '@platform/core':
-        specifier: workspace:*
+        specifier: file:../core
         version: link:../core
       connect-redis:
         specifier: ^7.1.1
