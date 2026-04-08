@@ -1,1 +1,1 @@
-{"name":"polyglot-point","version":"1.0.0","main":"packages/polyglot-point/dist/server.cjs","scripts":{"start":"node packages/polyglot-point/dist/server.cjs"}}
+﻿{"name":"polyglot-point","version":"1.0.0","main":"packages/polyglot-point/dist/server.cjs","scripts":{"start":"node packages/polyglot-point/dist/server.cjs"}}
