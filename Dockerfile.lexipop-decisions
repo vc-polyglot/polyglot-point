@@ -1,0 +1,32 @@
+# ── Build stage ───────────────────────────────────────────────────────────────
+FROM node:20-alpine AS builder
+WORKDIR /app
+
+# 1. Deps del backend
+COPY packages/lexipop-decisions/package.json ./
+RUN npm install --legacy-peer-deps
+
+# 2. Deps del frontend
+COPY packages/lexipop-decisions/frontend/package.json ./frontend/
+RUN cd frontend && npm install --legacy-peer-deps
+
+# 3. Todo el código fuente
+COPY packages/lexipop-decisions/ .
+
+# 4. Build
+RUN npm run build:frontend && npm run build:backend
+
+# ── Runner stage ──────────────────────────────────────────────────────────────
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY packages/lexipop-decisions/package.json ./
+RUN npm install --omit=dev --legacy-peer-deps
+
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/frontend/dist ./frontend/dist
+
+EXPOSE 3002
+CMD ["node", "dist/index.cjs"]
