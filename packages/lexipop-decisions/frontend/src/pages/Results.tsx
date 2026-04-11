@@ -1,3 +1,4 @@
+import React from "react";
 import type { DecisionResult, DecisionInput } from "../types";
 import LoaderAnalysis from "../components/LoaderAnalysis";
 
