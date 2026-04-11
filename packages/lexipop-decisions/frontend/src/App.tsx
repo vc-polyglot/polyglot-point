@@ -33,10 +33,10 @@ function Pedagogy({ onBack }: { onBack: () => void }) {
       </h1>
       {[
         { title: "Probabilidad subjetiva", body: "Cuando estimas que algo tiene 70% de chance de funcionar, ese numero viene de tu cabeza, no de datos. La clave es calibrar esa estimacion: cuantas veces en 10 situaciones similares has acertado?" },
-        { title: "Valor esperado", body: "EV = P(exito) x Valor(exito) + P(fallo) x Valor(fallo). Una decision con EV positivo no siempre es buena — depende de tu capacidad de absorber la perdida." },
-        { title: "Costo de oportunidad", body: "Elegir A no solo cuesta lo que pierdes si falla — tambien cuesta lo que hubieras ganado con B." },
+        { title: "Valor esperado", body: "EV = P(exito) x Valor(exito) + P(fallo) x Valor(fallo). Una decision con EV positivo no siempre es buena Ã¢â‚¬â€ depende de tu capacidad de absorber la perdida." },
+        { title: "Costo de oportunidad", body: "Elegir A no solo cuesta lo que pierdes si falla Ã¢â‚¬â€ tambien cuesta lo que hubieras ganado con B." },
         { title: "Reversibilidad", body: "Jeff Bezos divide las decisiones en puertas de una via (irreversibles) y puertas de dos vias (reversibles). Para puertas de una via: maxima deliberacion." },
-        { title: "Por que el peor escenario importa", body: "El peor escenario no es el mas probable — pero es el que destruye. Preguntate: puedo sobrevivir el peor caso?" },
+        { title: "Por que el peor escenario importa", body: "El peor escenario no es el mas probable Ã¢â‚¬â€ pero es el que destruye. Preguntate: puedo sobrevivir el peor caso?" },
         { title: "Como evitar decisiones impulsivas", body: "El cerebro bajo estres optimiza para velocidad, no para calidad. Escribir los inputs del analisis introduce friccion cognitiva que reduce sesgos." },
       ].map(({ title, body }) => (
         <div key={title} style={{ marginBottom: "2rem", paddingBottom: "2rem", borderBottom: `1px solid ${T.surfaceLow}` }}>
@@ -117,7 +117,7 @@ function Nav({ screen, setScreen, lang, setLang }: {
           background: T.primary, color: "white",
           width: "1.875rem", height: "1.875rem", borderRadius: "0.625rem",
           display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "0.875rem",
-        }}>⬡</span>
+        }}>Ã¢Â¬Â¡</span>
         LexiPop Decision
       </button>
 
@@ -161,12 +161,12 @@ function Nav({ screen, setScreen, lang, setLang }: {
                   color: l === lang ? T.primary : T.onMuted,
                   fontFamily: T.font, textAlign: "left",
                 }}>
-                  {l === "ES" && "🇲🇽 Espanol"}
-                  {l === "EN" && "🇺🇸 English"}
-                  {l === "FR" && "🇫🇷 Francais"}
-                  {l === "IT" && "🇮🇹 Italiano"}
-                  {l === "PT" && "🇧🇷 Portugues"}
-                  {l === "DE" && "🇩🇪 Deutsch"}
+                  {l === "ES" && "Ã°Å¸â€¡Â²Ã°Å¸â€¡Â½ Espanol"}
+                  {l === "EN" && "Ã°Å¸â€¡ÂºÃ°Å¸â€¡Â¸ English"}
+                  {l === "FR" && "Ã°Å¸â€¡Â«Ã°Å¸â€¡Â· Francais"}
+                  {l === "IT" && "Ã°Å¸â€¡Â®Ã°Å¸â€¡Â¹ Italiano"}
+                  {l === "PT" && "Ã°Å¸â€¡Â§Ã°Å¸â€¡Â· Portugues"}
+                  {l === "DE" && "Ã°Å¸â€¡Â©Ã°Å¸â€¡Âª Deutsch"}
                 </button>
               ))}
             </div>
