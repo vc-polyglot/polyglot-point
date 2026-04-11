@@ -32,12 +32,12 @@ function Pedagogy({ onBack }: { onBack: () => void }) {
         Como funciona decidir
       </h1>
       {[
-        { title: "Probabilidad subjetiva", body: "Cuando estimas que algo tiene 70% de chance de funcionar, ese numero viene de tu cabeza, no de datos. La clave es calibrar esa estimacion: cuantas veces en 10 situaciones similares has acertado?" },
-        { title: "Valor esperado", body: "EV = P(exito) x Valor(exito) + P(fallo) x Valor(fallo). Una decision con EV positivo no siempre es buena Ã¢â‚¬â€ depende de tu capacidad de absorber la perdida." },
-        { title: "Costo de oportunidad", body: "Elegir A no solo cuesta lo que pierdes si falla Ã¢â‚¬â€ tambien cuesta lo que hubieras ganado con B." },
-        { title: "Reversibilidad", body: "Jeff Bezos divide las decisiones en puertas de una via (irreversibles) y puertas de dos vias (reversibles). Para puertas de una via: maxima deliberacion." },
-        { title: "Por que el peor escenario importa", body: "El peor escenario no es el mas probable Ã¢â‚¬â€ pero es el que destruye. Preguntate: puedo sobrevivir el peor caso?" },
-        { title: "Como evitar decisiones impulsivas", body: "El cerebro bajo estres optimiza para velocidad, no para calidad. Escribir los inputs del analisis introduce friccion cognitiva que reduce sesgos." },
+        { title: "Probabilidad subjetiva", body: "Cuando estimas que algo tiene 70% de chance de funcionar, ese numero viene de tu cabeza, no de datos. La clave es calibrar esa estimacion." },
+        { title: "Valor esperado", body: "EV = P(exito) x Valor(exito) + P(fallo) x Valor(fallo). Una decision con EV positivo no siempre es buena." },
+        { title: "Costo de oportunidad", body: "Elegir A no solo cuesta lo que pierdes si falla, tambien cuesta lo que hubieras ganado con B." },
+        { title: "Reversibilidad", body: "Jeff Bezos divide las decisiones en puertas de una via (irreversibles) y puertas de dos vias (reversibles)." },
+        { title: "Por que el peor escenario importa", body: "El peor escenario no es el mas probable, pero es el que destruye. Preguntate: puedo sobrevivir el peor caso?" },
+        { title: "Como evitar decisiones impulsivas", body: "El cerebro bajo estres optimiza para velocidad, no para calidad. Escribir los inputs introduce friccion cognitiva que reduce sesgos." },
       ].map(({ title, body }) => (
         <div key={title} style={{ marginBottom: "2rem", paddingBottom: "2rem", borderBottom: `1px solid ${T.surfaceLow}` }}>
           <h3 style={{ fontSize: "1.125rem", fontWeight: 700, color: T.onSurface, marginBottom: "0.75rem" }}>{title}</h3>
@@ -113,12 +113,7 @@ function Nav({ screen, setScreen, lang, setLang }: {
         fontSize: "1rem", fontWeight: 700, color: T.onSurface,
         display: "flex", alignItems: "center", gap: "0.5rem", padding: 0, fontFamily: T.font,
       }}>
-        <span style={{
-          background: T.primary, color: "white",
-          width: "1.875rem", height: "1.875rem", borderRadius: "0.625rem",
-          display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "0.875rem",
-        }}>Ã¢Â¬Â¡</span>
-        LexiPop Decision
+        <img src="/logo.png" alt="LexiPop Decision" style={{ height: "2rem", width: "auto" }} />
       </button>
 
       <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
@@ -159,14 +154,14 @@ function Nav({ screen, setScreen, lang, setLang }: {
                   border: "none", cursor: "pointer",
                   fontSize: "0.875rem", fontWeight: l === lang ? 700 : 400,
                   color: l === lang ? T.primary : T.onMuted,
-                  fontFamily: T.font, textAlign: "left",
+                  fontFamily: T.font, textAlign: "left" as const,
                 }}>
-                  {l === "ES" && "Ã°Å¸â€¡Â²Ã°Å¸â€¡Â½ Espanol"}
-                  {l === "EN" && "Ã°Å¸â€¡ÂºÃ°Å¸â€¡Â¸ English"}
-                  {l === "FR" && "Ã°Å¸â€¡Â«Ã°Å¸â€¡Â· Francais"}
-                  {l === "IT" && "Ã°Å¸â€¡Â®Ã°Å¸â€¡Â¹ Italiano"}
-                  {l === "PT" && "Ã°Å¸â€¡Â§Ã°Å¸â€¡Â· Portugues"}
-                  {l === "DE" && "Ã°Å¸â€¡Â©Ã°Å¸â€¡Âª Deutsch"}
+                  {l === "ES" && "ES Espanol"}
+                  {l === "EN" && "EN English"}
+                  {l === "FR" && "FR Francais"}
+                  {l === "IT" && "IT Italiano"}
+                  {l === "PT" && "PT Portugues"}
+                  {l === "DE" && "DE Deutsch"}
                 </button>
               ))}
             </div>
@@ -185,25 +180,17 @@ export default function App() {
   const [error,     setError]     = useState<string | null>(null);
   const [lang,      setLang]      = useState<Lang>("ES");
 
-  // Sincronizar pantalla con historial del navegador
   function navigateTo(s: Screen) {
     window.history.pushState({ screen: s }, "", "");
     setScreen(s);
   }
 
   useEffect(() => {
-    // Estado inicial para que haya algo que interceptar en home
     window.history.replaceState({ screen: "home" }, "", "");
-
     function handlePopState(e: PopStateEvent) {
       const s = e.state?.screen as Screen | undefined;
-      if (s) {
-        setScreen(s);
-      } else {
-        setScreen("home");
-      }
+      setScreen(s ?? "home");
     }
-
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
