@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { DecisionInput, DecisionResult } from "./types";
 import { evaluateDecision } from "./services/api";
 import Home         from "./pages/Home";
@@ -27,17 +27,17 @@ function Pedagogy({ onBack }: { onBack: () => void }) {
         background: "none", border: "none", cursor: "pointer",
         color: T.outline, fontSize: "0.9375rem", marginBottom: "2rem",
         fontFamily: T.font, display: "flex", alignItems: "center", gap: "0.4rem",
-      }}>← Inicio</button>
+      }}>&larr; Inicio</button>
       <h1 style={{ fontSize: "clamp(1.75rem, 5vw, 2.5rem)", fontWeight: 800, color: T.onSurface, marginBottom: "2.5rem", letterSpacing: "-0.02em" }}>
-        Cómo funciona decidir
+        Como funciona decidir
       </h1>
       {[
-        { title: "Probabilidad subjetiva", body: "Cuando estimas que algo tiene 70% de chance de funcionar, ese número viene de tu cabeza, no de datos. La clave es calibrar esa estimación: ¿cuántas veces en 10 situaciones similares has acertado?" },
-        { title: "Valor esperado", body: "EV = P(éxito) × Valor(éxito) + P(fallo) × Valor(fallo). Una decisión con EV positivo no siempre es buena — depende de tu capacidad de absorber la pérdida." },
-        { title: "Costo de oportunidad", body: "Elegir A no solo cuesta lo que pierdes si falla — también cuesta lo que hubieras ganado con B." },
-        { title: "Reversibilidad", body: "Jeff Bezos divide las decisiones en puertas de una vía (irreversibles) y puertas de dos vías (reversibles). Para puertas de una vía: máxima deliberación." },
-        { title: "Por qué el peor escenario importa", body: "El peor escenario no es el más probable — pero es el que destruye. Pregúntate: ¿puedo sobrevivir el peor caso?" },
-        { title: "Cómo evitar decisiones impulsivas", body: "El cerebro bajo estrés optimiza para velocidad, no para calidad. Escribir los inputs del análisis introduce fricción cognitiva que reduce sesgos." },
+        { title: "Probabilidad subjetiva", body: "Cuando estimas que algo tiene 70% de chance de funcionar, ese numero viene de tu cabeza, no de datos. La clave es calibrar esa estimacion: cuantas veces en 10 situaciones similares has acertado?" },
+        { title: "Valor esperado", body: "EV = P(exito) x Valor(exito) + P(fallo) x Valor(fallo). Una decision con EV positivo no siempre es buena — depende de tu capacidad de absorber la perdida." },
+        { title: "Costo de oportunidad", body: "Elegir A no solo cuesta lo que pierdes si falla — tambien cuesta lo que hubieras ganado con B." },
+        { title: "Reversibilidad", body: "Jeff Bezos divide las decisiones en puertas de una via (irreversibles) y puertas de dos vias (reversibles). Para puertas de una via: maxima deliberacion." },
+        { title: "Por que el peor escenario importa", body: "El peor escenario no es el mas probable — pero es el que destruye. Preguntate: puedo sobrevivir el peor caso?" },
+        { title: "Como evitar decisiones impulsivas", body: "El cerebro bajo estres optimiza para velocidad, no para calidad. Escribir los inputs del analisis introduce friccion cognitiva que reduce sesgos." },
       ].map(({ title, body }) => (
         <div key={title} style={{ marginBottom: "2rem", paddingBottom: "2rem", borderBottom: `1px solid ${T.surfaceLow}` }}>
           <h3 style={{ fontSize: "1.125rem", fontWeight: 700, color: T.onSurface, marginBottom: "0.75rem" }}>{title}</h3>
@@ -50,15 +50,15 @@ function Pedagogy({ onBack }: { onBack: () => void }) {
 
 function Resources({ onBack }: { onBack: () => void }) {
   const books = [
-    { title: "Thinking, Fast and Slow", author: "Daniel Kahneman", desc: "El libro fundamental sobre cómo tomamos decisiones y por qué fallamos." },
+    { title: "Thinking, Fast and Slow", author: "Daniel Kahneman", desc: "El libro fundamental sobre como tomamos decisiones y por que fallamos." },
     { title: "The Art of Thinking Clearly", author: "Rolf Dobelli", desc: "99 sesgos cognitivos explicados con claridad." },
-    { title: "Superforecasting", author: "Philip Tetlock", desc: "Cómo mejorar la calibración de tus estimaciones de probabilidad." },
-    { title: "Decisive", author: "Chip & Dan Heath", desc: "Framework práctico para tomar mejores decisiones." },
+    { title: "Superforecasting", author: "Philip Tetlock", desc: "Como mejorar la calibracion de tus estimaciones de probabilidad." },
+    { title: "Decisive", author: "Chip & Dan Heath", desc: "Framework practico para tomar mejores decisiones." },
   ];
   const concepts = [
-    "Sesgo de confirmación", "Efecto de anclaje", "Sesgo de disponibilidad",
-    "Falacia del costo hundido", "Aversión a la pérdida", "Exceso de confianza",
-    "Heurística de representatividad", "Sesgo de optimismo",
+    "Sesgo de confirmacion", "Efecto de anclaje", "Sesgo de disponibilidad",
+    "Falacia del costo hundido", "Aversion a la perdida", "Exceso de confianza",
+    "Heuristica de representatividad", "Sesgo de optimismo",
   ];
   return (
     <div style={{ maxWidth: 680, margin: "0 auto", padding: "6rem 1.5rem 4rem" }}>
@@ -66,7 +66,7 @@ function Resources({ onBack }: { onBack: () => void }) {
         background: "none", border: "none", cursor: "pointer",
         color: T.outline, fontSize: "0.9375rem", marginBottom: "2rem",
         fontFamily: T.font, display: "flex", alignItems: "center", gap: "0.4rem",
-      }}>← Inicio</button>
+      }}>&larr; Inicio</button>
       <h1 style={{ fontSize: "clamp(1.75rem, 5vw, 2.5rem)", fontWeight: 800, color: T.onSurface, marginBottom: "2.5rem", letterSpacing: "-0.02em" }}>
         Recursos
       </h1>
@@ -122,7 +122,7 @@ function Nav({ screen, setScreen, lang, setLang }: {
       </button>
 
       <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
-        {([["Cómo funciona", "learn"], ["Recursos", "resources"]] as [string, Screen][]).map(([label, s]) => (
+        {([["Como funciona", "learn"], ["Recursos", "resources"]] as [string, Screen][]).map(([label, s]) => (
           <button key={s} onClick={() => setScreen(s)} style={{
             background: screen === s ? "#e0f0e8" : "transparent",
             border: "none", cursor: "pointer", padding: "0.4rem 0.875rem", borderRadius: "9999px",
@@ -143,7 +143,7 @@ function Nav({ screen, setScreen, lang, setLang }: {
             display: "flex", alignItems: "center", gap: "0.25rem",
           }}>
             {lang}
-            <span style={{ fontSize: "0.5625rem", color: T.outline, transform: langOpen ? "rotate(180deg)" : "none", transition: "transform 200ms" }}>▾</span>
+            <span style={{ fontSize: "0.5625rem", color: T.outline, transform: langOpen ? "rotate(180deg)" : "none", transition: "transform 200ms" }}>v</span>
           </button>
           {langOpen && (
             <div style={{
@@ -161,11 +161,11 @@ function Nav({ screen, setScreen, lang, setLang }: {
                   color: l === lang ? T.primary : T.onMuted,
                   fontFamily: T.font, textAlign: "left",
                 }}>
-                  {l === "ES" && "🇲🇽 Español"}
+                  {l === "ES" && "🇲🇽 Espanol"}
                   {l === "EN" && "🇺🇸 English"}
-                  {l === "FR" && "🇫🇷 Français"}
+                  {l === "FR" && "🇫🇷 Francais"}
                   {l === "IT" && "🇮🇹 Italiano"}
-                  {l === "PT" && "🇧🇷 Português"}
+                  {l === "PT" && "🇧🇷 Portugues"}
                   {l === "DE" && "🇩🇪 Deutsch"}
                 </button>
               ))}
@@ -185,11 +185,34 @@ export default function App() {
   const [error,     setError]     = useState<string | null>(null);
   const [lang,      setLang]      = useState<Lang>("ES");
 
+  // Sincronizar pantalla con historial del navegador
+  function navigateTo(s: Screen) {
+    window.history.pushState({ screen: s }, "", "");
+    setScreen(s);
+  }
+
+  useEffect(() => {
+    // Estado inicial para que haya algo que interceptar en home
+    window.history.replaceState({ screen: "home" }, "", "");
+
+    function handlePopState(e: PopStateEvent) {
+      const s = e.state?.screen as Screen | undefined;
+      if (s) {
+        setScreen(s);
+      } else {
+        setScreen("home");
+      }
+    }
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
   async function handleSubmit(input: DecisionInput) {
     setLastInput(input);
     setLoading(true);
     setError(null);
-    setScreen("results");
+    navigateTo("results");
     try {
       const data = await evaluateDecision(input);
       setResult(data);
@@ -204,20 +227,20 @@ export default function App() {
     setResult(null);
     setLastInput(null);
     setError(null);
-    setScreen("home");
+    navigateTo("home");
   }
 
   return (
     <>
       {screen !== "home" && (
-        <Nav screen={screen} setScreen={setScreen} lang={lang} setLang={setLang} />
+        <Nav screen={screen} setScreen={navigateTo} lang={lang} setLang={setLang} />
       )}
       <main>
-        {screen === "home"      && <Home onStart={() => setScreen("form")} onLearn={() => setScreen("learn")} />}
-        {screen === "form"      && <DecisionForm onSubmit={handleSubmit} onBack={() => setScreen("home")} loading={loading} />}
+        {screen === "home"      && <Home onStart={() => navigateTo("form")} onLearn={() => navigateTo("learn")} />}
+        {screen === "form"      && <DecisionForm onSubmit={handleSubmit} onBack={() => navigateTo("home")} loading={loading} />}
         {screen === "results"   && <Results result={result} loading={loading} error={error} onNew={handleNew} input={lastInput ?? undefined} />}
-        {screen === "learn"     && <Pedagogy onBack={() => setScreen("home")} />}
-        {screen === "resources" && <Resources onBack={() => setScreen("home")} />}
+        {screen === "learn"     && <Pedagogy onBack={() => navigateTo("home")} />}
+        {screen === "resources" && <Resources onBack={() => navigateTo("home")} />}
       </main>
     </>
   );

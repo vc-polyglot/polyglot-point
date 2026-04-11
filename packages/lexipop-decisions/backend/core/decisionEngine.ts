@@ -9,34 +9,26 @@ import {
 } from "./calculations";
 import type { DecisionInput, DecisionMetrics } from "./types";
 
-/**
- * Motor principal.
- * Recibe el input del usuario y devuelve métricas determinísticas.
- * Sin efectos secundarios. Sin llamadas a red. Sin IA.
- */
 export function runDecisionEngine(input: DecisionInput): DecisionMetrics {
-  const ev    = calcExpectedValue(input.probability, input.valueSuccess, input.valueFailure);
-  const evNet = calcExpectedValueNet(ev, input.opportunityCost);
+  // Defaults para campos opcionales (sliders no tocados)
+  const probability        = input.probability        ?? 50;
+  const worstSeverity      = input.worstSeverity      ?? 5;
+  const reversibilityScore = input.reversibilityScore ?? 5;
+  const revertCost         = input.revertCost         ?? 0;
+  const valueSuccess       = input.valueSuccess       ?? 0;
+  const valueFailure       = input.valueFailure       ?? 0;
+  const opportunityCost    = input.opportunityCost    ?? 0;
 
-  const riskIndex            = calcRiskIndex(input.probability, input.worstSeverity);
-  const irreversibilityIndex = calcIrreversibilityIndex(
-    input.reversibilityScore,
-    input.revertCost,
-    input.valueSuccess
-  );
-  const sensitivityThreshold = calcSensitivityThreshold(
-    input.probability,
-    input.valueSuccess,
-    input.valueFailure
-  );
-  const baseScenario = calcBaseScenario(input.probability);
-  const warnings     = calcWarnings(
-    input.probability,
-    input.reversibilityScore,
-    input.worstSeverity,
-    input.altB,
-    input.opportunityCost,
-    ev
+  const ev    = calcExpectedValue(probability, valueSuccess, valueFailure);
+  const evNet = calcExpectedValueNet(ev, opportunityCost);
+
+  const riskIndex            = calcRiskIndex(probability, worstSeverity);
+  const irreversibilityIndex = calcIrreversibilityIndex(reversibilityScore, revertCost, valueSuccess);
+  const sensitivityThreshold = calcSensitivityThreshold(probability, valueSuccess, valueFailure);
+  const baseScenario         = calcBaseScenario(probability);
+  const warnings             = calcWarnings(
+    probability, reversibilityScore, worstSeverity,
+    input.altB, opportunityCost, ev
   );
 
   return {
@@ -46,7 +38,7 @@ export function runDecisionEngine(input: DecisionInput): DecisionMetrics {
     irreversibilityIndex,
     sensitivityThreshold,
     baseScenario,
-    pessimisticValue:     input.valueFailure,
+    pessimisticValue:     valueFailure,
     warnings,
   };
 }
