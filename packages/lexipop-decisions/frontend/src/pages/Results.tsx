@@ -7,7 +7,7 @@ interface Props {
   loading: boolean;
   error:   string | null;
   onNew:   () => void;
-  input?:  DecisionInput;   // ← para mostrar resumen de lo que respondió
+  input?:  DecisionInput;
 }
 
 const T = {
@@ -41,7 +41,18 @@ function riskPalette(index: number) {
   return              { color: "#1a7a4a", bg: "#d0f0e0", label: "Bajo" };
 }
 
-// ── MetricCard ─────────────────────────────────────────────
+function riskHuman(index: number) {
+  if (index >= 70) return "Estas apostando mas de lo que percibes";
+  if (index >= 40) return "Riesgo manejable, pero real";
+  return "Riesgo bajo — confia en tu analisis";
+}
+
+function irrHuman(index: number) {
+  if (index >= 70) return "Dificil dar marcha atras";
+  if (index >= 40) return "Podrias revertirlo, pero con costo";
+  return "Puedes corregir el rumbo facilmente";
+}
+
 function MetricCard({ label, value, sub, color, bg }: {
   label: string; value: string; sub?: string; color: string; bg: string;
 }) {
@@ -59,7 +70,6 @@ function MetricCard({ label, value, sub, color, bg }: {
   );
 }
 
-// ── Zone ───────────────────────────────────────────────────
 function Zone({ accent, label, icon, children }: {
   accent: string; label: string; icon: string; children: React.ReactNode;
 }) {
@@ -82,7 +92,6 @@ function Zone({ accent, label, icon, children }: {
   );
 }
 
-// ── MiniBlock ──────────────────────────────────────────────
 function MiniBlock({ label, value }: { label: string; value: string }) {
   return (
     <div style={{ background: T.surfaceLow, borderRadius: 10, padding: "0.875rem 1rem", flex: 1, minWidth: 110 }}>
@@ -106,7 +115,6 @@ function BiasTag({ children }: { children: string }) {
   );
 }
 
-// ── Resumen de inputs ──────────────────────────────────────
 function InputSummary({ input }: { input: DecisionInput }) {
   const [open, setOpen] = React.useState(false);
 
@@ -116,7 +124,7 @@ function InputSummary({ input }: { input: DecisionInput }) {
     { label: "Probabilidad estimada", value: input.probability !== undefined ? `${input.probability}%` : undefined },
     { label: "Peor escenario",        value: input.worstScenario || undefined },
     { label: "Reversibilidad",        value: input.reversibilityScore !== undefined ? `${input.reversibilityScore}/10` : undefined },
-    { label: "Qué sacrificas",        value: input.opportunityDesc || undefined },
+    { label: "Que sacrificas",        value: input.opportunityDesc || undefined },
   ].filter(i => i.value);
 
   return (
@@ -136,7 +144,7 @@ function InputSummary({ input }: { input: DecisionInput }) {
         <span style={{
           color: T.outline, fontSize: "0.8rem",
           transform: open ? "rotate(180deg)" : "none", transition: "transform 200ms",
-        }}>▾</span>
+        }}>v</span>
       </button>
 
       {open && (
@@ -163,7 +171,6 @@ function InputSummary({ input }: { input: DecisionInput }) {
   );
 }
 
-// ── Componente principal ───────────────────────────────────
 export default function Results({ result, loading, error, onNew, input }: Props) {
 
   if (loading) return (
@@ -193,7 +200,7 @@ export default function Results({ result, loading, error, onNew, input }: Props)
   const { metrics, analysis } = result;
   const risk = riskPalette(metrics.riskIndex);
   const irr  = riskPalette(metrics.irreversibilityIndex);
-  const hasMonetary = metrics.expectedValue !== undefined;
+  const hasMonetary = metrics.expectedValue !== undefined && metrics.expectedValue !== null;
 
   const scenarioLabel = {
     favorable: "Favorable",
@@ -204,99 +211,35 @@ export default function Results({ result, loading, error, onNew, input }: Props)
   return (
     <div style={{ maxWidth: 640, margin: "0 auto", padding: "5.5rem 1.5rem 7rem", fontFamily: T.fontBody }}>
 
-      {/* Back */}
       <button onClick={onNew} style={{
         background: "none", border: "none", cursor: "pointer",
         color: T.outline, fontSize: "0.8125rem", marginBottom: "2rem",
         display: "flex", alignItems: "center", gap: "0.4rem",
         fontFamily: T.fontBody, padding: 0,
       }}>
-        ← Nueva decisión
+        &larr; Nueva decision
       </button>
 
-      {/* Título */}
       <h2 style={{
         fontFamily: T.fontHead, fontStyle: "italic",
         fontSize: "clamp(1.75rem, 6vw, 2.25rem)",
         fontWeight: 600, color: T.primary, marginBottom: "0.5rem",
       }}>
-        Resultados del análisis
+        Resultados del analisis
       </h2>
       <p style={{ color: T.onMuted, fontSize: "1rem", marginBottom: "1.5rem", lineHeight: 1.6 }}>
-        No te decimos qué hacer. Te mostramos cómo estás pensando.
+        No te decimos que hacer. Te mostramos como estas pensando.
       </p>
 
-      {/* Resumen de inputs */}
       {input && <InputSummary input={input} />}
 
-      {/* ── ZONA 1: Resultado estructural ── */}
-      <Zone accent={T.primary} label="Resultado estructural" icon="◈">
-
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem", marginBottom: "1rem" }}>
-          <MetricCard
-            label="Índice de riesgo"
-            value={`${metrics.riskIndex}/100`}
-            sub={risk.label}
-            color={risk.color} bg={risk.bg}
-          />
-          <MetricCard
-            label="Irreversibilidad"
-            value={`${metrics.irreversibilityIndex}/100`}
-            sub={irr.label}
-            color={irr.color} bg={irr.bg}
-          />
-          {hasMonetary && (
-            <MetricCard
-              label="Valor esperado"
-              value={fmt(metrics.expectedValue!)}
-              color="#1a7a4a" bg="#d0f0e0"
-            />
-          )}
-          {hasMonetary && metrics.expectedValueNet !== undefined && (
-            <MetricCard
-              label="Valor esperado neto"
-              value={fmt(metrics.expectedValueNet)}
-              color={T.primaryMid} bg="#d0f0e0"
-            />
-          )}
-        </div>
-
-        <div style={{ display: "flex", gap: "0.625rem", flexWrap: "wrap" as const, marginBottom: "1rem" }}>
-          <MiniBlock label="Escenario base" value={scenarioLabel} />
-          {hasMonetary && metrics.sensitivityThreshold !== undefined && (
-            <MiniBlock label="Sensibilidad" value={`±${metrics.sensitivityThreshold}% prob.`} />
-          )}
-          {hasMonetary && metrics.pessimisticValue !== undefined && (
-            <MiniBlock label="Peor escenario" value={fmt(metrics.pessimisticValue)} />
-          )}
-        </div>
-
-        {metrics.warnings.length > 0 && (
-          <div style={{ background: "#fef3c7", borderRadius: 12, padding: "1rem 1.125rem" }}>
-            <div style={{
-              fontSize: "0.625rem", fontWeight: 700, color: "#92400e",
-              letterSpacing: "0.1em", textTransform: "uppercase" as const, marginBottom: "0.625rem",
-            }}>
-              Advertencias automáticas
-            </div>
-            {metrics.warnings.map((w, i) => (
-              <div key={i} style={{
-                fontSize: "0.875rem", color: "#78350f",
-                marginBottom: "0.4rem", paddingLeft: "0.875rem",
-                borderLeft: "3px solid #fcd34d", lineHeight: 1.55,
-              }}>{w}</div>
-            ))}
-          </div>
-        )}
-      </Zone>
-
-      {/* ── ZONA 2: Interpretación pedagógica ── */}
-      <Zone accent="#1a7a4a" label="Interpretación pedagógica" icon="◇">
+      {/* ZONA 1: Interpretacion pedagogica — primero el espejo */}
+      <Zone accent="#1a7a4a" label="Como estas pensando" icon="◇">
         <div style={{ marginBottom: "1.25rem" }}>
           <div style={{
             fontSize: "0.625rem", fontWeight: 700, color: T.outline,
             letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "0.625rem",
-          }}>Análisis de riesgo</div>
+          }}>Analisis de riesgo</div>
           <p style={{ fontSize: "0.9375rem", lineHeight: 1.75, color: T.onSurface, margin: 0 }}>
             {analysis.riskAssessment}
           </p>
@@ -307,7 +250,7 @@ export default function Results({ result, loading, error, onNew, input }: Props)
             <div style={{
               fontSize: "0.625rem", fontWeight: 700, color: T.outline,
               letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "0.625rem",
-            }}>Cómo estás razonando</div>
+            }}>Tu forma de razonar</div>
             <p style={{ fontSize: "0.9375rem", lineHeight: 1.75, color: T.onSurface, margin: 0 }}>
               {analysis.structuralCommentary}
             </p>
@@ -340,8 +283,8 @@ export default function Results({ result, loading, error, onNew, input }: Props)
         )}
       </Zone>
 
-      {/* ── ZONA 3: Qué aprendiste ── */}
-      <Zone accent="#1a7a4a" label="Qué aprendiste hoy" icon="◉">
+      {/* ZONA 2: Que aprendiste */}
+      <Zone accent="#1a7a4a" label="Que aprendiste hoy" icon="◉">
         {analysis.lessonsLearned.map((lesson, i) => (
           <div key={i} style={{
             display: "flex", gap: "1rem", marginBottom: "1.125rem", alignItems: "flex-start",
@@ -359,6 +302,77 @@ export default function Results({ result, loading, error, onNew, input }: Props)
         ))}
       </Zone>
 
+      {/* ZONA 3: Numeros — para los que piensan en datos */}
+      <Zone accent={T.primary} label="Los numeros detras" icon="◈">
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem", marginBottom: "1rem" }}>
+          <MetricCard
+            label="Indice de riesgo"
+            value={`${metrics.riskIndex}/100`}
+            sub={riskHuman(metrics.riskIndex)}
+            color={risk.color} bg={risk.bg}
+          />
+          <MetricCard
+            label="Irreversibilidad"
+            value={`${metrics.irreversibilityIndex}/100`}
+            sub={irrHuman(metrics.irreversibilityIndex)}
+            color={irr.color} bg={irr.bg}
+          />
+          {hasMonetary && (
+            <MetricCard
+              label="Valor esperado"
+              value={fmt(metrics.expectedValue)}
+              color="#1a7a4a" bg="#d0f0e0"
+            />
+          )}
+          {hasMonetary && metrics.expectedValueNet !== undefined && metrics.expectedValueNet !== null && (
+            <MetricCard
+              label="Valor esperado neto"
+              value={fmt(metrics.expectedValueNet)}
+              color={T.primaryMid} bg="#d0f0e0"
+            />
+          )}
+        </div>
+
+        {hasMonetary && (
+          <p style={{
+            fontSize: "0.8125rem", color: T.onMuted, lineHeight: 1.65,
+            margin: "0 0 1rem", fontStyle: "italic",
+            borderLeft: `3px solid ${T.primary}`, paddingLeft: "0.875rem",
+          }}>
+            En promedio vale la pena — pero ese promedio asume que podrias tomar esta decision muchas veces. Tu solo la tomas una vez.
+          </p>
+        )}
+
+        <div style={{ display: "flex", gap: "0.625rem", flexWrap: "wrap" as const, marginBottom: "1rem" }}>
+          <MiniBlock label="Escenario base" value={scenarioLabel} />
+          {hasMonetary && metrics.sensitivityThreshold !== undefined && metrics.sensitivityThreshold !== null && (
+            <MiniBlock label="Sensibilidad" value={`+-${metrics.sensitivityThreshold}% prob.`} />
+          )}
+          {hasMonetary && metrics.pessimisticValue !== undefined && metrics.pessimisticValue !== null && (
+            <MiniBlock label="Peor escenario" value={fmt(metrics.pessimisticValue)} />
+          )}
+        </div>
+
+        {metrics.warnings.length > 0 && (
+          <div style={{ background: "#fef3c7", borderRadius: 12, padding: "1rem 1.125rem" }}>
+            <div style={{
+              fontSize: "0.625rem", fontWeight: 700, color: "#92400e",
+              letterSpacing: "0.1em", textTransform: "uppercase" as const, marginBottom: "0.625rem",
+            }}>
+              Advertencias
+            </div>
+            {metrics.warnings.map((w, i) => (
+              <div key={i} style={{
+                fontSize: "0.875rem", color: "#78350f",
+                marginBottom: "0.4rem", paddingLeft: "0.875rem",
+                borderLeft: "3px solid #fcd34d", lineHeight: 1.55,
+              }}>{w}</div>
+            ))}
+          </div>
+        )}
+      </Zone>
+
       <button onClick={onNew} style={{
         width: "100%", marginTop: "0.5rem",
         background: `linear-gradient(160deg, ${T.primary} 0%, ${T.primaryMid} 100%)`,
@@ -368,8 +382,7 @@ export default function Results({ result, loading, error, onNew, input }: Props)
         boxShadow: "0 8px 24px rgba(0,6,102,0.18)",
         display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem",
       }}>
-        <span className="material-symbols-outlined" style={{ fontSize: "1.1rem" }}>add_circle</span>
-        Nueva decisión
+        Nueva decision
       </button>
     </div>
   );
