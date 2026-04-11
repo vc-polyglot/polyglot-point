@@ -204,12 +204,10 @@ function DynamicQuestions({ title, level, onSubmit, loading }: {
     </div>
   );
 
-  const canSubmit =
+ const canSubmit =
     form.altA.trim().length > 5 &&
-    form.altB.trim().length > 5 &&
-    form.probability        !== undefined &&
-    form.reversibilityScore !== undefined;
-
+    form.altB.trim().length > 5;
+    
   const inputStyle = {
     width: "100%", padding: "0.75rem 1rem",
     background: THEME.surfaceLow, border: "none",
