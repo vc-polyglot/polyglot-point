@@ -27,7 +27,8 @@ const T = {
   fontBody:   "'Inter', system-ui, sans-serif",
 };
 
-function fmt(n: number) {
+function fmt(n: number | null | undefined) {
+  if (n === null || n === undefined) return "N/A";
   return n >= 0
     ? `$${n.toLocaleString("es-MX", { maximumFractionDigits: 0 })}`
     : `-$${Math.abs(n).toLocaleString("es-MX", { maximumFractionDigits: 0 })}`;
