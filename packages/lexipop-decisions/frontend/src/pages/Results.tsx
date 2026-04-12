@@ -18,7 +18,6 @@ const T = {
   surfaceCard:"#fffdf7",
   surfaceHigh:"#e8dfc8",
   teal:       "#e85d4a",
-  water:      "#f5c842",
   onSurface:  "#1a1410",
   onMuted:    "#4a3f35",
   outline:    "#7a6e60",
@@ -26,6 +25,37 @@ const T = {
   errorBg:    "#fdecea",
   fontHead:   "'Newsreader', Georgia, serif",
   fontBody:   "'Inter', system-ui, sans-serif",
+};
+
+const EXPLANATIONS: Record<string, { title: string; body: string }> = {
+  "Indice de riesgo": {
+    title: "Indice de riesgo",
+    body: "Combina dos cosas: que tan probable es que falle (70% del peso) y que tan grave seria el peor escenario (30% del peso). Un indice de 43/100 significa riesgo moderado — no es seguro, pero tampoco es una locura. Por encima de 70 empieza a ser territorio de alta exposicion.",
+  },
+  "Irreversibilidad": {
+    title: "Irreversibilidad",
+    body: "Mide que tan dificil seria dar marcha atras si las cosas salen mal. 0 = puedes revertir sin costo. 100 = decision de una sola via, sin regreso. Jeff Bezos llamaba a esto 'puertas de una via' — para esas hay que deliberar mucho mas antes de entrar.",
+  },
+  "Valor esperado": {
+    title: "Valor esperado",
+    body: "Es el resultado promedio si pudieras tomar esta decision infinitas veces. Se calcula como: (probabilidad de exito x ganancia) + (probabilidad de fallo x perdida). El problema: tu no la tomas infinitas veces. La tomas una sola vez. Ese promedio es una guia, no una garantia.",
+  },
+  "Valor esperado neto": {
+    title: "Valor esperado neto",
+    body: "Es el valor esperado despues de restarle lo que dejas de ganar con otras opciones (costo de oportunidad). Si el neto es positivo, la decision tiene sentido matematicamente. Si es negativo, lo que sacrificas vale mas que lo que podrias ganar.",
+  },
+  "Escenario base": {
+    title: "Escenario base",
+    body: "Resume la situacion general segun tu probabilidad estimada. Favorable = mas del 60% de chances de exito. Neutro = entre 40% y 60%. Adverso = menos del 40%. Es un diagnostico rapido, no un veredicto.",
+  },
+  "Sensibilidad": {
+    title: "Umbral de sensibilidad",
+    body: "Cuantos puntos porcentuales puede estar equivocada tu estimacion de probabilidad antes de que el resultado cambie de signo. Si es +-31%, significa que aunque tu probabilidad real sea 29 puntos menor de lo que crees, la decision sigue siendo matematicamente positiva. Mientras mas alto, mas margen de error tienes.",
+  },
+  "Peor escenario": {
+    title: "Valor del peor escenario",
+    body: "El valor monetario si las cosas salen exactamente como describiste en el peor caso. No es el mas probable, pero es el que debes poder absorber. Preguntate: si esto pasa, sobrevivo? Si la respuesta es no, la decision merece mucho mas cuidado sin importar el valor esperado.",
+  },
 };
 
 function fmt(n: number | null | undefined) {
@@ -36,15 +66,15 @@ function fmt(n: number | null | undefined) {
 }
 
 function riskPalette(index: number) {
-  if (index >= 70) return { color: T.error,   bg: T.errorBg, label: "Alto" };
-  if (index >= 40) return { color: "#92400e", bg: "#fef3c7", label: "Moderado" };
-  return              { color: "#1a7a4a", bg: "#d0f0e0", label: "Bajo" };
+  if (index >= 70) return { color: T.error,   bg: T.errorBg };
+  if (index >= 40) return { color: "#92400e", bg: "#fef3c7" };
+  return              { color: "#1a7a4a", bg: "#d0f0e0" };
 }
 
 function riskHuman(index: number) {
   if (index >= 70) return "Estas apostando mas de lo que percibes";
   if (index >= 40) return "Riesgo manejable, pero real";
-  return "Riesgo bajo â€” confia en tu analisis";
+  return "Riesgo bajo, confia en tu analisis";
 }
 
 function irrHuman(index: number) {
@@ -53,20 +83,158 @@ function irrHuman(index: number) {
   return "Puedes corregir el rumbo facilmente";
 }
 
+function Modal({ metricKey, onClose }: { metricKey: string; onClose: () => void }) {
+  const exp = EXPLANATIONS[metricKey];
+  if (!exp) return null;
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed", inset: 0, zIndex: 1000,
+        background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: "1.5rem",
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: T.surfaceCard, borderRadius: 20,
+          padding: "2rem", maxWidth: 480, width: "100%",
+          boxShadow: "0 24px 64px rgba(0,0,0,0.2)",
+          fontFamily: T.fontBody,
+        }}
+      >
+        <div style={{
+          fontSize: "0.625rem", fontWeight: 700, color: T.outline,
+          letterSpacing: "0.15em", textTransform: "uppercase" as const,
+          marginBottom: "0.5rem",
+        }}>Que significa esto</div>
+        <h3 style={{
+          fontFamily: T.fontHead, fontStyle: "italic",
+          fontSize: "1.375rem", color: T.primary,
+          marginBottom: "1rem", fontWeight: 600,
+        }}>{exp.title}</h3>
+        <p style={{
+          fontSize: "0.9375rem", lineHeight: 1.75,
+          color: T.onSurface, margin: 0,
+        }}>{exp.body}</p>
+        <button
+          onClick={onClose}
+          style={{
+            marginTop: "1.5rem", width: "100%",
+            background: T.primary, color: "#fffdf7",
+            border: "none", borderRadius: 12, padding: "0.875rem",
+            fontSize: "0.9375rem", fontWeight: 600,
+            fontFamily: T.fontBody, cursor: "pointer",
+          }}
+        >Entendido</button>
+      </div>
+    </div>
+  );
+}
+
 function MetricCard({ label, value, sub, color, bg }: {
   label: string; value: string; sub?: string; color: string; bg: string;
 }) {
+  const [hovered, setHovered] = React.useState(false);
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const hasExplanation = !!EXPLANATIONS[label];
+
   return (
-    <div style={{ background: bg, borderRadius: 14, padding: "1rem 1.125rem" }}>
-      <div style={{
-        fontSize: "0.625rem", fontWeight: 700, color,
-        letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "0.4rem",
-      }}>{label}</div>
-      <div style={{ fontSize: "1.5rem", fontWeight: 700, color, fontFamily: T.fontHead, lineHeight: 1 }}>
-        {value}
+    <>
+      {modalOpen && <Modal metricKey={label} onClose={() => setModalOpen(false)} />}
+      <div
+        onClick={() => hasExplanation && setModalOpen(true)}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          background: bg, borderRadius: 14, padding: "1rem 1.125rem",
+          cursor: hasExplanation ? "pointer" : "default",
+          transform: hovered && hasExplanation ? "translateY(-3px) scale(1.02)" : "none",
+          boxShadow: hovered && hasExplanation ? `0 8px 24px ${color}33` : "none",
+          transition: "all 200ms ease",
+          position: "relative" as const,
+        }}
+      >
+        <div style={{
+          fontSize: "0.625rem", fontWeight: 700, color,
+          letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "0.4rem",
+          display: "flex", alignItems: "center", gap: "0.4rem",
+        }}>
+          {label}
+          {hasExplanation && (
+            <span style={{
+              fontSize: "0.6rem", opacity: hovered ? 1 : 0.4,
+              transition: "opacity 200ms",
+              background: color, color: bg,
+              borderRadius: "50%", width: "1rem", height: "1rem",
+              display: "inline-flex", alignItems: "center", justifyContent: "center",
+              fontWeight: 700, flexShrink: 0,
+            }}>?</span>
+          )}
+        </div>
+        <div style={{
+          fontSize: "1.5rem", fontWeight: 700, color,
+          fontFamily: T.fontHead, lineHeight: 1,
+          transition: "transform 200ms",
+          transform: hovered ? "scale(1.05)" : "scale(1)",
+          display: "inline-block",
+        }}>
+          {value}
+        </div>
+        {sub && <div style={{ fontSize: "0.75rem", color, opacity: 0.7, marginTop: "0.25rem" }}>{sub}</div>}
       </div>
-      {sub && <div style={{ fontSize: "0.75rem", color, opacity: 0.7, marginTop: "0.25rem" }}>{sub}</div>}
-    </div>
+    </>
+  );
+}
+
+function MiniBlock({ label, value }: { label: string; value: string }) {
+  const [hovered, setHovered] = React.useState(false);
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const hasExplanation = !!EXPLANATIONS[label];
+
+  return (
+    <>
+      {modalOpen && <Modal metricKey={label} onClose={() => setModalOpen(false)} />}
+      <div
+        onClick={() => hasExplanation && setModalOpen(true)}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          background: T.surfaceLow, borderRadius: 10,
+          padding: "0.875rem 1rem", flex: 1, minWidth: 110,
+          cursor: hasExplanation ? "pointer" : "default",
+          transform: hovered && hasExplanation ? "translateY(-2px)" : "none",
+          boxShadow: hovered && hasExplanation ? "0 4px 12px rgba(0,0,0,0.1)" : "none",
+          transition: "all 200ms ease",
+        }}
+      >
+        <div style={{
+          fontSize: "0.5625rem", fontWeight: 700, color: T.outline,
+          letterSpacing: "0.1em", textTransform: "uppercase" as const,
+          marginBottom: "0.35rem", display: "flex", alignItems: "center", gap: "0.3rem",
+        }}>
+          {label}
+          {hasExplanation && (
+            <span style={{
+              fontSize: "0.55rem", opacity: hovered ? 1 : 0.4,
+              transition: "opacity 200ms",
+              background: T.outline, color: T.surfaceLow,
+              borderRadius: "50%", width: "0.875rem", height: "0.875rem",
+              display: "inline-flex", alignItems: "center", justifyContent: "center",
+              fontWeight: 700, flexShrink: 0,
+            }}>?</span>
+          )}
+        </div>
+        <div style={{
+          fontSize: "0.9375rem", fontWeight: 600, color: T.onSurface,
+          transition: "transform 200ms",
+          transform: hovered ? "scale(1.04)" : "scale(1)",
+          display: "inline-block",
+        }}>{value}</div>
+      </div>
+    </>
   );
 }
 
@@ -92,18 +260,6 @@ function Zone({ accent, label, icon, children }: {
   );
 }
 
-function MiniBlock({ label, value }: { label: string; value: string }) {
-  return (
-    <div style={{ background: T.surfaceLow, borderRadius: 10, padding: "0.875rem 1rem", flex: 1, minWidth: 110 }}>
-      <div style={{
-        fontSize: "0.5625rem", fontWeight: 700, color: T.outline,
-        letterSpacing: "0.1em", textTransform: "uppercase" as const, marginBottom: "0.35rem",
-      }}>{label}</div>
-      <div style={{ fontSize: "0.9375rem", fontWeight: 600, color: T.onSurface }}>{value}</div>
-    </div>
-  );
-}
-
 function BiasTag({ children }: { children: string }) {
   return (
     <span style={{
@@ -117,7 +273,6 @@ function BiasTag({ children }: { children: string }) {
 
 function InputSummary({ input }: { input: DecisionInput }) {
   const [open, setOpen] = React.useState(false);
-
   const items = [
     { label: "Si lo haces",           value: input.altA },
     { label: "Si no lo haces",        value: input.altB },
@@ -129,40 +284,24 @@ function InputSummary({ input }: { input: DecisionInput }) {
 
   return (
     <div style={{ marginBottom: "1.5rem" }}>
-      <button
-        onClick={() => setOpen(o => !o)}
-        style={{
-          background: T.surfaceLow, border: "none", borderRadius: 12,
-          padding: "0.875rem 1.25rem", width: "100%",
-          display: "flex", justifyContent: "space-between", alignItems: "center",
-          cursor: "pointer", fontFamily: T.fontBody,
-        }}
-      >
-        <span style={{ fontSize: "0.8125rem", fontWeight: 600, color: T.onMuted }}>
-          Lo que respondiste
-        </span>
-        <span style={{
-          color: T.outline, fontSize: "0.8rem",
-          transform: open ? "rotate(180deg)" : "none", transition: "transform 200ms",
-        }}>v</span>
+      <button onClick={() => setOpen(o => !o)} style={{
+        background: T.surfaceLow, border: "none", borderRadius: 12,
+        padding: "0.875rem 1.25rem", width: "100%",
+        display: "flex", justifyContent: "space-between", alignItems: "center",
+        cursor: "pointer", fontFamily: T.fontBody,
+      }}>
+        <span style={{ fontSize: "0.8125rem", fontWeight: 600, color: T.onMuted }}>Lo que respondiste</span>
+        <span style={{ color: T.outline, fontSize: "0.8rem", transform: open ? "rotate(180deg)" : "none", transition: "transform 200ms" }}>v</span>
       </button>
-
       {open && (
         <div style={{
           background: T.surfaceCard, borderRadius: "0 0 12px 12px",
-          padding: "1rem 1.25rem",
-          display: "flex", flexDirection: "column" as const, gap: "0.875rem",
+          padding: "1rem 1.25rem", display: "flex", flexDirection: "column" as const, gap: "0.875rem",
         }}>
           {items.map(({ label, value }) => (
             <div key={label}>
-              <div style={{
-                fontSize: "0.5625rem", fontWeight: 700, color: T.outline,
-                letterSpacing: "0.12em", textTransform: "uppercase" as const,
-                marginBottom: "0.25rem",
-              }}>{label}</div>
-              <div style={{ fontSize: "0.9375rem", color: T.onSurface, lineHeight: 1.5 }}>
-                {value}
-              </div>
+              <div style={{ fontSize: "0.5625rem", fontWeight: 700, color: T.outline, letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "0.25rem" }}>{label}</div>
+              <div style={{ fontSize: "0.9375rem", color: T.onSurface, lineHeight: 1.5 }}>{value}</div>
             </div>
           ))}
         </div>
@@ -172,7 +311,6 @@ function InputSummary({ input }: { input: DecisionInput }) {
 }
 
 export default function Results({ result, loading, error, onNew, input }: Props) {
-
   if (loading) return (
     <div style={{ maxWidth: 640, margin: "5rem auto", padding: "0 1.5rem" }}>
       <LoaderAnalysis />
@@ -189,9 +327,7 @@ export default function Results({ result, loading, error, onNew, input }: Props)
         background: `linear-gradient(160deg, ${T.primary} 0%, ${T.primaryMid} 100%)`,
         color: "#fffdf7", border: "none", cursor: "pointer",
         fontSize: "1rem", fontWeight: 600, fontFamily: T.fontBody,
-      }}>
-        Intentar de nuevo
-      </button>
+      }}>Intentar de nuevo</button>
     </div>
   );
 
@@ -210,137 +346,81 @@ export default function Results({ result, loading, error, onNew, input }: Props)
 
   return (
     <div style={{ maxWidth: 640, margin: "0 auto", padding: "5.5rem 1.5rem 7rem", fontFamily: T.fontBody }}>
-
       <button onClick={onNew} style={{
         background: "none", border: "none", cursor: "pointer",
         color: T.outline, fontSize: "0.8125rem", marginBottom: "2rem",
         display: "flex", alignItems: "center", gap: "0.4rem",
         fontFamily: T.fontBody, padding: 0,
-      }}>
-        &larr; Nueva decision
-      </button>
+      }}>&larr; Nueva decision</button>
 
       <h2 style={{
         fontFamily: T.fontHead, fontStyle: "italic",
         fontSize: "clamp(1.75rem, 6vw, 2.25rem)",
         fontWeight: 600, color: T.primary, marginBottom: "0.5rem",
-      }}>
-        Resultados del analisis
-      </h2>
+      }}>Resultados del analisis</h2>
       <p style={{ color: T.onMuted, fontSize: "1rem", marginBottom: "1.5rem", lineHeight: 1.6 }}>
         No te decimos que hacer. Te mostramos como estas pensando.
       </p>
 
       {input && <InputSummary input={input} />}
 
-      {/* ZONA 1: Interpretacion pedagogica â€” primero el espejo */}
-      <Zone accent="#1a7a4a" label="Como estas pensando" icon="â—‡">
+      <Zone accent="#1a7a4a" label="Como estas pensando" icon="*">
         <div style={{ marginBottom: "1.25rem" }}>
-          <div style={{
-            fontSize: "0.625rem", fontWeight: 700, color: T.outline,
-            letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "0.625rem",
-          }}>Analisis de riesgo</div>
-          <p style={{ fontSize: "0.9375rem", lineHeight: 1.75, color: T.onSurface, margin: 0 }}>
-            {analysis.riskAssessment}
-          </p>
+          <div style={{ fontSize: "0.625rem", fontWeight: 700, color: T.outline, letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "0.625rem" }}>Analisis de riesgo</div>
+          <p style={{ fontSize: "0.9375rem", lineHeight: 1.75, color: T.onSurface, margin: 0 }}>{analysis.riskAssessment}</p>
         </div>
-
         {analysis.structuralCommentary && (
           <div style={{ marginBottom: "1.25rem" }}>
-            <div style={{
-              fontSize: "0.625rem", fontWeight: 700, color: T.outline,
-              letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "0.625rem",
-            }}>Tu forma de razonar</div>
-            <p style={{ fontSize: "0.9375rem", lineHeight: 1.75, color: T.onSurface, margin: 0 }}>
-              {analysis.structuralCommentary}
-            </p>
+            <div style={{ fontSize: "0.625rem", fontWeight: 700, color: T.outline, letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "0.625rem" }}>Tu forma de razonar</div>
+            <p style={{ fontSize: "0.9375rem", lineHeight: 1.75, color: T.onSurface, margin: 0 }}>{analysis.structuralCommentary}</p>
           </div>
         )}
-
         {analysis.blindSpots.length > 0 && (
           <div style={{ marginBottom: "1.25rem" }}>
-            <div style={{
-              fontSize: "0.625rem", fontWeight: 700, color: T.outline,
-              letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "0.625rem",
-            }}>Puntos ciegos</div>
+            <div style={{ fontSize: "0.625rem", fontWeight: 700, color: T.outline, letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "0.625rem" }}>Puntos ciegos</div>
             {analysis.blindSpots.map((b, i) => (
-              <div key={i} style={{
-                fontSize: "0.9rem", color: T.onSurface, marginBottom: "0.5rem",
-                paddingLeft: "0.875rem", borderLeft: `3px solid ${T.teal}`, lineHeight: 1.6,
-              }}>{b}</div>
+              <div key={i} style={{ fontSize: "0.9rem", color: T.onSurface, marginBottom: "0.5rem", paddingLeft: "0.875rem", borderLeft: `3px solid ${T.teal}`, lineHeight: 1.6 }}>{b}</div>
             ))}
           </div>
         )}
-
         {analysis.biasFlags.length > 0 && (
           <div>
-            <div style={{
-              fontSize: "0.625rem", fontWeight: 700, color: T.outline,
-              letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "0.625rem",
-            }}>Sesgos detectados</div>
+            <div style={{ fontSize: "0.625rem", fontWeight: 700, color: T.outline, letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "0.625rem" }}>Sesgos detectados</div>
             <div>{analysis.biasFlags.map((b, i) => <BiasTag key={i}>{b}</BiasTag>)}</div>
           </div>
         )}
       </Zone>
 
-      {/* ZONA 2: Que aprendiste */}
-      <Zone accent="#1a7a4a" label="Que aprendiste hoy" icon="â—‰">
+      <Zone accent="#1a7a4a" label="Que aprendiste hoy" icon="+">
         {analysis.lessonsLearned.map((lesson, i) => (
-          <div key={i} style={{
-            display: "flex", gap: "1rem", marginBottom: "1.125rem", alignItems: "flex-start",
-          }}>
+          <div key={i} style={{ display: "flex", gap: "1rem", marginBottom: "1.125rem", alignItems: "flex-start" }}>
             <div style={{
               minWidth: "1.75rem", height: "1.75rem", borderRadius: "50%",
               background: "#d0f0e0", color: T.primaryMid,
               display: "flex", alignItems: "center", justifyContent: "center",
               fontSize: "0.75rem", fontWeight: 700, flexShrink: 0,
             }}>{i + 1}</div>
-            <p style={{ fontSize: "0.9375rem", lineHeight: 1.7, color: T.onSurface, margin: 0 }}>
-              {lesson}
-            </p>
+            <p style={{ fontSize: "0.9375rem", lineHeight: 1.7, color: T.onSurface, margin: 0 }}>{lesson}</p>
           </div>
         ))}
       </Zone>
 
-      {/* ZONA 3: Numeros â€” para los que piensan en datos */}
-      <Zone accent={T.primary} label="Los numeros detras" icon="â—ˆ">
-
+      <Zone accent={T.primary} label="Los numeros detras" icon="#">
+        <p style={{ fontSize: "0.75rem", color: T.outline, fontStyle: "italic", marginBottom: "1rem", marginTop: 0 }}>
+          Haz clic en cualquier numero para entender que significa
+        </p>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem", marginBottom: "1rem" }}>
-          <MetricCard
-            label="Indice de riesgo"
-            value={`${metrics.riskIndex}/100`}
-            sub={riskHuman(metrics.riskIndex)}
-            color={risk.color} bg={risk.bg}
-          />
-          <MetricCard
-            label="Irreversibilidad"
-            value={`${metrics.irreversibilityIndex}/100`}
-            sub={irrHuman(metrics.irreversibilityIndex)}
-            color={irr.color} bg={irr.bg}
-          />
-          {hasMonetary && (
-            <MetricCard
-              label="Valor esperado"
-              value={fmt(metrics.expectedValue)}
-              color="#1a7a4a" bg="#d0f0e0"
-            />
-          )}
+          <MetricCard label="Indice de riesgo" value={`${metrics.riskIndex}/100`} sub={riskHuman(metrics.riskIndex)} color={risk.color} bg={risk.bg} />
+          <MetricCard label="Irreversibilidad" value={`${metrics.irreversibilityIndex}/100`} sub={irrHuman(metrics.irreversibilityIndex)} color={irr.color} bg={irr.bg} />
+          {hasMonetary && <MetricCard label="Valor esperado" value={fmt(metrics.expectedValue)} color="#1a7a4a" bg="#d0f0e0" />}
           {hasMonetary && metrics.expectedValueNet !== undefined && metrics.expectedValueNet !== null && (
-            <MetricCard
-              label="Valor esperado neto"
-              value={fmt(metrics.expectedValueNet)}
-              color={T.primaryMid} bg="#d0f0e0"
-            />
+            <MetricCard label="Valor esperado neto" value={fmt(metrics.expectedValueNet)} color={T.primaryMid} bg="#d0f0e0" />
           )}
         </div>
 
         {hasMonetary && (
-          <p style={{
-            fontSize: "0.8125rem", color: T.onMuted, lineHeight: 1.65,
-            margin: "0 0 1rem", fontStyle: "italic",
-            borderLeft: `3px solid ${T.primary}`, paddingLeft: "0.875rem",
-          }}>
-            En promedio vale la pena â€” pero ese promedio asume que podrias tomar esta decision muchas veces. Tu solo la tomas una vez.
+          <p style={{ fontSize: "0.8125rem", color: T.onMuted, lineHeight: 1.65, margin: "0 0 1rem", fontStyle: "italic", borderLeft: `3px solid ${T.primary}`, paddingLeft: "0.875rem" }}>
+            En promedio vale la pena -- pero ese promedio asume que podrias tomar esta decision muchas veces. Tu solo la tomas una vez.
           </p>
         )}
 
@@ -356,18 +436,9 @@ export default function Results({ result, loading, error, onNew, input }: Props)
 
         {metrics.warnings.length > 0 && (
           <div style={{ background: "#fef3c7", borderRadius: 12, padding: "1rem 1.125rem" }}>
-            <div style={{
-              fontSize: "0.625rem", fontWeight: 700, color: "#92400e",
-              letterSpacing: "0.1em", textTransform: "uppercase" as const, marginBottom: "0.625rem",
-            }}>
-              Advertencias
-            </div>
+            <div style={{ fontSize: "0.625rem", fontWeight: 700, color: "#92400e", letterSpacing: "0.1em", textTransform: "uppercase" as const, marginBottom: "0.625rem" }}>Advertencias</div>
             {metrics.warnings.map((w, i) => (
-              <div key={i} style={{
-                fontSize: "0.875rem", color: "#78350f",
-                marginBottom: "0.4rem", paddingLeft: "0.875rem",
-                borderLeft: "3px solid #fcd34d", lineHeight: 1.55,
-              }}>{w}</div>
+              <div key={i} style={{ fontSize: "0.875rem", color: "#78350f", marginBottom: "0.4rem", paddingLeft: "0.875rem", borderLeft: "3px solid #fcd34d", lineHeight: 1.55 }}>{w}</div>
             ))}
           </div>
         )}
@@ -381,9 +452,7 @@ export default function Results({ result, loading, error, onNew, input }: Props)
         cursor: "pointer", transition: "all 200ms",
         boxShadow: "0 8px 24px rgba(0,6,102,0.18)",
         display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem",
-      }}>
-        Nueva decision
-      </button>
+      }}>Nueva decision</button>
     </div>
   );
 }
