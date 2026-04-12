@@ -27,7 +27,7 @@ const T = {
   fontBody:   "'Inter', system-ui, sans-serif",
 };
 
-// ── Explicaciones de metricas ──────────────────────────────
+// â”€â”€ Explicaciones de metricas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function getMetricExplanation(label: string, value: string): { title: string; concept: string; context: string } | null {
   const explanations: Record<string, { title: string; concept: string; contextFn: (v: string) => string }> = {
     "Indice de riesgo": {
@@ -84,7 +84,7 @@ function getMetricExplanation(label: string, value: string): { title: string; co
         const n = parseInt(v.replace("+-", "").replace("%", "").replace(" prob.", "").trim());
         if (n >= 25) return `Obtuviste ${v}. Tienes un margen amplio de error. Aunque tu estimacion de probabilidad este bastante equivocada, la decision seguiria teniendo sentido matematicamente. Eso da mas confianza.`;
         if (n >= 10) return `Obtuviste ${v}. El margen es moderado. Si tu probabilidad real difiere en mas de esos puntos de lo que estimaste, el resultado cambia. Vale la pena preguntarte: que tan calibrada esta tu estimacion?`;
-        return `Obtuviste ${v}. El margen es pequeno. La decision es muy sensible a que tan precisa sea tu estimacion de probabilidad. Un pequeño error en esa estimacion cambia completamente el resultado.`;
+        return `Obtuviste ${v}. El margen es pequeno. La decision es muy sensible a que tan precisa sea tu estimacion de probabilidad. Un pequeÃ±o error en esa estimacion cambia completamente el resultado.`;
       },
     },
     "Peor escenario": {
@@ -105,7 +105,7 @@ function getMetricExplanation(label: string, value: string): { title: string; co
   };
 }
 
-// ── Explicaciones de sesgos ────────────────────────────────
+// â”€â”€ Explicaciones de sesgos â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const BIAS_EXPLANATIONS: Record<string, { title: string; body: string }> = {
   "Optimismo excesivo": {
     title: "Optimismo excesivo",
@@ -133,9 +133,9 @@ const BIAS_EXPLANATIONS: Record<string, { title: string; body: string }> = {
   },
   "Analisis binario": {
     title: "Analisis binario",
-    body: "Ver la decision como solo dos opciones (hacerlo o no hacerlo) cuando en realidad hay un espectro. Podria hacerse a medias, probarse primero en pequeño, postergarse, o estructurarse de manera diferente. El pensamiento binario cierra opciones que podrian ser mejores.",
+    body: "Ver la decision como solo dos opciones (hacerlo o no hacerlo) cuando en realidad hay un espectro. Podria hacerse a medias, probarse primero en pequeÃ±o, postergarse, o estructurarse de manera diferente. El pensamiento binario cierra opciones que podrian ser mejores.",
   },
-  "Focalización en resultados negativos": {
+  "FocalizaciÃ³n en resultados negativos": {
     title: "Focalizacion en resultados negativos",
     body: "Darle mas peso mental a los posibles fracasos que a los posibles exitos, aunque la probabilidad de exito sea mayor. Es una forma de aversion al riesgo que puede paralizar decisiones que matematicamente tienen sentido.",
   },
@@ -153,7 +153,7 @@ const BIAS_EXPLANATIONS: Record<string, { title: string; body: string }> = {
   },
 };
 
-// ── Modal generico ─────────────────────────────────────────
+// â”€â”€ Modal generico â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function Modal({ title, concept, context, onClose }: {
   title: string; concept: string; context?: string; onClose: () => void;
 }) {
@@ -219,7 +219,7 @@ function Modal({ title, concept, context, onClose }: {
   );
 }
 
-// ── MetricCard ─────────────────────────────────────────────
+// â”€â”€ MetricCard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function MetricCard({ label, value, sub, color, bg }: {
   label: string; value: string; sub?: string; color: string; bg: string;
 }) {
@@ -279,7 +279,7 @@ function MetricCard({ label, value, sub, color, bg }: {
   );
 }
 
-// ── MiniBlock ──────────────────────────────────────────────
+// â”€â”€ MiniBlock â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function MiniBlock({ label, value }: { label: string; value: string }) {
   const [hovered, setHovered] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -336,7 +336,7 @@ function MiniBlock({ label, value }: { label: string; value: string }) {
   );
 }
 
-// ── BiasTag ────────────────────────────────────────────────
+// â”€â”€ BiasTag â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function BiasTag({ children }: { children: string }) {
   const [hovered, setHovered] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -373,7 +373,7 @@ function BiasTag({ children }: { children: string }) {
   );
 }
 
-// ── Zone ───────────────────────────────────────────────────
+// â”€â”€ Zone â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function Zone({ accent, label, icon, children }: {
   accent: string; label: string; icon: string; children: React.ReactNode;
 }) {
@@ -396,7 +396,7 @@ function Zone({ accent, label, icon, children }: {
   );
 }
 
-// ── InputSummary ───────────────────────────────────────────
+// â”€â”€ InputSummary â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function InputSummary({ input }: { input: DecisionInput }) {
   const [open, setOpen] = React.useState(false);
   const items = [
@@ -436,7 +436,7 @@ function InputSummary({ input }: { input: DecisionInput }) {
   );
 }
 
-// ── Componente principal ───────────────────────────────────
+// â”€â”€ Componente principal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function Results({ result, loading, error, onNew, input }: Props) {
   if (loading) return (
     <div style={{ maxWidth: 640, margin: "5rem auto", padding: "0 1.5rem" }}>
@@ -585,8 +585,3 @@ export default function Results({ result, loading, error, onNew, input }: Props)
   );
 }
 
-function riskPalette(index: number) {
-  if (index >= 70) return { color: T.error,   bg: T.errorBg };
-  if (index >= 40) return { color: "#92400e", bg: "#fef3c7" };
-  return              { color: "#1a7a4a", bg: "#d0f0e0" };
-}
