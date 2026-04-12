@@ -1,3 +1,4 @@
+$content = @'
 import { useState, useEffect } from "react";
 import type { DecisionInput, DecisionLevel } from "../types";
 import { THEME } from "../theme/tokens";
@@ -20,7 +21,7 @@ const TYPE_EXAMPLES: Record<DecisionLevel, string[]> = {
   cotidiana: [
     "Levantarme temprano o quedarme en la cama",
     "Hacer ejercicio o no",
-    "Comer saludable o comida rápida",
+    "Comer saludable o comida rapida",
     "Ahorrar dinero o gastarlo",
     "Estudiar o procrastinar",
     "Dormir temprano o desvelarme",
@@ -29,7 +30,7 @@ const TYPE_EXAMPLES: Record<DecisionLevel, string[]> = {
     "Aceptar una oferta de trabajo",
     "Renunciar para emprender",
     "Cambiar de industria",
-    "Hacer una maestría o seguir trabajando",
+    "Hacer una maestria o seguir trabajando",
     "Pedir un ascenso o moverme a otra empresa",
   ],
   financiera: [
@@ -37,7 +38,7 @@ const TYPE_EXAMPLES: Record<DecisionLevel, string[]> = {
     "Comprar casa o seguir rentando",
     "Invertir en un negocio propio",
     "Ahorrar para el retiro o gastar ahora",
-    "Pedir un préstamo para invertir",
+    "Pedir un prestamo para invertir",
   ],
 };
 
@@ -80,7 +81,6 @@ function LevelCard({ id, label, img, selected, onSelect }: {
   );
 }
 
-// ── Slider sin default ─────────────────────────────────────
 function SliderField({ label, value, onChange, max = 100, suffix = "%" }: {
   label: string; value: number | undefined;
   onChange: (v: number) => void; max?: number; suffix?: string;
@@ -108,7 +108,6 @@ function SliderField({ label, value, onChange, max = 100, suffix = "%" }: {
           }}>sin respuesta</span>
         )}
       </div>
-
       <input
         type="range" min={0} max={max} value={display}
         onChange={e => onChange(Number(e.target.value))}
@@ -128,14 +127,13 @@ function SliderField({ label, value, onChange, max = 100, suffix = "%" }: {
           textAlign: "center", fontSize: "0.6875rem", color: THEME.outline,
           marginTop: "0.4rem", fontStyle: "italic",
         }}>
-          Mueve para responder — si no lo tocas no se incluye en el análisis
+          Mueve para responder — si no lo tocas no se incluye en el analisis
         </p>
       )}
     </div>
   );
 }
 
-// ── Preguntas dinámicas ────────────────────────────────────
 interface Questions {
   optionAQuestion:       string;
   optionBQuestion:       string;
@@ -152,21 +150,63 @@ interface FormState {
   worstScenario:      string;
   reversibilityScore: number | undefined;
   opportunityDesc:    string;
+  valueSuccess:       number | undefined;
+  valueFailure:       number | undefined;
+  opportunityCost:    number | undefined;
+  revertCost:         number | undefined;
+}
+
+function NumberField({ label, value, onChange, placeholder }: {
+  label: string; value: number | undefined;
+  onChange: (v: number | undefined) => void; placeholder?: string;
+}) {
+  const inputStyle = {
+    width: "100%", padding: "0.75rem 1rem",
+    background: THEME.surfaceLow, border: "none",
+    borderBottom: `2px solid rgba(118,118,131,0.15)`,
+    borderRadius: "0.5rem 0.5rem 0 0",
+    fontSize: "1rem", fontFamily: THEME.fontBody, color: THEME.onSurface,
+    outline: "none",
+  };
+  return (
+    <div style={{ marginBottom: "1.25rem" }}>
+      <label style={{
+        display: "block", fontSize: "0.8125rem", fontWeight: 600,
+        color: THEME.onMuted, marginBottom: "0.5rem",
+        lineHeight: 1.45, fontFamily: THEME.fontBody,
+      }}>{label}</label>
+      <input
+        type="number"
+        value={value ?? ""}
+        placeholder={placeholder ?? "0"}
+        onChange={e => {
+          const v = e.target.value;
+          onChange(v === "" ? undefined : Number(v));
+        }}
+        style={inputStyle}
+      />
+    </div>
+  );
 }
 
 function DynamicQuestions({ title, level, onSubmit, loading }: {
   title: string; level: DecisionLevel;
   onSubmit: (input: DecisionInput) => void; loading: boolean;
 }) {
-  const [questions, setQuestions] = useState<Questions | null>(null);
-  const [loadingQ,  setLoadingQ]  = useState(true);
-  const [error,     setError]     = useState(false);
+  const [questions,      setQuestions]      = useState<Questions | null>(null);
+  const [loadingQ,       setLoadingQ]       = useState(true);
+  const [error,          setError]          = useState(false);
+  const [wantsFinancial, setWantsFinancial] = useState(false);
   const [form, setForm] = useState<FormState>({
     altA: "", altB: "",
     probability:        undefined,
     worstScenario:      "",
     reversibilityScore: undefined,
     opportunityDesc:    "",
+    valueSuccess:       undefined,
+    valueFailure:       undefined,
+    opportunityCost:    undefined,
+    revertCost:         undefined,
   });
 
   useEffect(() => {
@@ -190,7 +230,7 @@ function DynamicQuestions({ title, level, onSubmit, loading }: {
         <span className="material-symbols-outlined" style={{ color: THEME.outline }}>psychology</span>
       </div>
       <div style={{ fontFamily: THEME.fontHead, fontStyle: "italic", fontSize: "1.1rem", color: THEME.primary }}>
-        Generando preguntas personalizadas…
+        Generando preguntas personalizadas...
       </div>
       <div style={{ fontSize: "0.875rem", color: THEME.outline, marginTop: "0.4rem" }}>
         Esto toma unos segundos
@@ -200,14 +240,14 @@ function DynamicQuestions({ title, level, onSubmit, loading }: {
 
   if (error || !questions) return (
     <div style={{ color: THEME.error, textAlign: "center", padding: "2rem" }}>
-      Error cargando preguntas. Recarga la página.
+      Error cargando preguntas. Recarga la pagina.
     </div>
   );
 
- const canSubmit =
+  const canSubmit =
     form.altA.trim().length > 5 &&
     form.altB.trim().length > 5;
-    
+
   const inputStyle = {
     width: "100%", padding: "0.75rem 1rem",
     background: THEME.surfaceLow, border: "none",
@@ -225,7 +265,6 @@ function DynamicQuestions({ title, level, onSubmit, loading }: {
 
   return (
     <>
-      {/* Contexto — decisión siempre visible */}
       <div style={{
         background: THEME.primary, borderRadius: 12,
         padding: "0.875rem 1.25rem", marginBottom: "2rem",
@@ -233,7 +272,7 @@ function DynamicQuestions({ title, level, onSubmit, loading }: {
         <div style={{
           fontSize: "0.5625rem", fontWeight: 700, color: "rgba(255,255,255,0.6)",
           letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "0.3rem",
-        }}>Tu decisión</div>
+        }}>Tu decision</div>
         <div style={{
           fontFamily: THEME.fontHead, fontStyle: "italic",
           fontSize: "1.05rem", color: "#ffffff", lineHeight: 1.3,
@@ -245,24 +284,24 @@ function DynamicQuestions({ title, level, onSubmit, loading }: {
         fontSize: "clamp(1.5rem, 5vw, 1.875rem)",
         fontWeight: 600, color: THEME.primary, marginBottom: "0.5rem",
       }}>
-        Cuéntame más
+        Cuentame mas
       </h2>
       <p style={{ color: THEME.onMuted, fontSize: "0.9375rem", marginBottom: "2rem", lineHeight: 1.6 }}>
-        Responde lo que puedas. Los sliders grises no se incluyen en el análisis si no los tocas.
+        Responde lo que puedas. Los sliders grises no se incluyen en el analisis si no los tocas.
       </p>
 
       <div style={{ marginBottom: "1.75rem" }}>
         <label style={labelStyle}>{questions.optionAQuestion}</label>
         <input type="text" value={form.altA} style={inputStyle}
           onChange={e => setForm(f => ({ ...f, altA: e.target.value }))}
-          placeholder="Describe los cambios concretos…" />
+          placeholder="Describe los cambios concretos..." />
       </div>
 
       <div style={{ marginBottom: "1.75rem" }}>
         <label style={labelStyle}>{questions.optionBQuestion}</label>
         <input type="text" value={form.altB} style={inputStyle}
           onChange={e => setForm(f => ({ ...f, altB: e.target.value }))}
-          placeholder="Describe los cambios concretos…" />
+          placeholder="Describe los cambios concretos..." />
       </div>
 
       <SliderField
@@ -276,7 +315,7 @@ function DynamicQuestions({ title, level, onSubmit, loading }: {
         <label style={labelStyle}>{questions.worstScenarioQuestion}</label>
         <textarea rows={2} value={form.worstScenario} style={inputStyle}
           onChange={e => setForm(f => ({ ...f, worstScenario: e.target.value }))}
-          placeholder="Sé honesto, no dramatices…" />
+          placeholder="Se honesto, no dramatices..." />
       </div>
 
       <SliderField
@@ -290,8 +329,76 @@ function DynamicQuestions({ title, level, onSubmit, loading }: {
         <label style={labelStyle}>{questions.opportunityQuestion}</label>
         <textarea rows={2} value={form.opportunityDesc} style={inputStyle}
           onChange={e => setForm(f => ({ ...f, opportunityDesc: e.target.value }))}
-          placeholder="¿Qué dejas de hacer si eliges esto?" />
+          placeholder="Que dejas de hacer si eliges esto?" />
       </div>
+
+      {/* ── Checkbox analisis financiero ── */}
+      <div style={{
+        borderTop: `1px solid rgba(118,118,131,0.15)`,
+        paddingTop: "1.5rem", marginBottom: "1.75rem",
+      }}>
+        <label style={{
+          display: "flex", alignItems: "center", gap: "0.75rem",
+          cursor: "pointer", userSelect: "none" as const,
+        }}>
+          <div
+            onClick={() => setWantsFinancial(w => !w)}
+            style={{
+              width: "1.25rem", height: "1.25rem", borderRadius: "0.375rem", flexShrink: 0,
+              border: `2px solid ${wantsFinancial ? THEME.primary : THEME.outline}`,
+              background: wantsFinancial ? THEME.primary : "transparent",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              transition: "all 150ms", cursor: "pointer",
+            }}
+          >
+            {wantsFinancial && (
+              <span style={{ color: "#fff", fontSize: "0.75rem", fontWeight: 700, lineHeight: 1 }}>&#10003;</span>
+            )}
+          </div>
+          <span style={{ fontSize: "0.9375rem", color: THEME.onMuted, fontFamily: THEME.fontBody }}>
+            Quiero incluir el analisis financiero (numeros opcionales)
+          </span>
+        </label>
+      </div>
+
+      {/* ── Campos financieros opcionales ── */}
+      {wantsFinancial && (
+        <div style={{
+          background: THEME.surfaceLow, borderRadius: 12,
+          padding: "1.25rem", marginBottom: "1.75rem",
+        }}>
+          <div style={{
+            fontSize: "0.625rem", fontWeight: 700, color: THEME.outline,
+            letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "1rem",
+          }}>
+            Datos financieros
+          </div>
+          <NumberField
+            label="Si funciona, cuanto ganas o vale para ti (en numeros)"
+            value={form.valueSuccess}
+            onChange={v => setForm(f => ({ ...f, valueSuccess: v }))}
+            placeholder="Ej: 50000"
+          />
+          <NumberField
+            label="Si falla, cuanto pierdes (puede ser negativo)"
+            value={form.valueFailure}
+            onChange={v => setForm(f => ({ ...f, valueFailure: v }))}
+            placeholder="Ej: -20000"
+          />
+          <NumberField
+            label="Costo de oportunidad: cuanto dejas de ganar con otra opcion"
+            value={form.opportunityCost}
+            onChange={v => setForm(f => ({ ...f, opportunityCost: v }))}
+            placeholder="Ej: 30000"
+          />
+          <NumberField
+            label="Cuanto costaria dar marcha atras si sale mal"
+            value={form.revertCost}
+            onChange={v => setForm(f => ({ ...f, revertCost: v }))}
+            placeholder="Ej: 5000"
+          />
+        </div>
+      )}
 
       <button
         disabled={!canSubmit || loading}
@@ -303,6 +410,13 @@ function DynamicQuestions({ title, level, onSubmit, loading }: {
           worstScenario:      form.worstScenario,
           reversibilityScore: form.reversibilityScore!,
           opportunityDesc:    form.opportunityDesc,
+          valueSuccess:       form.valueSuccess  ?? 0,
+          valueFailure:       form.valueFailure  ?? 0,
+          opportunityCost:    form.opportunityCost ?? 0,
+          revertCost:         form.revertCost    ?? 0,
+          worstSeverity:      5,
+          impact6m:           "",
+          impact3y:           "",
         } as DecisionInput)}
         style={{
           width: "100%",
@@ -318,8 +432,8 @@ function DynamicQuestions({ title, level, onSubmit, loading }: {
           transition: "all 200ms",
         }}
       >
-        {loading ? "Analizando…" : (
-          <>Evaluar decisión
+        {loading ? "Analizando..." : (
+          <>Evaluar decision
             <span className="material-symbols-outlined" style={{ fontSize: "1.1rem" }}>query_stats</span>
           </>
         )}
@@ -328,7 +442,6 @@ function DynamicQuestions({ title, level, onSubmit, loading }: {
   );
 }
 
-// ── Componente principal ───────────────────────────────────
 export default function DecisionForm({ onSubmit, onBack, loading }: Props) {
   const [step,        setStep]        = useState<Step>("type");
   const [level,       setLevel]       = useState<DecisionLevel>("cotidiana");
@@ -361,7 +474,7 @@ export default function DecisionForm({ onSubmit, onBack, loading }: Props) {
         display: "flex", alignItems: "center", gap: "0.4rem",
         fontFamily: THEME.fontBody, padding: 0,
       }}>
-        ← {step === "type" ? "Inicio" : "Atrás"}
+        &larr; {step === "type" ? "Inicio" : "Atras"}
       </button>
 
       {step === "type" && (
@@ -370,9 +483,9 @@ export default function DecisionForm({ onSubmit, onBack, loading }: Props) {
             fontFamily: THEME.fontHead, fontStyle: "italic",
             fontSize: "clamp(1.75rem, 6vw, 2.25rem)",
             fontWeight: 600, color: THEME.primary, marginBottom: "0.5rem",
-          }}>¿Qué tipo de decisión es?</h2>
+          }}>Que tipo de decision es?</h2>
           <p style={{ color: THEME.onMuted, fontSize: "1rem", marginBottom: "2rem", lineHeight: 1.6 }}>
-            Elige una categoría para obtener ejemplos relevantes.
+            Elige una categoria para obtener ejemplos relevantes.
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem" }}>
             {LEVELS.map(({ id, label, img }) => (
@@ -391,9 +504,9 @@ export default function DecisionForm({ onSubmit, onBack, loading }: Props) {
             fontFamily: THEME.fontHead, fontStyle: "italic",
             fontSize: "clamp(1.75rem, 6vw, 2.25rem)",
             fontWeight: 600, color: THEME.primary, marginBottom: "0.5rem",
-          }}>¿Qué decisión tienes pendiente?</h2>
+          }}>Que decision tienes pendiente?</h2>
           <p style={{ color: THEME.onMuted, fontSize: "1rem", marginBottom: "2rem", lineHeight: 1.6 }}>
-            Elige un ejemplo o escribe tu propia situación.
+            Elige un ejemplo o escribe tu propia situacion.
           </p>
 
           <div style={{ marginBottom: "2rem" }}>
@@ -423,7 +536,7 @@ export default function DecisionForm({ onSubmit, onBack, loading }: Props) {
             </div>
             <textarea rows={2} value={customTitle}
               onChange={e => setCustomTitle(e.target.value)}
-              placeholder="Ej: Debería mudarme a otra ciudad por trabajo"
+              placeholder="Ej: Deberia mudarme a otra ciudad por trabajo"
               style={{
                 width: "100%", padding: "0.875rem",
                 background: THEME.surfaceLow, border: "none",
@@ -448,7 +561,7 @@ export default function DecisionForm({ onSubmit, onBack, loading }: Props) {
                 boxShadow: customTitle.trim() ? "0 8px 24px rgba(0,6,102,0.18)" : "none",
                 transition: "all 200ms",
               }}
-            >Usar esta decisión</button>
+            >Usar esta decision</button>
           </div>
         </>
       )}
@@ -462,3 +575,10 @@ export default function DecisionForm({ onSubmit, onBack, loading }: Props) {
     </div>
   );
 }
+'@
+
+[System.IO.File]::WriteAllText(
+  "C:\Users\Víctor\Desktop\escritorio b octubre 2025\polyglot-point-railway\packages\lexipop-decisions\frontend\src\pages\DecisionForm.tsx",
+  $content,
+  [System.Text.UTF8Encoding]::new($false)
+)

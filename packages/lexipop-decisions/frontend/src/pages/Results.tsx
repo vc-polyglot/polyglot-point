@@ -44,7 +44,7 @@ function riskPalette(index: number) {
 function riskHuman(index: number) {
   if (index >= 70) return "Estas apostando mas de lo que percibes";
   if (index >= 40) return "Riesgo manejable, pero real";
-  return "Riesgo bajo — confia en tu analisis";
+  return "Riesgo bajo â€” confia en tu analisis";
 }
 
 function irrHuman(index: number) {
@@ -200,7 +200,7 @@ export default function Results({ result, loading, error, onNew, input }: Props)
   const { metrics, analysis } = result;
   const risk = riskPalette(metrics.riskIndex);
   const irr  = riskPalette(metrics.irreversibilityIndex);
-  const hasMonetary = metrics.expectedValue !== undefined && metrics.expectedValue !== null;
+  const hasMonetary = metrics.expectedValue !== undefined && metrics.expectedValue !== null && metrics.expectedValue !== 0;
 
   const scenarioLabel = {
     favorable: "Favorable",
@@ -233,8 +233,8 @@ export default function Results({ result, loading, error, onNew, input }: Props)
 
       {input && <InputSummary input={input} />}
 
-      {/* ZONA 1: Interpretacion pedagogica — primero el espejo */}
-      <Zone accent="#1a7a4a" label="Como estas pensando" icon="◇">
+      {/* ZONA 1: Interpretacion pedagogica â€” primero el espejo */}
+      <Zone accent="#1a7a4a" label="Como estas pensando" icon="â—‡">
         <div style={{ marginBottom: "1.25rem" }}>
           <div style={{
             fontSize: "0.625rem", fontWeight: 700, color: T.outline,
@@ -284,7 +284,7 @@ export default function Results({ result, loading, error, onNew, input }: Props)
       </Zone>
 
       {/* ZONA 2: Que aprendiste */}
-      <Zone accent="#1a7a4a" label="Que aprendiste hoy" icon="◉">
+      <Zone accent="#1a7a4a" label="Que aprendiste hoy" icon="â—‰">
         {analysis.lessonsLearned.map((lesson, i) => (
           <div key={i} style={{
             display: "flex", gap: "1rem", marginBottom: "1.125rem", alignItems: "flex-start",
@@ -302,8 +302,8 @@ export default function Results({ result, loading, error, onNew, input }: Props)
         ))}
       </Zone>
 
-      {/* ZONA 3: Numeros — para los que piensan en datos */}
-      <Zone accent={T.primary} label="Los numeros detras" icon="◈">
+      {/* ZONA 3: Numeros â€” para los que piensan en datos */}
+      <Zone accent={T.primary} label="Los numeros detras" icon="â—ˆ">
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem", marginBottom: "1rem" }}>
           <MetricCard
@@ -340,7 +340,7 @@ export default function Results({ result, loading, error, onNew, input }: Props)
             margin: "0 0 1rem", fontStyle: "italic",
             borderLeft: `3px solid ${T.primary}`, paddingLeft: "0.875rem",
           }}>
-            En promedio vale la pena — pero ese promedio asume que podrias tomar esta decision muchas veces. Tu solo la tomas una vez.
+            En promedio vale la pena â€” pero ese promedio asume que podrias tomar esta decision muchas veces. Tu solo la tomas una vez.
           </p>
         )}
 
