@@ -1,4 +1,3 @@
-$content = @'
 import { useState, useEffect } from "react";
 import type { DecisionInput, DecisionLevel } from "../types";
 import { THEME } from "../theme/tokens";
@@ -575,10 +574,3 @@ export default function DecisionForm({ onSubmit, onBack, loading }: Props) {
     </div>
   );
 }
-'@
-
-[System.IO.File]::WriteAllText(
-  "C:\Users\Víctor\Desktop\escritorio b octubre 2025\polyglot-point-railway\packages\lexipop-decisions\frontend\src\pages\DecisionForm.tsx",
-  $content,
-  [System.Text.UTF8Encoding]::new($false)
-)
