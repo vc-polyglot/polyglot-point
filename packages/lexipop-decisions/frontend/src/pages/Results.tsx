@@ -318,7 +318,14 @@ function MiniBlock({ label, value }: { label: string; value: string }) {
 function BiasTag({ children }: { children: string }) {
   const [hovered, setHovered] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
-  const exp = BIAS_EXPLANATIONS[children];
+  const normalizedKey = Object.keys(BIAS_EXPLANATIONS).find(
+    k => k.toLowerCase().replace(/[áéíóúü]/g, c => ({á:"a",é:"e",í:"i",ó:"o",ú:"u",ü:"u"}[c]||c))
+      === children.toLowerCase().replace(/[áéíóúü]/g, c => ({á:"a",é:"e",í:"i",ó:"o",ú:"u",ü:"u"}[c]||c))
+  );
+  const exp = normalizedKey ? BIAS_EXPLANATIONS[normalizedKey] : {
+    title: children,
+    body: "Este sesgo cognitivo afecta la forma en que procesas la información al tomar esta decisión. Los sesgos no son errores de inteligencia — son atajos mentales que el cerebro usa para decidir rápido. Identificarlos es el primer paso para compensarlos.",
+  };
 
   return (
     <>
