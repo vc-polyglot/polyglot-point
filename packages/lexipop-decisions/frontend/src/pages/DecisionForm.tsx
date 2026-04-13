@@ -133,42 +133,23 @@ function SliderField({ label, value, onChange, max = 100, suffix = "%" }: {
   );
 }
 
-interface Questions {
-  optionAQuestion:       string;
-  optionBQuestion:       string;
-  probabilityQuestion:   string;
-  worstScenarioQuestion: string;
-  reversibilityQuestion: string;
-  opportunityQuestion:   string;
-}
+const PERIODOS = [
+  { id: "operacion", label: "Por operacion" },
+  { id: "mes",       label: "Al mes" },
+  { id: "anio",      label: "Al año" },
+  { id: "total",     label: "Total / ciclo completo" },
+];
 
-interface FormState {
-  altA:               string;
-  altB:               string;
-  probability:        number | undefined;
-  worstScenario:      string;
-  reversibilityScore: number | undefined;
-  opportunityDesc:    string;
-  valueSuccess:       number | undefined;
-  valueFailure:       number | undefined;
-  opportunityCost:    number | undefined;
-  revertCost:         number | undefined;
-}
-
-function NumberField({ label, value, onChange, placeholder }: {
-  label: string; value: number | undefined;
-  onChange: (v: number | undefined) => void; placeholder?: string;
+function NumberField({ label, value, period, onChange, onPeriodChange, placeholder }: {
+  label: string;
+  value: number | undefined;
+  period: string;
+  onChange: (v: number | undefined) => void;
+  onPeriodChange: (p: string) => void;
+  placeholder?: string;
 }) {
-  const inputStyle = {
-    width: "100%", padding: "0.75rem 1rem",
-    background: THEME.surfaceLow, border: "none",
-    borderBottom: `2px solid rgba(118,118,131,0.15)`,
-    borderRadius: "0.5rem 0.5rem 0 0",
-    fontSize: "1rem", fontFamily: THEME.fontBody, color: THEME.onSurface,
-    outline: "none",
-  };
   return (
-    <div style={{ marginBottom: "1.25rem" }}>
+    <div style={{ marginBottom: "1.5rem" }}>
       <label style={{
         display: "block", fontSize: "0.8125rem", fontWeight: 600,
         color: THEME.onMuted, marginBottom: "0.5rem",
@@ -182,10 +163,61 @@ function NumberField({ label, value, onChange, placeholder }: {
           const v = e.target.value;
           onChange(v === "" ? undefined : Number(v));
         }}
-        style={inputStyle}
+        style={{
+          width: "100%", padding: "0.75rem 1rem",
+          background: THEME.surfaceLow, border: "none",
+          borderBottom: `2px solid rgba(118,118,131,0.15)`,
+          borderRadius: "0.5rem 0.5rem 0 0",
+          fontSize: "1rem", fontFamily: THEME.fontBody, color: THEME.onSurface,
+          outline: "none",
+        }}
       />
+      <div style={{ display: "flex", flexWrap: "wrap" as const, gap: "0.5rem", marginTop: "0.625rem" }}>
+        {PERIODOS.map(p => (
+          <button
+            key={p.id}
+            type="button"
+            onClick={() => onPeriodChange(p.id)}
+            style={{
+              padding: "0.5rem 0.875rem",
+              borderRadius: 9999,
+              border: `2px solid ${period === p.id ? THEME.primary : "rgba(118,118,131,0.2)"}`,
+              background: period === p.id ? THEME.primary : "transparent",
+              color: period === p.id ? "#ffffff" : THEME.onMuted,
+              fontSize: "0.8125rem", fontWeight: 600,
+              fontFamily: THEME.fontBody, cursor: "pointer",
+              transition: "all 150ms",
+            }}
+          >{p.label}</button>
+        ))}
+      </div>
     </div>
   );
+}
+
+interface Questions {
+  optionAQuestion:       string;
+  optionBQuestion:       string;
+  probabilityQuestion:   string;
+  worstScenarioQuestion: string;
+  reversibilityQuestion: string;
+  opportunityQuestion:   string;
+}
+
+interface FormState {
+  altA:                  string;
+  altB:                  string;
+  probability:           number | undefined;
+  worstScenario:         string;
+  reversibilityScore:    number | undefined;
+  opportunityDesc:       string;
+  valueSuccess:          number | undefined;
+  valueSuccessPeriod:    string;
+  valueFailure:          number | undefined;
+  valueFailurePeriod:    string;
+  opportunityCost:       number | undefined;
+  opportunityCostPeriod: string;
+  revertCost:            number | undefined;
 }
 
 function DynamicQuestions({ title, level, onSubmit, loading }: {
@@ -198,14 +230,17 @@ function DynamicQuestions({ title, level, onSubmit, loading }: {
   const [wantsFinancial, setWantsFinancial] = useState(false);
   const [form, setForm] = useState<FormState>({
     altA: "", altB: "",
-    probability:        undefined,
-    worstScenario:      "",
-    reversibilityScore: undefined,
-    opportunityDesc:    "",
-    valueSuccess:       undefined,
-    valueFailure:       undefined,
-    opportunityCost:    undefined,
-    revertCost:         undefined,
+    probability:           undefined,
+    worstScenario:         "",
+    reversibilityScore:    undefined,
+    opportunityDesc:       "",
+    valueSuccess:          undefined,
+    valueSuccessPeriod:    "total",
+    valueFailure:          undefined,
+    valueFailurePeriod:    "total",
+    opportunityCost:       undefined,
+    opportunityCostPeriod: "total",
+    revertCost:            undefined,
   });
 
   useEffect(() => {
@@ -261,6 +296,18 @@ function DynamicQuestions({ title, level, onSubmit, loading }: {
     color: THEME.onMuted, marginBottom: "0.625rem",
     lineHeight: 1.45, fontFamily: THEME.fontBody,
   };
+
+  const PERIOD_MULTIPLIER: Record<string, number> = {
+    operacion: 1,
+    mes:       12,
+    anio:      1,
+    total:     1,
+  };
+
+  function annualize(value: number | undefined, period: string): number {
+    if (!value) return 0;
+    return value * (PERIOD_MULTIPLIER[period] ?? 1);
+  }
 
   return (
     <>
@@ -331,7 +378,6 @@ function DynamicQuestions({ title, level, onSubmit, loading }: {
           placeholder="Que dejas de hacer si eliges esto?" />
       </div>
 
-      {/* ── Checkbox analisis financiero ── */}
       <div style={{
         borderTop: `1px solid rgba(118,118,131,0.15)`,
         paddingTop: "1.5rem", marginBottom: "1.75rem",
@@ -360,7 +406,6 @@ function DynamicQuestions({ title, level, onSubmit, loading }: {
         </label>
       </div>
 
-      {/* ── Campos financieros opcionales ── */}
       {wantsFinancial && (
         <div style={{
           background: THEME.surfaceLow, borderRadius: 12,
@@ -373,27 +418,35 @@ function DynamicQuestions({ title, level, onSubmit, loading }: {
             Datos financieros
           </div>
           <NumberField
-            label="Si funciona, cuanto ganas o vale para ti (en numeros)"
+            label="Si funciona: cuanto dinero entra"
             value={form.valueSuccess}
+            period={form.valueSuccessPeriod}
             onChange={v => setForm(f => ({ ...f, valueSuccess: v }))}
+            onPeriodChange={p => setForm(f => ({ ...f, valueSuccessPeriod: p }))}
             placeholder="Ej: 50000"
           />
           <NumberField
-            label="Si falla, cuanto pierdes (puede ser negativo)"
+            label="Si falla: cuanto dinero sale de tu bolsillo"
             value={form.valueFailure}
+            period={form.valueFailurePeriod}
             onChange={v => setForm(f => ({ ...f, valueFailure: v }))}
-            placeholder="Ej: -20000"
+            onPeriodChange={p => setForm(f => ({ ...f, valueFailurePeriod: p }))}
+            placeholder="Ej: 20000"
           />
           <NumberField
-            label="Costo de oportunidad: cuanto dejas de ganar con otra opcion"
+            label="Costo de oportunidad: cuanto dejas de percibir con otra opcion"
             value={form.opportunityCost}
+            period={form.opportunityCostPeriod}
             onChange={v => setForm(f => ({ ...f, opportunityCost: v }))}
+            onPeriodChange={p => setForm(f => ({ ...f, opportunityCostPeriod: p }))}
             placeholder="Ej: 30000"
           />
           <NumberField
             label="Cuanto costaria dar marcha atras si sale mal"
             value={form.revertCost}
+            period="total"
             onChange={v => setForm(f => ({ ...f, revertCost: v }))}
+            onPeriodChange={() => {}}
             placeholder="Ej: 5000"
           />
         </div>
@@ -409,10 +462,10 @@ function DynamicQuestions({ title, level, onSubmit, loading }: {
           worstScenario:      form.worstScenario,
           reversibilityScore: form.reversibilityScore!,
           opportunityDesc:    form.opportunityDesc,
-          valueSuccess:       form.valueSuccess  ?? 0,
-          valueFailure:       form.valueFailure  ?? 0,
-          opportunityCost:    form.opportunityCost ?? 0,
-          revertCost:         form.revertCost    ?? 0,
+          valueSuccess:       annualize(form.valueSuccess, form.valueSuccessPeriod),
+          valueFailure:       -(annualize(form.valueFailure, form.valueFailurePeriod)),
+          opportunityCost:    annualize(form.opportunityCost, form.opportunityCostPeriod),
+          revertCost:         form.revertCost ?? 0,
           worstSeverity:      5,
           impact6m:           "",
           impact3y:           "",
