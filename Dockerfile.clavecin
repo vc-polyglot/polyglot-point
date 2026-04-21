@@ -1,0 +1,7 @@
+﻿FROM node:20-alpine
+WORKDIR /app
+COPY packages/clavecin-venta/package.json ./
+RUN npm install --production
+COPY packages/clavecin-venta/ ./
+EXPOSE 3000
+CMD ["node", "server.js"]
