@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eliminar cuenta — Polyglot Point</title>
+  <style>
+    body { font-family: sans-serif; max-width: 480px; margin: 80px auto; padding: 0 24px; color: #333; }
+    h1 { font-size: 24px; margin-bottom: 16px; }
+    p { color: #555; line-height: 1.6; margin-bottom: 24px; }
+    button { background: #e53e3e; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; }
+    button:disabled { background: #ccc; cursor: not-allowed; }
+    .msg { margin-top: 24px; padding: 12px; border-radius: 8px; }
+    .success { background: #f0fff4; color: #276749; }
+    .error { background: #fff5f5; color: #c53030; }
+  </style>
+</head>
+<body>
+  <h1>Eliminar cuenta</h1>
+  <p>Al eliminar tu cuenta se borrarán permanentemente todos tus datos, historial de conversaciones y suscripción. Esta acción no se puede deshacer.</p>
+  <p>Si tienes una suscripción activa, cancélala primero desde tu tienda de apps.</p>
+
+  <button id="btn" onclick="deleteAccount()">Eliminar mi cuenta</button>
+  <div id="msg"></div>
+
+  <script>
+    async function deleteAccount() {
+      if (!confirm('¿Estás seguro? Esta acción es permanente y no se puede deshacer.')) return;
+      const btn = document.getElementById('btn');
+      const msg = document.getElementById('msg');
+      btn.disabled = true;
+      btn.textContent = 'Eliminando...';
+      try {
+        const res = await fetch('/auth/delete-account', { method: 'DELETE', credentials: 'include' });
+        if (res.ok) {
+          msg.className = 'msg success';
+          msg.textContent = 'Tu cuenta ha sido eliminada. Hasta pronto.';
+          btn.style.display = 'none';
+        } else if (res.status === 401) {
+          msg.className = 'msg error';
+          msg.textContent = 'Debes iniciar sesión para eliminar tu cuenta.';
+          btn.disabled = false;
+          btn.textContent = 'Eliminar mi cuenta';
+        } else {
+          throw new Error();
+        }
+      } catch {
+        msg.className = 'msg error';
+        msg.textContent = 'Ocurrió un error. Escríbenos a soporte@polyglotpoint.com';
+        btn.disabled = false;
+        btn.textContent = 'Eliminar mi cuenta';
+      }
+    }
+  </script>
+</body>
+</html>
