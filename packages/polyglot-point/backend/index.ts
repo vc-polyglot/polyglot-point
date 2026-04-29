@@ -1,4 +1,4 @@
-﻿import "dotenv/config";
+import "dotenv/config";
 import { healthCheck } from "./health";
 process.on("uncaughtException", (err) => console.error("UNCAUGHT EXCEPTION:", err));
 process.on("unhandledRejection", (reason) => console.error("UNHANDLED REJECTION:", reason));
@@ -33,7 +33,7 @@ app.set("trust proxy", 1);
 // Canonical domain (force www in production)
 const CANONICAL_HOST = "www.polyglotpoint.com";
 app.use((req, res, next) => {
-  // EXCEPCIÓN: Stripe webhooks no deben redirigirse (Stripe no sigue redirects)
+  // EXCEPCI�N: Stripe webhooks no deben redirigirse (Stripe no sigue redirects)
   if (req.path === "/api/stripe/webhook") {
     return next();
   }
@@ -55,7 +55,7 @@ const SESSION_SECRET =
 
 if (isProduction && !process.env.SESSION_SECRET) {
   console.error(
-    "[WARN] SESSION_SECRET faltante en producciÃƒÂ³n; usando secreto efÃƒÂ­mero. Configura SESSION_SECRET en Railway."
+    "[WARN] SESSION_SECRET faltante en producciÃ³n; usando secreto efÃ­mero. Configura SESSION_SECRET en Railway."
   );
 }
 
@@ -210,7 +210,7 @@ const sessionOptions: session.SessionOptions = {
 
 async function initRedisSessionStore(): Promise<void> {
   if (!process.env.REDIS_URL) {
-    if (isProduction) console.warn("REDIS_URL no configurado en producciÃƒÂ³n (MemoryStore no recomendado)");
+    if (isProduction) console.warn("REDIS_URL no configurado en producciÃ³n (MemoryStore no recomendado)");
     return;
   }
 
@@ -324,14 +324,14 @@ function timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 
 function targetLanguageName(code: string): string {
   const LANG: Record<string, string> = {
-    es: "espaÃƒÂ±ol",
-    en: "inglÃƒÂ©s",
-    fr: "francÃƒÂ©s",
+    es: "espaÃ±ol",
+    en: "inglÃ©s",
+    fr: "francÃ©s",
     it: "italiano",
-    de: "alemÃƒÂ¡n",
-    pt: "portuguÃƒÂ©s",
+    de: "alemÃ¡n",
+    pt: "portuguÃ©s",
   };
-  return LANG[code] || "espaÃƒÂ±ol";
+  return LANG[code] || "espaÃ±ol";
 }function readLangFromBody(req: Record<string, unknown>): string {
   const cand =
     (typeof (req as any).language === "string" && (req as any).language) ||
@@ -576,7 +576,7 @@ async function chatHandler(req: Request, res: Response) {
     if (isProduction) {
       console.error(JSON.stringify({ type: "contract_violation", requestId, sessionKey, language, time: responseTime, issues: parsedOut.error.issues }));
     } else {
-      console.error("[CONTRACT] ChatResponse invÃ¯Â¿Â½lido", parsedOut.error.issues);
+      console.error("[CONTRACT] ChatResponse invï¿½lido", parsedOut.error.issues);
     }
     return res.status(500).json({
       claraResponse: "",
@@ -627,7 +627,7 @@ async function chatHandler(req: Request, res: Response) {
   app.post("/api/chat", chatHandler);
 
 
-  app.use("/auth", authRoutes);
+  app.use("/api/auth", authRoutes);
   app.use("/api", billingRoutes);
 
 
@@ -663,16 +663,16 @@ async function chatHandler(req: Request, res: Response) {
   res.status(401).json({ error: "No autenticado" });
 });app.post("/api/logout", (req: Request, res: Response) => {
     req.logout((err) => {
-      if (err) return res.status(500).json({ error: "Error al cerrar sesiÃƒÂ³n" });
+      if (err) return res.status(500).json({ error: "Error al cerrar sesiÃ³n" });
       req.session.destroy((err2) => {
-        if (err2) return res.status(500).json({ error: "Error destruyendo sesiÃƒÂ³n" });
+        if (err2) return res.status(500).json({ error: "Error destruyendo sesiÃ³n" });
         res.clearCookie("connect.sid", {
           path: "/",
           secure: isProduction,
           sameSite: isProduction ? "none" : "lax",
           httpOnly: true,
         });
-        res.json({ message: "SesiÃƒÂ³n cerrada" });
+        res.json({ message: "SesiÃ³n cerrada" });
       });
     });
   });
@@ -712,6 +712,7 @@ app.get('/healthz', healthCheck);
   console.error("BOOTSTRAP FAILED:", e);
   process.exit(1);
 });
+
 
 
 
