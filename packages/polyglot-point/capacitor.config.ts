@@ -1,9 +1,9 @@
-﻿import { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.polyglot.point',
   appName: 'Polyglot Point',
-  webDir: 'dist/public',
+  webDir: 'frontend/dist',
   server: {
     androidScheme: 'https'
   }

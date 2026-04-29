@@ -75,7 +75,7 @@ function LoginScreen({ error }: { error: string | null }) {
             ) : null}
 
             <button
-              onClick={() => goGoogleLogin()}
+              onClick={() => { void goGoogleLogin() }}
               style={{
                 display: "flex",
                 alignItems: "center",

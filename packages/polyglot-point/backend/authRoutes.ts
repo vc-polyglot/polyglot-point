@@ -1,4 +1,4 @@
-﻿import { Router } from "express";
+import { Router } from "express";
 import passport from "./auth";
 
 const router = Router();
@@ -22,7 +22,7 @@ if (googleOAuthEnabled) {
       failureRedirect: process.env.NODE_ENV === "production" ? "/?error=auth_failed" : "http://localhost:5173/?error=auth_failed",
     }),
     (_req, res) => {
-      res.redirect(process.env.NODE_ENV === "production" ? "/?auth=success" : "http://localhost:5173/?auth=success");
+      res.redirect(process.env.NODE_ENV === "production" ? "com.polyglot.point://auth/success" : "http://localhost:5173/?auth=success");
     }
   );
 } else {
