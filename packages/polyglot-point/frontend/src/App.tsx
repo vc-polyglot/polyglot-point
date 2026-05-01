@@ -205,15 +205,13 @@ const App: React.FC = () => {
 
   // ========== ESTA ES LA LÍNEA CORREGIDA ==========
   const handleLogin = useCallback(() => {
-    alert("BOTON PRESIONADO");
-    console.log("[App] Botón de login presionado");
-    import("./auth/api").then(m => {
-      alert("MODULO CARGADO");
-      m.goGoogleLogin();
-    }).catch(err => {
-      alert("ERROR: " + err.message);
-    });
-  }, []);
+  console.log("[App] Botón de login presionado");
+  import("./auth/api").then(m => {
+    m.goGoogleLogin();
+  }).catch(err => {
+    console.error("Error cargando módulo:", err);
+  });
+}, []);
   // ================================================
 
   const hardResetUi = useCallback(() => {

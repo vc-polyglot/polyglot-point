@@ -29,17 +29,10 @@ export async function apiLogout(): Promise<void> {
 
 export async function goGoogleLogin(): Promise<void> {
   try {
-    alert("1. Llamando GoogleAuth.signIn...");
     const result = await GoogleAuth.signIn();
-    alert("2. signIn OK, idToken: " + (result.authentication?.idToken ? "SÍ" : "NO"));
-    
     const idToken = result.authentication?.idToken;
-    if (!idToken) {
-      alert("ERROR: No se recibió idToken de Google");
-      throw new Error("No se recibió idToken de Google");
-    }
+    if (!idToken) throw new Error("No se recibió idToken de Google");
 
-    alert("3. Enviando al backend...");
     const response = await fetch("https://www.polyglotpoint.com/api/auth/google/token", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -47,20 +40,14 @@ export async function goGoogleLogin(): Promise<void> {
       body: JSON.stringify({ idToken }),
     });
 
-    alert("4. Respuesta del backend: " + response.status);
-    
     if (response.ok) {
-      alert("5. Login exitoso, redirigiendo...");
       window.location.href = "/";
     } else {
       const error = await response.json();
-      alert("ERROR del backend: " + JSON.stringify(error));
+      console.error("Error del backend:", error);
     }
   } catch (error: any) {
-    alert("CATCH: " + error.message);
-    if (error.message?.includes("cancel")) {
-      console.log("Usuario canceló el login");
-    } else {
+    if (!error.message?.includes("cancel")) {
       console.error("Error en login:", error);
     }
   }

@@ -1,4 +1,9 @@
 ﻿import { ChatResponseSchema, type ChatResponse } from "../../shared/contracts/chat";
+import { Capacitor } from "@capacitor/core";
+
+const BASE_URL = Capacitor.isNativePlatform()
+  ? "https://www.polyglotpoint.com"
+  : ""
 
 function getSessionId(): string {
   let sid = localStorage.getItem("clara_sid");
@@ -10,7 +15,7 @@ function getSessionId(): string {
 }
 
 export async function fetchChat(message: string, language: string = "es"): Promise<ChatResponse> {
-  const r = await fetch("/api/chat", {
+  const r = await fetch(`${BASE_URL}/api/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -34,7 +39,7 @@ export async function fetchChat(message: string, language: string = "es"): Promi
 }
 
 export async function fetchUsage(userId: string) {
-  const r = await fetch("/api/me", { credentials: "include" });
+  const r = await fetch(`${BASE_URL}/api/me`, { credentials: "include" });
   if (!r.ok) throw new Error("Error uso");
   const data = await r.json();
   return { remainingMessages: data.remainingMessages ?? data.messagesBank };
