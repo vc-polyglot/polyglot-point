@@ -1,3 +1,4 @@
+import { goGoogleLogin } from "./auth/api";
 import { useState, useCallback, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { PaywallModal } from "./components/PaywallModal";
@@ -202,9 +203,18 @@ const App: React.FC = () => {
     return () => clearTimeout(timeoutId);
   }, [messages, scrollToBottom]);
 
+  // ========== ESTA ES LA LÍNEA CORREGIDA ==========
   const handleLogin = useCallback(() => {
-  window.location.href = "/auth/google";
+    alert("BOTON PRESIONADO");
+    console.log("[App] Botón de login presionado");
+    import("./auth/api").then(m => {
+      alert("MODULO CARGADO");
+      m.goGoogleLogin();
+    }).catch(err => {
+      alert("ERROR: " + err.message);
+    });
   }, []);
+  // ================================================
 
   const hardResetUi = useCallback(() => {
     setMessages([]);

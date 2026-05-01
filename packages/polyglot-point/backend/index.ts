@@ -33,7 +33,7 @@ app.set("trust proxy", 1);
 // Canonical domain (force www in production)
 const CANONICAL_HOST = "www.polyglotpoint.com";
 app.use((req, res, next) => {
-  // EXCEPCIÓN: Stripe webhooks no deben redirigirse (Stripe no sigue redirects)
+  // EXCEPCIï¿½N: Stripe webhooks no deben redirigirse (Stripe no sigue redirects)
   if (req.path === "/api/stripe/webhook") {
     return next();
   }
@@ -74,6 +74,8 @@ const allowedExact = new Set(
     "http://localhost:3000",
     "https://polyglotpoint.com",
     "https://www.polyglotpoint.com",
+    "capacitor://localhost",
+    "https://localhost",
   ]
     .filter(Boolean)
     .map((s) => String(s).replace(/\/$/, ""))

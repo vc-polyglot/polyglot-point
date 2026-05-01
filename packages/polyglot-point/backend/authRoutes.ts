@@ -4,7 +4,7 @@ import crypto from "crypto";
 
 const router = Router();
 
-const pendingTokens = new Map<string, number>(); // token → userId
+const pendingTokens = new Map<string, number>();
 
 const googleOAuthEnabled = Boolean(
   (process.env.GOOGLE_CLIENT_ID_X || process.env.GOOGLE_CLIENT_ID) &&
@@ -18,7 +18,6 @@ if (googleOAuthEnabled) {
       scope: ["profile", "email"],
     })
   );
-
   router.get(
     "/google/callback",
     passport.authenticate("google", {
@@ -61,7 +60,6 @@ router.get("/session", async (req: any, res: any) => {
   });
 });
 
-// Eliminar cuenta
 router.delete("/delete-account", async (req: any, res: any) => {
   try {
     if (!req.isAuthenticated || !req.isAuthenticated() || !req.user) {
@@ -80,6 +78,66 @@ router.delete("/delete-account", async (req: any, res: any) => {
   } catch (error) {
     console.error("[delete-account] error:", error);
     res.status(500).json({ error: "Error al eliminar cuenta" });
+  }
+});
+
+// Endpoint para @daniele-rolli/capacitor-google-auth
+router.post("/google/token", async (req: any, res: any) => {
+  try {
+    const { idToken } = req.body;
+    if (!idToken) return res.status(400).json({ error: "idToken requerido" });
+
+    const { OAuth2Client } = await import("google-auth-library");
+    const client = new OAuth2Client(
+      process.env.GOOGLE_CLIENT_ID_WEB || process.env.GOOGLE_CLIENT_ID
+    );
+
+    const ticket = await client.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_CLIENT_ID_WEB || process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    if (!payload) return res.status(401).json({ error: "Token inválido" });
+    if (!payload.email_verified) return res.status(401).json({ error: "Email no verificado" });
+
+    const email = payload.email!;
+    const name = payload.name || email.split("@")[0];
+    const googleId = payload.sub;
+    const avatarUrl = payload.picture || null;
+
+    const { db } = await import("./db");
+    const { users } = await import("../shared/schema");
+    const { eq } = await import("drizzle-orm");
+
+    let [user] = await db.select().from(users).where(eq(users.email, email));
+
+    if (!user) {
+      const [created] = await db.insert(users).values({
+        email,
+        name,
+        googleId,
+        avatarUrl,
+        planType: "freemium",
+        messagesBank: 20,
+      }).returning();
+      user = created;
+    } else if (!user.googleId) {
+      const [updated] = await db.update(users)
+        .set({ googleId, avatarUrl: avatarUrl || user.avatarUrl })
+        .where(eq(users.id, user.id))
+        .returning();
+      user = updated;
+    }
+
+    req.login(user, (err: any) => {
+      if (err) return res.status(500).json({ error: "Error al iniciar sesión" });
+      res.json({ ok: true });
+    });
+
+  } catch (error: any) {
+    console.error("[google/token] error:", error);
+    res.status(401).json({ error: "Token inválido o expirado" });
   }
 });
 

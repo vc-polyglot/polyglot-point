@@ -23,8 +23,10 @@
     },
     "dependencies": {
         "@capacitor/android": "^8.3.0",
+        "@capacitor/browser": "8.0.3",
         "@capacitor/cli": "^8.3.0",
         "@capacitor/core": "^8.3.0",
+        "@daniele-rolli/capacitor-google-auth": "3.4.0-rc.6",
         "@google-cloud/text-to-speech": "^6.1.0",
         "@neondatabase/serverless": "^0.10.4",
         "@platform/core": "workspace:*",
@@ -39,6 +41,7 @@
         "drizzle-zod": "^0.8.2",
         "express": "^4.21.1",
         "express-session": "^1.18.2",
+        "google-auth-library": "^10.6.2",
         "multer": "^1.4.5-lts.1",
         "node-fetch": "^3.3.2",
         "openai": "^5.23.2",

@@ -4,4 +4,5 @@
     <string name="title_activity_main">Polyglot Point</string>
     <string name="package_name">com.polyglot.point</string>
     <string name="custom_url_scheme">com.polyglot.point</string>
+    <string name="server_client_id">1058588126233-0fs5h75qa3ccorrk2do3glrnagjo5lfs.apps.googleusercontent.com</string>
 </resources>
