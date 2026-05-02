@@ -388,6 +388,9 @@ importers:
 
   packages/lexipop-math:
     dependencies:
+      '@daniele-rolli/capacitor-google-auth':
+        specifier: 3.4.0-rc.6
+        version: 3.4.0-rc.6(@capacitor/core@8.3.0)
       '@lexipop/core':
         specifier: workspace:*
         version: link:../lexipop-core
@@ -412,6 +415,9 @@ importers:
       express-session:
         specifier: ^1.18.1
         version: 1.19.0
+      google-auth-library:
+        specifier: ^10.6.2
+        version: 10.6.2
       passport:
         specifier: ^0.7.0
         version: 0.7.0
@@ -491,6 +497,9 @@ importers:
       '@capacitor/core':
         specifier: ^8.2.0
         version: 8.3.0
+      '@capgo/capacitor-social-login':
+        specifier: ^8.3.20
+        version: 8.3.20(@capacitor/core@8.3.0)
       '@lexipop/core':
         specifier: workspace:*
         version: link:../../lexipop-core
@@ -1049,6 +1058,11 @@ packages:
 
   '@capacitor/core@8.3.0':
     resolution: {integrity: sha512-S4ajn4G/fS3VJj8salxqH/3LO5PPWv1VxGKQ27OCajnDcLJjEg9VXwgMPnlypgkIOqCJ2fmQLtk8GT+BlI9/rw==}
+
+  '@capgo/capacitor-social-login@8.3.20':
+    resolution: {integrity: sha512-baduDIczWQK1QJ1RBcFuiM1VGdAmkMwspAWQGqRi2UFjVdbElBMgTUUsm/4jDmmOVi5doXPuBr3N1VaSBrPiyQ==}
+    peerDependencies:
+      '@capacitor/core': '>=8.0.0'
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -7064,6 +7078,11 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@capgo/capacitor-social-login@8.3.20(@capacitor/core@8.3.0)':
+    dependencies:
+      '@capacitor/core': 8.3.0
+      tslib: 2.8.1
+
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
@@ -7769,6 +7788,7 @@ snapshots:
       drizzle-zod: 0.8.3(drizzle-orm@0.44.7(@neondatabase/serverless@0.10.4)(@types/pg@8.16.0)(pg@8.18.0)(postgres@3.4.8))(zod@3.25.76)
       express: 4.22.1
       express-session: 1.19.0
+      google-auth-library: 10.6.2
       multer: 1.4.5-lts.2
       node-fetch: 3.3.2
       openai: 5.23.2(ws@8.19.0)(zod@3.25.76)
