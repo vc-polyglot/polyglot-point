@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { Capacitor } from '@capacitor/core';
+import { SocialLogin } from '@capgo/capacitor-social-login';
 import './Login.css';
 
 type Language = 'es' | 'en' | 'fr' | 'de' | 'pt' | 'it';
@@ -8,6 +10,7 @@ interface User {
   email: string;
   displayName: string;
   avatar?: string;
+  isPro?: boolean;
 }
 
 interface LoginProps {
@@ -24,26 +27,70 @@ const T = {
   it: { title: 'Benvenuto a LexiPop Math', subtitle: 'Allena la tua mente con la matematica mentale', loginBtn: 'Continua con Google', loading: 'Caricamento...' }
 };
 
+const BASE_URL = Capacitor.isNativePlatform()
+  ? 'https://lexipopmath.com'
+  : '';
+
+const WEB_CLIENT_ID = '613395578802-ci6n809e4fbaieurdjqnsjurh4aoimn9.apps.googleusercontent.com';
+
 export default function Login({ onLoginSuccess, lang }: LoginProps) {
   const [loading, setLoading] = useState(true);
   const t = T[lang];
-  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/math';
 
   useEffect(() => {
-    // Verificar si ya está autenticado
-    fetch(`${API_BASE}/auth/me`, { credentials: 'include' })
+    const init = async () => {
+      if (Capacitor.isNativePlatform()) {
+        try {
+          await SocialLogin.initialize({
+            google: {
+              webClientId: WEB_CLIENT_ID,
+            },
+          });
+          console.log('SocialLogin initialized');
+        } catch (err) {
+          console.error('Error initializing SocialLogin:', err);
+        }
+      }
+    };
+    init();
+
+    fetch(`${BASE_URL}/api/math/auth/me`, { credentials: 'include' })
       .then(res => res.ok ? res.json() : null)
       .then(data => {
-        if (data?.user) {
-          onLoginSuccess(data.user);
-        }
+        if (data?.user) onLoginSuccess(data.user);
         setLoading(false);
       })
       .catch(() => setLoading(false));
   }, []);
 
-  const handleGoogleLogin = () => {
-    window.location.href = `${API_BASE}/auth/google`;
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await SocialLogin.login({
+  provider: 'google',
+  options: {},
+});
+
+      console.log('FULL RESULT:', JSON.stringify(result, null, 2));
+
+      const idToken = result?.result?.idToken;
+      if (!idToken) throw new Error('No idToken');
+
+      const response = await fetch(`${BASE_URL}/api/math/auth/google/token`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ idToken }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.user) onLoginSuccess(data.user);
+      }
+    } catch (error: any) {
+      if (!error.message?.includes('cancel')) {
+        console.error('Error en login:', error);
+      }
+    }
   };
 
   if (loading) {
@@ -63,7 +110,6 @@ export default function Login({ onLoginSuccess, lang }: LoginProps) {
         <img src="/lexipop-logo.png" alt="LexiPop Math" className="login-logo" />
         <h1 className="login-title">{t.title}</h1>
         <p className="login-subtitle">{t.subtitle}</p>
-        
         <button className="google-login-btn" onClick={handleGoogleLogin}>
           <svg className="google-icon" viewBox="0 0 24 24" width="20" height="20">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>

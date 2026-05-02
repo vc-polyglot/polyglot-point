@@ -14,6 +14,7 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@daniele-rolli/capacitor-google-auth": "3.4.0-rc.6",
     "@lexipop/core": "workspace:*",
     "@platform/core": "workspace:*",
     "connect-redis": "^7.1.1",
@@ -22,6 +23,7 @@
     "drizzle-orm": "^0.33.0",
     "express": "^4.21.1",
     "express-session": "^1.18.1",
+    "google-auth-library": "^10.6.2",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "pg": "^8.13.0",

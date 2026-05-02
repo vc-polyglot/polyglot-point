@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Capacitor } from '@capacitor/core';
 import MathExercise from './components/MathExercise';
 import Login from './components/Login';
 import './App.css';
@@ -13,21 +14,22 @@ interface User {
   isPro?: boolean;
 }
 
-const API = import.meta.env.VITE_API_URL || '';
+const BASE_URL = Capacitor.isNativePlatform()
+  ? 'https://lexipopmath.com'
+  : '';
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [lang, setLang] = useState<Language>('es');
 
   const handleLogout = async () => {
-    await fetch('/api/math/auth/logout', { method: 'POST', credentials: 'include' });
+    await fetch(`${BASE_URL}/api/math/auth/logout`, { method: 'POST', credentials: 'include' });
     setUser(null);
   };
 
   const handleReset = async () => {
     if (!confirm('¿Reiniciar tu contador de ejercicios desde cero?')) return;
-    await fetch('/api/math/exercise/reset', { method: 'POST', credentials: 'include' });
-    // Forzar reload para que MathExercise arranque limpio
+    await fetch(`${BASE_URL}/api/math/exercise/reset`, { method: 'POST', credentials: 'include' });
     localStorage.removeItem('lexipop-v4');
     window.location.reload();
   };
@@ -38,7 +40,6 @@ function App() {
 
   return (
     <div className="app">
-      {/* Barra superior */}
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', padding: '8px 16px' }}>
         {user.isPro && (
           <button
@@ -73,7 +74,6 @@ function App() {
           Salir
         </button>
       </div>
-
       <MathExercise />
     </div>
   );

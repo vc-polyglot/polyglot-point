@@ -1,5 +1,8 @@
 ﻿import { useState, useEffect, useRef } from 'react';
+import { Capacitor } from '@capacitor/core';
 import './MathExercise.css';
+
+const BASE_URL = Capacitor.isNativePlatform() ? 'https://lexipopmath.com' : '';
 
 type Language = 'es' | 'en' | 'fr' | 'de' | 'pt' | 'it';
 type Section   = 'aritmetica' | 'algebra' | 'funciones';
@@ -63,7 +66,6 @@ const T = {
   it: { sections:{ aritmetica:'Aritmetica', algebra:'Algebra', funciones:'Funzioni' }, ui:{ level:'Livello', placeholder:'?', lexi:'Lexi:', help:'Aiuto', resultado:'R:', loading:'Analisi...' }, lexi:{ correct:'Corretto.', incorrect:'Non corretto.', helpOffer:'Vuoi un suggerimento?' } },
 };
 
-// ─── Temas ────────────────────────────────────────────────────────────────────
 const THEME_VARS: Record<Theme, Record<string, string>> = {
   neutro: { '--bg-from':'#5DADE2','--bg-mid':'#85C1E9','--bg-to':'#AED6F1','--accent':'93,173,226','--surface':'255,255,255','--text':'27,58,82' },
   oscuro: { '--bg-from':'#1a1a2e','--bg-mid':'#16213e','--bg-to':'#0f3460','--accent':'100,149,237','--surface':'200,220,255','--text':'200,220,255' },
@@ -79,7 +81,6 @@ function applyTheme(theme: Theme) {
   Object.entries(THEME_VARS[theme]).forEach(([k, v]) => root.style.setProperty(k, v));
 }
 
-// ─── Unicode italic ───────────────────────────────────────────────────────────
 const ITALIC_MAP: Record<string, string> = {
   a:'𝑎',b:'𝑏',c:'𝑐',d:'𝑑',e:'𝑒',f:'𝑓',g:'𝑔',h:'ℎ',i:'𝑖',j:'𝑗',
   k:'𝑘',l:'𝑙',m:'𝑚',n:'𝑛',o:'𝑜',p:'𝑝',q:'𝑞',r:'𝑟',s:'𝑠',t:'𝑡',
@@ -89,12 +90,12 @@ function italicizeVars(str: string): string {
   return str.replace(/\b([a-z])\b/gi, (_, l) => ITALIC_MAP[l.toLowerCase()] ?? l);
 }
 
-// ─── Help ─────────────────────────────────────────────────────────────────────
 async function fetchHelpFromAPI(question: string, answer: number, lang: Language): Promise<string> {
-  const res  = await fetch('/api/math/help', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({question, answer, lang}) });
+  const res = await fetch(`${BASE_URL}/api/math/help`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({question, answer, lang}) });
   const data = await res.json();
   return data.help || '-';
 }
+
 function sanitizeLatex(text: string): string {
   return text
     .replace(/\\\(|\\\)/g,'').replace(/\\\[|\\\]/g,'')
@@ -106,6 +107,7 @@ function sanitizeLatex(text: string): string {
     .replace(/\\[a-zA-Z]+\{([^}]*)\}/g,'$1')
     .replace(/\\[a-zA-Z]+/g,'').replace(/[{}]/g,'');
 }
+
 function renderHelp(text: string) {
   const html = sanitizeLatex(text)
     .replace(/^(M[eéè]todo\s+\d+[:.:]|Method\s+\d+[:.:]|M[eé]thode\s+\d+[:.:]|Metodo\s+\d+[:.:])/gm,'<strong>$1</strong>')
@@ -119,7 +121,6 @@ function renderHelp(text: string) {
   return <div className="help-text" dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
-// ─── Paywall ──────────────────────────────────────────────────────────────────
 function Paywall({ onUpgrade }: { onUpgrade: () => void }) {
   return (
     <div style={{
@@ -128,14 +129,12 @@ function Paywall({ onUpgrade }: { onUpgrade: () => void }) {
       display:'flex', alignItems:'center', justifyContent:'center',
       padding:'24px', fontFamily:"'Georgia', 'Times New Roman', serif",
     }}>
-      {/* Glow ambiental */}
       <div style={{
         position:'absolute', top:'20%', left:'50%', transform:'translateX(-50%)',
         width:'600px', height:'600px', borderRadius:'50%',
         background:'radial-gradient(circle, rgba(93,173,226,0.08) 0%, transparent 70%)',
         pointerEvents:'none',
       }}/>
-
       <div style={{
         position:'relative', maxWidth:'420px', width:'100%',
         background:'rgba(255,255,255,0.03)',
@@ -146,12 +145,9 @@ function Paywall({ onUpgrade }: { onUpgrade: () => void }) {
         padding:'48px 40px 40px',
         textAlign:'center',
       }}>
-        {/* Logo */}
         <div style={{ marginBottom:'32px' }}>
           <img src="/lexipop-logo.png" alt="LexiPop Math" style={{ height:'80px', opacity:0.95 }} />
         </div>
-
-        {/* Social proof */}
         <div style={{
           display:'inline-block',
           background:'rgba(93,173,226,0.1)',
@@ -163,8 +159,6 @@ function Paywall({ onUpgrade }: { onUpgrade: () => void }) {
         }}>
           Eres del top 17% de usuarios nuevos
         </div>
-
-        {/* Headline */}
         <h2 style={{
           fontSize:'28px', fontWeight:400, color:'#f0f4f8',
           lineHeight:1.3, margin:'0 0 12px',
@@ -174,7 +168,6 @@ function Paywall({ onUpgrade }: { onUpgrade: () => void }) {
           Tu mente ya está<br/>
           <span style={{ fontStyle:'italic', color:'#5DADE2' }}>cambiando.</span>
         </h2>
-
         <p style={{
           fontSize:'16px', color:'rgba(255,255,255,0.5)',
           fontFamily:"'Helvetica Neue', sans-serif",
@@ -182,8 +175,6 @@ function Paywall({ onUpgrade }: { onUpgrade: () => void }) {
         }}>
           No te detengas ahora.
         </p>
-
-        {/* Features */}
         <div style={{
           textAlign:'left', marginBottom:'36px',
           display:'flex', flexDirection:'column', gap:'12px',
@@ -210,8 +201,6 @@ function Paywall({ onUpgrade }: { onUpgrade: () => void }) {
             </div>
           ))}
         </div>
-
-        {/* CTA */}
         <button onClick={onUpgrade} style={{
           width:'100%', padding:'16px',
           background:'linear-gradient(135deg, #5DADE2 0%, #3498DB 100%)',
@@ -224,7 +213,6 @@ function Paywall({ onUpgrade }: { onUpgrade: () => void }) {
         }}>
           Continuar — $199 MXN / mes
         </button>
-
         <p style={{
           fontSize:'12px', color:'rgba(255,255,255,0.3)',
           fontFamily:"'Helvetica Neue', sans-serif",
@@ -232,8 +220,6 @@ function Paywall({ onUpgrade }: { onUpgrade: () => void }) {
         }}>
           Cancela cuando quieras.
         </p>
-
-        {/* Exit */}
         <a href="https://lexipopmath.com" style={{
           fontSize:'12px', color:'rgba(255,255,255,0.25)',
           fontFamily:"'Helvetica Neue', sans-serif",
@@ -246,7 +232,6 @@ function Paywall({ onUpgrade }: { onUpgrade: () => void }) {
   );
 }
 
-// ─── Generadores ──────────────────────────────────────────────────────────────
 const rnd  = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
 const pick = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 function gcd(a: number, b: number): number { return b === 0 ? a : gcd(b, a % b); }
@@ -402,7 +387,6 @@ function gen(reflexId: ReflexId, level: number): Exercise {
   }
 }
 
-// ─── Dropdown ─────────────────────────────────────────────────────────────────
 interface DropdownMenuProps {
   open: boolean;
   align: 'left' | 'right';
@@ -417,7 +401,6 @@ function DropdownMenu({ open, align, children }: DropdownMenuProps) {
   );
 }
 
-// ─── Numeric Keypad ───────────────────────────────────────────────────────────
 interface NumericKeypadProps {
   onDigit: (d: string) => void;
   onBackspace: () => void;
@@ -471,7 +454,6 @@ function NumericKeypad({ onDigit, onBackspace, onSubmit, onToggleSign, onSymbol 
   );
 }
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
 export default function MathExercise() {
   const [lang, setLang]                     = useState<Language>('es');
   const [langOpen, setLangOpen]             = useState(false);
@@ -567,11 +549,11 @@ export default function MathExercise() {
 
   const notifyCorrect = async () => {
     try {
-      const res  = await fetch('/api/math/exercise/complete', { method:'POST', credentials:'include' });
+      const res  = await fetch(`${BASE_URL}/api/math/exercise/complete`, { method:'POST', credentials:'include' });
       const data = await res.json();
       if (data.blocked) setBlocked(true);
     } catch {
-      // silencioso — no bloqueamos el juego si falla la red
+      // silencioso
     }
   };
 
@@ -603,7 +585,7 @@ export default function MathExercise() {
 
   const handleUpgrade = async () => {
     try {
-      const res  = await fetch('/api/math/checkout', {
+      const res  = await fetch(`${BASE_URL}/api/math/checkout`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

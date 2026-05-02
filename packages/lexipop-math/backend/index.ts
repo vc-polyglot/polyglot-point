@@ -17,10 +17,10 @@ app.set("etag", false);
 
 const isProduction = process.env.NODE_ENV === "production";
 
-// â”€â”€â”€ Trust proxy (Railway sits behind one) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Trust proxy (Railway sits behind one) -----------------------------------
 app.set("trust proxy", 1);
 
-// â”€â”€â”€ Canonical redirect â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Canonical redirect -------------------------------------------------------
 const CANONICAL_HOST = process.env.CANONICAL_HOST || "www.lexipopmath.com";
 app.use((req, res, next) => {
   const host  = String(req.headers.host || "");
@@ -31,7 +31,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// â”€â”€â”€ CORS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- CORS --------------------------------------------------------------------
 const allowedExact = new Set(
   [
     process.env.CLIENT_URL,
@@ -40,6 +40,8 @@ const allowedExact = new Set(
     "http://localhost:5174",
     "http://localhost:3000",
     `https://${CANONICAL_HOST}`,
+    "https://localhost",
+    "capacitor://localhost",
   ]
     .filter(Boolean)
     .map((s) => String(s).replace(/\/$/, ""))
@@ -58,7 +60,7 @@ app.use(
   })
 );
 
-// â”€â”€â”€ Session â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Session -----------------------------------------------------------------
 const SESSION_SECRET =
   process.env.SESSION_SECRET ||
   (isProduction
@@ -66,7 +68,7 @@ const SESSION_SECRET =
     : "lexipop-math-dev-secret-change-in-prod");
 
 if (isProduction && !process.env.SESSION_SECRET) {
-  console.warn("[WARN] SESSION_SECRET ausente en producciÃ³n â€” configÃºrala en Railway.");
+  console.warn("[WARN] SESSION_SECRET ausente en produccion - configurala en Railway.");
 }
 
 const sessionOptions: session.SessionOptions = {
@@ -77,7 +79,7 @@ const sessionOptions: session.SessionOptions = {
     secure:   isProduction,
     sameSite: isProduction ? "none" : "lax",
     httpOnly: true,
-    maxAge:   30 * 24 * 60 * 60 * 1000, // 30 dÃ­as
+    maxAge:   30 * 24 * 60 * 60 * 1000,
   },
 };
 
@@ -99,9 +101,7 @@ async function initRedisSessionStore(): Promise<void> {
   }
 }
 
-// â”€â”€â”€ Health â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
-// Privacy Policy
+// --- Privacy Policy ----------------------------------------------------------
 app.get("/privacy", (_req: Request, res: Response) => {
   res.setHeader("Content-Type", "text/html; charset=utf-8");
   res.send(`<!DOCTYPE html>
@@ -151,6 +151,8 @@ app.get("/privacy", (_req: Request, res: Response) => {
 </div>
 </body></html>`);
 });
+
+// --- Health ------------------------------------------------------------------
 app.get("/health", (_req: Request, res: Response) => {
   res.status(200).json({
     status:            "ok",
@@ -164,7 +166,7 @@ app.get("/health", (_req: Request, res: Response) => {
   });
 });
 
-// â”€â”€â”€ Request logger â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Request logger ----------------------------------------------------------
 app.use((req, res, next) => {
   const start = Date.now();
   const path  = req.path;
@@ -175,12 +177,12 @@ app.use((req, res, next) => {
   next();
 });
 
-// â”€â”€â”€ Body parsers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Body parsers ------------------------------------------------------------
 app.use('/api/math/stripe/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 
-// â”€â”€â”€ Bootstrap â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Bootstrap ---------------------------------------------------------------
 (async () => {
   await initRedisSessionStore();
 
@@ -188,13 +190,18 @@ app.use(express.urlencoded({ extended: true, limit: "1mb" }));
   app.use(passport.initialize());
   app.use(passport.session());
 
-  // â”€â”€ Auth routes  (/auth/google, /auth/google/callback, /auth/logout)
   app.use("/auth", authRoutes);
-
-  // â”€â”€ Math API routes  (/api/health, /api/help)
   app.use("/api/math", mathRoutes);
 
-  // â”€â”€ Me endpoint
+  app.get("/api/math/auth/me", (req: Request, res: Response) => {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+    if (req.isAuthenticated && req.isAuthenticated() && req.user) {
+      const user = req.user as any;
+      return res.json({ user: { id: user.id, email: user.email, name: user.name, avatarUrl: user.avatarUrl } });
+    }
+    res.status(401).json({ error: "No autenticado" });
+  });
+
   app.get("/api/me", (req: Request, res: Response) => {
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
     if (req.isAuthenticated && req.isAuthenticated() && req.user) {
@@ -204,24 +211,22 @@ app.use(express.urlencoded({ extended: true, limit: "1mb" }));
     res.status(401).json({ error: "No autenticado" });
   });
 
-  // â”€â”€ Logout
   app.post("/api/logout", (req: Request, res: Response) => {
     req.logout((err) => {
-      if (err) return res.status(500).json({ error: "Error al cerrar sesiÃ³n" });
+      if (err) return res.status(500).json({ error: "Error al cerrar sesion" });
       req.session.destroy((err2) => {
-        if (err2) return res.status(500).json({ error: "Error destruyendo sesiÃ³n" });
+        if (err2) return res.status(500).json({ error: "Error destruyendo sesion" });
         res.clearCookie("connect.sid", {
           path:     "/",
           secure:   isProduction,
           sameSite: isProduction ? "none" : "lax",
           httpOnly: true,
         });
-        res.json({ message: "SesiÃ³n cerrada" });
+        res.json({ message: "Sesion cerrada" });
       });
     });
   });
 
-  // â”€â”€ Global error handler
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status  = err?.status || err?.statusCode || 500;
     const message = err?.message || "Internal Server Error";
@@ -229,7 +234,6 @@ app.use(express.urlencoded({ extended: true, limit: "1mb" }));
     res.status(status).json({ message });
   });
 
-  // â”€â”€ Vite / static frontend
   if (app.get("env") === "development") {
     const http = await import("http");
     const server = http.createServer(app);
@@ -252,4 +256,3 @@ function logBoot(port: number) {
   console.log(`[LexiPop Math] SESSION_SECRET: ${!!process.env.SESSION_SECRET}`);
   console.log(`[LexiPop Math] OPENAI_API_KEY:  ${!!process.env.OPENAI_API_KEY}`);
 }
-
