@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx backend/index.ts",
-    "build": "pnpm run build:frontend && pnpm run build:backend",
+    "build": "pnpm run build:backend",
     "build:frontend": "cd frontend && vite build",
     "build:backend": "tsup backend/index.ts --format cjs --out-dir dist --no-splitting --external vite",
     "start": "node dist/index.cjs",
