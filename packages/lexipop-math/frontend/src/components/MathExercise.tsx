@@ -2,7 +2,7 @@
 import { Capacitor } from '@capacitor/core';
 import './MathExercise.css';
 
-const BASE_URL = Capacitor.isNativePlatform() ? 'https://lexipopmath.com' : '';
+const BASE_URL = Capacitor.isNativePlatform() ? 'https://www.lexipopmath.com' : '';
 
 type Language = 'es' | 'en' | 'fr' | 'de' | 'pt' | 'it';
 type Section   = 'aritmetica' | 'algebra' | 'funciones';

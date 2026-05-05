@@ -1,20 +1,28 @@
 apply plugin: 'com.android.application'
 android {
+
+    signingConfigs {
+        release {
+            storeFile file("C:\\projects\\polyglot-point.jks")
+            storePassword "PolyglotP0int2026!"
+            keyAlias "polyglot-point"
+            keyPassword "PolyglotP0int2026!"
+        }
+    }
     namespace = "com.polyglot.point"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.polyglot.point"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 19
-        versionName "1.0.2"
+        versionCode 25
+        versionName "1.0.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
-    buildTypes {
-        release {
+    buildTypes { release { signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -45,6 +53,8 @@ try {
 } catch(Exception e) {
     logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
 }
+
+
 
 
 

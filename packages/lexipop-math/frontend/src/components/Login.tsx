@@ -19,19 +19,48 @@ interface LoginProps {
 }
 
 const T = {
-  es: { title: 'Bienvenido a LexiPop Math', subtitle: 'Entrena tu mente con matemáticas mentales', loginBtn: 'Continuar con Google', loading: 'Cargando...' },
-  en: { title: 'Welcome to LexiPop Math', subtitle: 'Train your mind with mental math', loginBtn: 'Continue with Google', loading: 'Loading...' },
-  fr: { title: 'Bienvenue à LexiPop Math', subtitle: 'Entraînez votre esprit avec des mathématiques mentales', loginBtn: 'Continuer avec Google', loading: 'Chargement...' },
-  de: { title: 'Willkommen bei LexiPop Math', subtitle: 'Trainiere deinen Geist mit Kopfrechnen', loginBtn: 'Mit Google fortfahren', loading: 'Laden...' },
-  pt: { title: 'Bem-vindo ao LexiPop Math', subtitle: 'Treine sua mente com matemática mental', loginBtn: 'Continuar com Google', loading: 'Carregando...' },
-  it: { title: 'Benvenuto a LexiPop Math', subtitle: 'Allena la tua mente con la matematica mentale', loginBtn: 'Continua con Google', loading: 'Caricamento...' }
+  es: {
+    title: 'Bienvenido a LexiPop Math',
+    subtitle: 'Entrena tu mente con matemáticas mentales',
+    loginBtn: 'Continuar con Google',
+    loading: 'Cargando...'
+  },
+  en: {
+    title: 'Welcome to LexiPop Math',
+    subtitle: 'Train your mind with mental math',
+    loginBtn: 'Continue with Google',
+    loading: 'Loading...'
+  },
+  fr: {
+    title: 'Bienvenue à LexiPop Math',
+    subtitle: 'Entraînez votre esprit avec des mathématiques mentales',
+    loginBtn: 'Continuer avec Google',
+    loading: 'Chargement...'
+  },
+  de: {
+    title: 'Willkommen bei LexiPop Math',
+    subtitle: 'Trainiere deinen Geist mit Kopfrechnen',
+    loginBtn: 'Mit Google fortfahren',
+    loading: 'Laden...'
+  },
+  pt: {
+    title: 'Bem-vindo ao LexiPop Math',
+    subtitle: 'Treine sua mente com matemática mental',
+    loginBtn: 'Continuar com Google',
+    loading: 'Carregando...'
+  },
+  it: {
+    title: 'Benvenuto a LexiPop Math',
+    subtitle: 'Allena la tua mente con la matematica mentale',
+    loginBtn: 'Continua con Google',
+    loading: 'Caricamento...'
+  }
 };
 
-const BASE_URL = Capacitor.isNativePlatform()
-  ? 'https://lexipopmath.com'
-  : '';
+const BASE_URL = 'https://www.lexipopmath.com';
 
-const WEB_CLIENT_ID = '613395578802-ci6n809e4fbaieurdjqnsjurh4aoimn9.apps.googleusercontent.com';
+const WEB_CLIENT_ID =
+  '613395578802-ci6n809e4fbaieurdjqnsjurh4aoimn9.apps.googleusercontent.com';
 
 export default function Login({ onLoginSuccess, lang }: LoginProps) {
   const [loading, setLoading] = useState(true);
@@ -46,16 +75,18 @@ export default function Login({ onLoginSuccess, lang }: LoginProps) {
               webClientId: WEB_CLIENT_ID,
             },
           });
-          console.log('SocialLogin initialized');
         } catch (err) {
-          console.error('Error initializing SocialLogin:', err);
+          console.log('INIT ERROR:', err);
         }
       }
     };
+
     init();
 
-    fetch(`${BASE_URL}/api/math/auth/me`, { credentials: 'include' })
-      .then(res => res.ok ? res.json() : null)
+    fetch(`${BASE_URL}/api/math/auth/me`, {
+      credentials: 'include',
+    })
+      .then(res => (res.ok ? res.json() : null))
       .then(data => {
         if (data?.user) onLoginSuccess(data.user);
         setLoading(false);
@@ -66,30 +97,52 @@ export default function Login({ onLoginSuccess, lang }: LoginProps) {
   const handleGoogleLogin = async () => {
     try {
       const result = await SocialLogin.login({
-  provider: 'google',
-  options: {},
-});
-
-      console.log('FULL RESULT:', JSON.stringify(result, null, 2));
-
-      const idToken = result?.result?.idToken;
-      if (!idToken) throw new Error('No idToken');
-
-      const response = await fetch(`${BASE_URL}/api/math/auth/google/token`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ idToken }),
+        provider: 'google',
+        options: {},
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data.user) onLoginSuccess(data.user);
+      const r = result?.result;
+
+      console.log('TOKEN:', r?.idToken);
+      console.log('EMAIL:', r?.profile?.email);
+      console.log('NAME:', r?.profile?.name);
+
+      if (!r?.idToken) {
+        console.log('NO ID TOKEN');
+        return;
+      }
+
+      const response = await fetch(`${BASE_URL}/auth/google/token`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ idToken: r.idToken }),
+        }
+      );
+
+      const text = await response.text();
+
+      let data: any = null;
+
+      try {
+        data = JSON.parse(text);
+      } catch {
+        console.log('INVALID JSON RESPONSE');
+      }
+
+      if (!response.ok) {
+        console.log('BACKEND ERROR:', data || text);
+        return;
+      }
+
+      if (data?.user) {
+        onLoginSuccess(data.user);
+      } else {
+        console.log('NO USER IN RESPONSE');
       }
     } catch (error: any) {
-      if (!error.message?.includes('cancel')) {
-        console.error('Error en login:', error);
-      }
+      if (error?.message?.includes('cancel')) return;
+      console.log('LOGIN ERROR:', error);
     }
   };
 
@@ -98,7 +151,7 @@ export default function Login({ onLoginSuccess, lang }: LoginProps) {
       <div className="login-container">
         <div className="login-card">
           <div className="loading-spinner" />
-          <p className="loading-text">{t.loading}</p>
+          <p>{t.loading}</p>
         </div>
       </div>
     );
@@ -110,6 +163,7 @@ export default function Login({ onLoginSuccess, lang }: LoginProps) {
         <img src="/lexipop-logo.png" alt="LexiPop Math" className="login-logo" />
         <h1 className="login-title">{t.title}</h1>
         <p className="login-subtitle">{t.subtitle}</p>
+
         <button className="google-login-btn" onClick={handleGoogleLogin}>
           <svg className="google-icon" viewBox="0 0 24 24" width="20" height="20">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>

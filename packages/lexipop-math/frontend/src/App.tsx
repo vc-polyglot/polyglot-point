@@ -15,7 +15,7 @@ interface User {
 }
 
 const BASE_URL = Capacitor.isNativePlatform()
-  ? 'https://lexipopmath.com'
+  ? 'https://www.lexipopmath.com'
   : '';
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
   const [lang, setLang] = useState<Language>('es');
 
   const handleLogout = async () => {
-    await fetch(`${BASE_URL}/api/math/auth/logout`, { method: 'POST', credentials: 'include' });
+    await fetch(`${BASE_URL}/api/logout`, { method: 'POST', credentials: 'include' });
     setUser(null);
   };
 
