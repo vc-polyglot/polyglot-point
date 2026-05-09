@@ -103,33 +103,6 @@ export default function Home({ onStart, onLearn, decisions = [] }: HomeProps) {
           </button>
         </section>
 
-        <div style={{ height: 1, background: T.surfaceMid, marginBottom: "2rem" }} />
-
-        {/* Dominios */}
-        <section style={{ marginBottom: "2rem" }}>
-          <p style={{
-            fontSize: "0.8125rem", fontWeight: 600, textTransform: "uppercase" as const,
-            letterSpacing: "0.1em", color: T.outline, marginBottom: "1rem",
-          }}>
-            ¿Qué área de tu vida?
-          </p>
-          <div style={{ display: "flex", flexDirection: "column" as const, gap: "0.5rem" }}>
-            {Object.entries(DOMAIN_LABEL).map(([id, label]) => {
-              const accent = DOMAIN_ACCENT[id];
-              return (
-                <button key={id} onClick={onStart} style={{
-                  background: accent.bg, border: "none", borderRadius: "0.875rem",
-                  padding: "0.875rem 1.125rem",
-                  display: "flex", alignItems: "center", justifyContent: "space-between",
-                  cursor: "pointer", transition: "all 180ms", fontFamily: T.font,
-                }}>
-                  <span style={{ fontSize: "0.9375rem", fontWeight: 600, color: accent.color }}>{label}</span>
-                  <span style={{ fontSize: "1rem", color: accent.color, opacity: 0.5 }}>›</span>
-                </button>
-              );
-            })}
-          </div>
-        </section>
 
         <div style={{ height: 1, background: T.surfaceMid, marginBottom: "2rem" }} />
 
