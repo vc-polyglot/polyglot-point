@@ -1,46 +1,38 @@
 export const THEME = {
-  primary:        "#1a7a4a",
-  primaryMid:     "#145f39",
-  primaryDim:     "#2a9a5a",
-  primaryFixed:   "#d0f0e0",
-
-  coral:          "#e85d4a",
-  coralLight:     "#fde8e5",
-  gold:           "#f5c842",
-  goldLight:      "#fef8e1",
-
-  surface:        "#f2f0ed",
-  surfaceLow:     "#eae8e4",
+  primary:        "#0035c5",
+  primaryMid:     "#0047ff",
+  primaryDim:     "#b9c3ff",
+  primaryFixed:   "#dde1ff",
+  secondary:      "#5b00df",
+  secondaryDim:   "#cfbdff",
+  surface:        "#f8f9fa",
+  surfaceLow:     "#f3f4f5",
   surfaceCard:    "#ffffff",
-  surfaceMid:     "#e0deda",
-  surfaceHigh:    "#d4d2ce",
-  surfaceHighest: "#c8c6c2",
-
-  onSurface:      "#1a1a1a",
-  onMuted:        "#4a4a4a",
-  outline:        "#8a8a8a",
-  outlineVariant: "#c8c6c2",
-
-  error:          "#c0392b",
-  errorBg:        "#fdecea",
-
-  fontHead:  "'Inter', system-ui, sans-serif",
-  fontBody:  "'Inter', system-ui, sans-serif",
-
+  surfaceMid:     "#edeeef",
+  surfaceHigh:    "#e7e8e9",
+  surfaceHighest: "#e1e3e4",
+  onSurface:      "#191c1d",
+  onMuted:        "#434657",
+  outline:        "#747688",
+  outlineVariant: "#c4c5da",
+  error:          "#ba1a1a",
+  errorBg:        "#ffdad6",
+  fontHead: "'Hanken Grotesk', system-ui, sans-serif",
+  fontBody: "'Inter', system-ui, sans-serif",
+  fontLabel:"'Geist', system-ui, sans-serif",
   space: {
     1:"0.25rem", 2:"0.5rem",  3:"0.75rem", 4:"1rem",
     5:"1.25rem", 6:"1.5rem",  8:"2rem",    10:"2.5rem",
     12:"3rem",   16:"4rem",   20:"5rem",
   },
   radius: {
-    sm:"0.375rem", md:"0.75rem", lg:"1rem",
-    xl:"1.25rem",  "2xl":"1.75rem", full:"9999px",
+    sm:"0.25rem", md:"0.5rem", lg:"1rem",
+    xl:"1.5rem",  "2xl":"2rem", full:"9999px",
   },
   shadow: {
-    ambient: "0 2px 12px rgba(0,0,0,0.06)",
-    float:   "0 8px 32px rgba(0,0,0,0.10)",
-    card:    "0 1px 4px rgba(0,0,0,0.08)",
+    ambient: "0 2px 12px rgba(0,0,0,0.04)",
+    float:   "0 8px 30px rgba(0,0,0,0.06)",
+    card:    "0 0 0 1px rgba(0,0,0,0.08)",
   },
 } as const;
-
 export type Theme = typeof THEME;
