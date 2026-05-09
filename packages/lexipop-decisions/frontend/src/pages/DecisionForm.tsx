@@ -430,6 +430,19 @@ export default function DecisionForm({ onSubmit, onBack, loading }: Props) {
 
       {step === "domain" && (
         <>
+        <div style={{ marginBottom: "2rem", borderRadius: "1rem", overflow: "hidden" }}>
+            <img
+              src="/img-camino.png"
+              alt=""
+              style={{
+                width: "100%",
+                aspectRatio: "3 / 1",
+                objectFit: "cover",
+                objectPosition: "center 40%",
+                display: "block",
+              }}
+            />
+          </div>
           <h2 style={{ fontFamily: THEME.fontHead, fontStyle: "italic", fontSize: "clamp(1.75rem, 6vw, 2.25rem)", fontWeight: 600, color: THEME.primary, marginBottom: "0.5rem" }}>
             ¿Qué tipo de decisión tienes?
           </h2>
