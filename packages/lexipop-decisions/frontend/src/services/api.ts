@@ -1,10 +1,37 @@
 import type { DecisionInput, DecisionResult } from "../types";
+import { Capacitor } from "@capacitor/core";
+import { GoogleAuth } from "@daniele-rolli/capacitor-google-auth";
 
-const ORIGIN = (typeof window !== "undefined" && (window as any)?.Capacitor?.isNativePlatform?.())
+export const ORIGIN = Capacitor.isNativePlatform()
   ? "https://lexipop-decisions-production.up.railway.app"
   : "";
 
 const BASE = `${ORIGIN}/api`;
+
+export async function goGoogleLogin(): Promise<{ ok: boolean; user?: any; error?: string }> {
+  try {
+    const result = await GoogleAuth.signIn();
+    const idToken = result.authentication?.idToken;
+    if (!idToken) throw new Error("No idToken");
+
+    const response = await fetch(`${BASE}/auth/google/token`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ idToken }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return { ok: true, user: data.user };
+    }
+    return { ok: false, error: "Error al autenticar" };
+  } catch (error: any) {
+    if (error.message?.includes("cancel")) return { ok: false, error: "cancelled" };
+    console.error("Error en login:", error);
+    return { ok: false, error: error.message };
+  }
+}
 
 export async function evaluateDecision(payload: DecisionInput): Promise<DecisionResult> {
   const res = await fetch(`${BASE}/decision/analyze`, {
@@ -24,4 +51,11 @@ export async function getMe(): Promise<{ id: number; email: string; name: string
   const res = await fetch(`${BASE}/me`, { credentials: "include" });
   if (res.status === 401) return null;
   return res.json();
+}
+
+export async function logout(): Promise<void> {
+  await fetch(`${BASE}/logout`, { method: "POST", credentials: "include" });
+  if (Capacitor.isNativePlatform()) {
+    try { await GoogleAuth.signOut(); } catch {}
+  }
 }
