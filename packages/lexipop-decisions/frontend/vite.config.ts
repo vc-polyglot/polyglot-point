@@ -9,4 +9,9 @@ export default defineConfig({
       "/auth": "http://localhost:3002",
     },
   },
+  build: {
+    rollupOptions: {
+      external: ["@capacitor/core"],
+    },
+  },
 });

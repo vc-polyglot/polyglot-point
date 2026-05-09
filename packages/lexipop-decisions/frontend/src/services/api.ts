@@ -1,8 +1,8 @@
 import type { DecisionInput, DecisionResult } from "../types";
-import { Capacitor } from "@capacitor/core";
-import { GoogleAuth } from "@daniele-rolli/capacitor-google-auth";
 
-export const ORIGIN = Capacitor.isNativePlatform()
+const isNative = typeof window !== "undefined" && !!(window as any)?.Capacitor?.isNativePlatform?.();
+
+export const ORIGIN = isNative
   ? "https://lexipop-decisions-production.up.railway.app"
   : "";
 
@@ -10,6 +10,7 @@ const BASE = `${ORIGIN}/api`;
 
 export async function goGoogleLogin(): Promise<{ ok: boolean; user?: any; error?: string }> {
   try {
+    const { GoogleAuth } = await import("@daniele-rolli/capacitor-google-auth");
     const result = await GoogleAuth.signIn();
     const idToken = result.authentication?.idToken;
     if (!idToken) throw new Error("No idToken");
@@ -55,7 +56,10 @@ export async function getMe(): Promise<{ id: number; email: string; name: string
 
 export async function logout(): Promise<void> {
   await fetch(`${BASE}/logout`, { method: "POST", credentials: "include" });
-  if (Capacitor.isNativePlatform()) {
-    try { await GoogleAuth.signOut(); } catch {}
+  if (isNative) {
+    try {
+      const { GoogleAuth } = await import("@daniele-rolli/capacitor-google-auth");
+      await GoogleAuth.signOut();
+    } catch {}
   }
 }
