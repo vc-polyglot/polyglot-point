@@ -29,7 +29,7 @@ export default function Home({ onStart, onLearn }: HomeProps) {
         padding: "0.875rem 1.5rem",
         boxShadow: "0 1px 0 rgba(0,0,0,0.06)",
       }}>
-        <img src="/logo.png" alt="LexiPop Decisions" style={{ height: "2.25rem", width: "auto", display: "block" }} />
+        <img src="/logo.png" alt="Ohtlica" style={{ height: "2.25rem", width: "auto", display: "block" }} />
         <button onClick={onLearn} style={{
           background: "none", border: "none", cursor: "pointer",
           fontSize: "0.9375rem", fontWeight: 500, color: T.onMuted,

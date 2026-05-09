@@ -113,7 +113,7 @@ function Nav({ screen, setScreen, lang, setLang }: {
         fontSize: "1rem", fontWeight: 700, color: T.onSurface,
         display: "flex", alignItems: "center", gap: "0.5rem", padding: 0, fontFamily: T.font,
       }}>
-        <img src="/logo.png" alt="LexiPop Decision" style={{ height: "2rem", width: "auto" }} />
+       <img src="/logo.png" alt="Ohtlica" style={{ height: "2rem", width: "auto" }} />
       </button>
 
       <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
