@@ -36,11 +36,9 @@ function timeAgo(dateStr: string): string {
 interface HomeProps {
   onStart: () => void;
   onLearn: () => void;
-  decisions?: Array<{ id: number; title: string; type: string; createdAt: string }>;
 }
 
-export default function Home({ onStart, onLearn, decisions = [] }: HomeProps) {
-  const recent = decisions.slice(0, 3);
+export default function Home({ onStart, onLearn }: HomeProps) {
 
   return (
     <div style={{ minHeight: "100dvh", background: T.surface, fontFamily: T.font, color: T.onSurface }}>
@@ -103,68 +101,6 @@ export default function Home({ onStart, onLearn, decisions = [] }: HomeProps) {
           </button>
         </section>
 
-
-        <div style={{ height: 1, background: T.surfaceMid, marginBottom: "2rem" }} />
-
-        {/* Historial */}
-        {recent.length > 0 ? (
-          <section>
-            <p style={{
-              fontSize: "0.8125rem", fontWeight: 600, textTransform: "uppercase" as const,
-              letterSpacing: "0.1em", color: T.outline, marginBottom: "1rem",
-            }}>
-              Decisiones recientes
-            </p>
-            <div style={{ display: "flex", flexDirection: "column" as const, gap: "0.625rem" }}>
-              {recent.map(d => {
-                const accent = DOMAIN_ACCENT[d.type] ?? { bg: T.surfaceLow, color: T.onMuted };
-                return (
-                  <div key={d.id} style={{
-                    background: T.surfaceCard, borderRadius: "1rem",
-                    padding: "1rem 1.25rem",
-                    display: "flex", alignItems: "center", gap: "0.875rem",
-                    boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
-                  }}>
-                    <span style={{
-                      padding: "0.25rem 0.75rem", borderRadius: "9999px",
-                      fontSize: "0.75rem", fontWeight: 700,
-                      textTransform: "uppercase" as const, letterSpacing: "0.08em",
-                      background: accent.bg, color: accent.color, flexShrink: 0,
-                    }}>
-                      {DOMAIN_LABEL[d.type] ?? d.type}
-                    </span>
-                    <span style={{
-                      fontSize: "0.9375rem", fontWeight: 600, color: T.onSurface,
-                      flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                    }}>
-                      {d.title}
-                    </span>
-                    <span style={{ fontSize: "0.8125rem", color: T.outline, flexShrink: 0 }}>
-                      {timeAgo(d.createdAt)}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-        ) : (
-          <section style={{ textAlign: "center" as const, padding: "1rem 0" }}>
-            <div style={{
-              width: "3.5rem", height: "3.5rem", borderRadius: "50%",
-              background: "#d0f0e0",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              margin: "0 auto 1rem",
-            }}>
-              <span className="material-symbols-outlined" style={{ color: T.primary, fontSize: "1.5rem" }}>
-                lightbulb
-              </span>
-            </div>
-            <p style={{ fontSize: "1rem", color: T.onMuted, lineHeight: 1.6 }}>
-              Tu historial aparecerá aquí.<br />
-              Empieza con la decisión que tienes en mente ahora.
-            </p>
-          </section>
-        )}
 
       </main>
 
