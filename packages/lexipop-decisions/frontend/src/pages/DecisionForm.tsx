@@ -232,7 +232,7 @@ function DynamicQuestions({ title, level, onSubmit, loading }: {
     </div>
   );
 
-  const canSubmit = form.altA.trim().length > 5 && form.altB.trim().length > 5;
+  const canSubmit = form.altA.trim().length > 1 && form.altB.trim().length > 1;
 
   const inputStyle = {
     width: "100%", padding: "0.75rem 1rem", background: THEME.surfaceLow,
