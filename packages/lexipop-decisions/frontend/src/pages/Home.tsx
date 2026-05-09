@@ -1,31 +1,30 @@
-const logo = "/logo.png";
-
 const T = {
   primary:     "#1a7a4a",
   primaryMid:  "#145f39",
-  coral:       "#e85d4a",
-  coralLight:  "#fde8e5",
-  gold:        "#f5c842",
-  goldLight:   "#fef8e1",
   surface:     "#f2f0ed",
   surfaceLow:  "#eae8e4",
   surfaceCard: "#ffffff",
   surfaceMid:  "#e0deda",
-  surfaceHigh: "#d4d2ce",
   onSurface:   "#1a1a1a",
   onMuted:     "#4a4a4a",
   outline:     "#8a8a8a",
   font:        "'Inter', system-ui, sans-serif",
 };
 
-const typeLabel: Record<string, string> = {
-  cotidiana: "Personal", carrera: "Carrera", financiera: "Finanzas",
+const DOMAIN_ACCENT: Record<string, { bg: string; color: string }> = {
+  cotidiana:  { bg: "#fef8e1", color: "#7a5a00" },
+  relaciones: { bg: "#fde8e5", color: "#8a2010" },
+  carrera:    { bg: "#e0f0e8", color: "#0a4a28" },
+  finanzas:   { bg: "#e8edf8", color: "#1a2a6a" },
+  identidad:  { bg: "#f0e8f8", color: "#4a1a7a" },
 };
 
-const typeColor: Record<string, { bg: string; color: string }> = {
-  cotidiana:  { bg: T.goldLight,  color: "#7a5a00" },
-  carrera:    { bg: T.coralLight, color: "#8a2010" },
-  financiera: { bg: "#e0f0e8",    color: "#0a4a28" },
+const DOMAIN_LABEL: Record<string, string> = {
+  cotidiana:  "Vida cotidiana",
+  relaciones: "Relaciones",
+  carrera:    "Carrera y propósito",
+  finanzas:   "Finanzas",
+  identidad:  "Identidad y crecimiento",
 };
 
 function timeAgo(dateStr: string): string {
@@ -54,7 +53,7 @@ export default function Home({ onStart, onLearn, decisions = [] }: HomeProps) {
         padding: "0.875rem 1.5rem",
         boxShadow: "0 1px 0 rgba(0,0,0,0.06)",
       }}>
-        <img src={logo} alt="LexiPop Decisions" style={{ height: "2.25rem", width: "auto", display: "block" }} />
+        <img src="/logo.png" alt="LexiPop Decisions" style={{ height: "2.25rem", width: "auto", display: "block" }} />
         <button onClick={onLearn} style={{
           background: "none", border: "none", cursor: "pointer",
           fontSize: "0.9375rem", fontWeight: 500, color: T.onMuted,
@@ -73,7 +72,7 @@ export default function Home({ onStart, onLearn, decisions = [] }: HomeProps) {
             fontSize: "0.8125rem", fontWeight: 600, textTransform: "uppercase" as const,
             letterSpacing: "0.1em", color: T.primary, marginBottom: "0.75rem",
           }}>
-            Toma mejores decisiones
+            Navega tus conflictos
           </p>
           <h1 style={{
             fontSize: "clamp(2rem, 8vw, 3rem)", fontWeight: 800,
@@ -86,10 +85,9 @@ export default function Home({ onStart, onLearn, decisions = [] }: HomeProps) {
             fontSize: "1.0625rem", color: T.onMuted,
             lineHeight: 1.65, marginBottom: "1.75rem",
           }}>
-            Describe tu situación. La app calcula el valor esperado, detecta sesgos y te da un análisis en segundos.
+            No te decimos qué hacer. Te mostramos cómo estás pensando.
           </p>
 
-          {/* CTA principal */}
           <button onClick={onStart} style={{
             width: "100%",
             background: `linear-gradient(135deg, ${T.primary} 0%, ${T.primaryMid} 100%)`,
@@ -101,52 +99,41 @@ export default function Home({ onStart, onLearn, decisions = [] }: HomeProps) {
             display: "flex", alignItems: "center", justifyContent: "center", gap: "0.6rem",
             transition: "all 180ms",
           }}>
-            <span className="material-symbols-outlined" style={{ fontSize: "1.25rem" }}>add_circle</span>
             Analizar una decisión
           </button>
         </section>
 
-        {/* Divisor */}
         <div style={{ height: 1, background: T.surfaceMid, marginBottom: "2rem" }} />
 
-        {/* Cards de tipo — preview visual */}
+        {/* Dominios */}
         <section style={{ marginBottom: "2rem" }}>
           <p style={{
             fontSize: "0.8125rem", fontWeight: 600, textTransform: "uppercase" as const,
             letterSpacing: "0.1em", color: T.outline, marginBottom: "1rem",
           }}>
-            ¿Qué tipo de decisión?
+            ¿Qué área de tu vida?
           </p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem" }}>
-            {[
-              { label: "Cotidiana", bg: T.goldLight, color: "#7a5a00", icon: "wb_sunny" },
-              { label: "Carrera",   bg: T.coralLight, color: "#8a2010", icon: "work" },
-              { label: "Finanzas",  bg: "#e0f0e8",    color: "#0a4a28", icon: "payments" },
-            ].map(({ label, bg, color, icon }) => (
-              <button key={label} onClick={onStart} style={{
-                background: bg, border: "none", borderRadius: "1.25rem",
-                padding: "1.125rem 0.75rem",
-                display: "flex", flexDirection: "column" as const,
-                alignItems: "center", gap: "0.5rem",
-                cursor: "pointer", transition: "all 180ms",
-                boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
-              }}>
-                <span className="material-symbols-outlined" style={{ fontSize: "1.5rem", color }}>
-                  {icon}
-                </span>
-                <span style={{
-                  fontSize: "0.875rem", fontWeight: 600, color,
-                  fontFamily: T.font,
-                }}>{label}</span>
-              </button>
-            ))}
+          <div style={{ display: "flex", flexDirection: "column" as const, gap: "0.5rem" }}>
+            {Object.entries(DOMAIN_LABEL).map(([id, label]) => {
+              const accent = DOMAIN_ACCENT[id];
+              return (
+                <button key={id} onClick={onStart} style={{
+                  background: accent.bg, border: "none", borderRadius: "0.875rem",
+                  padding: "0.875rem 1.125rem",
+                  display: "flex", alignItems: "center", justifyContent: "space-between",
+                  cursor: "pointer", transition: "all 180ms", fontFamily: T.font,
+                }}>
+                  <span style={{ fontSize: "0.9375rem", fontWeight: 600, color: accent.color }}>{label}</span>
+                  <span style={{ fontSize: "1rem", color: accent.color, opacity: 0.5 }}>›</span>
+                </button>
+              );
+            })}
           </div>
         </section>
 
-        {/* Divisor */}
         <div style={{ height: 1, background: T.surfaceMid, marginBottom: "2rem" }} />
 
-        {/* Historial o estado vacío */}
+        {/* Historial */}
         {recent.length > 0 ? (
           <section>
             <p style={{
@@ -156,42 +143,42 @@ export default function Home({ onStart, onLearn, decisions = [] }: HomeProps) {
               Decisiones recientes
             </p>
             <div style={{ display: "flex", flexDirection: "column" as const, gap: "0.625rem" }}>
-              {recent.map(d => (
-                <div key={d.id} style={{
-                  background: T.surfaceCard, borderRadius: "1rem",
-                  padding: "1rem 1.25rem",
-                  display: "flex", alignItems: "center", gap: "0.875rem",
-                  boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
-                }}>
-                  <span style={{
-                    padding: "0.25rem 0.75rem", borderRadius: "9999px",
-                    fontSize: "0.75rem", fontWeight: 700,
-                    textTransform: "uppercase" as const, letterSpacing: "0.08em",
-                    background: typeColor[d.type]?.bg ?? T.surfaceLow,
-                    color: typeColor[d.type]?.color ?? T.onMuted,
-                    flexShrink: 0,
+              {recent.map(d => {
+                const accent = DOMAIN_ACCENT[d.type] ?? { bg: T.surfaceLow, color: T.onMuted };
+                return (
+                  <div key={d.id} style={{
+                    background: T.surfaceCard, borderRadius: "1rem",
+                    padding: "1rem 1.25rem",
+                    display: "flex", alignItems: "center", gap: "0.875rem",
+                    boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
                   }}>
-                    {typeLabel[d.type] ?? d.type}
-                  </span>
-                  <span style={{
-                    fontSize: "0.9375rem", fontWeight: 600,
-                    color: T.onSurface, flex: 1,
-                    overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                  }}>
-                    {d.title}
-                  </span>
-                  <span style={{ fontSize: "0.8125rem", color: T.outline, flexShrink: 0 }}>
-                    {timeAgo(d.createdAt)}
-                  </span>
-                </div>
-              ))}
+                    <span style={{
+                      padding: "0.25rem 0.75rem", borderRadius: "9999px",
+                      fontSize: "0.75rem", fontWeight: 700,
+                      textTransform: "uppercase" as const, letterSpacing: "0.08em",
+                      background: accent.bg, color: accent.color, flexShrink: 0,
+                    }}>
+                      {DOMAIN_LABEL[d.type] ?? d.type}
+                    </span>
+                    <span style={{
+                      fontSize: "0.9375rem", fontWeight: 600, color: T.onSurface,
+                      flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                    }}>
+                      {d.title}
+                    </span>
+                    <span style={{ fontSize: "0.8125rem", color: T.outline, flexShrink: 0 }}>
+                      {timeAgo(d.createdAt)}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </section>
         ) : (
           <section style={{ textAlign: "center" as const, padding: "1rem 0" }}>
             <div style={{
               width: "3.5rem", height: "3.5rem", borderRadius: "50%",
-              background: T.primaryFixed ?? "#d0f0e0",
+              background: "#d0f0e0",
               display: "flex", alignItems: "center", justifyContent: "center",
               margin: "0 auto 1rem",
             }}>

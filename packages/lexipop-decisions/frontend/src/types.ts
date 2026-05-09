@@ -2,7 +2,7 @@
 // Sin importar el backend directamente — son tipos duplicados por diseño
 // (el frontend no debe depender del backend en el monorepo).
 
-export type DecisionLevel = "cotidiana" | "carrera" | "financiera";
+export type DecisionLevel = "cotidiana" | "relaciones" | "carrera" | "finanzas" | "identidad";
 
 export interface DecisionInput {
   title:              string;

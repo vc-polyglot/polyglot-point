@@ -1,20 +1,22 @@
 import type { DecisionInput, DecisionResult } from "../types";
 
-const BASE = "/api";
+const ORIGIN = (typeof window !== "undefined" && (window as any)?.Capacitor?.isNativePlatform?.())
+  ? "https://lexipop-decisions-production.up.railway.app"
+  : "";
+
+const BASE = `${ORIGIN}/api`;
 
 export async function evaluateDecision(payload: DecisionInput): Promise<DecisionResult> {
   const res = await fetch(`${BASE}/decision/analyze`, {
-    method:  "POST",
-    headers: { "Content-Type": "application/json" },
+    method:      "POST",
+    headers:     { "Content-Type": "application/json" },
     credentials: "include",
-    body:    JSON.stringify(payload),
+    body:        JSON.stringify(payload),
   });
-
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: "Error desconocido" }));
     throw new Error(err.error || `HTTP ${res.status}`);
   }
-
   return res.json();
 }
 
