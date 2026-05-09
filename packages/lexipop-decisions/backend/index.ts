@@ -36,11 +36,13 @@ const allowedExact = new Set(
   [
     process.env.CLIENT_URL,
     process.env.FRONTEND_URL,
-    "http://localhost:3002",  // Mismo puerto (Vite middleware)
+    "http://localhost:3002",
     "http://localhost:5173",
     "http://localhost:5174",
     "http://localhost:3000",
     `https://${CANONICAL_HOST}`,
+    "capacitor://localhost",
+    "https://localhost",
   ]
     .filter(Boolean)
     .map((s) => String(s).replace(/\/$/, ""))

@@ -1,19 +1,64 @@
 import { Router } from "express";
+import { OAuth2Client } from "google-auth-library";
 import { runDecisionEngine } from "./core/decisionEngine";
 import type { DecisionInput, AIAnalysis } from "./core/types";
 import { generateQuestions } from "./api-generate-questions";
+import { db } from "./db";
+import { users } from "./schema";
+import { eq } from "drizzle-orm";
 
 const router = Router();
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID_WEB);
 
-// ── Health ────────────────────────────────────────────────────────────────────
+// ── Auth Google Token ────────────────────────────────────────────────────────
+router.post("/auth/google/token", async (req, res) => {
+  try {
+    const { idToken } = req.body;
+    if (!idToken) return res.status(400).json({ error: "idToken requerido" });
+
+    const ticket = await googleClient.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_CLIENT_ID_WEB,
+    });
+
+    const payload = ticket.getPayload();
+    if (!payload) return res.status(401).json({ error: "Token inválido" });
+    if (!payload.email_verified) return res.status(401).json({ error: "Email no verificado" });
+
+    const email     = payload.email!;
+    const name      = payload.name || email.split("@")[0];
+    const googleId  = payload.sub;
+    const avatarUrl = payload.picture || null;
+
+    const [existing] = await db.select().from(users).where(eq(users.googleId, googleId)).limit(1);
+
+    let user = existing;
+    if (!user) {
+      const [created] = await db.insert(users).values({ email, name, googleId, avatarUrl }).returning();
+      user = created;
+    }
+
+    await new Promise<void>((resolve, reject) => {
+      req.login(user, (err) => err ? reject(err) : resolve());
+    });
+
+    return res.json({ ok: true, user: { id: user.id, email: user.email, name: user.name, avatarUrl: user.avatarUrl } });
+
+  } catch (err) {
+    console.error("[Auth/Google/Token]", err);
+    return res.status(401).json({ error: "Token inválido o expirado" });
+  }
+});
+
+// ── Health ───────────────────────────────────────────────────────────────────
 router.get("/health", (_req, res) => {
   res.json({ status: "ok", app: "lexipop-decision" });
 });
 
-// ── Generate personalized questions ──────────────────────────────────────────
+// ── Generate personalized questions ─────────────────────────────────────────
 router.post("/decision/generate-questions", generateQuestions);
 
-// ── Analyze decision ──────────────────────────────────────────────────────────
+// ── Analyze decision ─────────────────────────────────────────────────────────
 router.post("/decision/analyze", async (req, res) => {
   const input = req.body as DecisionInput;
 
@@ -28,8 +73,8 @@ router.post("/decision/analyze", async (req, res) => {
     return res.status(500).json({ error: "OPENAI_API_KEY no configurada." });
   }
 
-  const systemPrompt = `Eres un sistema de análisis estructural de decisiones. 
-Tu función NO es aconsejar al usuario qué hacer. 
+  const systemPrompt = `Eres un sistema de análisis estructural de decisiones.
+Tu función NO es aconsejar al usuario qué hacer.
 Tu función ES revelar la estructura de su razonamiento: supuestos implícitos, sesgos cognitivos, puntos ciegos y patrones de pensamiento.
 Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional, sin markdown, sin explicaciones fuera del JSON.
 El JSON debe tener exactamente esta estructura:
