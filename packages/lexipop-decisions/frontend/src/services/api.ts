@@ -1,16 +1,15 @@
 import type { DecisionInput, DecisionResult } from "../types";
+import { getGoogleAuth } from "../lib/googleAuth";
 
-const isNative = typeof window !== "undefined" && !!(window as any)?.Capacitor?.isNativePlatform?.();
-
-export const ORIGIN = isNative
-  ? "https://lexipop-decisions-production.up.railway.app"
-  : "";
-
+const isNative: boolean = !!(window as any)?.Capacitor?.isNativePlatform?.();
+const ORIGIN = isNative ? "https://lexipop-decisions-production.up.railway.app" : "";
 const BASE = `${ORIGIN}/api`;
 
 export async function goGoogleLogin(): Promise<{ ok: boolean; user?: any; error?: string }> {
   try {
-    const { GoogleAuth } = await import("@daniele-rolli/capacitor-google-auth");
+    const GoogleAuth = await getGoogleAuth();
+    if (!GoogleAuth) return { ok: false, error: "Login solo disponible en la app" };
+
     const result = await GoogleAuth.signIn();
     const idToken = result.authentication?.idToken;
     if (!idToken) throw new Error("No idToken");
@@ -29,7 +28,6 @@ export async function goGoogleLogin(): Promise<{ ok: boolean; user?: any; error?
     return { ok: false, error: "Error al autenticar" };
   } catch (error: any) {
     if (error.message?.includes("cancel")) return { ok: false, error: "cancelled" };
-    console.error("Error en login:", error);
     return { ok: false, error: error.message };
   }
 }
@@ -57,9 +55,9 @@ export async function getMe(): Promise<{ id: number; email: string; name: string
 export async function logout(): Promise<void> {
   await fetch(`${BASE}/logout`, { method: "POST", credentials: "include" });
   if (isNative) {
-    try {
-      const { GoogleAuth } = await import("@daniele-rolli/capacitor-google-auth");
-      await GoogleAuth.signOut();
-    } catch {}
+    const GoogleAuth = await getGoogleAuth();
+    if (GoogleAuth) {
+      try { await GoogleAuth.signOut(); } catch {}
+    }
   }
 }
