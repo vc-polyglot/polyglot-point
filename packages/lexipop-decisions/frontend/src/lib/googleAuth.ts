@@ -1,10 +1,9 @@
 export async function getGoogleAuth() {
-  if (!(window as any).Capacitor) return null;
+  const cap = (window as any).Capacitor;
+  if (!cap) return null;
 
-  const mod = await import(
-    /* @vite-ignore */
-    "@daniele-rolli/capacitor-google-auth"
-  );
+  const GoogleAuth = cap.Plugins?.GoogleAuth;
+  if (!GoogleAuth) return null;
 
-  return mod.GoogleAuth;
+  return GoogleAuth;
 }
