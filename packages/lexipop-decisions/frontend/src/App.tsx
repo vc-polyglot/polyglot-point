@@ -181,8 +181,11 @@ export default function App() {
   const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
-    getMe().then(u => { setUser(u); setAuthLoading(false); });
-  }, []);
+  getMe()
+    .then(u => setUser(u))
+    .catch(() => setUser(null))
+    .finally(() => setAuthLoading(false));
+}, []);
 
   useEffect(() => {
     window.history.replaceState({ screen: "home" }, "", "");

@@ -1,14 +1,13 @@
 import type { DecisionInput, DecisionResult } from "../types";
 import { getGoogleAuth } from "../lib/googleAuth";
 
-function getBase(): string {
-  const isNative = !!(window as any)?.Capacitor?.isNativePlatform?.();
-  const origin = isNative ? "https://lexipop-decisions-production.up.railway.app" : "";
-  return `${origin}/api`;
+function isNativePlatform(): boolean {
+  return !window.location.href.startsWith("http");
 }
 
-function isNativePlatform(): boolean {
-  return !!(window as any)?.Capacitor?.isNativePlatform?.();
+function getBase(): string {
+  const origin = isNativePlatform() ? "https://lexipop-decisions-production.up.railway.app" : "";
+  return `${origin}/api`;
 }
 
 export async function goGoogleLogin(): Promise<{ ok: boolean; user?: any; error?: string }> {
@@ -50,9 +49,13 @@ export async function evaluateDecision(payload: DecisionInput): Promise<Decision
 }
 
 export async function getMe(): Promise<{ id: number; email: string; name: string; avatarUrl?: string } | null> {
-  const res = await fetch(`${getBase()}/me`, { credentials: "include" });
-  if (res.status === 401) return null;
-  return res.json();
+  try {
+    const res = await fetch(`${getBase()}/me`, { credentials: "include" });
+    if (res.status === 401) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
 }
 
 export async function logout(): Promise<void> {
