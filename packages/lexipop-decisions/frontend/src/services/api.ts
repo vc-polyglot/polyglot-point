@@ -1,26 +1,29 @@
 import type { DecisionInput, DecisionResult } from "../types";
 import { getGoogleAuth } from "../lib/googleAuth";
 
-const isNative: boolean = !!(window as any)?.Capacitor?.isNativePlatform?.();
-const ORIGIN = isNative ? "https://lexipop-decisions-production.up.railway.app" : "";
-const BASE = `${ORIGIN}/api`;
+function getBase(): string {
+  const isNative = !!(window as any)?.Capacitor?.isNativePlatform?.();
+  const origin = isNative ? "https://lexipop-decisions-production.up.railway.app" : "";
+  return `${origin}/api`;
+}
+
+function isNativePlatform(): boolean {
+  return !!(window as any)?.Capacitor?.isNativePlatform?.();
+}
 
 export async function goGoogleLogin(): Promise<{ ok: boolean; user?: any; error?: string }> {
   try {
     const GoogleAuth = await getGoogleAuth();
     if (!GoogleAuth) return { ok: false, error: "Login solo disponible en la app" };
-
     const result = await GoogleAuth.signIn();
     const idToken = result.authentication?.idToken;
     if (!idToken) throw new Error("No idToken");
-
-    const response = await fetch(`${BASE}/auth/google/token`, {
+    const response = await fetch(`${getBase()}/auth/google/token`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify({ idToken }),
     });
-
     if (response.ok) {
       const data = await response.json();
       return { ok: true, user: data.user };
@@ -33,7 +36,7 @@ export async function goGoogleLogin(): Promise<{ ok: boolean; user?: any; error?
 }
 
 export async function evaluateDecision(payload: DecisionInput): Promise<DecisionResult> {
-  const res = await fetch(`${BASE}/decision/analyze`, {
+  const res = await fetch(`${getBase()}/decision/analyze`, {
     method:      "POST",
     headers:     { "Content-Type": "application/json" },
     credentials: "include",
@@ -47,14 +50,14 @@ export async function evaluateDecision(payload: DecisionInput): Promise<Decision
 }
 
 export async function getMe(): Promise<{ id: number; email: string; name: string; avatarUrl?: string } | null> {
-  const res = await fetch(`${BASE}/me`, { credentials: "include" });
+  const res = await fetch(`${getBase()}/me`, { credentials: "include" });
   if (res.status === 401) return null;
   return res.json();
 }
 
 export async function logout(): Promise<void> {
-  await fetch(`${BASE}/logout`, { method: "POST", credentials: "include" });
-  if (isNative) {
+  await fetch(`${getBase()}/logout`, { method: "POST", credentials: "include" });
+  if (isNativePlatform()) {
     const GoogleAuth = await getGoogleAuth();
     if (GoogleAuth) {
       try { await GoogleAuth.signOut(); } catch {}
