@@ -6,7 +6,7 @@ import { users } from "./schema";
 import { eq } from "drizzle-orm";
 
 const router = Router();
-const CLIENT_URL      = process.env.CLIENT_URL    || "http://localhost:5173";
+const CLIENT_URL       = process.env.CLIENT_URL     || "http://localhost:5173";
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "";
 
 const oauthClient = new OAuth2Client(GOOGLE_CLIENT_ID);
@@ -32,15 +32,19 @@ router.post("/google/token", async (req: Request, res: Response) => {
 
     const ticket = await oauthClient.verifyIdToken({
       idToken,
-      audience: GOOGLE_CLIENT_ID,
+      audience: [
+        GOOGLE_CLIENT_ID,
+        '1058588126233-7egjc9es675mj6lfijquopmekfndf6ai.apps.googleusercontent.com',
+        '1058588126233-9qssb250ncukj64jggt2i794vjhhve36.apps.googleusercontent.com',
+      ],
     });
     const payload = ticket.getPayload();
     if (!payload) return res.status(401).json({ error: "Token inválido" });
 
     const googleId  = payload.sub;
-    const email     = payload.email     || "";
-    const name      = payload.name      || "";
-    const avatarUrl = payload.picture   || null;
+    const email     = payload.email   || "";
+    const name      = payload.name    || "";
+    const avatarUrl = payload.picture || null;
 
     let [user] = await db.select().from(users).where(eq(users.googleId, googleId)).limit(1);
     if (!user) {
