@@ -5,6 +5,7 @@ WORKDIR /app
 COPY packages/lexipop-decisions/package.json ./
 RUN npm install --legacy-peer-deps
 # 2. Todo el código fuente
+ARG CACHEBUST=1
 COPY packages/lexipop-decisions/ .
 # 3. Deps del frontend (después del COPY para no ser sobreescritas)
 RUN cd frontend && rm -f package-lock.json && npm install --legacy-peer-deps
