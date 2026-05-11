@@ -2,14 +2,13 @@ import type { DecisionInput, DecisionResult } from "../types";
 import { getGoogleAuth } from "../lib/googleAuth";
 
 function isNativePlatform(): boolean {
-  return !window.location.href.startsWith("http");
+  return !!(window as any)?.Capacitor?.isNativePlatform?.();
 }
 
 function getBase(): string {
   const origin = isNativePlatform()
     ? "https://lexipop-decisions-production.up.railway.app"
     : "";
-
   return `${origin}/api`;
 }
 
@@ -19,12 +18,9 @@ export async function goGoogleLogin(): Promise<{
   error?: string;
 }> {
   try {
-
     console.log("[GOOGLE] iniciando login");
 
     const GoogleAuth = await getGoogleAuth();
-
-    console.log("[GOOGLE] plugin encontrado:", !!GoogleAuth);
 
     if (!GoogleAuth) {
       console.log("[GOOGLE] plugin inexistente");
@@ -38,11 +34,9 @@ export async function goGoogleLogin(): Promise<{
 
     const result = await GoogleAuth.signIn();
 
-    console.log("[GOOGLE] resultado completo:", result);
+    console.log("[GOOGLE] signIn completado");
 
     const idToken = result.authentication?.idToken;
-
-    console.log("[GOOGLE] idToken existe:", !!idToken);
 
     if (!idToken) {
       throw new Error("No idToken");
@@ -62,11 +56,8 @@ export async function goGoogleLogin(): Promise<{
     console.log("[GOOGLE] status backend:", response.status);
 
     if (response.ok) {
-
       const data = await response.json();
-
-      console.log("[GOOGLE] login correcto");
-
+      console.log("[GOOGLE] login correcto:", data.user?.email);
       return {
         ok: true,
         user: data.user,
@@ -74,7 +65,6 @@ export async function goGoogleLogin(): Promise<{
     }
 
     const txt = await response.text();
-
     console.log("[GOOGLE] backend error:", txt);
 
     return {
@@ -83,10 +73,7 @@ export async function goGoogleLogin(): Promise<{
     };
 
   } catch (error: any) {
-
-    console.log("[GOOGLE] EXCEPTION:", error);
-    console.log("[GOOGLE] MESSAGE:", error?.message);
-    console.log("[GOOGLE] STACK:", error?.stack);
+    console.log("[GOOGLE] EXCEPTION:", error?.message);
 
     if (error?.message?.includes("cancel")) {
       return {
