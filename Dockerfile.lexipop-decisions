@@ -7,7 +7,7 @@ RUN npm install --legacy-peer-deps
 # 2. Todo el código fuente
 COPY packages/lexipop-decisions/ .
 # 3. Deps del frontend (después del COPY para no ser sobreescritas)
-RUN cd frontend && npm install --force
+RUN cd frontend && rm -f package-lock.json && npm install --legacy-peer-deps
 # 4. Build
 RUN npm run build:frontend && npm run build:backend
 
