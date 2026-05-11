@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Ohtlica</string>
+    <string name="title_activity_main">Ohtlica</string>
+    <string name="package_name">com.ohtlica.app</string>
+    <string name="custom_url_scheme">com.ohtlica.app</string>
+    <string name="server_client_id">1058588126233-7egjc9es675mj6lfijquopmekfndf6ai.apps.googleusercontent.com</string>
+</resources>

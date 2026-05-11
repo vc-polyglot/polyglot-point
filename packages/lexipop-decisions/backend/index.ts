@@ -20,12 +20,13 @@ const isProduction = process.env.NODE_ENV === "production";
 // ── Trust proxy (Railway) ─────────────────────────────────────────────────────
 app.set("trust proxy", 1);
 
-// ── Canonical redirect ────────────────────────────────────────────────────────
+// ── Canonical redirect (excluye /api y /auth) ─────────────────────────────────
 const CANONICAL_HOST = process.env.CANONICAL_HOST || "www.lexipopdecision.com";
 app.use((req, res, next) => {
   const host  = String(req.headers.host || "");
   const proto = String(req.headers["x-forwarded-proto"] || "https");
-  if (isProduction && host && host !== CANONICAL_HOST) {
+  // Solo redirige si no es /api ni /auth
+  if (isProduction && host && host !== CANONICAL_HOST && !req.path.startsWith("/api") && !req.path.startsWith("/auth")) {
     return res.redirect(301, `${proto}://${CANONICAL_HOST}${req.originalUrl}`);
   }
   next();
