@@ -7,3 +7,9 @@ project(':capacitor-browser').projectDir = new File('../../../node_modules/.pnpm
 
 include ':daniele-rolli-capacitor-google-auth'
 project(':daniele-rolli-capacitor-google-auth').projectDir = new File('../../../node_modules/.pnpm/@daniele-rolli+capacitor-go_0ce0ad05bffee388cc09773939e14a09/node_modules/@daniele-rolli/capacitor-google-auth/android')
+
+include ':revenuecat-purchases-capacitor'
+project(':revenuecat-purchases-capacitor').projectDir = new File('../../../node_modules/.pnpm/@revenuecat+purchases-capacitor@13.1.0_@capacitor+core@8.3.0/node_modules/@revenuecat/purchases-capacitor/android')
+
+include ':revenuecat-purchases-capacitor-ui'
+project(':revenuecat-purchases-capacitor-ui').projectDir = new File('../../../node_modules/.pnpm/@revenuecat+purchases-capac_f15fab76c09d2db70e42903e643b662a/node_modules/@revenuecat/purchases-capacitor-ui/android')

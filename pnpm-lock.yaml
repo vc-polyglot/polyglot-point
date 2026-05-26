@@ -43,6 +43,55 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
 
+  packages/asistente-vc:
+    dependencies:
+      '@platform/core':
+        specifier: workspace:*
+        version: link:../core
+      cors:
+        specifier: ^2.8.5
+        version: 2.8.6
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.6.1
+      drizzle-orm:
+        specifier: ^0.44.7
+        version: 0.44.7(@neondatabase/serverless@0.10.4)(@types/pg@8.16.0)(pg@8.18.0)(postgres@3.4.8)
+      express:
+        specifier: ^4.21.1
+        version: 4.22.1
+      node-fetch:
+        specifier: ^3.3.2
+        version: 3.3.2
+      openai:
+        specifier: ^5.23.2
+        version: 5.23.2(ws@8.19.0)(zod@3.25.76)
+      pg:
+        specifier: ^8.16.3
+        version: 8.18.0
+      zod:
+        specifier: ^3.24.1
+        version: 3.25.76
+    devDependencies:
+      '@types/cors':
+        specifier: ^2.8.17
+        version: 2.8.19
+      '@types/express':
+        specifier: ^5.0.3
+        version: 5.0.6
+      '@types/pg':
+        specifier: ^8.16.0
+        version: 8.16.0
+      esbuild:
+        specifier: ^0.25.5
+        version: 0.25.12
+      tsx:
+        specifier: ^4.21.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
   packages/clavecin-venta:
     dependencies:
       express:
@@ -290,6 +339,9 @@ importers:
       express-session:
         specifier: ^1.18.1
         version: 1.19.0
+      google-auth-library:
+        specifier: ^10.6.2
+        version: 10.6.2
       openai:
         specifier: ^5.23.2
         version: 5.23.2(ws@8.19.0)(zod@3.25.76)
@@ -360,6 +412,18 @@ importers:
 
   packages/lexipop-decisions/frontend:
     dependencies:
+      '@capacitor/android':
+        specifier: ^8.3.3
+        version: 8.3.3(@capacitor/core@8.3.3)
+      '@capacitor/cli':
+        specifier: ^8.3.3
+        version: 8.3.3
+      '@capacitor/core':
+        specifier: ^8.3.3
+        version: 8.3.3
+      '@capawesome/capacitor-google-sign-in':
+        specifier: ^0.1.2
+        version: 0.1.2(@capacitor/core@8.3.3)
       react:
         specifier: ^18.3.0
         version: 18.3.1
@@ -390,7 +454,7 @@ importers:
     dependencies:
       '@daniele-rolli/capacitor-google-auth':
         specifier: 3.4.0-rc.6
-        version: 3.4.0-rc.6(@capacitor/core@8.3.0)
+        version: 3.4.0-rc.6(@capacitor/core@8.3.3)
       '@lexipop/core':
         specifier: workspace:*
         version: link:../lexipop-core
@@ -606,6 +670,12 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.2.7
         version: 1.2.8(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@revenuecat/purchases-capacitor':
+        specifier: ^13.1.0
+        version: 13.1.0(@capacitor/core@8.3.0)
+      '@revenuecat/purchases-capacitor-ui':
+        specifier: ^13.1.0
+        version: 13.1.0(@capacitor/core@8.3.0)
       connect-redis:
         specifier: ^9.0.0
         version: 9.0.0(express-session@1.19.0)(redis@5.10.0)
@@ -726,10 +796,10 @@ importers:
     dependencies:
       '@capacitor/app':
         specifier: ^8.1.0
-        version: 8.1.0(@capacitor/core@8.3.0)
+        version: 8.1.0(@capacitor/core@8.3.3)
       '@capacitor/browser':
         specifier: ^8.0.3
-        version: 8.0.3(@capacitor/core@8.3.0)
+        version: 8.0.3(@capacitor/core@8.3.3)
       '@radix-ui/react-accordion':
         specifier: ^1.2.12
         version: 1.2.12(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -927,6 +997,50 @@ importers:
         specifier: ^1.4.5-lts.1
         version: 1.4.5-lts.2
 
+  packages/temperament-lab:
+    dependencies:
+      '@capacitor/android':
+        specifier: ^8.0.0
+        version: 8.3.3(@capacitor/core@8.3.3)
+      '@capacitor/core':
+        specifier: ^8.0.0
+        version: 8.3.3
+      '@revenuecat/purchases-capacitor':
+        specifier: ^13.1.1
+        version: 13.1.1(@capacitor/core@8.3.3)
+    devDependencies:
+      '@capacitor/cli':
+        specifier: ^8.0.0
+        version: 8.3.3
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+
+  packages/temperament-lab/frontend:
+    dependencies:
+      react:
+        specifier: ^18.3.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.0
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.0
+        version: 18.3.27
+      '@types/react-dom':
+        specifier: ^18.3.0
+        version: 18.3.7(@types/react@18.3.27)
+      '@vitejs/plugin-react':
+        specifier: ^4.3.0
+        version: 4.7.0(vite@5.4.21(@types/node@25.2.0)(lightningcss@1.32.0))
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+      vite:
+        specifier: ^5.4.0
+        version: 5.4.21(@types/node@25.2.0)(lightningcss@1.32.0)
+
   packages/victor-contreras:
     dependencies:
       express:
@@ -1031,6 +1145,11 @@ packages:
     peerDependencies:
       '@capacitor/core': ^8.3.0
 
+  '@capacitor/android@8.3.3':
+    resolution: {integrity: sha512-Km7/voqtWVrN+qDHktoYb7DIliW+eakglH4jyT7C0dxODW/gDrMi19yC0ATNM2+rtaj3e2i46pgZ3A5UCa+44Q==}
+    peerDependencies:
+      '@capacitor/core': ^8.3.0
+
   '@capacitor/app@8.1.0':
     resolution: {integrity: sha512-MlmttTOWHDedr/G4SrhNRxsXMqY+R75S4MM4eIgzsgCzOYhb/MpCkA5Q3nuOCfL1oHm26xjUzqZ5aupbOwdfYg==}
     peerDependencies:
@@ -1056,8 +1175,21 @@ packages:
     engines: {node: '>=22.0.0'}
     hasBin: true
 
+  '@capacitor/cli@8.3.3':
+    resolution: {integrity: sha512-FHebL02KEyU5vs+Os5s1yZuE8QT3FzxoO4nZLywGk7Ny957E6gOujKouGKsnKYq01eAWWJGGV/Fv04rY27tSsw==}
+    engines: {node: '>=22.0.0'}
+    hasBin: true
+
   '@capacitor/core@8.3.0':
     resolution: {integrity: sha512-S4ajn4G/fS3VJj8salxqH/3LO5PPWv1VxGKQ27OCajnDcLJjEg9VXwgMPnlypgkIOqCJ2fmQLtk8GT+BlI9/rw==}
+
+  '@capacitor/core@8.3.3':
+    resolution: {integrity: sha512-xx1FIriZQ5jwqEkZwmWQHfXNEn5a9ZLOtdFoJXslh0ian6T/EU+QJtRmZw3KRsmcUV6p5ufczBrzF1rVP8Nu3A==}
+
+  '@capawesome/capacitor-google-sign-in@0.1.2':
+    resolution: {integrity: sha512-41Z5LBVZJQ/20lEbzQJUtjfm7rCUhiq0EsfKmytTfKjqUjQB4zy0zlDMowe/z5CtetL8u7WGvERtyRYil2exww==}
+    peerDependencies:
+      '@capacitor/core': '>=8.0.0'
 
   '@capgo/capacitor-social-login@8.3.20':
     resolution: {integrity: sha512-baduDIczWQK1QJ1RBcFuiM1VGdAmkMwspAWQGqRi2UFjVdbElBMgTUUsm/4jDmmOVi5doXPuBr3N1VaSBrPiyQ==}
@@ -2824,6 +2956,35 @@ packages:
       react-redux:
         optional: true
 
+  '@revenuecat/purchases-capacitor-ui@13.1.0':
+    resolution: {integrity: sha512-DpgHEycVkgk66+GtF6COotjqB09SK6nudS+3tRriqE2fcYRj+Zk+tlkz3JJPV7pV/VrOXsktoDAdTST4f7sV7Q==}
+    peerDependencies:
+      '@capacitor/core': '>=8.0.0'
+
+  '@revenuecat/purchases-capacitor@10.4.0':
+    resolution: {integrity: sha512-205im5Bs1BY8wLt+qaS0O2GTWtSHUMFc3Z8U2QaVx4EN0hHOk9gqx2bNaUEH+cOWTUPlNz9yikdiMUSTjJzwyA==}
+    peerDependencies:
+      '@capacitor/core': '>=7.0.0'
+
+  '@revenuecat/purchases-capacitor@13.1.0':
+    resolution: {integrity: sha512-3dV/RXWx9baqVTplpXsm4yVKRV9mLkaT3k6sp1LlaVwb7bukheeowB639InAzWgzA4BOLZ7lRZFino+/VvRnOw==}
+    peerDependencies:
+      '@capacitor/core': '>=8.0.0'
+
+  '@revenuecat/purchases-capacitor@13.1.1':
+    resolution: {integrity: sha512-Tzapdxn8k8rLsPtgykHIImMsoOl+r6Hcq64pqVEc2G2FF3MoObxqvNASO02D9dZQ7CBLacV2nau1wI3mXzThsQ==}
+    peerDependencies:
+      '@capacitor/core': '>=8.0.0'
+
+  '@revenuecat/purchases-typescript-internal-esm@14.3.0':
+    resolution: {integrity: sha512-7mkuBupATfPvBw+skTE/chY6UEux9ZidTbKBOcZ/MgALKJdcww7LgSbChdyoGdQlSJXBFf1zRPzHH+RB7y+LQA==}
+
+  '@revenuecat/purchases-typescript-internal-esm@18.4.0':
+    resolution: {integrity: sha512-NYmhZofAaCA2wCJ7kWyDGTSUl4wBFbdbrPOW4bvv5NxfeKj63DhtbnmimliHpJvZrm+Vw9Au41BCUD4zhnT1Bw==}
+
+  '@revenuecat/purchases-typescript-internal-esm@18.6.0':
+    resolution: {integrity: sha512-mXneiik9+9UlVYKa4vilAMP1N+NsyNK7U0cuv+yG7VqPG2nI6cQ28U3afxMwMrTGQXkBTP8cDfdUlFqpRiutjQ==}
+
   '@rolldown/pluginutils@1.0.0-beta.27':
     resolution: {integrity: sha512-+d0F4MKMCbeVUJwG96uQ4SgAznZNSq93I3V+9NHA4OpvqG8mRCpGdKmK8l/dl02h2CCDHwW2FqilnTyDcAnqjA==}
 
@@ -3162,11 +3323,17 @@ packages:
   '@types/express-serve-static-core@4.19.8':
     resolution: {integrity: sha512-02S5fmqeoKzVZCHPZid4b8JH2eM5HzQLZWN2FohQEy/0eXTq8VXZfSN6Pcr3F6N9R/vNrj7cpgbhjie6m/1tCA==}
 
+  '@types/express-serve-static-core@5.1.1':
+    resolution: {integrity: sha512-v4zIMr/cX7/d2BpAEX3KNKL/JrT1s43s96lLvvdTmza1oEvDudCqK9aF/djc/SWgy8Yh0h30TZx5VpzqFCxk5A==}
+
   '@types/express-session@1.18.2':
     resolution: {integrity: sha512-k+I0BxwVXsnEU2hV77cCobC08kIsn4y44C3gC0b46uxZVMaXA04lSPgRLR/bSL2w0t0ShJiG8o4jPzRG/nscFg==}
 
   '@types/express@4.17.25':
     resolution: {integrity: sha512-dVd04UKsfpINUnK0yBoYHDF3xu7xVH4BuDotC/xGuycx4CgbP48X/KF/586bcObxT0HENHXEU8Nqtu6NR+eKhw==}
+
+  '@types/express@5.0.6':
+    resolution: {integrity: sha512-sKYVuV7Sv9fbPIt/442koC7+IIwK5olP1KWeD88e/idgoJqDm3JV/YUiPwkoKK92ylff2MGxSz1CSjsXelx0YA==}
 
   '@types/fs-extra@8.1.5':
     resolution: {integrity: sha512-0dzKcwO+S8s2kuF5Z9oUWatQJj5Uq/iqphEtE3GQJVRRYm/tD1LglU2UnXi2A8jLq5umkGouOXOR9y0n613ZwQ==}
@@ -3244,6 +3411,9 @@ packages:
 
   '@types/serve-static@1.15.10':
     resolution: {integrity: sha512-tRs1dB+g8Itk72rlSI2ZrW6vZg0YrLI81iQSTkMmOqnqCaNr/8Ek4VwWcN5vZgCYWbg/JJSGBlUaYGAOP73qBw==}
+
+  '@types/serve-static@2.2.0':
+    resolution: {integrity: sha512-8mam4H1NHLtu7nmtalF7eyBH14QyOASmcxHhSfEoRyr0nP/YdoesEtU+uSRvMe96TW/HPTtkoKqQLl53N7UXMQ==}
 
   '@types/slice-ansi@4.0.0':
     resolution: {integrity: sha512-+OpjSaq85gvlZAYINyzKpLeiFkSC4EsC6IIiT6v6TLSU5k5U83fHGj9Lel8oKEXM0HqgrMVCjXPDPVICtxF7EQ==}
@@ -6997,9 +7167,13 @@ snapshots:
     dependencies:
       '@capacitor/core': 8.3.0
 
-  '@capacitor/app@8.1.0(@capacitor/core@8.3.0)':
+  '@capacitor/android@8.3.3(@capacitor/core@8.3.3)':
     dependencies:
-      '@capacitor/core': 8.3.0
+      '@capacitor/core': 8.3.3
+
+  '@capacitor/app@8.1.0(@capacitor/core@8.3.3)':
+    dependencies:
+      '@capacitor/core': 8.3.3
 
   '@capacitor/assets@3.0.5(@types/node@25.2.0)(typescript@5.9.3)':
     dependencies:
@@ -7029,6 +7203,10 @@ snapshots:
   '@capacitor/browser@8.0.3(@capacitor/core@8.3.0)':
     dependencies:
       '@capacitor/core': 8.3.0
+
+  '@capacitor/browser@8.0.3(@capacitor/core@8.3.3)':
+    dependencies:
+      '@capacitor/core': 8.3.3
 
   '@capacitor/cli@5.7.8':
     dependencies:
@@ -7074,9 +7252,39 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@capacitor/cli@8.3.3':
+    dependencies:
+      '@ionic/cli-framework-output': 2.2.8
+      '@ionic/utils-subprocess': 3.0.1
+      '@ionic/utils-terminal': 2.3.5
+      commander: 12.1.0
+      debug: 4.4.3(supports-color@5.5.0)
+      env-paths: 2.2.1
+      fs-extra: 11.3.4
+      kleur: 4.1.5
+      native-run: 2.0.3
+      open: 8.4.2
+      plist: 3.1.0
+      prompts: 2.4.2
+      rimraf: 6.1.3
+      semver: 7.7.3
+      tar: 7.5.13
+      tslib: 2.8.1
+      xml2js: 0.6.2
+    transitivePeerDependencies:
+      - supports-color
+
   '@capacitor/core@8.3.0':
     dependencies:
       tslib: 2.8.1
+
+  '@capacitor/core@8.3.3':
+    dependencies:
+      tslib: 2.8.1
+
+  '@capawesome/capacitor-google-sign-in@0.1.2(@capacitor/core@8.3.3)':
+    dependencies:
+      '@capacitor/core': 8.3.3
 
   '@capgo/capacitor-social-login@8.3.20(@capacitor/core@8.3.0)':
     dependencies:
@@ -7090,6 +7298,10 @@ snapshots:
   '@daniele-rolli/capacitor-google-auth@3.4.0-rc.6(@capacitor/core@8.3.0)':
     dependencies:
       '@capacitor/core': 8.3.0
+
+  '@daniele-rolli/capacitor-google-auth@3.4.0-rc.6(@capacitor/core@8.3.3)':
+    dependencies:
+      '@capacitor/core': 8.3.3
 
   '@date-fns/tz@1.4.1': {}
 
@@ -7769,17 +7981,19 @@ snapshots:
 
   '@platform/polyglot-point@file:packages/polyglot-point(@types/node@25.2.0)(@types/pg@8.16.0)(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(postgres@3.4.8)(redis@5.10.0)(tsx@4.21.0)':
     dependencies:
-      '@capacitor/android': 8.3.0(@capacitor/core@8.3.0)
-      '@capacitor/browser': 8.0.3(@capacitor/core@8.3.0)
-      '@capacitor/cli': 8.3.0
-      '@capacitor/core': 8.3.0
-      '@daniele-rolli/capacitor-google-auth': 3.4.0-rc.6(@capacitor/core@8.3.0)
+      '@capacitor/android': 8.3.3(@capacitor/core@8.3.3)
+      '@capacitor/browser': 8.0.3(@capacitor/core@8.3.3)
+      '@capacitor/cli': 8.3.3
+      '@capacitor/core': 8.3.3
+      '@daniele-rolli/capacitor-google-auth': 3.4.0-rc.6(@capacitor/core@8.3.3)
       '@google-cloud/text-to-speech': 6.4.0
       '@neondatabase/serverless': 0.10.4
       '@platform/core': link:packages/core
       '@radix-ui/react-dialog': 1.1.15(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-dropdown-menu': 2.1.16(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-tooltip': 1.2.8(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@revenuecat/purchases-capacitor': 13.1.1(@capacitor/core@8.3.3)
+      '@revenuecat/purchases-capacitor-ui': 13.1.0(@capacitor/core@8.3.3)
       connect-redis: 9.0.0(express-session@1.19.0)(redis@5.10.0)
       cordova-plugin-purchase: 13.13.1
       cors: 2.8.6
@@ -8623,6 +8837,44 @@ snapshots:
       react: 18.3.1
       react-redux: 9.2.0(@types/react@18.3.27)(react@18.3.1)(redux@5.0.1)
 
+  '@revenuecat/purchases-capacitor-ui@13.1.0(@capacitor/core@8.3.0)':
+    dependencies:
+      '@capacitor/core': 8.3.0
+      '@revenuecat/purchases-capacitor': 10.4.0(@capacitor/core@8.3.0)
+      '@revenuecat/purchases-typescript-internal-esm': 18.4.0
+
+  '@revenuecat/purchases-capacitor-ui@13.1.0(@capacitor/core@8.3.3)':
+    dependencies:
+      '@capacitor/core': 8.3.3
+      '@revenuecat/purchases-capacitor': 10.4.0(@capacitor/core@8.3.3)
+      '@revenuecat/purchases-typescript-internal-esm': 18.4.0
+
+  '@revenuecat/purchases-capacitor@10.4.0(@capacitor/core@8.3.0)':
+    dependencies:
+      '@capacitor/core': 8.3.0
+      '@revenuecat/purchases-typescript-internal-esm': 14.3.0
+
+  '@revenuecat/purchases-capacitor@10.4.0(@capacitor/core@8.3.3)':
+    dependencies:
+      '@capacitor/core': 8.3.3
+      '@revenuecat/purchases-typescript-internal-esm': 14.3.0
+
+  '@revenuecat/purchases-capacitor@13.1.0(@capacitor/core@8.3.0)':
+    dependencies:
+      '@capacitor/core': 8.3.0
+      '@revenuecat/purchases-typescript-internal-esm': 18.4.0
+
+  '@revenuecat/purchases-capacitor@13.1.1(@capacitor/core@8.3.3)':
+    dependencies:
+      '@capacitor/core': 8.3.3
+      '@revenuecat/purchases-typescript-internal-esm': 18.6.0
+
+  '@revenuecat/purchases-typescript-internal-esm@14.3.0': {}
+
+  '@revenuecat/purchases-typescript-internal-esm@18.4.0': {}
+
+  '@revenuecat/purchases-typescript-internal-esm@18.6.0': {}
+
   '@rolldown/pluginutils@1.0.0-beta.27': {}
 
   '@rollup/rollup-android-arm-eabi@4.57.1':
@@ -8908,6 +9160,13 @@ snapshots:
       '@types/range-parser': 1.2.7
       '@types/send': 1.2.1
 
+  '@types/express-serve-static-core@5.1.1':
+    dependencies:
+      '@types/node': 22.19.11
+      '@types/qs': 6.14.0
+      '@types/range-parser': 1.2.7
+      '@types/send': 1.2.1
+
   '@types/express-session@1.18.2':
     dependencies:
       '@types/express': 4.17.25
@@ -8918,6 +9177,12 @@ snapshots:
       '@types/express-serve-static-core': 4.19.8
       '@types/qs': 6.14.0
       '@types/serve-static': 1.15.10
+
+  '@types/express@5.0.6':
+    dependencies:
+      '@types/body-parser': 1.19.6
+      '@types/express-serve-static-core': 5.1.1
+      '@types/serve-static': 2.2.0
 
   '@types/fs-extra@8.1.5':
     dependencies:
@@ -9015,6 +9280,11 @@ snapshots:
       '@types/http-errors': 2.0.5
       '@types/node': 22.19.11
       '@types/send': 0.17.6
+
+  '@types/serve-static@2.2.0':
+    dependencies:
+      '@types/http-errors': 2.0.5
+      '@types/node': 22.19.11
 
   '@types/slice-ansi@4.0.0': {}
 
@@ -11387,7 +11657,7 @@ snapshots:
   path-scurry@1.11.1:
     dependencies:
       lru-cache: 10.4.3
-      minipass: 7.1.2
+      minipass: 7.1.3
 
   path-scurry@2.0.2:
     dependencies:

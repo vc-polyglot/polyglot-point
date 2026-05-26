@@ -2,5 +2,5 @@
 include ':capacitor-android'
 project(':capacitor-android').projectDir = new File('../node_modules/@capacitor/android/capacitor')
 
-include ':daniele-rolli-capacitor-google-auth'
-project(':daniele-rolli-capacitor-google-auth').projectDir = new File('../node_modules/@daniele-rolli/capacitor-google-auth/android')
+include ':capawesome-capacitor-google-sign-in'
+project(':capawesome-capacitor-google-sign-in').projectDir = new File('../node_modules/@capawesome/capacitor-google-sign-in/android')

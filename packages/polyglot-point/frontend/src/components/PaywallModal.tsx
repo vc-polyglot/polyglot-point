@@ -1,7 +1,8 @@
-﻿import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { useAuth } from '../auth/AuthContext';
 import { paywallTranslations, getBrowserLanguage } from '../i18n/paywall';
+import { getOfferings, purchasePackage, restorePurchases } from '../services/revenuecat';
 import '../styles/paywall-modal.css';
 
 type PaywallModalProps = {
@@ -9,80 +10,72 @@ type PaywallModalProps = {
   onClose: () => void;
 };
 
-type PlanKey = 'premium_monthly' | 'premium_yearly' | 'pro_monthly';
+type PlanKey = 'monthly' | 'yearly';
+
+const PLANS: { key: PlanKey; label: string; price: string; period: string; badge?: string; features: string[] }[] = [
+  {
+    key: 'monthly',
+    label: 'Premium Monthly',
+    price: '4.99',
+    period: '/mes',
+    badge: 'M�s popular',
+    features: ['50 mensajes diarios', '6 idiomas completos', 'Correcciones detalladas'],
+  },
+  {
+    key: 'yearly',
+    label: 'Premium Yearly',
+    price: '29.99',
+    period: '/a�o',
+    features: ['Todo lo de Premium', '2 meses gratis', 'Ahorras $30 al a�o'],
+  },
+];
 
 export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
   const auth = useAuth();
   const lang = getBrowserLanguage();
   const t = paywallTranslations[lang as keyof typeof paywallTranslations].paywall;
 
-  const [selectedPlan, setSelectedPlan] = useState<PlanKey>('premium_monthly');
+  const [selectedPlan, setSelectedPlan] = useState<PlanKey>('monthly');
   const [isLoading, setIsLoading] = useState(false);
+  const [rcPackages, setRcPackages] = useState<Record<string, any>>({});
+  const [restoreMsg, setRestoreMsg] = useState('');
 
-  // ── Android: verificar compra en backend ─────────────────────────────────
-  const verifyAndroidPurchase = async (purchaseToken: string) => {
-    try {
-      const res = await fetch('/billing/verify-purchase', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({
-          purchaseToken,
-          productId: 'polyglot_point_pro_monthly',
-        }),
-      });
-      if (!res.ok) {
-        console.error('[verify-purchase] status:', res.status);
+  // Cargar offerings de RevenueCat al abrir
+  useEffect(() => {
+    if (!isOpen || !Capacitor.isNativePlatform()) return;
+    (async () => {
+      const offering = await getOfferings();
+      if (!offering) return;
+      const map: Record<string, any> = {};
+      for (const pkg of offering.availablePackages) {
+        // pkg.identifier es '$rc_monthly', '$rc_annual', etc.
+        const id = pkg.identifier.replace('$rc_', '').replace('annual', 'yearly');$1console.log(`[RevenueCat] ID: ${id} | Precio: ${pkg.product.priceString} | Original ID: ${pkg.product.identifier}`);$1console.log(`[RevenueCat] ID: ${id} | Precio: ${pkg.product.priceString} | Original ID: ${pkg.product.identifier}`);
+        if (['monthly', 'yearly'].includes(id)) {
+          map[id] = pkg;
+        }
       }
-    } catch (err) {
-      console.error('[verify-purchase] error:', err);
-    }
-  };
+      setRcPackages(map);
+    })();
+  }, [isOpen]);
 
-  // ── Android: flujo Google Play ────────────────────────────────────────────
-  const handleAndroidPurchase = () => {
-    const CdvPurchase = (window as any).CdvPurchase;
-    if (!CdvPurchase) {
-      console.error('[PaywallModal] CdvPurchase no disponible');
+  // -- Android: flujo RevenueCat --------------------------------------------
+  const handleAndroidPurchase = async () => {
+    const pkg = rcPackages[selectedPlan];
+    if (!pkg) {
+      console.error('[PaywallModal] Paquete no encontrado:', selectedPlan, rcPackages);
       setIsLoading(false);
       return;
     }
-
-    const store = CdvPurchase.store;
-
-    store.register([{
-      id: 'polyglot_point_pro_monthly',
-      type: CdvPurchase.ProductType.PAID_SUBSCRIPTION,
-      platform: CdvPurchase.Platform.GOOGLE_PLAY,
-    }]);
-
-    store.when()
-      .approved((transaction: any) => {
-        transaction.verify();
-      })
-      .verified((receipt: any) => {
-        receipt.finish();
-        const token =
-          receipt.purchaseToken ||
-          receipt.transaction?.purchaseToken ||
-          receipt.nativePurchase?.purchaseToken ||
-          '';
-        verifyAndroidPurchase(token);
-      });
-
-    store.initialize([CdvPurchase.Platform.GOOGLE_PLAY]).then(() => {
-      const product = store.get(
-        'polyglot_point_pro_monthly',
-        CdvPurchase.Platform.GOOGLE_PLAY
-      );
-      if (product) {
-        product.getOffer()?.order();
-      }
-      setIsLoading(false);
-    });
+    const result = await purchasePackage(pkg);
+    setIsLoading(false);
+    if (result.success) {
+      onClose();
+    } else if (!result.cancelled) {
+      alert('Error al procesar el pago. Intenta de nuevo.');
+    }
   };
 
-  // ── Web: flujo Stripe ────────────────────────────────────────────────────
+  // -- Web: flujo Stripe ----------------------------------------------------
   const handleWebCheckout = async () => {
     try {
       const response = await fetch('/billing/create-checkout-session', {
@@ -91,61 +84,45 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
         credentials: 'include',
         body: JSON.stringify({ plan: selectedPlan }),
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to create checkout session');
-      }
-
+      if (!response.ok) throw new Error('Failed to create checkout session');
       const { url } = await response.json();
       window.location.href = url;
     } catch (error) {
       console.error('Error creating checkout session:', error);
-      alert(t.errors.checkoutFailed);
+      alert(t.errors?.checkoutFailed ?? 'Error al procesar el pago.');
       setIsLoading(false);
     }
   };
 
-  // ── Punto de entrada del botón ───────────────────────────────────────────
   const handleSubscribe = async () => {
     setIsLoading(true);
-
     if (Capacitor.isNativePlatform()) {
-      handleAndroidPurchase();
+      await handleAndroidPurchase();
       return;
     }
-
     await handleWebCheckout();
   };
 
+  const handleRestore = async () => {
+    setIsLoading(true);
+    const result = await restorePurchases();
+    setIsLoading(false);
+    if (result.success) {
+      setRestoreMsg('? Compra restaurada correctamente.');
+      onClose();
+    } else {
+      setRestoreMsg('No se encontraron compras anteriores.');
+    }
+  };
+
   const handleLogout = async () => {
-    if (confirm('¿Seguro que quieres cerrar sesión?')) {
-      if (auth?.logout) {
-        await auth.logout();
-      } else {
-        window.location.href = '/';
-      }
+    if (confirm('�Seguro que quieres cerrar sesi�n?')) {
+      if (auth?.logout) await auth.logout();
+      else window.location.href = '/';
     }
   };
 
   if (!isOpen) return null;
-
-  const getPlanName = (plan: PlanKey) => {
-    switch (plan) {
-      case 'premium_monthly': return t.plans.premiumMonthly.name;
-      case 'premium_yearly': return t.plans.premiumYearly.name;
-      case 'pro_monthly': return t.plans.proMonthly.name;
-      default: return '';
-    }
-  };
-
-  const getPlanDescription = (plan: PlanKey) => {
-    switch (plan) {
-      case 'premium_monthly': return t.plans.premiumMonthly.desc;
-      case 'premium_yearly': return t.plans.premiumYearly.desc;
-      case 'pro_monthly': return t.plans.proMonthly.desc;
-      default: return '';
-    }
-  };
 
   return (
     <div className="paywall-backdrop">
@@ -164,7 +141,7 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
             </svg>
-            <span>Práctica sin límites</span>
+            <span>Pr�ctica sin l�mites</span>
           </div>
           <div className="benefit-item">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -181,67 +158,31 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
         </div>
 
         <div className="paywall-plans">
-          <div
-            className={`plan-card ${selectedPlan === 'premium_monthly' ? 'selected' : ''} popular`}
-            onClick={() => setSelectedPlan('premium_monthly')}
-          >
-            <span className="popular-badge">Más popular</span>
-            <div className="plan-header">
-              <h3>{getPlanName('premium_monthly')}</h3>
-              <p>{getPlanDescription('premium_monthly')}</p>
+          {PLANS.map((plan) => (
+            <div
+              key={plan.key}
+              className={`plan-card ${selectedPlan === plan.key ? 'selected' : ''} ${plan.badge ? 'popular' : ''}`}
+              onClick={() => setSelectedPlan(plan.key)}
+            >
+              {plan.badge && <span className="popular-badge">{plan.badge}</span>}
+              <div className="plan-header">
+                <h3>{plan.label}</h3>
+              </div>
+              <div className="plan-price">
+                <span className="currency">$</span>
+                <span className="amount">{plan.price}</span>
+                <span className="period">{plan.period}</span>
+              </div>
+              <ul className="plan-features">
+                {plan.features.map((f, i) => (
+                  <li key={i}>
+                    <span className="checkmark">?</span>
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <div className="plan-price">
-              <span className="currency">$</span>
-              <span className="amount">14.99</span>
-              <span className="period">/mes</span>
-            </div>
-            <ul className="plan-features">
-              <li><span className="checkmark">✓</span><span className="highlight">50 mensajes diarios</span></li>
-              <li><span className="checkmark">✓</span><span>6 idiomas completos</span></li>
-              <li><span className="checkmark">✓</span><span>Correcciones detalladas</span></li>
-            </ul>
-          </div>
-
-          <div
-            className={`plan-card ${selectedPlan === 'premium_yearly' ? 'selected' : ''}`}
-            onClick={() => setSelectedPlan('premium_yearly')}
-          >
-            <div className="plan-header">
-              <h3>{getPlanName('premium_yearly')}</h3>
-              <p>{getPlanDescription('premium_yearly')}</p>
-            </div>
-            <div className="plan-price">
-              <span className="currency">$</span>
-              <span className="amount">149.99</span>
-              <span className="period">/año</span>
-              <span className="savings">(≈ $12.50/mes)</span>
-            </div>
-            <ul className="plan-features">
-              <li><span className="checkmark">✓</span><span>Todo lo de Premium</span></li>
-              <li><span className="checkmark">✓</span><span className="highlight">2 meses gratis</span></li>
-              <li><span className="checkmark">✓</span><span>Ahorras $30 al año</span></li>
-            </ul>
-          </div>
-
-          <div
-            className={`plan-card ${selectedPlan === 'pro_monthly' ? 'selected' : ''}`}
-            onClick={() => setSelectedPlan('pro_monthly')}
-          >
-            <div className="plan-header">
-              <h3>{getPlanName('pro_monthly')}</h3>
-              <p>{getPlanDescription('pro_monthly')}</p>
-            </div>
-            <div className="plan-price">
-              <span className="currency">$</span>
-              <span className="amount">27.99</span>
-              <span className="period">/mes</span>
-            </div>
-            <ul className="plan-features">
-              <li><span className="checkmark">✓</span><span className="highlight">150 mensajes diarios</span></li>
-              <li><span className="checkmark">✓</span><span>Modelos IA avanzados</span></li>
-              <li><span className="checkmark">✓</span><span>Soporte prioritario</span></li>
-            </ul>
-          </div>
+          ))}
         </div>
 
         <div className="paywall-cta">
@@ -253,6 +194,16 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
             {isLoading ? t.loading : t.ctaChoose}
           </button>
           <p className="price-note">{t.priceNote}</p>
+          {Capacitor.isNativePlatform() && (
+            <button
+              className="paywall-btn-restore"
+              onClick={handleRestore}
+              disabled={isLoading}
+            >
+              Restaurar compra
+            </button>
+          )}
+          {restoreMsg && <p className="restore-msg">{restoreMsg}</p>}
         </div>
 
         <div className="paywall-guarantee">
@@ -265,3 +216,6 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
     </div>
   );
 }
+
+
+

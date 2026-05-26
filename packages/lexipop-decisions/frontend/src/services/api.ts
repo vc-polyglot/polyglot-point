@@ -1,5 +1,5 @@
 import type { DecisionInput, DecisionResult } from "../types";
-import { getGoogleAuth } from "../lib/googleAuth";
+import { GoogleSignIn } from "@capawesome/capacitor-google-sign-in";
 
 function isNativePlatform(): boolean {
   return !!(window as any)?.Capacitor?.isNativePlatform?.();
@@ -20,94 +20,58 @@ export async function goGoogleLogin(): Promise<{
   try {
     console.log("[GOOGLE] iniciando login");
 
-    const GoogleAuth = await getGoogleAuth();
+    await GoogleSignIn.initialize({
+      clientId: '1058588126233-7egjc9es675mj6lfijquopmekfndf6ai.apps.googleusercontent.com',
+      scopes: ['profile', 'email'],
+    });
 
-    if (!GoogleAuth) {
-      console.log("[GOOGLE] plugin inexistente");
-      return {
-        ok: false,
-        error: "Login solo disponible en la app",
-      };
-    }
+    const result = await GoogleSignIn.signIn();
 
-    console.log("[GOOGLE] llamando signIn");
+    const idToken =
+      result?.authentication?.idToken ||
+      (result as any)?.idToken ||
+      result?.user?.idToken;
 
-    const result = await GoogleAuth.signIn();
-
-    console.log("[GOOGLE] signIn completado");
-
-    const idToken = result.authentication?.idToken;
-
-    if (!idToken) {
-      throw new Error("No idToken");
-    }
-
-    console.log("[GOOGLE] enviando token al backend");
+    if (!idToken) throw new Error("No idToken");
 
     const response = await fetch(`${getBase()}/auth/google/token`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify({ idToken }),
     });
 
-    console.log("[GOOGLE] status backend:", response.status);
-
     if (response.ok) {
       const data = await response.json();
-      console.log("[GOOGLE] login correcto:", data.user?.email);
-      return {
-        ok: true,
-        user: data.user,
-      };
+      if (data.user) {
+        return { ok: true, user: data.user };
+      } else {
+        return { ok: false, error: "Formato de respuesta inválido" };
+      }
+    } else {
+      const txt = await response.text();
+      alert("Backend: " + response.status + " " + txt);  // ← temporal
+      return { ok: false, error: txt };
     }
-
-    const txt = await response.text();
-    console.log("[GOOGLE] backend error:", txt);
-
-    return {
-      ok: false,
-      error: txt || "Error al autenticar",
-    };
-
   } catch (error: any) {
-    console.log("[GOOGLE] EXCEPTION:", error?.message);
-
-    if (error?.message?.includes("cancel")) {
-      return {
-        ok: false,
-        error: "cancelled",
-      };
-    }
-
-    return {
-      ok: false,
-      error: error?.message || "unknown error",
-    };
+    console.error("[GOOGLE] error:", error.message);
+    alert("Error: " + error.message);   // ← temporal
+    return { ok: false, error: error.message };
   }
 }
 
 export async function evaluateDecision(
   payload: DecisionInput
 ): Promise<DecisionResult> {
-
   const res = await fetch(`${getBase()}/decision/analyze`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify(payload),
   });
 
   if (!res.ok) {
-
-    const err = await res
-      .json()
-      .catch(() => ({ error: "Error desconocido" }));
-
+    const err = await res.json().catch(() => ({ error: "Error desconocido" }));
     throw new Error(err.error || `HTTP ${res.status}`);
   }
 
@@ -120,57 +84,27 @@ export async function getMe(): Promise<{
   name: string;
   avatarUrl?: string;
 } | null> {
-
   try {
-
-    const res = await fetch(`${getBase()}/me`, {
-      credentials: "include",
-    });
-
-    console.log("[AUTH] /me status:", res.status);
-
-    if (res.status === 401) {
-      return null;
-    }
-
-    const data = await res.json();
-
-    console.log("[AUTH] usuario:", data);
-
-    return data;
-
+    const res = await fetch(`${getBase()}/me`, { credentials: "include" });
+    if (res.status === 401) return null;
+    return await res.json();
   } catch (err) {
-
     console.log("[AUTH] getMe error:", err);
-
     return null;
   }
 }
 
 export async function logout(): Promise<void> {
-
-  console.log("[AUTH] logout");
-
   await fetch(`${getBase()}/logout`, {
     method: "POST",
     credentials: "include",
   });
 
   if (isNativePlatform()) {
-
-    const GoogleAuth = await getGoogleAuth();
-
-    if (GoogleAuth) {
-      try {
-
-        console.log("[AUTH] signOut google");
-
-        await GoogleAuth.signOut();
-
-      } catch (err) {
-
-        console.log("[AUTH] signOut error:", err);
-      }
+    try {
+      await GoogleSignIn.signOut();
+    } catch (err) {
+      console.log("[AUTH] signOut error:", err);
     }
   }
 }

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Tempera</string>
+    <string name="title_activity_main">Tempera</string>
+    <string name="package_name">com.ohtlica.tempera</string>
+    <string name="custom_url_scheme">com.ohtlica.tempera</string>
+</resources>

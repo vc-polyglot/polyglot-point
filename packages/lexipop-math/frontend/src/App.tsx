@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Capacitor } from '@capacitor/core';
 import MathExercise from './components/MathExercise';
 import Login from './components/Login';
+import Onboarding from './components/Onboarding';
 import './App.css';
 
 type Language = 'es' | 'en' | 'fr' | 'de' | 'pt' | 'it';
@@ -21,6 +22,9 @@ const BASE_URL = Capacitor.isNativePlatform()
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [lang, setLang] = useState<Language>('es');
+  const [showOnboarding, setShowOnboarding] = useState<boolean>(
+    () => !localStorage.getItem('ob-done')
+  );
 
   const handleLogout = async () => {
     await fetch(`${BASE_URL}/api/logout`, { method: 'POST', credentials: 'include' });
@@ -75,6 +79,12 @@ function App() {
         </button>
       </div>
       <MathExercise />
+      {showOnboarding && (
+        <Onboarding onComplete={() => {
+          localStorage.setItem('ob-done', '1');
+          setShowOnboarding(false);
+        }} />
+      )}
     </div>
   );
 }

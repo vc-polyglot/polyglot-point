@@ -1,0 +1,29 @@
+{
+  "name": "@platform/asistente-vc",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npx tsx backend/index.ts",
+    "build": "esbuild backend/index.ts --platform=node --bundle --format=cjs --external:pg --outfile=dist/server.cjs",
+    "start": "node dist/server.cjs"
+  },
+  "engines": { "node": ">=20.0.0" },
+  "dependencies": {
+    "@platform/core": "workspace:*",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.44.7",
+    "express": "^4.21.1",
+    "node-fetch": "^3.3.2",
+    "openai": "^5.23.2",
+    "pg": "^8.16.3",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.3",
+    "@types/pg": "^8.16.0",
+    "esbuild": "^0.25.5",
+    "tsx": "^4.21.0",
+    "typescript": "^5.0.0"
+  }
+}

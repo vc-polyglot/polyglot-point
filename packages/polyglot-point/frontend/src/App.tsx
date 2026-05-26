@@ -5,6 +5,7 @@ import { PaywallModal } from "./components/PaywallModal";
 import { useAuth } from "./auth/AuthContext";
 import { fetchChat, fetchUsage } from "./api";
 import { translations, Language } from "./i18n";
+import { initRevenueCat, loginRC } from "./services/revenuecat";
 import "./styles/index.css";
 
 const IDIOMAS: { codigo: Language; nombre: string; }[] = [
@@ -156,6 +157,13 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (user?.id) {
+      // Inicializar RevenueCat con el ID del usuario
+      initRevenueCat(String(user.id)).then(() => {
+        loginRC(String(user.id));
+      }).catch((e) => {
+        console.warn('[RC] init error:', e);
+      });
+
       fetchUsage(String(user.id))
         .then((u) => {
           const nextRemaining = u.remainingMessages ?? MAX_MENSAJES_DIARIOS;
