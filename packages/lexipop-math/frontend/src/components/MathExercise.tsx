@@ -1,5 +1,6 @@
-﻿import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Capacitor } from '@capacitor/core';
+import { Purchases, LOG_LEVEL } from '@revenuecat/purchases-capacitor';
 import './MathExercise.css';
 
 const BASE_URL = Capacitor.isNativePlatform() ? 'https://www.lexipopmath.com' : '';
@@ -220,13 +221,13 @@ function Paywall({ onUpgrade }: { onUpgrade: () => void }) {
         }}>
           Cancela cuando quieras.
         </p>
-        <a href="https://lexipopmath.com" style={{
+        <button onClick={() => window.location.reload()} style={{
           fontSize:'12px', color:'rgba(255,255,255,0.25)',
           fontFamily:"'Helvetica Neue', sans-serif",
-          textDecoration:'none', letterSpacing:'0.05em',
+          background:'none', border:'none', cursor:'pointer', letterSpacing:'0.05em',
         }}>
           Volver al inicio
-        </a>
+        </button>
       </div>
     </div>
   );
@@ -483,6 +484,11 @@ export default function MathExercise() {
   const t = T[lang];
 
   useEffect(() => { applyTheme(theme); localStorage.setItem('lexipop-theme', theme); }, [theme]);
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+    Purchases.configure({ apiKey: 'goog_kYJMYdaCLUwSHPLoIGBwKXlMSRL' });
+    Purchases.setLogLevel({ level: LOG_LEVEL.DEBUG });
+  }, []);
 
   useEffect(() => {
     const h = (e: MouseEvent) => {
@@ -584,17 +590,31 @@ export default function MathExercise() {
   };
 
   const handleUpgrade = async () => {
+    if (!Capacitor.isNativePlatform()) {
+      alert('Las suscripciones solo están disponibles en la app móvil.');
+      return;
+    }
     try {
-      const res  = await fetch(`${BASE_URL}/api/math/checkout`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId: 'price_1T3pKkDWSg24TpJZqgDE9pTb' }),
-      });
-      const data = await res.json();
-      if (data.url) window.location.href = data.url;
-    } catch {
-      alert('Error al conectar con el servidor de pagos.');
+      const offerings = await Purchases.getOfferings();
+      const pkg = offerings.current?.monthly ?? offerings.current?.availablePackages[0];
+      if (!pkg) { alert('No hay planes disponibles por ahora.'); return; }
+
+      const { customerInfo } = await Purchases.purchasePackage({ aPackage: pkg });
+
+      if (customerInfo.entitlements.active['pro']) {
+        await fetch(`${BASE_URL}/api/math/revenuecat/sync`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ revenueCatUserId: customerInfo.originalAppUserId }),
+        });
+        setBlocked(false);
+        window.location.reload();
+      }
+    } catch (err: any) {
+      if (err?.userCancelled) return;
+      console.error('RevenueCat purchase error:', err);
+      alert('No se pudo completar la compra.');
     }
   };
 

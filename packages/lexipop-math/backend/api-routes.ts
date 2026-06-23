@@ -81,7 +81,7 @@ router.post('/exercise/complete', async (req, res) => {
     .set({ exercisesCount: newCount, updatedAt: new Date() })
     .where(eq(users.id, user.id));
 
-  if (newCount >=100) {
+  if (newCount >= 100) {
     return res.json({ blocked: true, count: newCount });
   }
 
@@ -103,7 +103,42 @@ router.post('/exercise/reset', async (req, res) => {
   res.json({ success: true });
 });
 
-// ========== RUTAS STRIPE ==========
+// ========== RUTAS REVENUECAT ==========
+
+router.post('/revenuecat/sync', async (req, res) => {
+  if (!req.user) return res.status(401).json({ error: 'Not authenticated' });
+  const user = req.user as any;
+  await db.update(users)
+    .set({ isPro: true, updatedAt: new Date() })
+    .where(eq(users.id, user.id));
+  res.json({ success: true });
+});
+
+router.post('/revenuecat/webhook', async (req, res) => {
+  const authHeader = req.headers['authorization'];
+  if (authHeader !== `Bearer ${process.env.REVENUECAT_WEBHOOK_SECRET}`) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const event = req.body.event;
+  const appUserId = event?.app_user_id;
+  if (!appUserId) return res.json({ received: true });
+
+  const isActiveEvent   = ['INITIAL_PURCHASE','RENEWAL','UNCANCELLATION','PRODUCT_CHANGE'].includes(event.type);
+  const isInactiveEvent = ['CANCELLATION','EXPIRATION','BILLING_ISSUE'].includes(event.type);
+
+  if (isActiveEvent) {
+    await db.update(users).set({ isPro: true, updatedAt: new Date() })
+      .where(eq(users.googleId, appUserId));
+  } else if (isInactiveEvent) {
+    await db.update(users).set({ isPro: false, updatedAt: new Date() })
+      .where(eq(users.googleId, appUserId));
+  }
+
+  res.json({ received: true });
+});
+
+// ========== RUTAS STRIPE (inactivas, respaldo) ==========
 
 router.post('/checkout', async (req, res) => {
   if (!req.user) {
@@ -124,7 +159,6 @@ router.post('/checkout', async (req, res) => {
       success_url: `${process.env.CLIENT_URL || 'http://localhost:5174'}?success=true`,
       cancel_url: `${process.env.CLIENT_URL || 'http://localhost:5174'}?canceled=true`,
       customer_email: (req.user as any).email,
-      // Guardar el user id para identificarlo en el webhook
       metadata: { userId: (req.user as any).id },
     });
 
@@ -153,7 +187,6 @@ router.post('/stripe/webhook', async (req, res) => {
 
   switch (event.type) {
 
-    // ✅ Pago completado → activar isPro
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session;
       const userId = session.metadata?.userId;
@@ -168,7 +201,6 @@ router.post('/stripe/webhook', async (req, res) => {
       break;
     }
 
-    // ❌ Suscripción cancelada → quitar isPro
     case 'customer.subscription.deleted': {
       const subscription = event.data.object as Stripe.Subscription;
       const customerId = subscription.customer as string;
