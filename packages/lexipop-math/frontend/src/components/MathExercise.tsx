@@ -221,7 +221,7 @@ function Paywall({ onUpgrade }: { onUpgrade: () => void }) {
         }}>
           Cancela cuando quieras.
         </p>
-        <button onClick={() => window.location.reload()} style={{
+        onClick={onUpgrade}
           fontSize:'12px', color:'rgba(255,255,255,0.25)',
           fontFamily:"'Helvetica Neue', sans-serif",
           background:'none', border:'none', cursor:'pointer', letterSpacing:'0.05em',

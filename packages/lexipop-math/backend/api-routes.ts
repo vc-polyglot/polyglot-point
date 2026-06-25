@@ -4,11 +4,8 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { db } from './db';
 import { users } from './schema';
 import { eq } from 'drizzle-orm';
-import Stripe from 'stripe';
 
 const router = Router();
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-11-20.acacia' });
 
 // Configurar Google OAuth para LexiPop Math
 passport.use('lexipop-google', new GoogleStrategy(
@@ -133,84 +130,6 @@ router.post('/revenuecat/webhook', async (req, res) => {
   } else if (isInactiveEvent) {
     await db.update(users).set({ isPro: false, updatedAt: new Date() })
       .where(eq(users.googleId, appUserId));
-  }
-
-  res.json({ received: true });
-});
-
-// ========== RUTAS STRIPE (inactivas, respaldo) ==========
-
-router.post('/checkout', async (req, res) => {
-  if (!req.user) {
-    return res.status(401).json({ error: 'Not authenticated' });
-  }
-
-  const { priceId } = req.body;
-
-  if (!priceId) {
-    return res.status(400).json({ error: 'priceId is required' });
-  }
-
-  try {
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [{ price: priceId, quantity: 1 }],
-      mode: 'subscription',
-      success_url: `${process.env.CLIENT_URL || 'http://localhost:5174'}?success=true`,
-      cancel_url: `${process.env.CLIENT_URL || 'http://localhost:5174'}?canceled=true`,
-      customer_email: (req.user as any).email,
-      metadata: { userId: (req.user as any).id },
-    });
-
-    res.json({ url: session.url });
-  } catch (err: any) {
-    console.error('Stripe checkout error:', err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// ⚠️  Esta ruta necesita raw body — asegúrate de que en tu index/server principal
-//     tengas ANTES de express.json():
-//     app.use('/api/math/stripe/webhook', express.raw({ type: 'application/json' }));
-router.post('/stripe/webhook', async (req, res) => {
-  const sig = req.headers['stripe-signature'] as string;
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
-
-  let event: Stripe.Event;
-
-  try {
-    event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
-  } catch (err: any) {
-    console.error('Webhook signature verification failed:', err.message);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
-
-  switch (event.type) {
-
-    case 'checkout.session.completed': {
-      const session = event.data.object as Stripe.Checkout.Session;
-      const userId = session.metadata?.userId;
-      const customerId = session.customer as string;
-
-      if (userId) {
-        await db.update(users)
-          .set({ isPro: true, stripeCustomerId: customerId, updatedAt: new Date() })
-          .where(eq(users.id, userId));
-        console.log(`✅ Usuario ${userId} activado como Pro`);
-      }
-      break;
-    }
-
-    case 'customer.subscription.deleted': {
-      const subscription = event.data.object as Stripe.Subscription;
-      const customerId = subscription.customer as string;
-
-      await db.update(users)
-        .set({ isPro: false, updatedAt: new Date() })
-        .where(eq(users.stripeCustomerId, customerId));
-      console.log(`❌ Suscripción cancelada para customer ${customerId}`);
-      break;
-    }
   }
 
   res.json({ received: true });
