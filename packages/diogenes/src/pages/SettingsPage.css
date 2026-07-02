@@ -1,0 +1,145 @@
+.settings {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 1.25rem 4rem;
+}
+
+.settings__header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem 0 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings__back {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.settings__back:hover {
+  color: var(--gold);
+}
+
+.settings__header h1 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+}
+
+.settings__section {
+  padding: 1.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings__label {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.85rem;
+}
+
+.settings__card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.settings__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.settings__name {
+  font-size: 0.95rem;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.settings__email {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+.settings__premium {
+  font-size: 0.9rem;
+  color: var(--gold);
+  letter-spacing: 0.03em;
+}
+
+.settings__free {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+}
+
+.settings__free p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.settings__upgrade {
+  padding: 0.65rem 1.25rem;
+  background: var(--gold-dim);
+  color: var(--text);
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: background 0.2s;
+  align-self: flex-start;
+}
+
+.settings__upgrade:hover {
+  background: var(--gold);
+}
+
+.settings__languages {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.settings__lang {
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.settings__lang:hover {
+  border-color: var(--gold-dim);
+  color: var(--text);
+}
+
+.settings__lang--active {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.settings__signout {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+  transition: color 0.2s;
+  padding: 0.5rem 0;
+}
+
+.settings__signout:hover {
+  color: #c0392b;
+}

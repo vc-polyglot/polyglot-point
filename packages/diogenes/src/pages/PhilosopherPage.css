@@ -1,0 +1,124 @@
+.philosopher {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 1.25rem 6rem;
+}
+
+.philosopher__header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem 0 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.philosopher__back {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.philosopher__back:hover {
+  color: var(--gold);
+}
+
+.philosopher__header h1 {
+  font-size: 1.6rem;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+
+.philosopher__herma {
+  width: 80px;
+  margin: 2rem auto 1rem;
+  opacity: 0.4;
+  display: block;
+}
+
+.philosopher__herma svg {
+  width: 100%;
+  height: auto;
+}
+
+.philosopher__hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 2rem;
+}
+
+.philosopher__text {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--stone);
+  cursor: text;
+  user-select: text;
+}
+
+.philosopher__text p {
+  margin-bottom: 1.5rem;
+}
+
+.philosopher__text ::selection {
+  background: var(--gold-dim);
+  color: var(--text);
+}
+
+.philosopher__panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-overlay);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 1.25rem 2.5rem;
+  max-height: 50vh;
+  overflow-y: auto;
+  animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.philosopher__panel-close {
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  transition: color 0.2s;
+}
+
+.philosopher__panel-close:hover {
+  color: var(--text);
+}
+
+.philosopher__panel-selection {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--gold);
+  margin-bottom: 1rem;
+  padding-right: 2rem;
+  line-height: 1.6;
+}
+
+.philosopher__panel-loading {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.philosopher__panel-explanation {
+  font-size: 0.92rem;
+  color: var(--text);
+  line-height: 1.8;
+}
