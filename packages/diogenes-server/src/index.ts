@@ -17,7 +17,9 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 app.use(helmet());
 app.use(cors({
   origin: process.env.CLIENT_URL,
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 
@@ -27,9 +29,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
     httpOnly: true,
-    maxAge: 30 * 24 * 60 * 60 * 1000
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    sameSite: 'none'
   }
 }));
 
