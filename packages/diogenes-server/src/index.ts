@@ -9,6 +9,7 @@ import passport from './auth';
 import router from './routes';
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 
 const PgStore = connectPgSimple(session);
