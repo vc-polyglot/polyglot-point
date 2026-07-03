@@ -1,5 +1,7 @@
 FROM node:20-alpine
 
+ENV VITE_API_URL=https://diogenes-server-production.up.railway.app
+
 WORKDIR /app
 
 # Instalar dependencias del servidor
@@ -14,7 +16,7 @@ RUN cd packages/diogenes && npm install
 COPY packages/diogenes-server ./packages/diogenes-server
 COPY packages/diogenes ./packages/diogenes
 
-# Build del frontend
+# Build del frontend con la variable
 RUN cd packages/diogenes && npm run build
 
 # Instalar tsx globalmente
