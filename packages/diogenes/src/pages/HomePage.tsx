@@ -1,36 +1,19 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { FILOSOFOS } from '../data/filosofos';
 import './HomePage.css';
-
-const PHILOSOPHERS = [
-  { id: 1, name: 'Tales de Mileto', book: 1, free: true, tagline: 'El primero en preguntar de qué está hecho todo' },
-  { id: 2, name: 'Solón', book: 1, free: true, tagline: 'El que puso orden donde había caos' },
-  { id: 3, name: 'Quilón', book: 1, free: true, tagline: 'Conócete a ti mismo' },
-  { id: 4, name: 'Pitágoras', book: 1, free: true, tagline: 'Números, almas y vegetarianismo' },
-  { id: 5, name: 'Heráclito', book: 1, free: true, tagline: 'Todo cambia, nada permanece' },
-  { id: 6, name: 'Sócrates', book: 2, free: true, tagline: 'Solo sé que no sé nada' },
-  { id: 7, name: 'Platón', book: 3, free: true, tagline: 'El mundo de las ideas' },
-  { id: 8, name: 'Aristóteles', book: 5, free: true, tagline: 'El que clasificó el mundo entero' },
-  { id: 9, name: 'Diógenes el Cínico', book: 6, free: true, tagline: 'El que vivía en un barril y le dijo no a Alejandro Magno' },
-  { id: 10, name: 'Epicuro', book: 10, free: true, tagline: 'El placer como camino, no como vicio' },
-  { id: 11, name: 'Zenón de Citio', book: 7, free: false, tagline: 'Fundador del estoicismo' },
-  { id: 12, name: 'Aristipo', book: 2, free: false, tagline: 'El placer como único bien' },
-  { id: 13, name: 'Antístenes', book: 6, free: false, tagline: 'Padre del cinismo' },
-  { id: 14, name: 'Empédocles', book: 8, free: false, tagline: 'Los cuatro elementos y el amor' },
-  { id: 15, name: 'Demócrito', book: 9, free: false, tagline: 'El átomo como base de todo' },
-];
 
 export default function HomePage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
 
-  const filtered = PHILOSOPHERS.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase())
+  const filtered = FILOSOFOS.filter(p =>
+    p.nombre.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleSelect = (p: typeof PHILOSOPHERS[0]) => {
+  const handleSelect = (p: typeof FILOSOFOS[0]) => {
     if (!p.free && !user?.isPremium) {
       window.dispatchEvent(new CustomEvent('show-wallpay', { detail: { philosopher: p } }));
       return;
@@ -63,7 +46,7 @@ export default function HomePage() {
         {filtered.map(p => (
           <li key={p.id} className="home__item" onClick={() => handleSelect(p)}>
             <div className="home__item-info">
-              <span className="home__item-name">{p.name}</span>
+              <span className="home__item-name">{p.nombre}</span>
               <span className="home__item-tagline">{p.tagline}</span>
             </div>
             {!p.free && !user?.isPremium && (
