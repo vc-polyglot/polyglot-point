@@ -45,7 +45,7 @@ router.post('/api/explain', async (req, res) => {
   const fresh = await db.select().from(users).where(eq(users.id, user.id));
   const currentUser = fresh[0];
 
-  if (!currentUser.isPremium && (currentUser.dailyQueries ?? 0) >= 3) {
+  if (!currentUser.isPremium && (currentUser.dailyQueries ?? 0) >= 5) {
     return res.status(403).json({ error: 'Límite diario alcanzado' });
   }
 
