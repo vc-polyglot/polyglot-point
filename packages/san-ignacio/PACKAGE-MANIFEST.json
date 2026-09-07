@@ -1,0 +1,33 @@
+{
+  "package": "san-ignacio-package-01",
+  "version": "0.1.0",
+  "files": [
+    ".dockerignore",
+    ".env.example",
+    ".gitignore",
+    "Dockerfile",
+    "README.md",
+    "package.json",
+    "private/admin-dashboard.html",
+    "public/404.html",
+    "public/admin/admin.css",
+    "public/admin/dashboard.js",
+    "public/admin/login.html",
+    "public/admin/login.js",
+    "public/css/site.css",
+    "public/index.html",
+    "public/js/site.js",
+    "src/config/env.js",
+    "src/db/migrate.js",
+    "src/db/schema.sql",
+    "src/db/seed-admin.js",
+    "src/lib/db.js",
+    "src/lib/redis.js",
+    "src/middleware/auth.js",
+    "src/routes/admin-api.js",
+    "src/routes/admin-auth.js",
+    "src/routes/public-api.js",
+    "src/server.js"
+  ],
+  "purpose": "Vertical slice: public site + PostgreSQL + Redis session auth + admin for schedules/pastoral/notices."
+}

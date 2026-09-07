@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Panel · San Ignacio</title>
+  <link rel="stylesheet" href="/admin-assets/admin.css">
+</head>
+<body class="dashboard-body">
+  <aside class="admin-sidebar">
+    <div>
+      <span class="admin-mark"></span>
+      <strong>San Ignacio</strong>
+      <small>Administración</small>
+    </div>
+
+    <nav>
+      <button class="sidebar-link active" data-panel="overview">Resumen</button>
+      <button class="sidebar-link" data-panel="pastoral">Mensaje pastoral</button>
+      <button class="sidebar-link" data-panel="schedules">Horarios</button>
+      <button class="sidebar-link" data-panel="notices">Avisos</button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="/" target="_blank" rel="noopener">Ver sitio ↗</a>
+      <button id="logout-button">Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <p>Panel de administración</p>
+        <h1 id="panel-title">Resumen</h1>
+      </div>
+      <div id="current-user" class="current-user"></div>
+    </header>
+
+    <section id="panel-overview" class="admin-panel active">
+      <div id="overview-cards" class="stat-grid">
+        <article><span>—</span><small>Mensajes pastorales</small></article>
+        <article><span>—</span><small>Horarios activos</small></article>
+        <article><span>—</span><small>Avisos activos</small></article>
+      </div>
+      <div class="admin-callout">
+        <strong>Paquete 01</strong>
+        <p>Este panel ya controla el mensaje pastoral, los horarios y los avisos que aparecen en la página pública.</p>
+      </div>
+    </section>
+
+    <section id="panel-pastoral" class="admin-panel">
+      <div class="two-column">
+        <form id="pastoral-form" class="admin-card form-stack">
+          <div>
+            <p class="admin-kicker">Nuevo mensaje</p>
+            <h2>Mensaje pastoral</h2>
+          </div>
+
+          <label>
+            Título
+            <input name="title" required maxlength="180">
+          </label>
+
+          <label>
+            Entradilla
+            <textarea name="excerpt" rows="2" maxlength="500"></textarea>
+          </label>
+
+          <label>
+            Autor / sacerdote
+            <input name="author_name" maxlength="160">
+          </label>
+
+          <label>
+            Texto
+            <textarea name="body" rows="12" required></textarea>
+          </label>
+
+          <div class="button-row">
+            <button type="submit" name="action" value="draft" class="secondary-button">Guardar borrador</button>
+            <button type="submit" name="action" value="publish">Publicar</button>
+          </div>
+          <p id="pastoral-status" class="form-status" role="status"></p>
+        </form>
+
+        <div class="admin-card">
+          <p class="admin-kicker">Recientes</p>
+          <h2>Publicaciones</h2>
+          <div id="pastoral-list" class="admin-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-schedules" class="admin-panel">
+      <div class="admin-card">
+        <div class="card-heading-row">
+          <div>
+            <p class="admin-kicker">Inicio</p>
+            <h2>Horarios litúrgicos</h2>
+          </div>
+          <button id="add-schedule" type="button" class="secondary-button">+ Horario</button>
+        </div>
+
+        <p class="help-text">La lista se muestra en la primera pantalla del sitio. Arrastra el orden editando el número de orden por ahora.</p>
+        <form id="schedules-form">
+          <div id="schedules-editor" class="schedule-editor"></div>
+          <div class="button-row end">
+            <button type="submit">Guardar horarios</button>
+          </div>
+          <p id="schedules-status" class="form-status" role="status"></p>
+        </form>
+      </div>
+    </section>
+
+    <section id="panel-notices" class="admin-panel">
+      <div class="two-column">
+        <form id="notice-form" class="admin-card form-stack">
+          <div>
+            <p class="admin-kicker">Aviso extraordinario</p>
+            <h2>Nuevo aviso</h2>
+          </div>
+
+          <label>
+            Título
+            <input name="title" required maxlength="180">
+          </label>
+
+          <label>
+            Texto
+            <textarea name="body" rows="5" required></textarea>
+          </label>
+
+          <div class="inline-fields">
+            <label>
+              Desde
+              <input name="starts_at" type="datetime-local">
+            </label>
+            <label>
+              Hasta
+              <input name="ends_at" type="datetime-local">
+            </label>
+          </div>
+
+          <label>
+            Prioridad (0–10)
+            <input name="priority" type="number" min="0" max="10" value="0">
+          </label>
+
+          <button type="submit">Publicar aviso</button>
+          <p id="notice-status" class="form-status" role="status"></p>
+        </form>
+
+        <div class="admin-card">
+          <p class="admin-kicker">Registrados</p>
+          <h2>Avisos</h2>
+          <div id="notice-list" class="admin-list"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/admin-assets/dashboard.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+﻿FROM node:20-alpine
+
+WORKDIR /app
+
+COPY packages/san-ignacio/package*.json ./
+
+RUN npm ci --omit=dev
+
+COPY packages/san-ignacio/ ./
+
+ENV NODE_ENV=production
+
+EXPOSE 3000
+
+CMD ["npm", "start"]

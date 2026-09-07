@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Administración · San Ignacio</title>
+  <link rel="stylesheet" href="/admin-assets/admin.css">
+</head>
+<body class="admin-login-body">
+  <main class="login-shell">
+    <section class="login-brand">
+      <span class="admin-mark"></span>
+      <p>San Ignacio de Loyola</p>
+      <h1>Administración</h1>
+      <small>Polanco · Ciudad de México</small>
+    </section>
+
+    <form id="login-form" class="login-form">
+      <label>
+        Correo
+        <input name="email" type="email" autocomplete="username" required>
+      </label>
+
+      <label>
+        Contraseña
+        <input name="password" type="password" autocomplete="current-password" required>
+      </label>
+
+      <p id="login-error" class="form-error" role="alert" hidden></p>
+      <button type="submit">Entrar</button>
+    </form>
+  </main>
+
+  <script src="/admin-assets/login.js" defer></script>
+</body>
+</html>
