@@ -1,10 +1,130 @@
 import { Router } from "express";
 import { db, withTransaction } from "../lib/db.js";
 import { requireAuth, requireRole } from "../middleware/auth.js";
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
 
 export const adminApi = Router();
 
 adminApi.use(requireAuth);
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true
+});
+
+const imageUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 20 * 1024 * 1024,
+    files: 1
+  },
+  fileFilter: (_req, file, callback) => {
+    const type = String(file.mimetype || "").toLowerCase();
+
+    if (!type.startsWith("image/") || type === "image/svg+xml") {
+      return callback(new Error("Solo se permiten imágenes válidas."));
+    }
+
+    callback(null, true);
+  }
+});
+
+function receiveImage(req, res, next) {
+  imageUpload.single("image")(req, res, (error) => {
+    if (error instanceof multer.MulterError && error.code === "LIMIT_FILE_SIZE") {
+      return res.status(413).json({
+        error: "La imagen supera el límite de 20 MB."
+      });
+    }
+
+    if (error) {
+      return res.status(400).json({
+        error: error.message || "No se pudo leer la imagen."
+      });
+    }
+
+    next();
+  });
+}
+
+function sendImageToCloudinary(buffer) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream({
+      resource_type: "image",
+      folder: "san-ignacio/images",
+      tags: ["san-ignacio"],
+      format: "webp",
+      overwrite: false,
+      transformation: [{
+        width: 2400,
+        height: 2400,
+        crop: "limit",
+        quality: "auto:good"
+      }]
+    }, (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+
+    stream.end(buffer);
+  });
+}
+
+adminApi.post("/media/images", requireRole("admin"), receiveImage, async (req, res, next) => {
+  let uploadedPublicId = null;
+
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        error: "Selecciona una imagen."
+      });
+    }
+
+    const altText = String(req.body?.alt_text || "").trim().slice(0, 300) || null;
+
+    const uploaded = await sendImageToCloudinary(req.file.buffer);
+    uploadedPublicId = uploaded.public_id;
+
+    const secureUrl = uploaded.secure_url || uploaded.url;
+
+    const result = await db.query(`
+      INSERT INTO media
+        (media_type, provider, public_id, url, secure_url, width, height, bytes, alt_text)
+      VALUES
+        ('image', 'cloudinary', $1, $2, $2, $3, $4, $5, $6)
+      RETURNING
+        id, media_type, provider, public_id, secure_url,
+        width, height, bytes, alt_text, created_at
+    `, [
+      uploaded.public_id,
+      secureUrl,
+      uploaded.width || null,
+      uploaded.height || null,
+      uploaded.bytes || null,
+      altText
+    ]);
+
+    res.status(201).json({
+      image: result.rows[0]
+    });
+  } catch (error) {
+    if (uploadedPublicId) {
+      try {
+        await cloudinary.uploader.destroy(uploadedPublicId, {
+          resource_type: "image",
+          invalidate: true
+        });
+      } catch {
+        // No ocultar el error principal si falla la limpieza.
+      }
+    }
+
+    next(error);
+  }
+});
 
 adminApi.get("/overview", async (_req, res, next) => {
   try {
