@@ -1849,3 +1849,151 @@ body .liturgy-section .loading {
     padding-left: 0;
   }
 }
+
+
+/* ============================================================
+   SAN IGNACIO — LITURGIA HIERARCHY FINAL
+   Conserva la estética existente.
+   ============================================================ */
+
+
+/* VIDA LITÚRGICA — TÍTULO PRINCIPAL */
+
+body .liturgy-section .liturgy-heading h2 {
+  margin: 0 !important;
+
+  color: inherit !important;
+
+  font-size: clamp(5rem, 9vw, 10rem) !important;
+  line-height: .84 !important;
+
+  letter-spacing: -.065em !important;
+}
+
+
+/* HORARIOS — PEQUEÑO */
+
+body .liturgy-section .liturgy-subtitle {
+  margin:
+    clamp(1.25rem, 2vw, 2rem)
+    0
+    clamp(2.5rem, 4vw, 4rem) !important;
+
+  color: rgba(255,255,255,.72) !important;
+
+  font-size: clamp(.78rem, 1vw, .95rem) !important;
+  font-weight: 800 !important;
+
+  letter-spacing: .20em !important;
+  text-transform: uppercase !important;
+}
+
+
+/* INFORMACIÓN FIJA QUE SE AÑADIRÁ CUANDO VÍCTOR LA DÉ */
+
+body .liturgy-fixed-info {
+  max-width: 65rem;
+
+  margin:
+    0
+    0
+    clamp(2.5rem, 4vw, 4rem);
+
+  color: rgba(255,255,255,.86);
+
+  font-size: clamp(1rem, 1.35vw, 1.25rem);
+  line-height: 1.65;
+}
+
+
+body .liturgy-fixed-info[hidden] {
+  display: none !important;
+}
+
+
+/* ============================================================
+   CELEBRACIONES ESPECIALES
+   ÚNICO RECUADRO DE ESTA SECCIÓN
+   ============================================================ */
+
+body .special-celebrations {
+  margin:
+    clamp(2rem, 4vw, 4rem)
+    0
+    0;
+
+  max-width: 42rem;
+
+  padding:
+    clamp(1.7rem, 3vw, 2.8rem);
+
+  background: var(--paper, #eee8dc);
+
+  color: var(--ink, #16191b);
+
+  border-top: 8px solid var(--warm-orange, #c55a27);
+}
+
+
+body .special-celebrations-title {
+  margin: 0 0 1.5rem;
+
+  color: var(--ink, #16191b);
+
+  font-size: clamp(1.35rem, 2vw, 2rem);
+  font-weight: 800;
+
+  line-height: 1.05;
+  letter-spacing: -.025em;
+}
+
+
+body .special-celebrations .notices {
+  margin: 0 !important;
+  padding: 0 !important;
+
+  background: transparent !important;
+}
+
+
+body .special-celebrations .notice {
+  padding: 1rem 0;
+
+  border-top: 1px solid rgba(22,25,27,.18);
+}
+
+
+body .special-celebrations .notice:first-child {
+  border-top: 0;
+}
+
+
+body .special-celebrations .notice strong {
+  color: var(--ink, #16191b) !important;
+}
+
+
+body .special-celebrations .notice p {
+  color: #625c54 !important;
+}
+
+
+/* NO CONVERTIR LOS HORARIOS EN TARJETAS */
+
+body .liturgy-section .schedule-grid {
+  background: transparent !important;
+}
+
+
+/* MÓVIL */
+
+@media (max-width: 700px) {
+
+  body .liturgy-section .liturgy-heading h2 {
+    font-size: clamp(4rem, 19vw, 6rem) !important;
+  }
+
+  body .special-celebrations {
+    max-width: 100%;
+  }
+}

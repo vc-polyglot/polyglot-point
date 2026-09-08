@@ -45,13 +45,29 @@
     </section>
 
     <section id="liturgia" class="liturgy-section section-shell">
-      <div class="liturgy-heading">
-        <p class="section-kicker">Vida litúrgica</p>
-        <h2>Horarios</h2>
-      </div>
+      <header class="liturgy-heading">
+        <h2>Vida litúrgica</h2>
+        <p class="liturgy-subtitle">Horarios</p>
+
+        <div
+          id="liturgy-fixed-info"
+          class="liturgy-fixed-info"
+          hidden
+        ></div>
+      </header>
 
       <div class="liturgy-content">
-        <div id="notices" class="notices" hidden></div>
+                <aside class="special-celebrations">
+          <p class="special-celebrations-title">
+            Celebraciones especiales
+          </p>
+
+          <div
+            id="notices"
+            class="notices"
+            hidden
+          ></div>
+        </aside>
 
         <div id="schedule-grid" class="schedule-grid" aria-live="polite">
           <p class="loading">Cargando horarios…</p>
