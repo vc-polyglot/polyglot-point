@@ -1997,3 +1997,141 @@ body .liturgy-section .schedule-grid {
     max-width: 100%;
   }
 }
+
+
+/* ============================================================
+   SAN IGNACIO — UNIFIED SECTION FRAME
+
+   Todas las secciones principales usan el mismo lienzo exterior.
+   Cada sección conserva su estética y composición interna.
+   ============================================================ */
+
+:root {
+  --si-header-space: 92px;
+  --si-section-height: calc(100svh - var(--si-header-space));
+}
+
+
+/* El main deja de funcionar como columna angosta */
+
+body main {
+  width: 100% !important;
+  max-width: none !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow-x: clip;
+}
+
+
+/* ============================================================
+   LIENZO ÚNICO PARA TODAS LAS SECCIONES
+   ============================================================ */
+
+body main > section {
+  box-sizing: border-box !important;
+
+  width: 100% !important;
+  max-width: none !important;
+
+  min-height: var(--si-section-height) !important;
+
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+
+  align-content: center;
+}
+
+
+/* Ninguna section-shell vuelve a encogerse */
+
+body main > .section-shell {
+  width: 100% !important;
+  max-width: none !important;
+
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+
+/* ============================================================
+   NOSOTROS
+   ============================================================ */
+
+body main > #nosotros {
+  width: 100% !important;
+  max-width: none !important;
+
+  min-height: var(--si-section-height) !important;
+
+  margin: 0 !important;
+}
+
+
+/* ============================================================
+   VIDA LITÚRGICA
+   ============================================================ */
+
+body main > #liturgia {
+  width: 100% !important;
+  max-width: none !important;
+
+  min-height: var(--si-section-height) !important;
+
+  margin: 0 !important;
+}
+
+
+/* ============================================================
+   RESTO DE SECCIONES
+   ============================================================ */
+
+body main > #pastoral,
+body main > #espiritualidad,
+body main > #musica,
+body main > #donativos,
+body main > #contacto {
+  width: 100% !important;
+  max-width: none !important;
+
+  min-height: var(--si-section-height) !important;
+
+  margin: 0 !important;
+}
+
+
+/* ============================================================
+   CONTENEDOR DEL CMS INSTITUCIONAL
+   Jamás ocupa espacio.
+   ============================================================ */
+
+#institutional-data-holder {
+  display: none !important;
+
+  width: 0 !important;
+  height: 0 !important;
+
+  min-height: 0 !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow: hidden !important;
+}
+
+
+/* ============================================================
+   MÓVIL
+   ============================================================ */
+
+@media (max-width: 700px) {
+
+  :root {
+    --si-header-space: 76px;
+  }
+
+  body main > section {
+    min-height: var(--si-section-height) !important;
+  }
+}
