@@ -104,3 +104,5 @@ ALTER TABLE pastoral_posts
 
 ALTER TABLE pastoral_posts
   ADD COLUMN IF NOT EXISTS youtube_url TEXT;
+ALTER TABLE music_items
+  ADD COLUMN IF NOT EXISTS youtube_url TEXT;

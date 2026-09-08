@@ -520,3 +520,275 @@ adminApi.post("/notices", requireRole("admin"), async (req, res, next) => {
     next(error);
   }
 });
+
+function normalizeMusicYouTubeUrl(value) {
+  const raw = String(value || "").trim();
+
+  if (!raw) return null;
+
+  try {
+    const parsed = new URL(raw);
+    const host = parsed.hostname.replace(/^www\./, "").toLowerCase();
+    let videoId = null;
+
+    if (host === "youtu.be") {
+      videoId = parsed.pathname.split("/").filter(Boolean)[0] || null;
+    } else if (host === "youtube.com" || host === "m.youtube.com") {
+      if (parsed.pathname === "/watch") {
+        videoId = parsed.searchParams.get("v");
+      } else {
+        const parts = parsed.pathname.split("/").filter(Boolean);
+
+        if (["embed", "shorts", "live"].includes(parts[0])) {
+          videoId = parts[1] || null;
+        }
+      }
+    }
+
+    if (!videoId || !/^[A-Za-z0-9_-]{6,20}$/.test(videoId)) {
+      return false;
+    }
+
+    return `https://www.youtube.com/watch?v=${videoId}`;
+  } catch {
+    return false;
+  }
+}
+
+adminApi.get("/music", async (_req, res, next) => {
+  try {
+    const [itemsResult, concertsResult] = await Promise.all([
+      db.query(`
+        SELECT
+          id, item_type, title, description,
+          media_id, youtube_url, sort_order,
+          published, created_at, updated_at
+        FROM music_items
+        ORDER BY sort_order ASC, id DESC
+      `),
+
+      db.query(`
+        SELECT
+          id, title, starts_at, location,
+          description, status, created_at, updated_at
+        FROM concerts
+        ORDER BY starts_at DESC
+      `)
+    ]);
+
+    res.json({
+      items: itemsResult.rows,
+      concerts: concertsResult.rows
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminApi.post("/music/items", requireRole("admin"), async (req, res, next) => {
+  try {
+    const allowedTypes = new Set(["recording", "repertoire", "article"]);
+
+    const itemType = String(req.body?.item_type || "").trim();
+    const title = String(req.body?.title || "").trim();
+    const description = String(req.body?.description || "").trim() || null;
+    const sortOrder = Number(req.body?.sort_order || 0);
+    const published = Boolean(req.body?.published);
+
+    const youtubeUrl = normalizeMusicYouTubeUrl(req.body?.youtube_url);
+
+    if (!allowedTypes.has(itemType)) {
+      return res.status(400).json({
+        error: "Tipo de contenido musical inválido."
+      });
+    }
+
+    if (!title) {
+      return res.status(400).json({
+        error: "Escribe un título."
+      });
+    }
+
+    if (youtubeUrl === false) {
+      return res.status(400).json({
+        error: "La dirección de YouTube no es válida."
+      });
+    }
+
+    const result = await db.query(`
+      INSERT INTO music_items
+        (
+          item_type, title, description,
+          youtube_url, sort_order, published
+        )
+      VALUES
+        ($1, $2, $3, $4, $5, $6)
+      RETURNING
+        id, item_type, title, description,
+        youtube_url, sort_order, published,
+        created_at, updated_at
+    `, [
+      itemType,
+      title,
+      description,
+      youtubeUrl,
+      Number.isFinite(sortOrder) ? sortOrder : 0,
+      published
+    ]);
+
+    res.status(201).json({
+      item: result.rows[0]
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminApi.patch("/music/items/:id/publish", requireRole("admin"), async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const published = Boolean(req.body?.published);
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({ error: "ID inválido." });
+    }
+
+    const result = await db.query(`
+      UPDATE music_items
+      SET
+        published = $2,
+        updated_at = NOW()
+      WHERE id = $1
+      RETURNING
+        id, item_type, title, description,
+        youtube_url, sort_order, published,
+        created_at, updated_at
+    `, [id, published]);
+
+    if (!result.rows[0]) {
+      return res.status(404).json({
+        error: "Contenido musical no encontrado."
+      });
+    }
+
+    res.json({
+      item: result.rows[0]
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminApi.delete("/music/items/:id", requireRole("admin"), async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({ error: "ID inválido." });
+    }
+
+    const result = await db.query(`
+      DELETE FROM music_items
+      WHERE id = $1
+      RETURNING id
+    `, [id]);
+
+    if (!result.rows[0]) {
+      return res.status(404).json({
+        error: "Contenido musical no encontrado."
+      });
+    }
+
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminApi.post("/concerts", requireRole("admin"), async (req, res, next) => {
+  try {
+    const title = String(req.body?.title || "").trim();
+    const startsAtRaw = String(req.body?.starts_at || "").trim();
+    const location = String(req.body?.location || "").trim() || null;
+    const description = String(req.body?.description || "").trim() || null;
+
+    const allowedStatus = new Set([
+      "scheduled",
+      "cancelled",
+      "completed"
+    ]);
+
+    const status = String(req.body?.status || "scheduled").trim();
+
+    if (!title) {
+      return res.status(400).json({
+        error: "Escribe el nombre del concierto."
+      });
+    }
+
+    const startsAt = new Date(startsAtRaw);
+
+    if (!startsAtRaw || Number.isNaN(startsAt.getTime())) {
+      return res.status(400).json({
+        error: "Indica una fecha y hora válidas."
+      });
+    }
+
+    if (!allowedStatus.has(status)) {
+      return res.status(400).json({
+        error: "Estado de concierto inválido."
+      });
+    }
+
+    const result = await db.query(`
+      INSERT INTO concerts
+        (
+          title, starts_at, location,
+          description, status
+        )
+      VALUES
+        ($1, $2, $3, $4, $5)
+      RETURNING
+        id, title, starts_at, location,
+        description, status, created_at, updated_at
+    `, [
+      title,
+      startsAt.toISOString(),
+      location,
+      description,
+      status
+    ]);
+
+    res.status(201).json({
+      concert: result.rows[0]
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminApi.delete("/concerts/:id", requireRole("admin"), async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({ error: "ID inválido." });
+    }
+
+    const result = await db.query(`
+      DELETE FROM concerts
+      WHERE id = $1
+      RETURNING id
+    `, [id]);
+
+    if (!result.rows[0]) {
+      return res.status(404).json({
+        error: "Concierto no encontrado."
+      });
+    }
+
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+});

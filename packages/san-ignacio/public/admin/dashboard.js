@@ -6,7 +6,8 @@ const panelTitles = {
   pastoral: "Mensaje pastoral",
   schedules: "Horarios",
   notices: "Avisos",
-  images: "Imágenes"
+  images: "Imágenes",
+  music: "Música"
 };
 
 function escapeHtml(value) {
@@ -73,6 +74,7 @@ $$(".sidebar-link").forEach((button) => {
     if (panel === "schedules") loadSchedules();
     if (panel === "notices") loadNotices();
     if (panel === "images") loadImages();
+    if (panel === "music") loadMusicAdmin();
   });
 });
 
@@ -440,6 +442,229 @@ $("#image-upload-form").addEventListener("submit", async (event) => {
     form.reset();
     status.textContent = "Fotografía guardada.";
     await loadImages();
+  } catch (error) {
+    status.textContent = error.message;
+    status.classList.add("error");
+  }
+});
+
+function musicTypeLabel(value) {
+  return {
+    recording: "Grabación",
+    repertoire: "Repertorio",
+    article: "Artículo"
+  }[value] || value;
+}
+
+function concertStatusLabel(value) {
+  return {
+    scheduled: "Programado",
+    cancelled: "Cancelado",
+    completed: "Realizado"
+  }[value] || value;
+}
+
+async function loadMusicAdmin() {
+  const { items, concerts } = await api("/api/admin/music");
+
+  const itemList = $("#music-item-list");
+  const concertList = $("#concert-list");
+
+  if (!items.length) {
+    itemList.innerHTML =
+      `<div class="list-item">Todavía no hay contenido musical.</div>`;
+  } else {
+    itemList.innerHTML = items.map((item) => `
+      <article class="list-item">
+        <strong>${escapeHtml(item.title)}</strong>
+        <small>
+          ${escapeHtml(musicTypeLabel(item.item_type))}
+          · orden ${Number(item.sort_order || 0)}
+        </small>
+
+        ${item.description
+          ? `<p>${escapeHtml(item.description)}</p>`
+          : ""
+        }
+
+        ${item.youtube_url
+          ? `<small>Video de YouTube asociado</small>`
+          : ""
+        }
+
+        <span class="status-badge">
+          ${item.published ? "Publicado" : "Borrador"}
+        </span>
+
+        <div class="admin-item-actions">
+          <button
+            type="button"
+            class="secondary-button"
+            data-toggle-music="${item.id}"
+            data-published="${item.published ? "1" : "0"}"
+          >
+            ${item.published ? "Ocultar" : "Publicar"}
+          </button>
+
+          <button
+            type="button"
+            class="danger-button"
+            data-delete-music="${item.id}"
+          >
+            Eliminar
+          </button>
+        </div>
+      </article>
+    `).join("");
+  }
+
+  if (!concerts.length) {
+    concertList.innerHTML =
+      `<div class="list-item">Todavía no hay conciertos registrados.</div>`;
+  } else {
+    concertList.innerHTML = concerts.map((concert) => `
+      <article class="list-item">
+        <strong>${escapeHtml(concert.title)}</strong>
+        <small>${formatDate(concert.starts_at)}</small>
+
+        ${concert.location
+          ? `<small>${escapeHtml(concert.location)}</small>`
+          : ""
+        }
+
+        ${concert.description
+          ? `<p>${escapeHtml(concert.description)}</p>`
+          : ""
+        }
+
+        <span class="status-badge">
+          ${escapeHtml(concertStatusLabel(concert.status))}
+        </span>
+
+        <div class="admin-item-actions">
+          <button
+            type="button"
+            class="danger-button"
+            data-delete-concert="${concert.id}"
+          >
+            Eliminar
+          </button>
+        </div>
+      </article>
+    `).join("");
+  }
+
+  itemList.querySelectorAll("[data-toggle-music]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const currentlyPublished = button.dataset.published === "1";
+
+      await api(
+        `/api/admin/music/items/${button.dataset.toggleMusic}/publish`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            published: !currentlyPublished
+          })
+        }
+      );
+
+      await loadMusicAdmin();
+    });
+  });
+
+  itemList.querySelectorAll("[data-delete-music]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      if (!confirm("¿Eliminar definitivamente este contenido musical?")) {
+        return;
+      }
+
+      await api(`/api/admin/music/items/${button.dataset.deleteMusic}`, {
+        method: "DELETE"
+      });
+
+      await loadMusicAdmin();
+    });
+  });
+
+  concertList.querySelectorAll("[data-delete-concert]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      if (!confirm("¿Eliminar definitivamente este concierto?")) {
+        return;
+      }
+
+      await api(`/api/admin/concerts/${button.dataset.deleteConcert}`, {
+        method: "DELETE"
+      });
+
+      await loadMusicAdmin();
+    });
+  });
+}
+
+$("#music-item-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const data = new FormData(form);
+  const status = $("#music-item-status");
+
+  status.classList.remove("error");
+  status.textContent = "Guardando…";
+
+  try {
+    await api("/api/admin/music/items", {
+      method: "POST",
+      body: JSON.stringify({
+        item_type: data.get("item_type"),
+        title: data.get("title"),
+        description: data.get("description"),
+        youtube_url: data.get("youtube_url") || null,
+        sort_order: Number(data.get("sort_order") || 0),
+        published: Boolean(data.get("published"))
+      })
+    });
+
+    form.reset();
+    form.querySelector('[name="sort_order"]').value = "0";
+
+    status.textContent = "Contenido guardado.";
+    await loadMusicAdmin();
+  } catch (error) {
+    status.textContent = error.message;
+    status.classList.add("error");
+  }
+});
+
+$("#concert-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const data = new FormData(form);
+  const status = $("#concert-status");
+
+  status.classList.remove("error");
+  status.textContent = "Guardando…";
+
+  try {
+    const rawDate = data.get("starts_at");
+
+    await api("/api/admin/concerts", {
+      method: "POST",
+      body: JSON.stringify({
+        title: data.get("title"),
+        starts_at: rawDate
+          ? new Date(rawDate).toISOString()
+          : null,
+        location: data.get("location"),
+        description: data.get("description"),
+        status: data.get("status") || "scheduled"
+      })
+    });
+
+    form.reset();
+
+    status.textContent = "Concierto guardado.";
+    await loadMusicAdmin();
   } catch (error) {
     status.textContent = error.message;
     status.classList.add("error");

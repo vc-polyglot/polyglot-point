@@ -442,6 +442,82 @@ a { color: inherit; }
   font-weight: 700;
 }
 
+
+.music-copy {
+  display: grid;
+  gap: 34px;
+}
+
+.music-public-group h3 {
+  margin: 0 0 14px;
+  font-size: 1.15rem;
+}
+
+.music-public-list {
+  display: grid;
+  gap: 1px;
+  background: rgba(255,255,255,.18);
+}
+
+.music-public-item,
+.concert-public-item {
+  padding: 18px 0;
+  background: var(--cool-blue);
+  border-bottom: 1px solid rgba(255,255,255,.2);
+}
+
+.music-public-item:last-child,
+.concert-public-item:last-child {
+  border-bottom: 0;
+}
+
+.music-public-item strong,
+.concert-public-item strong {
+  display: block;
+  font-size: 1.05rem;
+}
+
+.music-public-item p,
+.concert-public-item p {
+  margin: 8px 0 0;
+  color: #dae3ed;
+}
+
+.concert-public-item span,
+.concert-public-item small {
+  display: block;
+  margin-top: 4px;
+  color: #d7e2ee;
+}
+
+.music-type {
+  display: block;
+  margin-bottom: 5px;
+  color: #c5d4e4;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.music-youtube-link {
+  display: inline-block;
+  margin-top: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+
+.music-public-empty {
+  margin: 0;
+  color: #dae3ed;
+}
+
+.music-celebrations {
+  margin-top: 4px !important;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255,255,255,.25);
+}
 .donations-section {
   background: var(--paper-2);
   color: var(--ink);

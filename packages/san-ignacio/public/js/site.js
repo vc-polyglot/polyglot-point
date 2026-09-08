@@ -58,6 +58,103 @@ function youtubeEmbedUrl(value) {
     return "";
   }
 }
+
+function formatConcertDate(value) {
+  if (!value) return "";
+
+  return new Intl.DateTimeFormat("es-MX", {
+    dateStyle: "long",
+    timeStyle: "short"
+  }).format(new Date(value));
+}
+
+async function loadMusic() {
+  const musicContainer = document.querySelector("#music-items-public");
+  const concertContainer = document.querySelector("#concerts-public");
+
+  if (!musicContainer || !concertContainer) return;
+
+  try {
+    const response = await fetch("/api/music", {
+      headers: {
+        Accept: "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("No se pudo cargar la sección de música.");
+    }
+
+    const { items, concerts } = await response.json();
+
+    if (concerts?.length) {
+      concertContainer.innerHTML = concerts.map((concert) => `
+        <article class="concert-public-item">
+          <strong>${escapeHtml(concert.title)}</strong>
+          <span>${escapeHtml(formatConcertDate(concert.starts_at))}</span>
+
+          ${concert.location
+            ? `<small>${escapeHtml(concert.location)}</small>`
+            : ""
+          }
+
+          ${concert.description
+            ? `<p>${escapeHtml(concert.description)}</p>`
+            : ""
+          }
+        </article>
+      `).join("");
+    } else {
+      concertContainer.innerHTML =
+        `<p class="music-public-empty">No hay conciertos anunciados por el momento.</p>`;
+    }
+
+    if (items?.length) {
+      musicContainer.innerHTML = items.map((item) => `
+        <article class="music-public-item">
+          <span class="music-type">${escapeHtml({
+            recording: "Grabación",
+            repertoire: "Repertorio",
+            article: "Artículo"
+          }[item.item_type] || item.item_type)}</span>
+
+          <strong>${escapeHtml(item.title)}</strong>
+
+          ${item.description
+            ? `<p>${escapeHtml(item.description)}</p>`
+            : ""
+          }
+
+          ${item.youtube_url
+            ? `
+              <a
+                class="music-youtube-link"
+                href="${escapeHtml(item.youtube_url)}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Ver en YouTube →
+              </a>
+            `
+            : ""
+          }
+        </article>
+      `).join("");
+    } else {
+      musicContainer.innerHTML =
+        `<p class="music-public-empty">El contenido musical aparecerá aquí próximamente.</p>`;
+    }
+
+  } catch (error) {
+    console.error(error);
+
+    concertContainer.innerHTML =
+      `<p class="music-public-empty">No fue posible cargar la agenda.</p>`;
+
+    musicContainer.innerHTML =
+      `<p class="music-public-empty">No fue posible cargar el contenido musical.</p>`;
+  }
+}
 async function loadHome() {
   try {
     const response = await fetch("/api/home", {
@@ -148,3 +245,4 @@ async function loadHome() {
 }
 
 loadHome();
+loadMusic();

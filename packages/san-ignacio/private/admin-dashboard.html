@@ -21,6 +21,7 @@
       <button class="sidebar-link" data-panel="schedules">Horarios</button>
       <button class="sidebar-link" data-panel="notices">Avisos</button>
       <button class="sidebar-link" data-panel="images">Imágenes</button>
+      <button class="sidebar-link" data-panel="music">Música</button>
     </nav>
 
     <div class="sidebar-footer">
@@ -213,6 +214,121 @@
 
         <div id="image-gallery" class="image-gallery"></div>
       </div>
+    </section>
+
+    <section id="panel-music" class="admin-panel">
+
+      <div class="two-column music-admin-columns">
+
+        <form id="music-item-form" class="admin-card form-stack">
+          <div>
+            <p class="admin-kicker">Contenido musical</p>
+            <h2>Nueva publicación</h2>
+          </div>
+
+          <label>
+            Tipo
+            <select name="item_type" required>
+              <option value="recording">Grabación</option>
+              <option value="repertoire">Repertorio</option>
+              <option value="article">Artículo</option>
+            </select>
+          </label>
+
+          <label>
+            Título
+            <input name="title" maxlength="180" required>
+          </label>
+
+          <label>
+            Descripción
+            <textarea name="description" rows="5"></textarea>
+          </label>
+
+          <label>
+            Video de YouTube
+            <input
+              name="youtube_url"
+              type="url"
+              placeholder="https://www.youtube.com/watch?v=..."
+            >
+          </label>
+
+          <label>
+            Orden
+            <input
+              name="sort_order"
+              type="number"
+              value="0"
+            >
+          </label>
+
+          <label class="checkbox-label">
+            <input name="published" type="checkbox" value="1">
+            Publicar inmediatamente
+          </label>
+
+          <button type="submit">Guardar contenido</button>
+          <p id="music-item-status" class="form-status" role="status"></p>
+        </form>
+
+        <form id="concert-form" class="admin-card form-stack">
+          <div>
+            <p class="admin-kicker">Agenda musical</p>
+            <h2>Nuevo concierto</h2>
+          </div>
+
+          <label>
+            Título
+            <input name="title" maxlength="180" required>
+          </label>
+
+          <label>
+            Fecha y hora
+            <input name="starts_at" type="datetime-local" required>
+          </label>
+
+          <label>
+            Lugar
+            <input name="location" maxlength="200">
+          </label>
+
+          <label>
+            Descripción
+            <textarea name="description" rows="5"></textarea>
+          </label>
+
+          <label>
+            Estado
+            <select name="status">
+              <option value="scheduled">Programado</option>
+              <option value="cancelled">Cancelado</option>
+              <option value="completed">Realizado</option>
+            </select>
+          </label>
+
+          <button type="submit">Guardar concierto</button>
+          <p id="concert-status" class="form-status" role="status"></p>
+        </form>
+
+      </div>
+
+      <div class="two-column music-admin-lists">
+
+        <div class="admin-card">
+          <p class="admin-kicker">Publicaciones</p>
+          <h2>Música</h2>
+          <div id="music-item-list" class="admin-list"></div>
+        </div>
+
+        <div class="admin-card">
+          <p class="admin-kicker">Agenda</p>
+          <h2>Conciertos</h2>
+          <div id="concert-list" class="admin-list"></div>
+        </div>
+
+      </div>
+
     </section>
   </main>
 

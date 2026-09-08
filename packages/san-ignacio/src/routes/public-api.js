@@ -48,3 +48,36 @@ publicApi.get("/home", async (_req, res, next) => {
     next(error);
   }
 });
+
+publicApi.get("/music", async (_req, res, next) => {
+  try {
+    const [itemsResult, concertsResult] = await Promise.all([
+      db.query(`
+        SELECT
+          id, item_type, title, description,
+          youtube_url, sort_order
+        FROM music_items
+        WHERE published = TRUE
+        ORDER BY sort_order ASC, id DESC
+        LIMIT 12
+      `),
+
+      db.query(`
+        SELECT
+          id, title, starts_at, location, description
+        FROM concerts
+        WHERE status = 'scheduled'
+          AND starts_at >= NOW()
+        ORDER BY starts_at ASC
+        LIMIT 12
+      `)
+    ]);
+
+    res.json({
+      items: itemsResult.rows,
+      concerts: concertsResult.rows
+    });
+  } catch (error) {
+    next(error);
+  }
+});

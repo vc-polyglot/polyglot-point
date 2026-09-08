@@ -561,3 +561,44 @@ textarea:focus {
   .schedule-row { grid-template-columns: 1fr; }
   .inline-fields { grid-template-columns: 1fr; }
 }
+
+select {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: white;
+  padding: 11px 12px;
+  color: var(--ink);
+  font: inherit;
+}
+
+select:focus {
+  outline: 2px solid rgba(40,81,124,.28);
+  border-color: var(--blue);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  grid-template-columns: none;
+  gap: 9px;
+}
+
+.checkbox-label input {
+  width: auto;
+  margin: 0;
+}
+
+.music-admin-lists {
+  margin-top: 20px;
+}
+
+.admin-item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.admin-item-actions button {
+  margin-top: 0 !important;
+}
