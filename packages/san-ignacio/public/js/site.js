@@ -311,7 +311,8 @@ async function loadHome() {
     if (!response.ok) throw new Error("No se pudo cargar el contenido.");
     const data = await response.json();
 
-    if (data.schedules?.length) {
+    if (scheduleGrid) {
+      if (data.schedules?.length) {
       scheduleGrid.innerHTML = data.schedules.map((item) => `
         <article class="schedule-item">
           <p class="schedule-category">${escapeHtml(item.category)}</p>
@@ -328,6 +329,7 @@ async function loadHome() {
           <div class="schedule-time">Por confirmar</div>
         </article>
       `;
+    }
     }
 
     if (data.pastoral) {
@@ -375,7 +377,7 @@ async function loadHome() {
       `;
     }
 
-    if (data.notices?.length) {
+    if (notices && data.notices?.length) {
       notices.hidden = false;
       notices.innerHTML = data.notices.map((notice) => `
         <div class="notice">
@@ -386,7 +388,9 @@ async function loadHome() {
     }
   } catch (error) {
     console.error(error);
-    scheduleGrid.innerHTML = `<p>No fue posible cargar los horarios.</p>`;
+    if (scheduleGrid) {
+      scheduleGrid.innerHTML = `<p>No fue posible cargar los horarios.</p>`;
+    }
     pastoralCard.innerHTML = `<p>No fue posible cargar el mensaje pastoral.</p>`;
   }
 }
