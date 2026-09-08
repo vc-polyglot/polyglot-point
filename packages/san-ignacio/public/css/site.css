@@ -238,7 +238,7 @@ a { color: inherit; }
   height: 22vw;
   min-width: 190px;
   min-height: 190px;
-  right: -7vw;
+  right: clamp(24px, 4vw, 56px);
   top: 4vh;
   background:
     linear-gradient(90deg, transparent 0 28%, var(--warm-red) 28% 58%, transparent 58%),
