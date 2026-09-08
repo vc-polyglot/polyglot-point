@@ -462,3 +462,52 @@ contactForm?.addEventListener("submit", async (event) => {
     }
   }
 });
+
+
+// ============================================================
+// SAN IGNACIO CANONICAL HISTORY TABS
+// ============================================================
+
+const canonicalHistoryTabs =
+  document.querySelectorAll("[data-history-tab]");
+
+const canonicalHistoryPanels =
+  document.querySelectorAll("[data-history-panel]");
+
+canonicalHistoryTabs.forEach((tab) => {
+
+  tab.addEventListener("click", () => {
+
+    const target =
+      tab.dataset.historyTab;
+
+    canonicalHistoryTabs.forEach((item) => {
+
+      const active =
+        item === tab;
+
+      item.classList.toggle(
+        "active",
+        active
+      );
+
+      item.setAttribute(
+        "aria-selected",
+        String(active)
+      );
+    });
+
+    canonicalHistoryPanels.forEach((panel) => {
+
+      const active =
+        panel.dataset.historyPanel === target;
+
+      panel.classList.toggle(
+        "active",
+        active
+      );
+
+      panel.hidden = !active;
+    });
+  });
+});

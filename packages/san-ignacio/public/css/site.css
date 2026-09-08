@@ -2135,3 +2135,234 @@ body main > #contacto {
     min-height: var(--si-section-height) !important;
   }
 }
+
+
+/* ============================================================
+   SAN IGNACIO — CANONICAL HISTORY 2ddf6bd
+
+   La composición de Historia reutiliza directamente el sistema
+   de .architecture-section de la versión canónica 2ddf6bd.
+   ============================================================ */
+
+
+/* ============================================================
+   LIENZO EXTERIOR UNIFICADO
+   ============================================================ */
+
+:root {
+  --si-header-height: 92px;
+  --si-section-min-height: calc(100svh - var(--si-header-height));
+}
+
+
+body main {
+  width: 100% !important;
+  max-width: none !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow-x: clip;
+}
+
+
+body main > section {
+  box-sizing: border-box !important;
+
+  width: 100% !important;
+  max-width: none !important;
+
+  min-height: var(--si-section-min-height) !important;
+
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+
+body main > .section-shell {
+  width: 100% !important;
+  max-width: none !important;
+
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+
+/* ============================================================
+   HISTORIA
+   Mantiene:
+   crema a la izquierda
+   barras cromáticas a la derecha
+   ============================================================ */
+
+body #historia.history-section {
+  width: 100% !important;
+  max-width: none !important;
+
+  min-height: var(--si-section-min-height) !important;
+
+  margin: 0 !important;
+}
+
+
+body #historia .history-copy {
+  align-self: stretch;
+}
+
+
+body #historia .history-copy > .section-kicker {
+  margin-bottom: clamp(1rem, 2vw, 1.8rem);
+}
+
+
+body #historia .history-copy > h2 {
+  margin:
+    0
+    0
+    clamp(2rem, 4vw, 4rem);
+
+  color: var(--ink, #17191b);
+
+  font-size: clamp(4.5rem, 7vw, 8rem);
+  line-height: .86;
+
+  letter-spacing: -.06em;
+}
+
+
+/* ============================================================
+   PESTAÑAS
+   ============================================================ */
+
+body #historia .history-tabs {
+  display: flex;
+  flex-wrap: wrap;
+
+  width: 100%;
+
+  margin: 0;
+
+  border-top: 1px solid rgba(23,25,27,.24);
+  border-bottom: 1px solid rgba(23,25,27,.24);
+}
+
+
+body #historia .history-tab {
+  appearance: none;
+
+  margin: 0;
+
+  padding:
+    1rem
+    clamp(1.1rem, 2vw, 2rem)
+    1rem
+    0;
+
+  background: transparent;
+
+  color: rgba(23,25,27,.52);
+
+  border: 0;
+
+  font: inherit;
+  font-size: clamp(.78rem, 1vw, .95rem);
+  font-weight: 800;
+
+  letter-spacing: .08em;
+
+  cursor: pointer;
+}
+
+
+body #historia .history-tab + .history-tab {
+  padding-left: clamp(1.1rem, 2vw, 2rem);
+
+  border-left: 1px solid rgba(23,25,27,.16);
+}
+
+
+body #historia .history-tab.active {
+  color: var(--ink, #17191b);
+}
+
+
+/* ============================================================
+   PANELES
+   ============================================================ */
+
+body #historia .history-panels {
+  padding-top: clamp(2rem, 4vw, 4rem);
+}
+
+
+body #historia .history-panel[hidden] {
+  display: none !important;
+}
+
+
+body #historia .history-panel h3 {
+  margin: 0 0 1.3rem;
+
+  color: var(--ink, #17191b);
+
+  font-size: clamp(2.3rem, 4vw, 4.5rem);
+  line-height: .92;
+
+  letter-spacing: -.045em;
+}
+
+
+body #historia .history-panel p {
+  max-width: 38rem;
+
+  line-height: 1.6;
+}
+
+
+/* ============================================================
+   BARRAS CANÓNICAS
+   ============================================================ */
+
+body #historia #history-palette {
+  align-self: stretch;
+}
+
+
+/* El CMS conserva about-* pero NO controla las barras */
+
+body #historia #about-image {
+  display: none !important;
+}
+
+
+/* ============================================================
+   MÓVIL
+   ============================================================ */
+
+@media (max-width: 700px) {
+
+  :root {
+    --si-header-height: 76px;
+  }
+
+  body #historia .history-tabs {
+    display: block;
+  }
+
+  body #historia .history-tab {
+    display: block;
+
+    width: 100%;
+
+    padding: 1rem 0;
+
+    text-align: left;
+  }
+
+  body #historia .history-tab + .history-tab {
+    padding-left: 0;
+
+    border-left: 0;
+    border-top: 1px solid rgba(23,25,27,.16);
+  }
+}

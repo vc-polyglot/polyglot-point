@@ -29,6 +29,7 @@
       <a href="#musica">Música</a>
       <a href="#donativos">Donativos</a>
       <a href="#contacto">Contacto</a>
+      <a href="#historia">Historia</a>
     </nav>
   </header>
 
@@ -43,7 +44,6 @@
       <div class="mosaic warm" aria-hidden="true"></div>
       <div class="mosaic cool" aria-hidden="true"></div>
     </section>
-
 <section id="nosotros" class="staff-section section-shell">
       <div class="staff-heading">
         <p class="section-kicker">Comunidad</p>
@@ -85,6 +85,11 @@
         </div>
       </div>
     </section>
+
+
+
+
+
 
 
 
@@ -293,17 +298,113 @@
       </form>
     </section>
 
-    <div
-      id="institutional-data-holder"
-      hidden
-      aria-hidden="true"
-      style="display:none !important"
-    >
-      <div id="about-eyebrow"></div>
-      <div id="about-title"></div>
-      <div id="about-body"></div>
-      <div id="about-image"></div>
+
+
     </div>
+
+    <section id="historia" class="architecture-section history-section history-section--canonical">
+
+      <div class="architecture-copy history-copy">
+
+        <p class="section-kicker">Historia</p>
+
+        <h2>Historia</h2>
+
+        <nav
+          class="history-tabs"
+          role="tablist"
+          aria-label="Historia de San Ignacio de Loyola"
+        >
+
+          <button
+            class="history-tab active"
+            type="button"
+            role="tab"
+            aria-selected="true"
+            aria-controls="history-patria"
+            data-history-tab="patria"
+          >
+            Instituto Patria
+          </button>
+
+          <button
+            class="history-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="history-capilla"
+            data-history-tab="capilla"
+          >
+            Capilla
+          </button>
+
+          <button
+            class="history-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="history-arquitectura"
+            data-history-tab="arquitectura"
+          >
+            Arquitectura
+          </button>
+
+        </nav>
+
+        <div class="history-panels">
+
+          <article
+            id="history-patria"
+            class="history-panel active"
+            role="tabpanel"
+            data-history-panel="patria"
+          >
+            <h3>Instituto Patria</h3>
+          </article>
+
+          <article
+            id="history-capilla"
+            class="history-panel"
+            role="tabpanel"
+            data-history-panel="capilla"
+            hidden
+          >
+            <h3>Capilla</h3>
+          </article>
+
+          <article
+            id="history-arquitectura"
+            class="history-panel"
+            role="tabpanel"
+            data-history-panel="arquitectura"
+            hidden
+          >
+            <p id="about-eyebrow" class="section-kicker"></p>
+            <h3 id="about-title"></h3>
+            <p id="about-body"></p>
+
+            <div
+              id="about-image"
+              hidden
+              aria-hidden="true"
+              style="display:none !important"
+            ></div>
+          </article>
+
+        </div>
+
+      </div>
+
+      <div
+        id="history-palette"
+        class="architecture-placeholder"
+        role="img"
+        aria-label="Interior del templo de San Ignacio de Loyola"
+      >
+        <span>San Ignacio de Loyola</span>
+      </div>
+
+    </section>
 </main>
 
   <footer class="site-footer">
