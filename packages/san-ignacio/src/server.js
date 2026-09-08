@@ -1,3 +1,4 @@
+import { join as sanIgnacioJoinPath } from "node:path";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import express from "express";
@@ -134,12 +135,7 @@ function sendSanIgnacioPublicFile(res, relativePath, contentType) {
   }
 
   return res.sendFile(
-    require("node:path").join(
-      __dirname,
-      "..",
-      "public",
-      ...relativePath
-    )
+    sanIgnacioJoinPath(process.cwd(), "public", ...relativePath)
   );
 }
 
