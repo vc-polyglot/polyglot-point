@@ -615,3 +615,110 @@ a { color: inherit; }
     flex-direction: column;
   }
 }
+
+.donations-section {
+  display: grid;
+  gap: 32px;
+}
+
+.donations-intro {
+  max-width: 760px;
+}
+
+.donations-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.donation-card {
+  padding: 26px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.04);
+  backdrop-filter: blur(2px);
+}
+
+.donation-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.donation-card h3 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.donation-badge,
+.donation-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 6px 12px;
+  border: 1px solid rgba(255,255,255,.2);
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.donation-badge--live,
+.donation-chip--active {
+  border-color: rgba(233, 168, 75, .45);
+  background: rgba(233, 168, 75, .12);
+}
+
+.donation-method-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.bank-details {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.bank-details div {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+
+.bank-details div:last-child {
+  border-bottom: 0;
+}
+
+.bank-details dt {
+  margin: 0 0 4px;
+  color: #d1dae3;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.bank-details dd {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.bank-note {
+  margin: 18px 0 0 !important;
+  color: #d9e0e7;
+}
+
+@media (max-width: 900px) {
+  .donations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .donation-card-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
