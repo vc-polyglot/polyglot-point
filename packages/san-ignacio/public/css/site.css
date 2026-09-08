@@ -958,3 +958,335 @@ a { color: inherit; }
     min-height: 440px;
   }
 }
+/* ============================================================
+   SAN IGNACIO CHROMATIC RHYTHM 2026
+   Ritmo cromático inspirado en concreto, piedra y vitrales.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. HERO
+   Carbón mineral en lugar de negro puro.
+   ------------------------------------------------------------ */
+
+.first-screen {
+  position: relative;
+  overflow: hidden;
+  background: #24282a;
+  color: #f2eee5;
+  border-bottom: 0;
+}
+
+/*
+  Franja de vitral: colores sólidos, sin degradado tonal.
+  Funciona como una pieza gráfica propia del templo.
+*/
+.first-screen::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 12px;
+  background:
+    linear-gradient(
+      90deg,
+      #a64332 0%,
+      #a64332 19%,
+      #d08a2d 19%,
+      #d08a2d 38%,
+      #4d6385 38%,
+      #4d6385 61%,
+      #694d72 61%,
+      #694d72 79%,
+      #b45239 79%,
+      #b45239 100%
+    );
+}
+
+.first-screen > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ------------------------------------------------------------
+   2. MENSAJE PASTORAL
+   Primer gran respiro cálido inmediatamente después del hero.
+   ------------------------------------------------------------ */
+
+.pastoral-section {
+  background: #e7e0d3;
+  color: #202426;
+}
+
+.pastoral-section .section-kicker {
+  color: #715b43;
+}
+
+.pastoral-section h2 {
+  color: #202426;
+}
+
+.pastoral-section > div:first-child p:not(.section-kicker) {
+  color: #625e56;
+}
+
+/*
+  La tarjeta pastoral conserva su profundidad azul oscura
+  para que siga siendo una pieza fuerte sobre el fondo cálido.
+*/
+.pastoral-card {
+  background: #263544;
+  color: #f2eee5;
+  border-color: rgba(255,255,255,.14);
+}
+
+.pastoral-card h3,
+.pastoral-card h2 {
+  color: #f2eee5;
+}
+
+.pastoral-card p {
+  color: #d9dde0;
+}
+
+/* ------------------------------------------------------------
+   3. NOSOTROS / ARQUITECTURA
+   Conserva piedra clara y obtiene una franja de vitral más clara.
+   ------------------------------------------------------------ */
+
+.architecture-section {
+  position: relative;
+  background: #d8cdbb;
+  color: #222526;
+}
+
+.architecture-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 11px;
+  height: 100%;
+  background:
+    linear-gradient(
+      180deg,
+      #a64332 0%,
+      #a64332 23%,
+      #d08a2d 23%,
+      #d08a2d 45%,
+      #4d6385 45%,
+      #4d6385 69%,
+      #694d72 69%,
+      #694d72 100%
+    );
+}
+
+.architecture-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.architecture-section .section-kicker {
+  color: #705e48;
+}
+
+/* ------------------------------------------------------------
+   4. ESPIRITUALIDAD
+   Oscuridad azulada, no negro repetido.
+   ------------------------------------------------------------ */
+
+.three-paths {
+  background: #202a31;
+  color: #f2eee5;
+}
+
+.three-paths .section-kicker {
+  color: #c8a873;
+}
+
+.three-paths .spirituality-intro p {
+  color: #c4c9cb;
+}
+
+.three-paths .path-grid {
+  background: rgba(255,255,255,.10);
+}
+
+.three-paths .path-grid article {
+  position: relative;
+  background: #27343b;
+  color: #f2eee5;
+  overflow: hidden;
+}
+
+.three-paths .path-grid article::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 7px;
+}
+
+.three-paths .path-grid article:nth-child(4n + 1)::before {
+  background: #a64332;
+}
+
+.three-paths .path-grid article:nth-child(4n + 2)::before {
+  background: #d08a2d;
+}
+
+.three-paths .path-grid article:nth-child(4n + 3)::before {
+  background: #526b91;
+}
+
+.three-paths .path-grid article:nth-child(4n + 4)::before {
+  background: #76577f;
+}
+
+.three-paths .path-grid article span {
+  color: #d9ba82;
+}
+
+.three-paths .path-grid article p {
+  color: #bbc2c5;
+}
+
+/* ------------------------------------------------------------
+   5. PÁRROCOS / EQUIPO
+   Sale completamente del bloque negro.
+   Las personas necesitan luz y piel, no otro muro oscuro.
+   ------------------------------------------------------------ */
+
+.staff-section {
+  background: #cfc8bc;
+  color: #202426;
+  border-top: 0;
+}
+
+.staff-section .section-kicker {
+  color: #715d47;
+}
+
+.staff-section .staff-heading h2 {
+  color: #202426;
+}
+
+.staff-grid {
+  background: rgba(32,36,38,.16);
+}
+
+.staff-card {
+  background: #e4ded3;
+  color: #202426;
+}
+
+.staff-photo {
+  background: #b8b3aa;
+}
+
+.staff-photo-empty {
+  background: #b8b3aa;
+}
+
+.staff-photo-empty span {
+  color: rgba(32,36,38,.20);
+}
+
+.staff-role {
+  color: #79594a;
+}
+
+.staff-copy h3 {
+  color: #202426;
+}
+
+.staff-copy p:last-child:not(.staff-role) {
+  color: #67635c;
+}
+
+/* ------------------------------------------------------------
+   6. MÚSICA
+   Mantiene el azul como gran cambio de temperatura.
+   ------------------------------------------------------------ */
+
+.music-section {
+  background: #304b67;
+  color: #f3f0e8;
+}
+
+.music-section .section-kicker {
+  color: #e0be80;
+}
+
+/* ------------------------------------------------------------
+   7. DONATIVOS
+   Piedra cálida, como ya funcionaba.
+   ------------------------------------------------------------ */
+
+.donations-section {
+  background: #e4ddd0;
+  color: #242728;
+}
+
+/* ------------------------------------------------------------
+   8. CONTACTO
+   Regresa a oscuridad para cerrar el recorrido.
+   No negro absoluto: carbón profundo.
+   ------------------------------------------------------------ */
+
+.contact-section {
+  background: #1e2326;
+  color: #f1eee7;
+}
+
+/* ------------------------------------------------------------
+   Ritmo vertical entre secciones.
+   Evita que los cambios cromáticos parezcan bloques accidentales.
+   ------------------------------------------------------------ */
+
+.pastoral-section,
+.three-paths,
+.staff-section,
+.music-section,
+.donations-section,
+.contact-section {
+  position: relative;
+}
+
+/* Línea fina de transición mineral */
+
+.pastoral-section::after,
+.three-paths::after,
+.staff-section::after,
+.music-section::after,
+.donations-section::after {
+  content: "";
+  position: absolute;
+  z-index: 5;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(32,36,38,.18);
+}
+
+/* ------------------------------------------------------------
+   MOBILE
+   Las franjas siguen presentes pero no dominan.
+   ------------------------------------------------------------ */
+
+@media (max-width: 700px) {
+  .first-screen::before {
+    height: 9px;
+  }
+
+  .architecture-section::before {
+    width: 8px;
+  }
+
+  .staff-section {
+    background: #d6cfc3;
+  }
+}
