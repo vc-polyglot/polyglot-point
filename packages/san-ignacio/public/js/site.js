@@ -27,6 +27,37 @@ function formatDate(value) {
   }).format(new Date(value));
 }
 
+function youtubeEmbedUrl(value) {
+  if (!value) return "";
+
+  try {
+    const parsed = new URL(value);
+    const host = parsed.hostname.replace(/^www\./, "").toLowerCase();
+    let videoId = null;
+
+    if (host === "youtu.be") {
+      videoId = parsed.pathname.split("/").filter(Boolean)[0] || null;
+    } else if (host === "youtube.com" || host === "m.youtube.com") {
+      if (parsed.pathname === "/watch") {
+        videoId = parsed.searchParams.get("v");
+      } else {
+        const parts = parsed.pathname.split("/").filter(Boolean);
+
+        if (["embed", "shorts", "live"].includes(parts[0])) {
+          videoId = parts[1] || null;
+        }
+      }
+    }
+
+    if (!videoId || !/^[A-Za-z0-9_-]{6,20}$/.test(videoId)) {
+      return "";
+    }
+
+    return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}`;
+  } catch {
+    return "";
+  }
+}
 async function loadHome() {
   try {
     const response = await fetch("/api/home", {
@@ -56,14 +87,42 @@ async function loadHome() {
     }
 
     if (data.pastoral) {
+      const embedUrl = youtubeEmbedUrl(data.pastoral.youtube_url);
+
       pastoralCard.innerHTML = `
-        <h3>${escapeHtml(data.pastoral.title)}</h3>
-        <p class="meta">
-          ${escapeHtml(data.pastoral.author_name || "San Ignacio de Loyola")}
-          ${data.pastoral.published_at ? ` · ${formatDate(data.pastoral.published_at)}` : ""}
-        </p>
-        ${data.pastoral.excerpt ? `<p><strong>${escapeHtml(data.pastoral.excerpt)}</strong></p>` : ""}
-        <div class="body">${escapeHtml(data.pastoral.body)}</div>
+        ${data.pastoral.image_url ? `
+          <figure class="pastoral-image">
+            <img
+              src="${escapeHtml(data.pastoral.image_url)}"
+              alt="${escapeHtml(data.pastoral.image_alt || "")}"
+              loading="lazy"
+            >
+          </figure>
+        ` : ""}
+
+        <div class="pastoral-content">
+          <h3>${escapeHtml(data.pastoral.title)}</h3>
+          <p class="meta">
+            ${escapeHtml(data.pastoral.author_name || "San Ignacio de Loyola")}
+            ${data.pastoral.published_at ? ` · ${formatDate(data.pastoral.published_at)}` : ""}
+          </p>
+
+          ${data.pastoral.excerpt ? `<p><strong>${escapeHtml(data.pastoral.excerpt)}</strong></p>` : ""}
+
+          ${embedUrl ? `
+            <div class="pastoral-video">
+              <iframe
+                src="${embedUrl}"
+                title="${escapeHtml(data.pastoral.title)}"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              ></iframe>
+            </div>
+          ` : ""}
+
+          <div class="body">${escapeHtml(data.pastoral.body)}</div>
+        </div>
       `;
     } else {
       pastoralCard.innerHTML = `

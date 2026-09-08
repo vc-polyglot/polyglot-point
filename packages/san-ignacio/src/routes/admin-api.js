@@ -335,9 +335,17 @@ adminApi.put("/schedules", requireRole("admin"), async (req, res, next) => {
 adminApi.get("/pastoral", async (_req, res, next) => {
   try {
     const result = await db.query(`
-      SELECT id, title, excerpt, body, author_name, status, published_at, created_at, updated_at
-      FROM pastoral_posts
-      ORDER BY COALESCE(published_at, created_at) DESC
+      SELECT
+        p.id, p.title, p.excerpt, p.body, p.author_name,
+        p.status, p.published_at, p.created_at, p.updated_at,
+        p.image_media_id, p.youtube_url,
+        m.secure_url AS image_url,
+        m.alt_text AS image_alt
+      FROM pastoral_posts p
+      LEFT JOIN media m
+        ON m.id = p.image_media_id
+       AND m.media_type = 'image'
+      ORDER BY COALESCE(p.published_at, p.created_at) DESC
       LIMIT 30
     `);
     res.json({ posts: result.rows });
@@ -354,22 +362,91 @@ adminApi.post("/pastoral", requireRole("admin"), async (req, res, next) => {
     const authorName = String(req.body?.author_name || "").trim() || null;
     const publish = Boolean(req.body?.publish);
 
+    const imageMediaIdRaw = req.body?.image_media_id;
+    const imageMediaId = imageMediaIdRaw
+      ? Number(imageMediaIdRaw)
+      : null;
+
+    const youtubeRaw = String(req.body?.youtube_url || "").trim();
+    let youtubeUrl = null;
+
+    if (imageMediaId !== null) {
+      if (!Number.isInteger(imageMediaId) || imageMediaId <= 0) {
+        return res.status(400).json({ error: "Imagen inválida." });
+      }
+
+      const imageCheck = await db.query(`
+        SELECT id
+        FROM media
+        WHERE id = $1
+          AND media_type = 'image'
+          AND provider = 'cloudinary'
+      `, [imageMediaId]);
+
+      if (!imageCheck.rows[0]) {
+        return res.status(400).json({ error: "La fotografía seleccionada no existe." });
+      }
+    }
+
+    if (youtubeRaw) {
+      try {
+        const parsed = new URL(youtubeRaw);
+        const host = parsed.hostname.replace(/^www\./, "").toLowerCase();
+        let videoId = null;
+
+        if (host === "youtu.be") {
+          videoId = parsed.pathname.split("/").filter(Boolean)[0] || null;
+        } else if (host === "youtube.com" || host === "m.youtube.com") {
+          if (parsed.pathname === "/watch") {
+            videoId = parsed.searchParams.get("v");
+          } else {
+            const parts = parsed.pathname.split("/").filter(Boolean);
+
+            if (["embed", "shorts", "live"].includes(parts[0])) {
+              videoId = parts[1] || null;
+            }
+          }
+        }
+
+        if (!videoId || !/^[A-Za-z0-9_-]{6,20}$/.test(videoId)) {
+          return res.status(400).json({ error: "La dirección de YouTube no es válida." });
+        }
+
+        youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
+      } catch {
+        return res.status(400).json({ error: "La dirección de YouTube no es válida." });
+      }
+    }
+
     if (!title || !body) {
       return res.status(400).json({ error: "Título y texto son obligatorios." });
     }
 
     const result = await db.query(`
       INSERT INTO pastoral_posts
-        (title, excerpt, body, author_name, status, published_at)
+        (
+          title, excerpt, body, author_name,
+          status, published_at, image_media_id, youtube_url
+        )
       VALUES
-        ($1, $2, $3, $4, $5, CASE WHEN $5 = 'published' THEN NOW() ELSE NULL END)
-      RETURNING id, title, excerpt, body, author_name, status, published_at, created_at
+        (
+          $1, $2, $3, $4,
+          $5,
+          CASE WHEN $5 = 'published' THEN NOW() ELSE NULL END,
+          $6, $7
+        )
+      RETURNING
+        id, title, excerpt, body, author_name,
+        status, published_at, created_at,
+        image_media_id, youtube_url
     `, [
       title,
       excerpt,
       body,
       authorName,
-      publish ? "published" : "draft"
+      publish ? "published" : "draft",
+      imageMediaId,
+      youtubeUrl
     ]);
 
     res.status(201).json({ post: result.rows[0] });

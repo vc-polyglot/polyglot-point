@@ -31,6 +31,7 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       imgSrc: ["'self'", "data:", "https:"],
       mediaSrc: ["'self'", "https:"],
+      frameSrc: ["'self'", "https://www.youtube.com", "https://www.youtube-nocookie.com"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
       connectSrc: ["'self'"],

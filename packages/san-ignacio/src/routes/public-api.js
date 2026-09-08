@@ -13,12 +13,20 @@ publicApi.get("/home", async (_req, res, next) => {
         ORDER BY sort_order ASC, id ASC
       `),
       db.query(`
-        SELECT id, title, excerpt, body, author_name, published_at
-        FROM pastoral_posts
-        WHERE status = 'published'
-          AND published_at IS NOT NULL
-          AND published_at <= NOW()
-        ORDER BY published_at DESC
+        SELECT
+          p.id, p.title, p.excerpt, p.body,
+          p.author_name, p.published_at,
+          p.youtube_url,
+          m.secure_url AS image_url,
+          m.alt_text AS image_alt
+        FROM pastoral_posts p
+        LEFT JOIN media m
+          ON m.id = p.image_media_id
+         AND m.media_type = 'image'
+        WHERE p.status = 'published'
+          AND p.published_at IS NOT NULL
+          AND p.published_at <= NOW()
+        ORDER BY p.published_at DESC
         LIMIT 1
       `),
       db.query(`

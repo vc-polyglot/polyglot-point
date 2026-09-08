@@ -100,7 +100,23 @@ async function loadOverview() {
 }
 
 async function loadPastoral() {
-  const { posts } = await api("/api/admin/pastoral");
+  const [{ posts }, { images }] = await Promise.all([
+    api("/api/admin/pastoral"),
+    api("/api/admin/media/images")
+  ]);
+
+  const imageSelect = $("#pastoral-image-select");
+
+  if (imageSelect) {
+    imageSelect.innerHTML = `
+      <option value="">Sin fotografía</option>
+      ${images.map((image) => `
+        <option value="${image.id}">
+          ${escapeHtml(image.alt_text || `Fotografía ${image.id}`)}
+        </option>
+      `).join("")}
+    `;
+  }
   const list = $("#pastoral-list");
 
   if (!posts.length) {
@@ -144,6 +160,8 @@ $("#pastoral-form").addEventListener("submit", async (event) => {
         title: data.get("title"),
         excerpt: data.get("excerpt"),
         author_name: data.get("author_name"),
+        image_media_id: data.get("image_media_id") || null,
+        youtube_url: data.get("youtube_url") || null,
         body: data.get("body"),
         publish: submitter?.value === "publish"
       })

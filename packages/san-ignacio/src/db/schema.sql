@@ -98,3 +98,9 @@ CREATE TABLE IF NOT EXISTS concerts (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+
+ALTER TABLE pastoral_posts
+  ADD COLUMN IF NOT EXISTS image_media_id BIGINT REFERENCES media(id) ON DELETE SET NULL;
+
+ALTER TABLE pastoral_posts
+  ADD COLUMN IF NOT EXISTS youtube_url TEXT;
