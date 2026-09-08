@@ -110,12 +110,12 @@ app.get("/admin/dashboard", requireAuth, (_req, res) => {
 
 app.use("/admin-assets", express.static(path.join(rootDir, "public", "admin"), {
   fallthrough: false,
-  maxAge: isProduction ? "1h" : 0
+  maxAge: 0
 }));
 
 app.use(express.static(path.join(rootDir, "public"), {
   index: "index.html",
-  maxAge: isProduction ? "1h" : 0
+  maxAge: 0
 }));
 
 app.use((req, res) => {
