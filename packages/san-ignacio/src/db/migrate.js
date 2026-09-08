@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 try {
-  const sql = await fs.readFile(path.join(__dirname, "schema.sql"), "utf8");
+  const sql = (await fs.readFile(path.join(__dirname, "schema.sql"), "utf8")).replace(/^\uFEFF/, "");
   await db.query(sql);
   console.log("Migración completada.");
 } catch (error) {

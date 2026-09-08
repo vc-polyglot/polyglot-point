@@ -1,4 +1,4 @@
-﻿CREATE SCHEMA IF NOT EXISTS san_ignacio;
+CREATE SCHEMA IF NOT EXISTS san_ignacio;
 SET search_path TO san_ignacio, public;
 
 CREATE TABLE IF NOT EXISTS users (
