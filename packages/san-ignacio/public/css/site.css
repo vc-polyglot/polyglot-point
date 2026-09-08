@@ -1655,3 +1655,197 @@ body .first-screen .schedule-card::before {
     margin: 0 !important;
   }
 }
+
+
+/* ============================================================
+   SAN IGNACIO — LITURGY SECTION
+   Segunda sección real del sitio.
+   ============================================================ */
+
+body .liturgy-section {
+  position: relative;
+
+  display: grid;
+  grid-template-columns:
+    minmax(220px, .72fr)
+    minmax(0, 1.6fr);
+
+  gap: clamp(3rem, 7vw, 8rem);
+
+  align-items: start;
+
+  background: var(--si-red, #a43830) !important;
+  color: var(--si-light, #f6f1e7) !important;
+
+  padding-top: clamp(4.5rem, 8vw, 8rem);
+  padding-bottom: clamp(4.5rem, 8vw, 8rem);
+}
+
+
+body .liturgy-heading {
+  max-width: 30rem;
+}
+
+
+body .liturgy-section .section-kicker {
+  color: #f3c59a !important;
+}
+
+
+body .liturgy-section h2 {
+  margin: 0;
+
+  color: var(--si-light, #f6f1e7) !important;
+
+  font-size: clamp(3.2rem, 6vw, 7rem);
+  line-height: .92;
+
+  letter-spacing: -.055em;
+}
+
+
+body .liturgy-content {
+  min-width: 0;
+}
+
+
+/* ============================================================
+   AVISOS
+   ============================================================ */
+
+body .liturgy-section .notices {
+  margin: 0 0 2rem;
+  padding: 0;
+
+  background: transparent;
+}
+
+
+body .liturgy-section .notice {
+  padding: 1.25rem 0;
+
+  color: var(--si-light, #f6f1e7);
+
+  border-top: 1px solid rgba(255,255,255,.32);
+}
+
+
+body .liturgy-section .notice:last-child {
+  border-bottom: 1px solid rgba(255,255,255,.32);
+}
+
+
+body .liturgy-section .notice strong {
+  color: var(--si-light, #f6f1e7);
+}
+
+
+body .liturgy-section .notice p {
+  color: rgba(246,241,231,.82);
+}
+
+
+/* ============================================================
+   HORARIOS
+   Ya no son una tarjeta.
+   Son el contenido principal de la sección.
+   ============================================================ */
+
+body .liturgy-section .schedule-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  background: transparent;
+
+  border-top: 1px solid rgba(255,255,255,.42);
+}
+
+
+body .liturgy-section .schedule-item {
+  padding:
+    clamp(1.6rem, 3vw, 2.6rem)
+    clamp(1.5rem, 3vw, 2.8rem)
+    clamp(1.6rem, 3vw, 2.6rem)
+    0;
+
+  color: var(--si-light, #f6f1e7);
+
+  border-bottom: 1px solid rgba(255,255,255,.30);
+}
+
+
+body .liturgy-section .schedule-item:nth-child(odd) {
+  border-right: 1px solid rgba(255,255,255,.30);
+}
+
+
+body .liturgy-section .schedule-item:nth-child(even) {
+  padding-left: clamp(1.5rem, 3vw, 2.8rem);
+}
+
+
+body .liturgy-section .schedule-category {
+  color: #f3c59a !important;
+}
+
+
+body .liturgy-section .schedule-day {
+  color: var(--si-light, #f6f1e7) !important;
+
+  font-size: clamp(1rem, 1.4vw, 1.3rem);
+}
+
+
+body .liturgy-section .schedule-time {
+  margin-top: .35rem;
+
+  color: var(--si-light, #f6f1e7) !important;
+
+  font-size: clamp(1.8rem, 3vw, 3.4rem);
+  line-height: 1;
+}
+
+
+body .liturgy-section .schedule-detail {
+  color: rgba(246,241,231,.76) !important;
+}
+
+
+body .liturgy-section .loading {
+  grid-column: 1 / -1;
+
+  padding: 2rem 0;
+
+  color: rgba(246,241,231,.8);
+}
+
+
+/* ============================================================
+   TABLET / MÓVIL
+   ============================================================ */
+
+@media (max-width: 850px) {
+
+  body .liturgy-section {
+    grid-template-columns: 1fr;
+
+    gap: 2.5rem;
+  }
+
+
+  body .liturgy-section .schedule-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  body .liturgy-section .schedule-item:nth-child(odd) {
+    border-right: 0;
+  }
+
+
+  body .liturgy-section .schedule-item:nth-child(even) {
+    padding-left: 0;
+  }
+}
