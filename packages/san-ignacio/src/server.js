@@ -1,4 +1,3 @@
-import { join as sanIgnacioJoinPath } from "node:path";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import express from "express";
@@ -109,58 +108,32 @@ app.get("/admin/dashboard", requireAuth, (_req, res) => {
   res.sendFile(path.join(rootDir, "private", "admin-dashboard.html"));
 });
 
-
 // ============================================================
-// SAN IGNACIO PUBLIC NO-STORE
-//
-// El HTML, CSS principal y JS principal jamás se sirven
-// desde caché del navegador ni de intermediarios.
+// SAN IGNACIO CACHE HEADERS V2
+// Evita que HTML, CSS y JS principales queden pegados en caché.
+// ESM-safe: no usa require() ni __dirname.
 // ============================================================
 
-const sanIgnacioNoStoreHeaders = {
-  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
-  "Pragma": "no-cache",
-  "Expires": "0",
-  "Surrogate-Control": "no-store",
-  "X-San-Ignacio-Cache": "no-store-v1"
-};
+app.use((req, res, next) => {
+  const noStorePaths = new Set([
+    "/",
+    "/index.html",
+    "/css/site.css",
+    "/js/site.js"
+  ]);
 
-function sendSanIgnacioPublicFile(res, relativePath, contentType) {
-  Object.entries(sanIgnacioNoStoreHeaders).forEach(([name, value]) => {
-    res.setHeader(name, value);
-  });
-
-  if (contentType) {
-    res.type(contentType);
+  if (noStorePaths.has(req.path)) {
+    res.setHeader(
+      "Cache-Control",
+      "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+    );
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+    res.setHeader("Surrogate-Control", "no-store");
+    res.setHeader("X-San-Ignacio-Cache", "no-store-v2");
   }
 
-  return res.sendFile(
-    sanIgnacioJoinPath(process.cwd(), "public", ...relativePath)
-  );
-}
-
-app.get(["/", "/index.html"], (_req, res) => {
-  return sendSanIgnacioPublicFile(
-    res,
-    ["index.html"],
-    "html"
-  );
-});
-
-app.get("/css/site.css", (_req, res) => {
-  return sendSanIgnacioPublicFile(
-    res,
-    ["css", "site.css"],
-    "css"
-  );
-});
-
-app.get("/js/site.js", (_req, res) => {
-  return sendSanIgnacioPublicFile(
-    res,
-    ["js", "site.js"],
-    "javascript"
-  );
+  next();
 });
 
 app.use("/admin-assets", express.static(path.join(rootDir, "public", "admin"), {
