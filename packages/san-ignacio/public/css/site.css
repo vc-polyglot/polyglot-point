@@ -1369,3 +1369,79 @@ body footer {
     gap: 10px;
   }
 }
+
+
+/* ============================================================
+   SAN IGNACIO — LITURGIA CLEARANCE FIX
+
+   El conjunto cromático superior derecho NO SE MUEVE.
+   Se reposiciona exclusivamente la tarjeta de Vida litúrgica
+   para que deje de invadirlo.
+   ============================================================ */
+
+@media (min-width: 1100px) {
+
+  body .first-screen .schedule-panel,
+  body .first-screen .schedule-card {
+
+    /*
+       La tarjeta deja de alinearse contra el extremo derecho.
+       Reservamos deliberadamente el costado derecho
+       para la composición rojo / naranja / amarillo.
+    */
+
+    width: min(39rem, 48vw) !important;
+    max-width: 39rem !important;
+
+    margin-left: auto !important;
+    margin-right: clamp(13rem, 17vw, 19rem) !important;
+
+    /*
+       Conservamos su posición vertical general.
+       No empujamos ni modificamos los bloques de color.
+    */
+
+    transform: none !important;
+  }
+}
+
+
+/* ------------------------------------------------------------
+   Pantallas intermedias:
+   menor reserva lateral porque el hero ya tiene menos anchura.
+   ------------------------------------------------------------ */
+
+@media (min-width: 800px) and (max-width: 1099px) {
+
+  body .first-screen .schedule-panel,
+  body .first-screen .schedule-card {
+    width: min(36rem, 60vw) !important;
+    max-width: 36rem !important;
+
+    margin-left: auto !important;
+    margin-right: clamp(7rem, 12vw, 10rem) !important;
+
+    transform: none !important;
+  }
+}
+
+
+/* ------------------------------------------------------------
+   Móvil:
+   desaparece la competencia espacial.
+   La tarjeta vuelve al flujo natural.
+   ------------------------------------------------------------ */
+
+@media (max-width: 799px) {
+
+  body .first-screen .schedule-panel,
+  body .first-screen .schedule-card {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+
+    transform: none !important;
+  }
+}
