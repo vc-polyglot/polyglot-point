@@ -1372,8 +1372,13 @@ body footer {
 
 
 /* ============================================================
-   SAN IGNACIO — HERO ZOOM LOCK V4
-   Composición proporcional estable en escritorio.
+   SAN IGNACIO — HERO COMPOSITION FINAL V3
+
+   1. Campo crema hasta ambos extremos del viewport.
+   2. Nombre a la izquierda.
+   3. Morado como contrapeso, SIN atravesar el texto.
+   4. Vida litúrgica abajo/derecha, en territorio propio.
+   5. Composición cromática superior derecha: INTACTA.
    ============================================================ */
 
 body {
@@ -1382,379 +1387,271 @@ body {
 
 
 /* ============================================================
-   HERO FULL BLEED
+   CAMPO GENERAL
    ============================================================ */
 
 body .first-screen {
   position: relative !important;
   isolation: isolate !important;
-  overflow: hidden !important;
 
-  display: block !important;
+  min-height: calc(100svh - 72px) !important;
 
-  box-sizing: border-box !important;
+  display: grid !important;
+  grid-template-columns:
+    minmax(21rem, 0.9fr)
+    minmax(29rem, 1.15fr) !important;
+
+  grid-template-rows: 1fr !important;
+
+  column-gap: clamp(3rem, 6vw, 7rem) !important;
+
+  align-items: start !important;
+
+  padding:
+    clamp(4rem, 7vh, 6rem)
+    clamp(3rem, 7vw, 8rem)
+    clamp(4rem, 7vh, 6rem) !important;
+
+  background: var(--si-cream, #eee8dc) !important;
+  color: var(--si-dark, #16191b) !important;
+
+  /*
+     Ésta es la corrección de las bandas negras:
+     el fondo se prolonga hasta los bordes del viewport
+     aunque el contenedor padre tenga ancho limitado.
+  */
+
+  box-shadow:
+    0 0 0 100vmax var(--si-cream, #eee8dc) !important;
+
+  clip-path: inset(0 -100vmax) !important;
+}
+
+
+/* La franja superior también llega de extremo a extremo */
+
+body .first-screen::before {
+  left: 50% !important;
+  right: auto !important;
 
   width: 100vw !important;
   max-width: none !important;
 
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: calc(50% - 50vw) !important;
-
-  padding: 0 !important;
-
-  min-height: 48vw !important;
-  height: calc(100svh - 5rem) !important;
-
-  background: var(--si-cream, #eee8dc) !important;
-  color: var(--si-dark, #16191b) !important;
-}
-
-
-/* ============================================================
-   FRANJA SUPERIOR FULL WIDTH
-   ============================================================ */
-
-body .first-screen::before {
-  content: "" !important;
-
-  position: absolute !important;
-
-  top: 0 !important;
-  left: 0 !important;
-
-  width: 100% !important;
-  height: max(8px, .65vw) !important;
-
-  transform: none !important;
-
-  z-index: 2 !important;
-
-  background:
-    linear-gradient(
-      90deg,
-      #ae4036 0%,
-      #ae4036 19%,
-      #d96a38 19%,
-      #d96a38 38%,
-      #2d3134 38%,
-      #2d3134 57%,
-      #31577d 57%,
-      #31577d 79%,
-      #594573 79%,
-      #594573 100%
-    ) !important;
-}
-
-
-/* ============================================================
-   VITRAL SUPERIOR DERECHO
-   TERRITORIO: 80% -> 97%
-   ============================================================ */
-
-body .first-screen::after {
-  content: "" !important;
-
-  position: absolute !important;
-
-  left: 80% !important;
-  top: 5% !important;
-
-  width: 17% !important;
-  height: 47% !important;
+  transform: translateX(-50%) !important;
 
   z-index: 1 !important;
-
-  pointer-events: none !important;
-
-  background:
-    linear-gradient(#dfa637,#dfa637)
-      0 0 / 42% 28% no-repeat,
-
-    linear-gradient(#dfa637,#dfa637)
-      100% 0 / 18% 28% no-repeat,
-
-    linear-gradient(#b64036,#b64036)
-      42% 0 / 40% 100% no-repeat,
-
-    linear-gradient(#dd6933,#dd6933)
-      0 72% / 42% 28% no-repeat,
-
-    linear-gradient(#dd6933,#dd6933)
-      100% 72% / 18% 28% no-repeat !important;
 }
 
 
 /* ============================================================
    IDENTIDAD
-   TERRITORIO: 14% -> 43%
    ============================================================ */
 
 body .first-screen .identity {
-  position: absolute !important;
+  grid-column: 1 !important;
+  grid-row: 1 !important;
 
-  left: 14% !important;
-  top: 25% !important;
+  position: relative !important;
+  z-index: 4 !important;
 
-  width: 29% !important;
-  max-width: none !important;
+  align-self: center !important;
+
+  width: 100% !important;
+  max-width: 37rem !important;
+
+  /*
+     Reservamos físicamente una columna para el morado.
+     Ya no puede meterse debajo de las letras.
+  */
+
+  padding-left: clamp(6.5rem, 8vw, 8.5rem) !important;
 
   margin: 0 !important;
-  padding: 0 !important;
-
   transform: none !important;
-
-  z-index: 5 !important;
 }
 
 
-/* ============================================================
-   MORADO
-   ESTÁ FUERA DE LA CAJA DEL TEXTO.
-   NO PUEDE CRUZAR LAS LETRAS.
-   ============================================================ */
+/* Morado nuevo: lateral, independiente de las letras */
 
 body .first-screen .identity::before {
   content: "" !important;
 
   position: absolute !important;
 
-  left: -22% !important;
-  top: 39% !important;
+  left: 0 !important;
+  top: 42% !important;
+  bottom: -6rem !important;
 
-  width: 12% !important;
-  height: 125% !important;
+  width: clamp(4.25rem, 5vw, 5.75rem) !important;
 
-  background: #594573 !important;
+  background: var(--si-purple, #594573) !important;
 
   z-index: -1 !important;
 }
 
+
+/*
+   Si el diseño original tenía otro pseudo-elemento
+   atravesando el título, desaparece.
+*/
 
 body .first-screen .identity::after {
-  content: "" !important;
-
-  position: absolute !important;
-
-  left: -12% !important;
-  top: 29% !important;
-
-  width: 7% !important;
-  height: 82% !important;
-
-  background: #665084 !important;
-
-  z-index: -1 !important;
+  content: none !important;
+  display: none !important;
 }
 
 
-/* ============================================================
-   TÍTULO FIJO EN DOS LÍNEAS
-   ============================================================ */
-
-body #home-title {
+body .first-screen .identity h1 {
   position: relative !important;
+  z-index: 5 !important;
 
-  width: 100% !important;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  color: var(--si-dark, #16191b) !important;
-
-  font-size: 5vw !important;
-  line-height: .94 !important;
-  letter-spacing: -.055em !important;
-
+  margin-left: 0 !important;
   transform: none !important;
 
-  z-index: 5 !important;
+  color: var(--si-dark, #16191b) !important;
 }
 
 
-body #home-title .hero-title-line {
-  display: block !important;
-
-  width: max-content !important;
-
-  white-space: nowrap !important;
-}
-
-
+body .first-screen .identity p,
+body .first-screen .identity small,
 body .first-screen .identity .section-kicker {
-  margin-bottom: 1.6vw !important;
-}
-
-
-body .first-screen .identity > p:last-child {
-  margin-top: 1.6vw !important;
+  position: relative !important;
+  z-index: 5 !important;
 }
 
 
 /* ============================================================
    VIDA LITÚRGICA
-   TERRITORIO: 48% -> 75%
 
-   EL VITRAL COMIENZA EN 80%.
-
-   ENTRE LOS DOS QUEDAN 5 PUNTOS PORCENTUALES VACÍOS.
+   IMPORTANTE:
+   No intentamos mover el elemento cromático.
+   La tarjeta baja POR DEBAJO de su territorio.
    ============================================================ */
 
 body .first-screen .schedule-panel,
 body .first-screen .schedule-card {
-  position: absolute !important;
 
-  left: 48% !important;
-  right: auto !important;
+  grid-column: 2 !important;
+  grid-row: 1 !important;
 
-  top: 22% !important;
+  position: relative !important;
+  z-index: 5 !important;
 
-  width: 27% !important;
-  max-width: none !important;
-  min-width: 0 !important;
+  align-self: start !important;
 
-  box-sizing: border-box !important;
+  width: min(100%, 35rem) !important;
+  max-width: 35rem !important;
 
-  margin: 0 !important;
+  /*
+     El elemento cromático vive arriba.
+     La tarjeta comienza bastante más abajo.
+  */
+
+  margin-top: clamp(24rem, 42vh, 29rem) !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+  margin-bottom: 0 !important;
 
   transform: none !important;
 
-  z-index: 6 !important;
-
-  background: rgba(246,241,231,.97) !important;
+  background: rgba(246,241,231,.94) !important;
+  color: var(--si-dark, #16191b) !important;
 
   border: 0 !important;
   box-shadow: none !important;
 }
 
 
-/* Línea naranja estrictamente del ancho de la tarjeta */
+/*
+   La línea naranja pertenece a la tarjeta,
+   pero no se prolonga hacia el bloque cromático.
+*/
 
 body .first-screen .schedule-panel::before,
 body .first-screen .schedule-card::before {
   content: "" !important;
 
   position: absolute !important;
-
   top: 0 !important;
   left: 0 !important;
+  right: 0 !important;
 
-  width: 100% !important;
-  height: max(6px,.42vw) !important;
+  height: 7px !important;
 
-  background: #dd6933 !important;
-
-  z-index: 1 !important;
+  background: var(--si-orange, #c25a27) !important;
 }
 
 
 /* ============================================================
-   ESCRITORIO:
-   NO HAY MEDIA QUERY.
-
-   El navegador puede estar:
-   75%
-   80%
-   90%
-   100%
-   110%
-   125%
-   150%
-
-   y las relaciones porcentuales siguen siendo las mismas.
+   TABLET
    ============================================================ */
 
-
-/* ============================================================
-   MÓVIL REAL
-
-   Sólo cambiamos la composición cuando además de ser angosto
-   el dispositivo utiliza un apuntador táctil/coarse.
-
-   El zoom del navegador de escritorio NO activa esta regla.
-   ============================================================ */
-
-@media (max-width: 760px) and (pointer: coarse) {
+@media (max-width: 1100px) {
 
   body .first-screen {
-    width: 100% !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto !important;
 
-    margin: 0 !important;
+    row-gap: 3.5rem !important;
 
-    height: auto !important;
-    min-height: auto !important;
-
-    padding: 3rem 1.5rem !important;
-
-    display: flex !important;
-    flex-direction: column !important;
-
-    gap: 3rem !important;
+    padding-left: clamp(2rem, 6vw, 4rem) !important;
+    padding-right: clamp(2rem, 6vw, 4rem) !important;
   }
-
-
-  body .first-screen::after {
-    position: relative !important;
-
-    left: auto !important;
-    top: auto !important;
-
-    width: 70vw !important;
-    height: 52vw !important;
-
-    align-self: flex-end !important;
-
-    order: 1 !important;
-  }
-
 
   body .first-screen .identity {
-    position: relative !important;
+    grid-column: 1 !important;
+    grid-row: 1 !important;
 
-    left: auto !important;
-    top: auto !important;
-
-    width: 100% !important;
-
-    padding-left: 4.5rem !important;
-
-    order: 2 !important;
+    max-width: 40rem !important;
   }
-
-
-  body #home-title {
-    font-size: 15vw !important;
-  }
-
-
-  body #home-title .hero-title-line {
-    white-space: normal !important;
-    width: auto !important;
-  }
-
-
-  body .first-screen .identity::before {
-    left: 0 !important;
-    width: 2.6rem !important;
-  }
-
-
-  body .first-screen .identity::after {
-    left: 2.1rem !important;
-    width: 1.8rem !important;
-  }
-
 
   body .first-screen .schedule-panel,
   body .first-screen .schedule-card {
-    position: relative !important;
+    grid-column: 1 !important;
+    grid-row: 2 !important;
 
-    left: auto !important;
-    top: auto !important;
+    width: min(100%, 38rem) !important;
+    max-width: 38rem !important;
 
+    margin-top: 0 !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+  }
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 650px) {
+
+  body .first-screen {
+    min-height: auto !important;
+
+    padding:
+      3rem
+      1.4rem
+      3rem !important;
+
+    row-gap: 2.5rem !important;
+  }
+
+  body .first-screen .identity {
+    padding-left: 4.5rem !important;
+  }
+
+  body .first-screen .identity::before {
+    width: 3.25rem !important;
+    top: 38% !important;
+    bottom: -2rem !important;
+  }
+
+  body .first-screen .schedule-panel,
+  body .first-screen .schedule-card {
     width: 100% !important;
+    max-width: 100% !important;
 
     margin: 0 !important;
-
-    order: 3 !important;
   }
 }
