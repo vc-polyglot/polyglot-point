@@ -170,3 +170,62 @@ publicApi.post("/contact", async (req, res, next) => {
     next(error);
   }
 });
+publicApi.get("/institutional", async (_req, res, next) => {
+  try {
+    const [sectionsResult, cardsResult, staffResult] = await Promise.all([
+      db.query(`
+        SELECT
+          s.slug,
+          s.eyebrow,
+          s.title,
+          s.body,
+          m.secure_url AS image_url,
+          m.alt_text AS image_alt
+        FROM institutional_sections s
+        LEFT JOIN media m
+          ON m.id = s.image_media_id
+         AND m.media_type = 'image'
+        WHERE s.published = TRUE
+        ORDER BY s.slug
+      `),
+
+      db.query(`
+        SELECT
+          id,
+          section_slug,
+          label,
+          title,
+          body,
+          sort_order
+        FROM institutional_cards
+        WHERE published = TRUE
+        ORDER BY section_slug, sort_order ASC, id ASC
+      `),
+
+      db.query(`
+        SELECT
+          s.id,
+          s.name,
+          s.role,
+          s.description,
+          s.sort_order,
+          m.secure_url AS image_url,
+          m.alt_text AS image_alt
+        FROM staff_members s
+        LEFT JOIN media m
+          ON m.id = s.media_id
+         AND m.media_type = 'image'
+        WHERE s.published = TRUE
+        ORDER BY s.sort_order ASC, s.id ASC
+      `)
+    ]);
+
+    res.json({
+      sections: sectionsResult.rows,
+      cards: cardsResult.rows,
+      staff: staffResult.rows
+    });
+  } catch (error) {
+    next(error);
+  }
+});

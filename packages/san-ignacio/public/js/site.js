@@ -155,6 +155,153 @@ async function loadMusic() {
       `<p class="music-public-empty">No fue posible cargar el contenido musical.</p>`;
   }
 }
+
+async function loadInstitutional() {
+  try {
+    const response = await fetch("/api/institutional", {
+      headers: {
+        Accept: "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("No se pudo cargar el contenido institucional.");
+    }
+
+    const data = await response.json();
+
+    const about = data.sections?.find(
+      (section) => section.slug === "about"
+    );
+
+    const spirituality = data.sections?.find(
+      (section) => section.slug === "spirituality"
+    );
+
+    if (about) {
+      const eyebrow = document.querySelector("#about-eyebrow");
+      const title = document.querySelector("#about-title");
+      const body = document.querySelector("#about-body");
+      const image = document.querySelector("#about-image");
+
+      if (eyebrow) {
+        eyebrow.textContent = about.eyebrow || "Arquitectura y comunidad";
+      }
+
+      if (title) {
+        title.textContent = about.title;
+      }
+
+      if (body) {
+        body.textContent = about.body || "";
+      }
+
+      if (image && about.image_url) {
+        image.classList.add("has-image");
+
+        image.innerHTML = `
+          <img
+            src="${escapeHtml(about.image_url)}"
+            alt="${escapeHtml(about.image_alt || about.title)}"
+            loading="lazy"
+          >
+        `;
+      }
+    }
+
+    if (spirituality) {
+      const eyebrow = document.querySelector("#spirituality-eyebrow");
+      const title = document.querySelector("#spirituality-title");
+      const body = document.querySelector("#spirituality-body");
+
+      if (eyebrow) {
+        eyebrow.textContent =
+          spirituality.eyebrow || "Espiritualidad jesuita";
+      }
+
+      if (title) {
+        title.textContent = spirituality.title;
+      }
+
+      if (body) {
+        body.textContent = spirituality.body || "";
+      }
+    }
+
+    const cardsContainer =
+      document.querySelector("#spirituality-cards");
+
+    const spiritualCards = (data.cards || []).filter(
+      (card) => card.section_slug === "spirituality"
+    );
+
+    if (cardsContainer) {
+      if (spiritualCards.length) {
+        cardsContainer.innerHTML = spiritualCards.map((card) => `
+          <article>
+            <span>${escapeHtml(card.label || "")}</span>
+            <h3>${escapeHtml(card.title)}</h3>
+            ${card.body
+              ? `<p>${escapeHtml(card.body)}</p>`
+              : ""
+            }
+          </article>
+        `).join("");
+      } else {
+        cardsContainer.innerHTML = `
+          <p class="loading">
+            Información en actualización.
+          </p>
+        `;
+      }
+    }
+
+    const staffGrid = document.querySelector("#staff-grid");
+
+    if (staffGrid) {
+      if (data.staff?.length) {
+        staffGrid.innerHTML = data.staff.map((member) => `
+          <article class="staff-card">
+            ${member.image_url
+              ? `
+                <figure class="staff-photo">
+                  <img
+                    src="${escapeHtml(member.image_url)}"
+                    alt="${escapeHtml(member.image_alt || member.name)}"
+                    loading="lazy"
+                  >
+                </figure>
+              `
+              : `
+                <div class="staff-photo staff-photo-empty" aria-hidden="true">
+                  <span>SI</span>
+                </div>
+              `
+            }
+
+            <div class="staff-copy">
+              <p class="staff-role">${escapeHtml(member.role)}</p>
+              <h3>${escapeHtml(member.name)}</h3>
+
+              ${member.description
+                ? `<p>${escapeHtml(member.description)}</p>`
+                : ""
+              }
+            </div>
+          </article>
+        `).join("");
+      } else {
+        staffGrid.innerHTML = `
+          <p class="loading">
+            La información del equipo pastoral se encuentra en actualización.
+          </p>
+        `;
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
 async function loadHome() {
   try {
     const response = await fetch("/api/home", {
@@ -246,6 +393,7 @@ async function loadHome() {
 
 loadHome();
 loadMusic();
+loadInstitutional();
 
 const contactForm = document.querySelector("#contact-form");
 const contactStatus = document.querySelector("#contact-status");

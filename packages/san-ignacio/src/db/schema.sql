@@ -120,3 +120,119 @@ CREATE TABLE IF NOT EXISTS contact_messages (
 
 CREATE INDEX IF NOT EXISTS contact_messages_status_created_idx
   ON contact_messages (status, created_at DESC);
+CREATE TABLE IF NOT EXISTS institutional_sections (
+  slug TEXT PRIMARY KEY
+    CHECK (slug IN ('about', 'spirituality')),
+  eyebrow TEXT,
+  title TEXT NOT NULL,
+  body TEXT,
+  image_media_id BIGINT REFERENCES media(id) ON DELETE SET NULL,
+  published BOOLEAN NOT NULL DEFAULT TRUE,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS institutional_cards (
+  id BIGSERIAL PRIMARY KEY,
+  section_slug TEXT NOT NULL
+    REFERENCES institutional_sections(slug) ON DELETE CASCADE,
+  label TEXT,
+  title TEXT NOT NULL,
+  body TEXT,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  published BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS staff_members (
+  id BIGSERIAL PRIMARY KEY,
+  slug TEXT UNIQUE,
+  name TEXT NOT NULL,
+  role TEXT NOT NULL,
+  description TEXT,
+  media_id BIGINT REFERENCES media(id) ON DELETE SET NULL,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  published BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+INSERT INTO institutional_sections
+  (slug, eyebrow, title, body, published)
+VALUES
+  (
+    'about',
+    'Arquitectura y comunidad',
+    'Una iglesia modernista viva.',
+    'El templo de San Ignacio de Loyola, en Polanco, fue proyectado por Juan Sordo Madaleno en 1961 y está catalogado por el Instituto Nacional de Bellas Artes.',
+    TRUE
+  ),
+  (
+    'spirituality',
+    'Espiritualidad jesuita',
+    'Encontrar a Dios en todas las cosas.',
+    'La espiritualidad ignaciana nace de la experiencia de san Ignacio de Loyola y encuentra en los Ejercicios Espirituales una de sus expresiones centrales.',
+    TRUE
+  )
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO institutional_cards
+  (section_slug, label, title, body, sort_order, published)
+SELECT
+  'spirituality',
+  '01',
+  'Ignacio',
+  'Ejercicios Espirituales y una manera de encontrar a Dios en todas las cosas.',
+  10,
+  TRUE
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM institutional_cards
+  WHERE section_slug = 'spirituality'
+    AND title = 'Ignacio'
+);
+
+INSERT INTO institutional_cards
+  (section_slug, label, title, body, sort_order, published)
+SELECT
+  'spirituality',
+  '02',
+  'México',
+  'La presencia de la Compañía de Jesús en México forma parte de una historia iniciada en 1572.',
+  20,
+  TRUE
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM institutional_cards
+  WHERE section_slug = 'spirituality'
+    AND title = 'México'
+);
+
+INSERT INTO institutional_cards
+  (section_slug, label, title, body, sort_order, published)
+SELECT
+  'spirituality',
+  '03',
+  'Polanco',
+  'Una comunidad en la que la tradición ignaciana continúa formando parte de la vida cotidiana del templo.',
+  30,
+  TRUE
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM institutional_cards
+  WHERE section_slug = 'spirituality'
+    AND title = 'Polanco'
+);
+
+INSERT INTO staff_members
+  (slug, name, role, description, sort_order, published)
+VALUES
+  (
+    'luis-gonzalez-cosio',
+    'P. Luis González-Cosío Elcoro, S.J.',
+    'Rector',
+    NULL,
+    10,
+    TRUE
+  )
+ON CONFLICT (slug) DO NOTHING;

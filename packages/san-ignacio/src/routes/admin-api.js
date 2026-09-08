@@ -885,3 +885,430 @@ adminApi.delete("/contact-messages/:id", requireRole("admin"), async (req, res, 
     next(error);
   }
 });
+async function institutionalImageId(value) {
+  if (value === null || value === undefined || value === "") {
+    return null;
+  }
+
+  const id = Number(value);
+
+  if (!Number.isInteger(id) || id <= 0) {
+    return false;
+  }
+
+  const result = await db.query(`
+    SELECT id
+    FROM media
+    WHERE id = $1
+      AND media_type = 'image'
+      AND provider = 'cloudinary'
+  `, [id]);
+
+  return result.rows[0] ? id : false;
+}
+
+adminApi.get("/institutional", requireRole("admin"), async (_req, res, next) => {
+  try {
+    const [sectionsResult, cardsResult, staffResult] = await Promise.all([
+      db.query(`
+        SELECT
+          s.slug,
+          s.eyebrow,
+          s.title,
+          s.body,
+          s.image_media_id,
+          s.published,
+          s.updated_at,
+          m.secure_url AS image_url,
+          m.alt_text AS image_alt
+        FROM institutional_sections s
+        LEFT JOIN media m
+          ON m.id = s.image_media_id
+        ORDER BY s.slug
+      `),
+
+      db.query(`
+        SELECT
+          id,
+          section_slug,
+          label,
+          title,
+          body,
+          sort_order,
+          published,
+          created_at,
+          updated_at
+        FROM institutional_cards
+        ORDER BY section_slug, sort_order ASC, id ASC
+      `),
+
+      db.query(`
+        SELECT
+          s.id,
+          s.slug,
+          s.name,
+          s.role,
+          s.description,
+          s.media_id,
+          s.sort_order,
+          s.published,
+          s.created_at,
+          s.updated_at,
+          m.secure_url AS image_url,
+          m.alt_text AS image_alt
+        FROM staff_members s
+        LEFT JOIN media m
+          ON m.id = s.media_id
+        ORDER BY s.sort_order ASC, s.id ASC
+      `)
+    ]);
+
+    res.json({
+      sections: sectionsResult.rows,
+      cards: cardsResult.rows,
+      staff: staffResult.rows
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminApi.put("/institutional/sections/:slug", requireRole("admin"), async (req, res, next) => {
+  try {
+    const slug = String(req.params.slug || "").trim();
+
+    if (!["about", "spirituality"].includes(slug)) {
+      return res.status(400).json({
+        error: "Sección institucional inválida."
+      });
+    }
+
+    const eyebrow = String(req.body?.eyebrow || "").trim() || null;
+    const title = String(req.body?.title || "").trim();
+    const body = String(req.body?.body || "").trim() || null;
+    const published = Boolean(req.body?.published);
+
+    const imageMediaId = await institutionalImageId(
+      req.body?.image_media_id
+    );
+
+    if (!title) {
+      return res.status(400).json({
+        error: "Escribe un título."
+      });
+    }
+
+    if (imageMediaId === false) {
+      return res.status(400).json({
+        error: "La fotografía seleccionada no existe."
+      });
+    }
+
+    const result = await db.query(`
+      INSERT INTO institutional_sections
+        (
+          slug, eyebrow, title, body,
+          image_media_id, published, updated_at
+        )
+      VALUES
+        ($1, $2, $3, $4, $5, $6, NOW())
+      ON CONFLICT (slug)
+      DO UPDATE SET
+        eyebrow = EXCLUDED.eyebrow,
+        title = EXCLUDED.title,
+        body = EXCLUDED.body,
+        image_media_id = EXCLUDED.image_media_id,
+        published = EXCLUDED.published,
+        updated_at = NOW()
+      RETURNING
+        slug, eyebrow, title, body,
+        image_media_id, published, updated_at
+    `, [
+      slug,
+      eyebrow,
+      title,
+      body,
+      imageMediaId,
+      published
+    ]);
+
+    res.json({
+      section: result.rows[0]
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminApi.post("/institutional/cards", requireRole("admin"), async (req, res, next) => {
+  try {
+    const sectionSlug = String(req.body?.section_slug || "spirituality").trim();
+    const label = String(req.body?.label || "").trim() || null;
+    const title = String(req.body?.title || "").trim();
+    const body = String(req.body?.body || "").trim() || null;
+    const sortOrder = Number(req.body?.sort_order || 0);
+    const published = Boolean(req.body?.published);
+
+    if (sectionSlug !== "spirituality") {
+      return res.status(400).json({
+        error: "Las tarjetas sólo están habilitadas para Espiritualidad."
+      });
+    }
+
+    if (!title) {
+      return res.status(400).json({
+        error: "Escribe un título."
+      });
+    }
+
+    const result = await db.query(`
+      INSERT INTO institutional_cards
+        (
+          section_slug, label, title, body,
+          sort_order, published
+        )
+      VALUES
+        ($1, $2, $3, $4, $5, $6)
+      RETURNING *
+    `, [
+      sectionSlug,
+      label,
+      title,
+      body,
+      Number.isFinite(sortOrder) ? sortOrder : 0,
+      published
+    ]);
+
+    res.status(201).json({
+      card: result.rows[0]
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminApi.put("/institutional/cards/:id", requireRole("admin"), async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({
+        error: "ID inválido."
+      });
+    }
+
+    const label = String(req.body?.label || "").trim() || null;
+    const title = String(req.body?.title || "").trim();
+    const body = String(req.body?.body || "").trim() || null;
+    const sortOrder = Number(req.body?.sort_order || 0);
+    const published = Boolean(req.body?.published);
+
+    if (!title) {
+      return res.status(400).json({
+        error: "Escribe un título."
+      });
+    }
+
+    const result = await db.query(`
+      UPDATE institutional_cards
+      SET
+        label = $2,
+        title = $3,
+        body = $4,
+        sort_order = $5,
+        published = $6,
+        updated_at = NOW()
+      WHERE id = $1
+      RETURNING *
+    `, [
+      id,
+      label,
+      title,
+      body,
+      Number.isFinite(sortOrder) ? sortOrder : 0,
+      published
+    ]);
+
+    if (!result.rows[0]) {
+      return res.status(404).json({
+        error: "Tarjeta no encontrada."
+      });
+    }
+
+    res.json({
+      card: result.rows[0]
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminApi.delete("/institutional/cards/:id", requireRole("admin"), async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({
+        error: "ID inválido."
+      });
+    }
+
+    const result = await db.query(`
+      DELETE FROM institutional_cards
+      WHERE id = $1
+      RETURNING id
+    `, [id]);
+
+    if (!result.rows[0]) {
+      return res.status(404).json({
+        error: "Tarjeta no encontrada."
+      });
+    }
+
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminApi.post("/institutional/staff", requireRole("admin"), async (req, res, next) => {
+  try {
+    const name = String(req.body?.name || "").trim();
+    const role = String(req.body?.role || "").trim();
+    const description = String(req.body?.description || "").trim() || null;
+    const sortOrder = Number(req.body?.sort_order || 0);
+    const published = Boolean(req.body?.published);
+
+    const mediaId = await institutionalImageId(req.body?.media_id);
+
+    if (!name || !role) {
+      return res.status(400).json({
+        error: "Escribe nombre y cargo."
+      });
+    }
+
+    if (mediaId === false) {
+      return res.status(400).json({
+        error: "La fotografía seleccionada no existe."
+      });
+    }
+
+    const result = await db.query(`
+      INSERT INTO staff_members
+        (
+          name, role, description,
+          media_id, sort_order, published
+        )
+      VALUES
+        ($1, $2, $3, $4, $5, $6)
+      RETURNING *
+    `, [
+      name,
+      role,
+      description,
+      mediaId,
+      Number.isFinite(sortOrder) ? sortOrder : 0,
+      published
+    ]);
+
+    res.status(201).json({
+      member: result.rows[0]
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminApi.put("/institutional/staff/:id", requireRole("admin"), async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({
+        error: "ID inválido."
+      });
+    }
+
+    const name = String(req.body?.name || "").trim();
+    const role = String(req.body?.role || "").trim();
+    const description = String(req.body?.description || "").trim() || null;
+    const sortOrder = Number(req.body?.sort_order || 0);
+    const published = Boolean(req.body?.published);
+
+    const mediaId = await institutionalImageId(req.body?.media_id);
+
+    if (!name || !role) {
+      return res.status(400).json({
+        error: "Escribe nombre y cargo."
+      });
+    }
+
+    if (mediaId === false) {
+      return res.status(400).json({
+        error: "La fotografía seleccionada no existe."
+      });
+    }
+
+    const result = await db.query(`
+      UPDATE staff_members
+      SET
+        name = $2,
+        role = $3,
+        description = $4,
+        media_id = $5,
+        sort_order = $6,
+        published = $7,
+        updated_at = NOW()
+      WHERE id = $1
+      RETURNING *
+    `, [
+      id,
+      name,
+      role,
+      description,
+      mediaId,
+      Number.isFinite(sortOrder) ? sortOrder : 0,
+      published
+    ]);
+
+    if (!result.rows[0]) {
+      return res.status(404).json({
+        error: "Integrante no encontrado."
+      });
+    }
+
+    res.json({
+      member: result.rows[0]
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminApi.delete("/institutional/staff/:id", requireRole("admin"), async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({
+        error: "ID inválido."
+      });
+    }
+
+    const result = await db.query(`
+      DELETE FROM staff_members
+      WHERE id = $1
+      RETURNING id
+    `, [id]);
+
+    if (!result.rows[0]) {
+      return res.status(404).json({
+        error: "Integrante no encontrado."
+      });
+    }
+
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+});

@@ -835,3 +835,126 @@ a { color: inherit; }
     grid-template-columns: 1fr;
   }
 }
+.spirituality-intro {
+  max-width: 760px;
+  margin-bottom: 44px;
+}
+
+.spirituality-intro h2 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 4.6rem);
+  line-height: 1;
+  letter-spacing: -.04em;
+}
+
+.spirituality-intro p {
+  max-width: 64ch;
+  margin: 22px 0 0;
+  color: #aaa69e;
+}
+
+.architecture-placeholder.has-image {
+  display: block;
+  background: #25292c;
+}
+
+.architecture-placeholder.has-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 520px;
+  object-fit: cover;
+}
+
+.staff-section {
+  border-top: 1px solid var(--line);
+}
+
+.staff-heading {
+  max-width: 760px;
+  margin-bottom: 44px;
+}
+
+.staff-heading h2 {
+  margin: 0;
+  font-size: clamp(2.3rem, 4.3vw, 5rem);
+  line-height: .98;
+  letter-spacing: -.04em;
+}
+
+.staff-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+}
+
+.staff-card {
+  min-width: 0;
+  background: var(--ink-soft);
+}
+
+.staff-photo {
+  margin: 0;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #25292c;
+}
+
+.staff-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.staff-photo-empty {
+  display: grid;
+  place-items: center;
+}
+
+.staff-photo-empty span {
+  color: rgba(255,255,255,.18);
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 700;
+  letter-spacing: -.08em;
+}
+
+.staff-copy {
+  padding: 28px;
+}
+
+.staff-role {
+  margin: 0 0 7px;
+  color: #a9a69f;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.staff-copy h3 {
+  margin: 0;
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+.staff-copy p:last-child:not(.staff-role) {
+  color: #aaa69e;
+}
+
+@media (max-width: 920px) {
+  .staff-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .staff-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .architecture-placeholder.has-image img {
+    min-height: 440px;
+  }
+}

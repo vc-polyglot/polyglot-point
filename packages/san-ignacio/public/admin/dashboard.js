@@ -8,7 +8,8 @@ const panelTitles = {
   notices: "Avisos",
   images: "Imágenes",
   music: "Música",
-  contact: "Mensajes"
+  contact: "Mensajes",
+  institutional: "Institucional"
 };
 
 function escapeHtml(value) {
@@ -77,6 +78,7 @@ $$(".sidebar-link").forEach((button) => {
     if (panel === "images") loadImages();
     if (panel === "music") loadMusicAdmin();
     if (panel === "contact") loadContactMessages();
+    if (panel === "institutional") loadInstitutionalAdmin();
   });
 });
 
@@ -811,6 +813,410 @@ async function loadContactMessages() {
 $("#refresh-contact-messages")?.addEventListener(
   "click",
   loadContactMessages
+);
+
+let institutionalState = {
+  sections: [],
+  cards: [],
+  staff: [],
+  images: []
+};
+
+function institutionalImageOptions(images, selectedId = null) {
+  return `
+    <option value="">Sin fotografía</option>
+    ${images.map((image) => `
+      <option
+        value="${image.id}"
+        ${Number(selectedId) === Number(image.id) ? "selected" : ""}
+      >
+        ${escapeHtml(image.alt_text || `Fotografía ${image.id}`)}
+      </option>
+    `).join("")}
+  `;
+}
+
+function fillInstitutionalSectionForm(formId, section) {
+  const form = $(formId);
+
+  if (!form || !section) return;
+
+  form.elements.eyebrow.value = section.eyebrow || "";
+  form.elements.title.value = section.title || "";
+  form.elements.body.value = section.body || "";
+
+  if (form.elements.image_media_id) {
+    form.elements.image_media_id.innerHTML =
+      institutionalImageOptions(
+        institutionalState.images,
+        section.image_media_id
+      );
+  }
+
+  form.elements.published.checked = Boolean(section.published);
+}
+
+function resetInstitutionalCardForm() {
+  const form = $("#institutional-card-form");
+
+  form.reset();
+  form.elements.id.value = "";
+  form.elements.sort_order.value = "0";
+  form.elements.published.checked = true;
+  $("#institutional-card-cancel").hidden = true;
+}
+
+function resetStaffForm() {
+  const form = $("#staff-form");
+
+  form.reset();
+  form.elements.id.value = "";
+  form.elements.sort_order.value = "0";
+  form.elements.published.checked = true;
+  form.elements.media_id.innerHTML =
+    institutionalImageOptions(institutionalState.images);
+
+  $("#staff-cancel").hidden = true;
+}
+
+async function loadInstitutionalAdmin() {
+  const [content, media] = await Promise.all([
+    api("/api/admin/institutional"),
+    api("/api/admin/media/images")
+  ]);
+
+  institutionalState = {
+    sections: content.sections || [],
+    cards: content.cards || [],
+    staff: content.staff || [],
+    images: media.images || []
+  };
+
+  const about = institutionalState.sections.find(
+    (section) => section.slug === "about"
+  );
+
+  const spirituality = institutionalState.sections.find(
+    (section) => section.slug === "spirituality"
+  );
+
+  fillInstitutionalSectionForm("#about-form", about);
+  fillInstitutionalSectionForm("#spirituality-form", spirituality);
+
+  const staffImageSelect = $("#staff-image-select");
+
+  if (staffImageSelect && !staffImageSelect.value) {
+    staffImageSelect.innerHTML =
+      institutionalImageOptions(institutionalState.images);
+  }
+
+  const cardList = $("#institutional-card-list");
+
+  if (!institutionalState.cards.length) {
+    cardList.innerHTML = `
+      <div class="empty-library">
+        No hay tarjetas de Espiritualidad.
+      </div>
+    `;
+  } else {
+    cardList.innerHTML = institutionalState.cards.map((card) => `
+      <article class="list-item">
+        <strong>
+          ${escapeHtml(card.label || "")}
+          ${escapeHtml(card.title)}
+        </strong>
+
+        ${card.body
+          ? `<p>${escapeHtml(card.body)}</p>`
+          : ""
+        }
+
+        <small>
+          Orden ${Number(card.sort_order || 0)}
+          · ${card.published ? "Publicado" : "Oculto"}
+        </small>
+
+        <div class="admin-item-actions">
+          <button
+            type="button"
+            class="secondary-button"
+            data-edit-institutional-card="${card.id}"
+          >
+            Editar
+          </button>
+
+          <button
+            type="button"
+            class="danger-button"
+            data-delete-institutional-card="${card.id}"
+          >
+            Eliminar
+          </button>
+        </div>
+      </article>
+    `).join("");
+  }
+
+  const staffList = $("#staff-list");
+
+  if (!institutionalState.staff.length) {
+    staffList.innerHTML = `
+      <div class="empty-library">
+        No hay integrantes publicados.
+      </div>
+    `;
+  } else {
+    staffList.innerHTML = institutionalState.staff.map((member) => `
+      <article class="list-item">
+        <strong>${escapeHtml(member.name)}</strong>
+        <small>${escapeHtml(member.role)}</small>
+
+        ${member.description
+          ? `<p>${escapeHtml(member.description)}</p>`
+          : ""
+        }
+
+        <small>
+          Orden ${Number(member.sort_order || 0)}
+          · ${member.published ? "Publicado" : "Oculto"}
+        </small>
+
+        <div class="admin-item-actions">
+          <button
+            type="button"
+            class="secondary-button"
+            data-edit-staff="${member.id}"
+          >
+            Editar
+          </button>
+
+          <button
+            type="button"
+            class="danger-button"
+            data-delete-staff="${member.id}"
+          >
+            Eliminar
+          </button>
+        </div>
+      </article>
+    `).join("");
+  }
+
+  cardList.querySelectorAll("[data-edit-institutional-card]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const card = institutionalState.cards.find(
+        (item) => Number(item.id) === Number(button.dataset.editInstitutionalCard)
+      );
+
+      if (!card) return;
+
+      const form = $("#institutional-card-form");
+
+      form.elements.id.value = card.id;
+      form.elements.label.value = card.label || "";
+      form.elements.title.value = card.title || "";
+      form.elements.body.value = card.body || "";
+      form.elements.sort_order.value = card.sort_order || 0;
+      form.elements.published.checked = Boolean(card.published);
+
+      $("#institutional-card-cancel").hidden = false;
+    });
+  });
+
+  cardList.querySelectorAll("[data-delete-institutional-card]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      if (!confirm("¿Eliminar definitivamente esta tarjeta?")) {
+        return;
+      }
+
+      await api(
+        `/api/admin/institutional/cards/${button.dataset.deleteInstitutionalCard}`,
+        {
+          method: "DELETE"
+        }
+      );
+
+      await loadInstitutionalAdmin();
+    });
+  });
+
+  staffList.querySelectorAll("[data-edit-staff]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const member = institutionalState.staff.find(
+        (item) => Number(item.id) === Number(button.dataset.editStaff)
+      );
+
+      if (!member) return;
+
+      const form = $("#staff-form");
+
+      form.elements.id.value = member.id;
+      form.elements.name.value = member.name || "";
+      form.elements.role.value = member.role || "";
+      form.elements.description.value = member.description || "";
+      form.elements.sort_order.value = member.sort_order || 0;
+      form.elements.published.checked = Boolean(member.published);
+
+      form.elements.media_id.innerHTML =
+        institutionalImageOptions(
+          institutionalState.images,
+          member.media_id
+        );
+
+      $("#staff-cancel").hidden = false;
+    });
+  });
+
+  staffList.querySelectorAll("[data-delete-staff]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      if (!confirm("¿Eliminar definitivamente este integrante?")) {
+        return;
+      }
+
+      await api(
+        `/api/admin/institutional/staff/${button.dataset.deleteStaff}`,
+        {
+          method: "DELETE"
+        }
+      );
+
+      await loadInstitutionalAdmin();
+    });
+  });
+}
+
+async function saveInstitutionalSection(slug, form, statusElement) {
+  const data = new FormData(form);
+
+  statusElement.classList.remove("error");
+  statusElement.textContent = "Guardando…";
+
+  try {
+    await api(`/api/admin/institutional/sections/${slug}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        eyebrow: data.get("eyebrow"),
+        title: data.get("title"),
+        body: data.get("body"),
+        image_media_id: data.get("image_media_id") || null,
+        published: Boolean(data.get("published"))
+      })
+    });
+
+    statusElement.textContent = "Guardado.";
+    await loadInstitutionalAdmin();
+  } catch (error) {
+    statusElement.textContent = error.message;
+    statusElement.classList.add("error");
+  }
+}
+
+$("#about-form")?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  await saveInstitutionalSection(
+    "about",
+    event.currentTarget,
+    $("#about-status")
+  );
+});
+
+$("#spirituality-form")?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  await saveInstitutionalSection(
+    "spirituality",
+    event.currentTarget,
+    $("#spirituality-status")
+  );
+});
+
+$("#institutional-card-form")?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const data = new FormData(form);
+  const id = data.get("id");
+  const status = $("#institutional-card-status");
+
+  status.classList.remove("error");
+  status.textContent = "Guardando…";
+
+  try {
+    await api(
+      id
+        ? `/api/admin/institutional/cards/${id}`
+        : "/api/admin/institutional/cards",
+      {
+        method: id ? "PUT" : "POST",
+        body: JSON.stringify({
+          section_slug: "spirituality",
+          label: data.get("label"),
+          title: data.get("title"),
+          body: data.get("body"),
+          sort_order: Number(data.get("sort_order") || 0),
+          published: Boolean(data.get("published"))
+        })
+      }
+    );
+
+    resetInstitutionalCardForm();
+    status.textContent = "Tarjeta guardada.";
+
+    await loadInstitutionalAdmin();
+  } catch (error) {
+    status.textContent = error.message;
+    status.classList.add("error");
+  }
+});
+
+$("#institutional-card-cancel")?.addEventListener(
+  "click",
+  resetInstitutionalCardForm
+);
+
+$("#staff-form")?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const data = new FormData(form);
+  const id = data.get("id");
+  const status = $("#staff-status");
+
+  status.classList.remove("error");
+  status.textContent = "Guardando…";
+
+  try {
+    await api(
+      id
+        ? `/api/admin/institutional/staff/${id}`
+        : "/api/admin/institutional/staff",
+      {
+        method: id ? "PUT" : "POST",
+        body: JSON.stringify({
+          name: data.get("name"),
+          role: data.get("role"),
+          description: data.get("description"),
+          media_id: data.get("media_id") || null,
+          sort_order: Number(data.get("sort_order") || 0),
+          published: Boolean(data.get("published"))
+        })
+      }
+    );
+
+    resetStaffForm();
+    status.textContent = "Integrante guardado.";
+
+    await loadInstitutionalAdmin();
+  } catch (error) {
+    status.textContent = error.message;
+    status.classList.add("error");
+  }
+});
+
+$("#staff-cancel")?.addEventListener(
+  "click",
+  resetStaffForm
 );
 await initSession();
 await loadOverview();
