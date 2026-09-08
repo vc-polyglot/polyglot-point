@@ -108,6 +108,65 @@ app.get("/admin/dashboard", requireAuth, (_req, res) => {
   res.sendFile(path.join(rootDir, "private", "admin-dashboard.html"));
 });
 
+
+// ============================================================
+// SAN IGNACIO PUBLIC NO-STORE
+//
+// El HTML, CSS principal y JS principal jamás se sirven
+// desde caché del navegador ni de intermediarios.
+// ============================================================
+
+const sanIgnacioNoStoreHeaders = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+  "Pragma": "no-cache",
+  "Expires": "0",
+  "Surrogate-Control": "no-store",
+  "X-San-Ignacio-Cache": "no-store-v1"
+};
+
+function sendSanIgnacioPublicFile(res, relativePath, contentType) {
+  Object.entries(sanIgnacioNoStoreHeaders).forEach(([name, value]) => {
+    res.setHeader(name, value);
+  });
+
+  if (contentType) {
+    res.type(contentType);
+  }
+
+  return res.sendFile(
+    require("node:path").join(
+      __dirname,
+      "..",
+      "public",
+      ...relativePath
+    )
+  );
+}
+
+app.get(["/", "/index.html"], (_req, res) => {
+  return sendSanIgnacioPublicFile(
+    res,
+    ["index.html"],
+    "html"
+  );
+});
+
+app.get("/css/site.css", (_req, res) => {
+  return sendSanIgnacioPublicFile(
+    res,
+    ["css", "site.css"],
+    "css"
+  );
+});
+
+app.get("/js/site.js", (_req, res) => {
+  return sendSanIgnacioPublicFile(
+    res,
+    ["js", "site.js"],
+    "javascript"
+  );
+});
+
 app.use("/admin-assets", express.static(path.join(rootDir, "public", "admin"), {
   fallthrough: false,
   maxAge: 0
