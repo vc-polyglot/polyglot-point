@@ -7,7 +7,8 @@ const panelTitles = {
   schedules: "Horarios",
   notices: "Avisos",
   images: "Imágenes",
-  music: "Música"
+  music: "Música",
+  contact: "Mensajes"
 };
 
 function escapeHtml(value) {
@@ -75,6 +76,7 @@ $$(".sidebar-link").forEach((button) => {
     if (panel === "notices") loadNotices();
     if (panel === "images") loadImages();
     if (panel === "music") loadMusicAdmin();
+    if (panel === "contact") loadContactMessages();
   });
 });
 
@@ -670,5 +672,145 @@ $("#concert-form").addEventListener("submit", async (event) => {
     status.classList.add("error");
   }
 });
+
+function contactStatusLabel(value) {
+  return {
+    new: "Nuevo",
+    read: "Leído",
+    archived: "Archivado"
+  }[value] || value;
+}
+
+async function loadContactMessages() {
+  const container = $("#contact-message-list");
+
+  if (!container) return;
+
+  container.innerHTML = "<p>Cargando mensajes…</p>";
+
+  const { messages } = await api("/api/admin/contact-messages");
+
+  if (!messages.length) {
+    container.innerHTML = `
+      <div class="empty-library">
+        Todavía no hay mensajes recibidos.
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = messages.map((message) => `
+    <article class="contact-message-card ${message.status === "new" ? "is-new" : ""}">
+      <div class="contact-message-top">
+        <div>
+          <strong>${escapeHtml(message.subject)}</strong>
+          <small>
+            ${escapeHtml(message.name)}
+            · ${escapeHtml(message.email)}
+          </small>
+          ${message.phone
+            ? `<small>${escapeHtml(message.phone)}</small>`
+            : ""
+          }
+        </div>
+
+        <span class="status-badge">
+          ${escapeHtml(contactStatusLabel(message.status))}
+        </span>
+      </div>
+
+      <p class="contact-message-date">
+        ${formatDate(message.created_at)}
+      </p>
+
+      <p class="contact-message-body">
+        ${escapeHtml(message.message)}
+      </p>
+
+      <div class="admin-item-actions">
+        ${message.status !== "read"
+          ? `
+            <button
+              type="button"
+              class="secondary-button"
+              data-contact-status="${message.id}"
+              data-status="read"
+            >
+              Marcar leído
+            </button>
+          `
+          : ""
+        }
+
+        ${message.status !== "archived"
+          ? `
+            <button
+              type="button"
+              class="secondary-button"
+              data-contact-status="${message.id}"
+              data-status="archived"
+            >
+              Archivar
+            </button>
+          `
+          : ""
+        }
+
+        <a
+          class="secondary-button contact-reply-link"
+          href="mailto:${encodeURIComponent(message.email)}?subject=${encodeURIComponent(`Re: ${message.subject}`)}"
+        >
+          Responder
+        </a>
+
+        <button
+          type="button"
+          class="danger-button"
+          data-contact-delete="${message.id}"
+        >
+          Eliminar
+        </button>
+      </div>
+    </article>
+  `).join("");
+
+  container.querySelectorAll("[data-contact-status]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      await api(
+        `/api/admin/contact-messages/${button.dataset.contactStatus}/status`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            status: button.dataset.status
+          })
+        }
+      );
+
+      await loadContactMessages();
+    });
+  });
+
+  container.querySelectorAll("[data-contact-delete]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      if (!confirm("¿Eliminar definitivamente este mensaje?")) {
+        return;
+      }
+
+      await api(
+        `/api/admin/contact-messages/${button.dataset.contactDelete}`,
+        {
+          method: "DELETE"
+        }
+      );
+
+      await loadContactMessages();
+    });
+  });
+}
+
+$("#refresh-contact-messages")?.addEventListener(
+  "click",
+  loadContactMessages
+);
 await initSession();
 await loadOverview();

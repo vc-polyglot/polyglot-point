@@ -81,3 +81,92 @@ publicApi.get("/music", async (_req, res, next) => {
     next(error);
   }
 });
+
+publicApi.get("/contact/health", async (_req, res, next) => {
+  try {
+    await db.query(`
+      SELECT id
+      FROM contact_messages
+      LIMIT 1
+    `);
+
+    res.json({ ok: true });
+  } catch (error) {
+    next(error);
+  }
+});
+
+publicApi.post("/contact", async (req, res, next) => {
+  try {
+    const name = String(req.body?.name || "").trim();
+    const email = String(req.body?.email || "").trim().toLowerCase();
+    const phone = String(req.body?.phone || "").trim() || null;
+    const subject = String(req.body?.subject || "").trim();
+    const message = String(req.body?.message || "").trim();
+
+    const website = String(req.body?.website || "").trim();
+
+    if (website) {
+      return res.status(204).end();
+    }
+
+    if (!name || !email || !subject || !message) {
+      return res.status(400).json({
+        error: "Completa los campos obligatorios."
+      });
+    }
+
+    if (name.length > 160) {
+      return res.status(400).json({
+        error: "El nombre es demasiado largo."
+      });
+    }
+
+    if (
+      email.length > 254 ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    ) {
+      return res.status(400).json({
+        error: "Escribe un correo electrónico válido."
+      });
+    }
+
+    if (phone && phone.length > 60) {
+      return res.status(400).json({
+        error: "El teléfono es demasiado largo."
+      });
+    }
+
+    if (subject.length > 200) {
+      return res.status(400).json({
+        error: "El asunto es demasiado largo."
+      });
+    }
+
+    if (message.length > 5000) {
+      return res.status(400).json({
+        error: "El mensaje es demasiado largo."
+      });
+    }
+
+    await db.query(`
+      INSERT INTO contact_messages
+        (name, email, phone, subject, message)
+      VALUES
+        ($1, $2, $3, $4, $5)
+    `, [
+      name,
+      email,
+      phone,
+      subject,
+      message
+    ]);
+
+    res.status(201).json({
+      ok: true,
+      message: "Mensaje recibido."
+    });
+  } catch (error) {
+    next(error);
+  }
+});

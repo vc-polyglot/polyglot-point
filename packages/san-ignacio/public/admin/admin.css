@@ -602,3 +602,67 @@ select:focus {
 .admin-item-actions button {
   margin-top: 0 !important;
 }
+
+.contact-admin-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.contact-message-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.contact-message-card {
+  padding: 18px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.contact-message-card.is-new {
+  border-left: 6px solid var(--blue);
+}
+
+.contact-message-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.contact-message-top strong,
+.contact-message-top small {
+  display: block;
+}
+
+.contact-message-top small {
+  margin-top: 4px;
+  color: var(--muted);
+}
+
+.contact-message-date {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: .78rem;
+}
+
+.contact-message-body {
+  margin: 18px 0 0;
+  white-space: pre-wrap;
+}
+
+.contact-reply-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+@media (max-width: 720px) {
+  .contact-admin-heading,
+  .contact-message-top {
+    flex-direction: column;
+  }
+}

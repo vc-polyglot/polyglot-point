@@ -106,3 +106,17 @@ ALTER TABLE pastoral_posts
   ADD COLUMN IF NOT EXISTS youtube_url TEXT;
 ALTER TABLE music_items
   ADD COLUMN IF NOT EXISTS youtube_url TEXT;
+CREATE TABLE IF NOT EXISTS contact_messages (
+  id BIGSERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT,
+  subject TEXT NOT NULL,
+  message TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'new'
+    CHECK (status IN ('new', 'read', 'archived')),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS contact_messages_status_created_idx
+  ON contact_messages (status, created_at DESC);

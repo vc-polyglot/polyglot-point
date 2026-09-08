@@ -246,3 +246,67 @@ async function loadHome() {
 
 loadHome();
 loadMusic();
+
+const contactForm = document.querySelector("#contact-form");
+const contactStatus = document.querySelector("#contact-status");
+
+contactForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const data = new FormData(form);
+  const button = form.querySelector('button[type="submit"]');
+
+  if (contactStatus) {
+    contactStatus.classList.remove("error");
+    contactStatus.textContent = "Enviando…";
+  }
+
+  if (button) {
+    button.disabled = true;
+  }
+
+  try {
+    const response = await fetch("/api/contact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify({
+        name: data.get("name"),
+        email: data.get("email"),
+        phone: data.get("phone"),
+        subject: data.get("subject"),
+        message: data.get("message"),
+        website: data.get("website")
+      })
+    });
+
+    const payload = response.status === 204
+      ? {}
+      : await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(
+        payload.error || "No fue posible enviar el mensaje."
+      );
+    }
+
+    form.reset();
+
+    if (contactStatus) {
+      contactStatus.textContent =
+        "Su mensaje fue recibido. Gracias.";
+    }
+  } catch (error) {
+    if (contactStatus) {
+      contactStatus.textContent = error.message;
+      contactStatus.classList.add("error");
+    }
+  } finally {
+    if (button) {
+      button.disabled = false;
+    }
+  }
+});

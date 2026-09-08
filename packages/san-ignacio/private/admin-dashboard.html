@@ -22,6 +22,7 @@
       <button class="sidebar-link" data-panel="notices">Avisos</button>
       <button class="sidebar-link" data-panel="images">Imágenes</button>
       <button class="sidebar-link" data-panel="music">Música</button>
+      <button class="sidebar-link" data-panel="contact">Mensajes</button>
     </nav>
 
     <div class="sidebar-footer">
@@ -329,6 +330,29 @@
 
       </div>
 
+    </section>
+
+    <section id="panel-contact" class="admin-panel">
+      <div class="admin-card">
+        <div class="contact-admin-heading">
+          <div>
+            <p class="admin-kicker">Contacto</p>
+            <h2>Mensajes recibidos</h2>
+          </div>
+
+          <button
+            type="button"
+            id="refresh-contact-messages"
+            class="secondary-button"
+          >
+            Actualizar
+          </button>
+        </div>
+
+        <div id="contact-message-list" class="contact-message-list">
+          <p>Cargando mensajes…</p>
+        </div>
+      </div>
     </section>
   </main>
 

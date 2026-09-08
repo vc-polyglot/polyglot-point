@@ -186,9 +186,94 @@
     </section>
 
     <section id="contacto" class="contact-section section-shell">
-      <p class="section-kicker">Contacto</p>
-      <h2>San Ignacio de Loyola</h2>
-      <p>Séneca 306, Polanco, Ciudad de México.</p>
+      <div class="contact-intro">
+        <p class="section-kicker">Contacto</p>
+        <h2>San Ignacio de Loyola</h2>
+        <p class="contact-address">
+          Séneca 306, Polanco, Ciudad de México.
+        </p>
+        <p class="contact-copy">
+          Envíenos un mensaje y la parroquia podrá atenderlo desde su sistema administrativo.
+        </p>
+      </div>
+
+      <form id="contact-form" class="contact-form">
+        <div class="contact-form-row">
+          <label>
+            Nombre
+            <input
+              name="name"
+              type="text"
+              maxlength="160"
+              autocomplete="name"
+              required
+            >
+          </label>
+
+          <label>
+            Correo electrónico
+            <input
+              name="email"
+              type="email"
+              maxlength="254"
+              autocomplete="email"
+              required
+            >
+          </label>
+        </div>
+
+        <div class="contact-form-row">
+          <label>
+            Teléfono
+            <input
+              name="phone"
+              type="tel"
+              maxlength="60"
+              autocomplete="tel"
+            >
+          </label>
+
+          <label>
+            Asunto
+            <input
+              name="subject"
+              type="text"
+              maxlength="200"
+              required
+            >
+          </label>
+        </div>
+
+        <label>
+          Mensaje
+          <textarea
+            name="message"
+            rows="7"
+            maxlength="5000"
+            required
+          ></textarea>
+        </label>
+
+        <div class="contact-honeypot" aria-hidden="true">
+          <label>
+            Sitio web
+            <input
+              name="website"
+              type="text"
+              tabindex="-1"
+              autocomplete="off"
+            >
+          </label>
+        </div>
+
+        <div class="contact-submit-row">
+          <button type="submit" class="button-link">
+            Enviar mensaje
+          </button>
+
+          <p id="contact-status" class="contact-status" role="status"></p>
+        </div>
+      </form>
     </section>
   </main>
 

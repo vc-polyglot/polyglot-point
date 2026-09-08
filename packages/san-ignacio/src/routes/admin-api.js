@@ -792,3 +792,96 @@ adminApi.delete("/concerts/:id", requireRole("admin"), async (req, res, next) =>
     next(error);
   }
 });
+
+adminApi.get("/contact-messages", requireRole("admin"), async (_req, res, next) => {
+  try {
+    const result = await db.query(`
+      SELECT
+        id, name, email, phone,
+        subject, message, status, created_at
+      FROM contact_messages
+      ORDER BY
+        CASE status
+          WHEN 'new' THEN 0
+          WHEN 'read' THEN 1
+          ELSE 2
+        END,
+        created_at DESC
+      LIMIT 300
+    `);
+
+    res.json({
+      messages: result.rows
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminApi.patch("/contact-messages/:id/status", requireRole("admin"), async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const status = String(req.body?.status || "").trim();
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({
+        error: "ID inválido."
+      });
+    }
+
+    if (!["new", "read", "archived"].includes(status)) {
+      return res.status(400).json({
+        error: "Estado inválido."
+      });
+    }
+
+    const result = await db.query(`
+      UPDATE contact_messages
+      SET status = $2
+      WHERE id = $1
+      RETURNING
+        id, name, email, phone,
+        subject, message, status, created_at
+    `, [id, status]);
+
+    if (!result.rows[0]) {
+      return res.status(404).json({
+        error: "Mensaje no encontrado."
+      });
+    }
+
+    res.json({
+      message: result.rows[0]
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminApi.delete("/contact-messages/:id", requireRole("admin"), async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({
+        error: "ID inválido."
+      });
+    }
+
+    const result = await db.query(`
+      DELETE FROM contact_messages
+      WHERE id = $1
+      RETURNING id
+    `, [id]);
+
+    if (!result.rows[0]) {
+      return res.status(404).json({
+        error: "Mensaje no encontrado."
+      });
+    }
+
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+});
