@@ -150,6 +150,126 @@ adminApi.get("/overview", async (_req, res, next) => {
   }
 });
 
+const SAN_IGNACIO_IMAGE_QUOTA_BYTES = 4 * 1024 * 1024 * 1024;
+
+adminApi.get("/media/images", async (_req, res, next) => {
+  try {
+    const [imagesResult, usageResult] = await Promise.all([
+      db.query(`
+        SELECT
+          id, public_id, url, secure_url, width, height,
+          bytes, alt_text, created_at
+        FROM media
+        WHERE media_type = 'image'
+          AND provider = 'cloudinary'
+        ORDER BY created_at DESC
+        LIMIT 500
+      `),
+      db.query(`
+        SELECT
+          COUNT(*)::int AS total,
+          COALESCE(SUM(bytes), 0)::bigint AS used_bytes
+        FROM media
+        WHERE media_type = 'image'
+          AND provider = 'cloudinary'
+      `)
+    ]);
+
+    const usedBytes = Number(usageResult.rows[0]?.used_bytes || 0);
+    const quotaBytes = SAN_IGNACIO_IMAGE_QUOTA_BYTES;
+    const percent = quotaBytes > 0
+      ? Math.round((usedBytes / quotaBytes) * 1000) / 10
+      : 0;
+
+    res.json({
+      images: imagesResult.rows,
+      storage: {
+        total: Number(usageResult.rows[0]?.total || 0),
+        used_bytes: usedBytes,
+        quota_bytes: quotaBytes,
+        percent
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminApi.get("/media/images/:id/download", async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({ error: "ID inválido." });
+    }
+
+    const result = await db.query(`
+      SELECT id, url, secure_url
+      FROM media
+      WHERE id = $1
+        AND media_type = 'image'
+        AND provider = 'cloudinary'
+    `, [id]);
+
+    const image = result.rows[0];
+
+    if (!image) {
+      return res.status(404).json({ error: "Imagen no encontrada." });
+    }
+
+    const sourceUrl = image.secure_url || image.url;
+
+    if (!sourceUrl) {
+      return res.status(404).json({ error: "La imagen no tiene archivo asociado." });
+    }
+
+    const downloadUrl = sourceUrl.includes("/upload/")
+      ? sourceUrl.replace("/upload/", "/upload/fl_attachment/")
+      : sourceUrl;
+
+    res.redirect(302, downloadUrl);
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminApi.delete("/media/images/:id", requireRole("admin"), async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({ error: "ID inválido." });
+    }
+
+    const result = await db.query(`
+      SELECT id, public_id
+      FROM media
+      WHERE id = $1
+        AND media_type = 'image'
+        AND provider = 'cloudinary'
+    `, [id]);
+
+    const image = result.rows[0];
+
+    if (!image) {
+      return res.status(404).json({ error: "Imagen no encontrada." });
+    }
+
+    if (image.public_id) {
+      await cloudinary.uploader.destroy(image.public_id, {
+        resource_type: "image",
+        invalidate: true
+      });
+    }
+
+    await db.query("DELETE FROM media WHERE id = $1", [id]);
+
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+});
+
 adminApi.get("/schedules", async (_req, res, next) => {
   try {
     const result = await db.query(`

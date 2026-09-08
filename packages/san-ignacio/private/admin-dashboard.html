@@ -20,6 +20,7 @@
       <button class="sidebar-link" data-panel="pastoral">Mensaje pastoral</button>
       <button class="sidebar-link" data-panel="schedules">Horarios</button>
       <button class="sidebar-link" data-panel="notices">Avisos</button>
+      <button class="sidebar-link" data-panel="images">Imágenes</button>
     </nav>
 
     <div class="sidebar-footer">
@@ -156,6 +157,45 @@
           <h2>Avisos</h2>
           <div id="notice-list" class="admin-list"></div>
         </div>
+      </div>
+    </section>
+
+    <section id="panel-images" class="admin-panel">
+      <div class="admin-card">
+        <div class="card-heading-row">
+          <div>
+            <p class="admin-kicker">Archivo de fotografías</p>
+            <h2>Imágenes</h2>
+          </div>
+          <div id="image-storage" class="storage-summary">Cargando almacenamiento…</div>
+        </div>
+
+        <div class="storage-box">
+          <progress id="image-storage-progress" class="storage-progress" max="100" value="0"></progress>
+          <p id="image-storage-message" class="help-text"></p>
+        </div>
+
+        <form id="image-upload-form" class="image-upload-form">
+          <label>
+            Nueva fotografía
+            <input type="file" name="image" accept="image/*" required>
+          </label>
+
+          <label>
+            Descripción de la imagen
+            <input name="alt_text" maxlength="300" placeholder="Ej. Interior del templo durante la celebración">
+          </label>
+
+          <button type="submit">Subir fotografía</button>
+          <p id="image-upload-status" class="form-status" role="status"></p>
+        </form>
+
+        <div class="image-library-heading">
+          <h3>Fotografías guardadas</h3>
+          <small id="image-count"></small>
+        </div>
+
+        <div id="image-gallery" class="image-gallery"></div>
       </div>
     </section>
   </main>

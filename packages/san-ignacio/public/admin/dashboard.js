@@ -5,7 +5,8 @@ const panelTitles = {
   overview: "Resumen",
   pastoral: "Mensaje pastoral",
   schedules: "Horarios",
-  notices: "Avisos"
+  notices: "Avisos",
+  images: "Imágenes"
 };
 
 function escapeHtml(value) {
@@ -29,7 +30,7 @@ async function api(url, options = {}) {
   const response = await fetch(url, {
     headers: {
       Accept: "application/json",
-      ...(options.body ? { "Content-Type": "application/json" } : {}),
+      ...(options.body && !(options.body instanceof FormData) ? { "Content-Type": "application/json" } : {}),
       ...(options.headers || {})
     },
     ...options
@@ -71,6 +72,7 @@ $$(".sidebar-link").forEach((button) => {
     if (panel === "pastoral") loadPastoral();
     if (panel === "schedules") loadSchedules();
     if (panel === "notices") loadNotices();
+    if (panel === "images") loadImages();
   });
 });
 
@@ -285,5 +287,145 @@ $("#notice-form").addEventListener("submit", async (event) => {
   }
 });
 
+
+function formatBytes(value) {
+  const bytes = Number(value || 0);
+
+  if (bytes < 1024) return `${bytes} B`;
+
+  const units = ["KB", "MB", "GB", "TB"];
+  let size = bytes;
+  let unitIndex = -1;
+
+  do {
+    size /= 1024;
+    unitIndex += 1;
+  } while (size >= 1024 && unitIndex < units.length - 1);
+
+  return `${size.toFixed(size >= 10 ? 1 : 2)} ${units[unitIndex]}`;
+}
+
+function storageMessage(percent) {
+  if (percent >= 95) {
+    return "Espacio casi agotado. Conviene descargar y borrar fotografías antiguas.";
+  }
+
+  if (percent >= 85) {
+    return "El almacenamiento comienza a agotarse. Conviene liberar espacio.";
+  }
+
+  if (percent >= 70) {
+    return "Se ha utilizado más del 70% del archivo de imágenes. Conviene revisar fotografías antiguas.";
+  }
+
+  return "Uso normal del archivo de imágenes.";
+}
+
+async function loadImages() {
+  const { images, storage } = await api("/api/admin/media/images");
+
+  const percent = Number(storage.percent || 0);
+  const progress = $("#image-storage-progress");
+
+  progress.value = Math.min(percent, 100);
+  progress.classList.toggle("warning", percent >= 70 && percent < 85);
+  progress.classList.toggle("high", percent >= 85 && percent < 95);
+  progress.classList.toggle("critical", percent >= 95);
+
+  $("#image-storage").textContent =
+    `${formatBytes(storage.used_bytes)} de ${formatBytes(storage.quota_bytes)} · ${percent.toFixed(1)}%`;
+
+  $("#image-storage-message").textContent = storageMessage(percent);
+  $("#image-count").textContent = `${Number(storage.total || 0)} fotografías`;
+
+  const gallery = $("#image-gallery");
+
+  if (!images.length) {
+    gallery.innerHTML = `<div class="empty-library">Todavía no hay fotografías guardadas.</div>`;
+    return;
+  }
+
+  gallery.innerHTML = images.map((image) => `
+    <article class="image-card">
+      <div class="image-thumb">
+        <img
+          src="${escapeHtml(image.secure_url || image.url)}"
+          alt="${escapeHtml(image.alt_text || "")}"
+          loading="lazy"
+        >
+      </div>
+
+      <div class="image-card-body">
+        <strong>${escapeHtml(image.alt_text || "Sin descripción")}</strong>
+        <small>
+          ${Number(image.width || 0)} × ${Number(image.height || 0)}
+          · ${formatBytes(image.bytes)}
+        </small>
+        <small>${formatDate(image.created_at)}</small>
+
+        <div class="image-actions">
+          <a
+            class="secondary-button"
+            href="/api/admin/media/images/${image.id}/download"
+          >Descargar</a>
+
+          <button
+            type="button"
+            class="danger-button"
+            data-delete-image="${image.id}"
+          >Eliminar</button>
+        </div>
+      </div>
+    </article>
+  `).join("");
+
+  gallery.querySelectorAll("[data-delete-image]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const confirmed = confirm(
+        "¿Eliminar esta fotografía? Esta acción también la borrará del archivo de imágenes."
+      );
+
+      if (!confirmed) return;
+
+      button.disabled = true;
+
+      try {
+        await api(`/api/admin/media/images/${button.dataset.deleteImage}`, {
+          method: "DELETE"
+        });
+
+        await loadImages();
+      } catch (error) {
+        alert(error.message);
+        button.disabled = false;
+      }
+    });
+  });
+}
+
+$("#image-upload-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const status = $("#image-upload-status");
+  const data = new FormData(form);
+
+  status.classList.remove("error");
+  status.textContent = "Subiendo y optimizando fotografía…";
+
+  try {
+    await api("/api/admin/media/images", {
+      method: "POST",
+      body: data
+    });
+
+    form.reset();
+    status.textContent = "Fotografía guardada.";
+    await loadImages();
+  } catch (error) {
+    status.textContent = error.message;
+    status.classList.add("error");
+  }
+});
 await initSession();
 await loadOverview();
