@@ -961,163 +961,177 @@ a { color: inherit; }
 
 
 /* ============================================================
-   SAN IGNACIO — PALETA DE VITRAL V2
-   Los colores del propio lenguaje visual del templo
-   estructuran ahora el recorrido completo.
+   SAN IGNACIO — PALETA FINAL DE VITRAL
+   Una sola fuente de verdad para los grandes fondos.
    ============================================================ */
 
 :root {
-  --si-cream: #eee9df;
-  --si-cream-deep: #ddd3c3;
+  --si-cream: #eee8dc;
+  --si-cream-2: #ddd2c1;
 
-  --si-red: #9e302b;
-  --si-orange: #c25726;
+  --si-red: #a43830;
+  --si-orange: #c25a27;
 
   --si-blue: #31577d;
-  --si-purple: #594473;
+  --si-purple: #594573;
 
-  --si-charcoal: #282d30;
+  --si-charcoal: #292e31;
 
-  --si-light: #f5f1e8;
-  --si-dark: #171a1c;
+  --si-dark: #16191b;
+  --si-light: #f6f1e7;
+}
+
+
+/* ============================================================
+   CABECERA
+   Puede permanecer oscura: no cuenta como una pantalla.
+   ============================================================ */
+
+.site-header,
+header.site-header {
+  background: #15191b !important;
 }
 
 
 /* ============================================================
    1. HERO — CREMA
-   La primera impresión deja de ser negra.
    ============================================================ */
 
-.first-screen {
-  position: relative;
-  overflow: hidden;
-  background: var(--si-cream);
+body .first-screen {
+  background: var(--si-cream) !important;
+  color: var(--si-dark) !important;
+}
+
+body .first-screen .identity,
+body .first-screen .schedule-panel,
+body .first-screen .schedule-card {
   color: var(--si-dark);
 }
 
-.first-screen h1,
-.first-screen h2,
-.first-screen h3,
-.first-screen strong {
-  color: var(--si-dark);
+body .first-screen h1,
+body .first-screen h2,
+body .first-screen h3,
+body .first-screen strong {
+  color: var(--si-dark) !important;
 }
 
-.first-screen p,
-.first-screen small {
-  color: #625d55;
+body .first-screen p,
+body .first-screen small,
+body .first-screen .section-kicker {
+  color: #655e54 !important;
 }
+
 
 /*
-   La franja deja claro desde el primer momento
-   cuál será la paleta del sitio.
+   Bloques de vitral en el hero.
 */
 
-.first-screen::before {
+body .first-screen::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 2;
   width: 100%;
-  height: 14px;
+  height: 13px;
+  z-index: 5;
+
   background:
     linear-gradient(
       90deg,
       var(--si-red) 0%,
-      var(--si-red) 18%,
-      var(--si-orange) 18%,
-      var(--si-orange) 36%,
-      var(--si-charcoal) 36%,
-      var(--si-charcoal) 54%,
-      var(--si-blue) 54%,
-      var(--si-blue) 78%,
-      var(--si-purple) 78%,
+      var(--si-red) 19%,
+      var(--si-orange) 19%,
+      var(--si-orange) 38%,
+      var(--si-charcoal) 38%,
+      var(--si-charcoal) 57%,
+      var(--si-blue) 57%,
+      var(--si-blue) 79%,
+      var(--si-purple) 79%,
       var(--si-purple) 100%
-    );
-}
-
-.first-screen > * {
-  position: relative;
-  z-index: 3;
+    ) !important;
 }
 
 
 /* ============================================================
-   2. MENSAJE PASTORAL — ROJO LADRILLO
-   Primera sección verdaderamente cromática.
+   2. MENSAJE PASTORAL — ROJO
    ============================================================ */
 
-.pastoral-section {
-  background: var(--si-red);
-  color: var(--si-light);
+body .pastoral-section {
+  background: var(--si-red) !important;
+  color: var(--si-light) !important;
 }
 
-.pastoral-section .section-kicker {
-  color: #f0c9a7;
+body .pastoral-section h2,
+body .pastoral-section h3,
+body .pastoral-section strong {
+  color: var(--si-light) !important;
 }
 
-.pastoral-section h2 {
-  color: var(--si-light);
+body .pastoral-section .section-kicker {
+  color: #f2c89d !important;
 }
 
-.pastoral-section > div:first-child p:not(.section-kicker) {
-  color: #f0ddd2;
+body .pastoral-section > div:first-child p:not(.section-kicker) {
+  color: #f0dbd2 !important;
 }
 
-.pastoral-card {
-  background: var(--si-cream);
-  color: var(--si-dark);
-  border: 0;
-  box-shadow: 0 18px 45px rgba(31,20,18,.16);
-}
-
-.pastoral-card h2,
-.pastoral-card h3 {
-  color: var(--si-dark);
-}
-
-.pastoral-card p {
-  color: #615b54;
-}
-
-.pastoral-card a {
-  color: var(--si-red);
-}
-
-
-/* ============================================================
-   3. NOSOTROS — CREMA + GRAN CAMPO DE VITRALES
-   Conservamos justamente la parte que sí funciona.
-   ============================================================ */
-
-.architecture-section {
-  position: relative;
-  background: var(--si-cream);
-  color: var(--si-dark);
-}
-
-.architecture-copy {
-  background: var(--si-cream);
-}
-
-.architecture-section .section-kicker {
-  color: #755c48;
-}
-
-.architecture-section h2 {
-  color: var(--si-dark);
-}
-
-.architecture-section p {
-  color: #635d55;
-}
 
 /*
-   Esta sección ya posee el gran plano cromático vertical.
-   No la oscurecemos.
+   La tarjeta se vuelve clara para contrastar
+   con el gran campo rojo.
 */
 
-.architecture-placeholder {
+body .pastoral-section .pastoral-card {
+  background: var(--si-cream) !important;
+  color: var(--si-dark) !important;
+  border: 0 !important;
+}
+
+body .pastoral-section .pastoral-card h2,
+body .pastoral-section .pastoral-card h3,
+body .pastoral-section .pastoral-card strong {
+  color: var(--si-dark) !important;
+}
+
+body .pastoral-section .pastoral-card p {
+  color: #625b53 !important;
+}
+
+
+/* ============================================================
+   3. NOSOTROS — CREMA + VITRAL
+   ============================================================ */
+
+body .architecture-section {
+  background: var(--si-cream) !important;
+  color: var(--si-dark) !important;
+}
+
+body .architecture-copy {
+  background: var(--si-cream) !important;
+  color: var(--si-dark) !important;
+}
+
+body .architecture-section h2,
+body .architecture-section h3 {
+  color: var(--si-dark) !important;
+}
+
+body .architecture-section p {
+  color: #625d55 !important;
+}
+
+body .architecture-section .section-kicker {
+  color: #755b46 !important;
+}
+
+
+/*
+   Mientras no haya fotografía real,
+   el espacio visual ES el vitral.
+*/
+
+body .architecture-placeholder:not(.has-image) {
   background:
     linear-gradient(
       90deg,
@@ -1131,275 +1145,212 @@ a { color: inherit; }
       var(--si-blue) 82%,
       var(--si-purple) 82%,
       var(--si-purple) 100%
-    );
-  color: var(--si-light);
-}
+    ) !important;
 
-.architecture-placeholder.has-image {
-  background: var(--si-charcoal);
+  color: var(--si-light) !important;
 }
 
 
 /* ============================================================
-   4. ESPIRITUALIDAD — AZUL
-   Ya no "azul casi negro": AZUL.
+   4. ESPIRITUALIDAD — AZUL REAL
    ============================================================ */
 
-.three-paths {
-  background: var(--si-blue);
-  color: var(--si-light);
+body .three-paths {
+  background: var(--si-blue) !important;
+  color: var(--si-light) !important;
 }
 
-.three-paths .section-kicker {
-  color: #f0ca88;
+body .three-paths h2,
+body .three-paths h3 {
+  color: var(--si-light) !important;
 }
 
-.spirituality-intro h2 {
-  color: var(--si-light);
+body .three-paths .section-kicker {
+  color: #f0c98a !important;
 }
 
-.three-paths .spirituality-intro p {
-  color: #dae4ed;
+body .three-paths .spirituality-intro p {
+  color: #dce5ee !important;
 }
 
-.three-paths .path-grid {
-  background: transparent;
+body .three-paths .path-grid {
+  background: transparent !important;
   gap: 14px;
 }
 
-.three-paths .path-grid article {
-  position: relative;
-  overflow: hidden;
-  background: rgba(245,241,232,.96);
-  color: var(--si-dark);
-  border: 0;
+body .three-paths .path-grid article {
+  background: var(--si-cream) !important;
+  color: var(--si-dark) !important;
+  border: 0 !important;
 }
 
-.three-paths .path-grid article h3 {
-  color: var(--si-dark);
+body .three-paths .path-grid article h3 {
+  color: var(--si-dark) !important;
 }
 
-.three-paths .path-grid article p {
-  color: #625e58;
+body .three-paths .path-grid article p {
+  color: #625c54 !important;
 }
 
-.three-paths .path-grid article span {
-  color: var(--si-blue);
+body .three-paths .path-grid article:nth-child(3n + 1) {
+  border-top: 8px solid var(--si-red) !important;
 }
 
-.three-paths .path-grid article::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 8px;
+body .three-paths .path-grid article:nth-child(3n + 2) {
+  border-top: 8px solid var(--si-orange) !important;
 }
 
-.three-paths .path-grid article:nth-child(3n + 1)::before {
-  background: var(--si-red);
-}
-
-.three-paths .path-grid article:nth-child(3n + 2)::before {
-  background: var(--si-orange);
-}
-
-.three-paths .path-grid article:nth-child(3n + 3)::before {
-  background: var(--si-purple);
+body .three-paths .path-grid article:nth-child(3n + 3) {
+  border-top: 8px solid var(--si-purple) !important;
 }
 
 
 /* ============================================================
    5. PÁRROCOS — NARANJA QUEMADO
-   Sección humana, cálida y claramente distinta.
    ============================================================ */
 
-.staff-section {
-  background: var(--si-orange);
-  color: var(--si-light);
-  border-top: 0;
+body .staff-section {
+  background: var(--si-orange) !important;
+  color: var(--si-light) !important;
+  border-top: 0 !important;
 }
 
-.staff-section .section-kicker {
-  color: #ffe0bd;
+body .staff-section .staff-heading h2,
+body .staff-section h2 {
+  color: var(--si-light) !important;
 }
 
-.staff-heading h2 {
-  color: var(--si-light);
+body .staff-section .section-kicker {
+  color: #ffe1ba !important;
 }
 
-.staff-grid {
-  background: transparent;
+body .staff-section .staff-grid {
+  background: transparent !important;
   gap: 16px;
 }
 
-.staff-card {
-  background: var(--si-cream);
-  color: var(--si-dark);
+body .staff-section .staff-card {
+  background: var(--si-cream) !important;
+  color: var(--si-dark) !important;
 }
 
-.staff-photo,
-.staff-photo-empty {
-  background: #c9b9a4;
+body .staff-section .staff-photo,
+body .staff-section .staff-photo-empty {
+  background: #c9b7a0 !important;
 }
 
-.staff-photo-empty span {
-  color: rgba(41,36,31,.22);
+body .staff-section .staff-copy h3 {
+  color: var(--si-dark) !important;
 }
 
-.staff-role {
-  color: var(--si-red);
+body .staff-section .staff-role {
+  color: var(--si-red) !important;
 }
 
-.staff-copy h3 {
-  color: var(--si-dark);
-}
-
-.staff-copy p:last-child:not(.staff-role) {
-  color: #645f58;
+body .staff-section .staff-copy p {
+  color: #655e56 !important;
 }
 
 
 /* ============================================================
    6. MÚSICA — MORADO
-   Ya no repetimos azul inmediatamente después del azul.
    ============================================================ */
 
-.music-section {
-  background: var(--si-purple);
-  color: var(--si-light);
+body .music-section {
+  background: var(--si-purple) !important;
+  color: var(--si-light) !important;
 }
 
-.music-section .section-kicker {
-  color: #f0c98d;
+body .music-section h2,
+body .music-section h3,
+body .music-section strong {
+  color: var(--si-light) !important;
 }
 
-.music-section h2,
-.music-section h3 {
-  color: var(--si-light);
+body .music-section .section-kicker {
+  color: #f0c98a !important;
 }
 
-.music-section p,
-.music-section small {
-  color: #e2dce8;
+body .music-section p {
+  color: #e6dfea !important;
 }
 
-.music-public-list article,
-.music-public-item,
-.concert-public-item {
-  background: rgba(245,241,232,.96);
-  color: var(--si-dark);
-}
-
-.music-public-list article h3,
-.music-public-list article strong,
-.music-public-item h3,
-.concert-public-item h3 {
-  color: var(--si-dark);
-}
-
-.music-public-list article p,
-.music-public-item p,
-.concert-public-item p {
-  color: #625d57;
+body .music-section .music-public-item,
+body .music-section .concert-public-item {
+  background: rgba(255,255,255,.10) !important;
+  color: var(--si-light) !important;
 }
 
 
 /* ============================================================
    7. DONATIVOS — CREMA
-   Pausa visual antes del cierre.
    ============================================================ */
 
-.donations-section {
-  background: var(--si-cream-deep);
-  color: var(--si-dark);
+body .donations-section {
+  background: var(--si-cream-2) !important;
+  color: var(--si-dark) !important;
 }
 
-.donations-section .section-kicker {
-  color: #765d49;
+body .donations-section h2,
+body .donations-section h3,
+body .donations-section strong {
+  color: var(--si-dark) !important;
 }
 
-.donations-section h2,
-.donations-section h3 {
-  color: var(--si-dark);
+body .donations-section .section-kicker {
+  color: #755c48 !important;
 }
 
-.donation-card {
-  background: var(--si-light);
-  color: var(--si-dark);
-}
-
-.donation-badge,
-.donation-chip {
-  border-color: rgba(23,26,28,.24);
+body .donation-card {
+  background: var(--si-cream) !important;
+  color: var(--si-dark) !important;
 }
 
 
 /* ============================================================
-   8. CONTACTO — ÚNICA GRAN SECCIÓN OSCURA
-   Aquí sí termina el recorrido en carbón.
+   8. CONTACTO — ÚNICA SECCIÓN OSCURA
    ============================================================ */
 
-.contact-section {
-  background: var(--si-charcoal);
-  color: var(--si-light);
+body .contact-section {
+  background: var(--si-charcoal) !important;
+  color: var(--si-light) !important;
 }
 
-.contact-section .section-kicker {
-  color: #d7aa74;
+body .contact-section h2,
+body .contact-section h3 {
+  color: var(--si-light) !important;
 }
 
-.contact-section h2 {
-  color: var(--si-light);
+body .contact-section .section-kicker {
+  color: #e0ad72 !important;
 }
 
-.contact-address,
-.contact-copy {
-  color: #d4d0c9;
+body .contact-section .contact-address,
+body .contact-section .contact-copy {
+  color: #d7d1c8 !important;
 }
 
-.contact-form {
-  background: #202427;
-  border-top-color: var(--si-red);
+body .contact-section .contact-form {
+  background: #202528 !important;
+  color: var(--si-light) !important;
+  border-top: 8px solid var(--si-orange) !important;
 }
 
-.contact-form input,
-.contact-form textarea {
-  background: #171a1c;
-  color: var(--si-light);
+body .contact-section input,
+body .contact-section textarea {
+  background: #171b1d !important;
+  color: var(--si-light) !important;
 }
 
 
 /* ============================================================
-   TRANSICIONES
-   Las secciones cambian de color de forma franca.
-   Sin capas negras intermedias.
+   FOOTER
+   Forma parte del cierre oscuro.
    ============================================================ */
 
-.pastoral-section,
-.architecture-section,
-.three-paths,
-.staff-section,
-.music-section,
-.donations-section,
-.contact-section {
-  position: relative;
-}
-
-.pastoral-section::after,
-.architecture-section::after,
-.three-paths::after,
-.staff-section::after,
-.music-section::after,
-.donations-section::after {
-  content: "";
-  position: absolute;
-  z-index: 10;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: rgba(20,20,20,.14);
+body footer {
+  background: var(--si-charcoal) !important;
+  color: #bdb8b0 !important;
 }
 
 
@@ -1409,16 +1360,12 @@ a { color: inherit; }
 
 @media (max-width: 700px) {
 
-  .first-screen::before {
-    height: 10px;
+  body .first-screen::before {
+    height: 9px;
   }
 
-  .pastoral-card {
-    box-shadow: none;
-  }
-
-  .three-paths .path-grid,
-  .staff-grid {
+  body .three-paths .path-grid,
+  body .staff-section .staff-grid {
     gap: 10px;
   }
 }
