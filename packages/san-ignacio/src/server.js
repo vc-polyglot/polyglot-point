@@ -83,6 +83,20 @@ app.use("/api", publicApi);
 app.use("/api/admin", adminAuth);
 app.use("/api/admin", adminApi);
 
+
+app.use("/admin", (_req, res, next) => {
+  res.setHeader(
+    "X-Robots-Tag",
+    "noindex, nofollow, noarchive, nosnippet"
+  );
+
+  res.setHeader(
+    "Cache-Control",
+    "no-store"
+  );
+
+  next();
+});
 app.get("/admin", (_req, res) => {
   if (_req.session?.user) {
     return res.redirect("/admin/dashboard");
