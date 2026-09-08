@@ -28,9 +28,8 @@
       <a href="#pastoral">Pastoral</a>
       <a href="#musica">Música</a>
       <a href="#donativos">Donativos</a>
-      <a href="#contacto">Contacto</a>
       <a href="#historia">Historia</a>
-    </nav>
+      <a href="#contacto">Contacto</a>    </nav>
   </header>
 
   <main>
@@ -44,6 +43,7 @@
       <div class="mosaic warm" aria-hidden="true"></div>
       <div class="mosaic cool" aria-hidden="true"></div>
     </section>
+
 <section id="nosotros" class="staff-section section-shell">
       <div class="staff-heading">
         <p class="section-kicker">Comunidad</p>
@@ -86,22 +86,6 @@
       </div>
     </section>
 
-
-
-
-
-
-
-
-    <section id="pastoral" class="pastoral-section section-shell">
-      <div>
-        <p class="section-kicker">Esta semana</p>
-        <h2>Mensaje pastoral</h2>
-      </div>
-      <article id="pastoral-card" class="pastoral-card">
-        <p class="loading">Cargando mensaje…</p>
-      </article>
-    </section>
 <section id="espiritualidad" class="three-paths section-shell">
       <p id="spirituality-eyebrow" class="section-kicker">Espiritualidad jesuita</p>
       <div class="spirituality-intro">
@@ -114,9 +98,17 @@
       </div>
     </section>
 
+<section id="pastoral" class="pastoral-section section-shell">
+      <div>
+        <p class="section-kicker">Esta semana</p>
+        <h2>Mensaje pastoral</h2>
+      </div>
+      <article id="pastoral-card" class="pastoral-card">
+        <p class="loading">Cargando mensaje…</p>
+      </article>
+    </section>
 
-
-    <section id="musica" class="music-section section-shell">
+<section id="musica" class="music-section section-shell">
       <div>
         <p class="section-kicker">Música</p>
         <h2>La música como parte de la vida del templo.</h2>
@@ -143,7 +135,7 @@
       </div>
     </section>
 
-    <section id="donativos" class="donations-section section-shell">
+<section id="donativos" class="donations-section section-shell">
       <div class="donations-intro">
         <p class="section-kicker">Donativos</p>
         <h2>Sostener el templo también es participar en su vida.</h2>
@@ -207,102 +199,7 @@
       </div>
     </section>
 
-    <section id="contacto" class="contact-section section-shell">
-      <div class="contact-intro">
-        <p class="section-kicker">Contacto</p>
-        <h2>San Ignacio de Loyola</h2>
-        <p class="contact-address">
-          Séneca 306, Polanco, Ciudad de México.
-        </p>
-        <p class="contact-copy">
-          Envíenos un mensaje y la parroquia podrá atenderlo desde su sistema administrativo.
-        </p>
-      </div>
-
-      <form id="contact-form" class="contact-form">
-        <div class="contact-form-row">
-          <label>
-            Nombre
-            <input
-              name="name"
-              type="text"
-              maxlength="160"
-              autocomplete="name"
-              required
-            >
-          </label>
-
-          <label>
-            Correo electrónico
-            <input
-              name="email"
-              type="email"
-              maxlength="254"
-              autocomplete="email"
-              required
-            >
-          </label>
-        </div>
-
-        <div class="contact-form-row">
-          <label>
-            Teléfono
-            <input
-              name="phone"
-              type="tel"
-              maxlength="60"
-              autocomplete="tel"
-            >
-          </label>
-
-          <label>
-            Asunto
-            <input
-              name="subject"
-              type="text"
-              maxlength="200"
-              required
-            >
-          </label>
-        </div>
-
-        <label>
-          Mensaje
-          <textarea
-            name="message"
-            rows="7"
-            maxlength="5000"
-            required
-          ></textarea>
-        </label>
-
-        <div class="contact-honeypot" aria-hidden="true">
-          <label>
-            Sitio web
-            <input
-              name="website"
-              type="text"
-              tabindex="-1"
-              autocomplete="off"
-            >
-          </label>
-        </div>
-
-        <div class="contact-submit-row">
-          <button type="submit" class="button-link">
-            Enviar mensaje
-          </button>
-
-          <p id="contact-status" class="contact-status" role="status"></p>
-        </div>
-      </form>
-    </section>
-
-
-
-    </div>
-
-    <section id="historia" class="architecture-section history-section history-section--canonical">
+<section id="historia" class="architecture-section history-section history-section--canonical">
 
       <div class="architecture-copy history-copy">
 
@@ -405,6 +302,126 @@
       </div>
 
     </section>
+
+<section id="contacto" class="contact-section section-shell">
+      <div class="contact-intro">
+        <p class="section-kicker">Contacto</p>
+        <h2>San Ignacio de Loyola</h2>
+        <p class="contact-address">
+          Séneca 306, Polanco, Ciudad de México.
+        </p>
+        <p class="contact-copy">
+          Envíenos un mensaje y la parroquia podrá atenderlo desde su sistema administrativo.
+        </p>
+      </div>
+
+      <form id="contact-form" class="contact-form">
+        <div class="contact-form-row">
+          <label>
+            Nombre
+            <input
+              name="name"
+              type="text"
+              maxlength="160"
+              autocomplete="name"
+              required
+            >
+          </label>
+
+          <label>
+            Correo electrónico
+            <input
+              name="email"
+              type="email"
+              maxlength="254"
+              autocomplete="email"
+              required
+            >
+          </label>
+        </div>
+
+        <div class="contact-form-row">
+          <label>
+            Teléfono
+            <input
+              name="phone"
+              type="tel"
+              maxlength="60"
+              autocomplete="tel"
+            >
+          </label>
+
+          <label>
+            Asunto
+            <input
+              name="subject"
+              type="text"
+              maxlength="200"
+              required
+            >
+          </label>
+        </div>
+
+        <label>
+          Mensaje
+          <textarea
+            name="message"
+            rows="7"
+            maxlength="5000"
+            required
+          ></textarea>
+        </label>
+
+        <div class="contact-honeypot" aria-hidden="true">
+          <label>
+            Sitio web
+            <input
+              name="website"
+              type="text"
+              tabindex="-1"
+              autocomplete="off"
+            >
+          </label>
+        </div>
+
+        <div class="contact-submit-row">
+          <button type="submit" class="button-link">
+            Enviar mensaje
+          </button>
+
+          <p id="contact-status" class="contact-status" role="status"></p>
+        </div>
+      </form>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+
 </main>
 
   <footer class="site-footer">

@@ -2366,3 +2366,156 @@ body #historia #about-image {
     border-top: 1px solid rgba(23,25,27,.16);
   }
 }
+
+
+/* ============================================================
+   SAN IGNACIO — IL MONOGRAM V102
+
+        ───────────────
+              │
+              │
+              │
+              │────────────
+
+   amarillo = cabeza de I
+   rojo     = asta común I/L
+   rojo     = pie de L hacia la derecha
+   ============================================================ */
+
+
+/* ============================================================
+   CONTRASTE
+   ============================================================ */
+
+body .first-screen .eyebrow,
+body .first-screen .address {
+  color: #343633 !important;
+  opacity: 1 !important;
+}
+
+
+body .first-screen .eyebrow {
+  font-weight: 700 !important;
+}
+
+
+body .first-screen .address {
+  font-weight: 500 !important;
+}
+
+
+/* ============================================================
+   ASTA VERTICAL ROJA
+   ============================================================ */
+
+body .first-screen .mosaic.warm {
+  position: absolute !important;
+
+  top: 4% !important;
+  right: 8% !important;
+
+  width: clamp(82px, 7vw, 118px) !important;
+  height: clamp(340px, 35vw, 445px) !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  background: #AE4036 !important;
+
+  border: 0 !important;
+  box-shadow: none !important;
+
+  transform: none !important;
+
+  overflow: visible !important;
+
+  z-index: 2 !important;
+
+  pointer-events: none !important;
+}
+
+
+/* ============================================================
+   CABEZA AMARILLA DE LA I
+   ============================================================ */
+
+body .first-screen .mosaic.warm::before {
+  content: "" !important;
+
+  position: absolute !important;
+
+  top: 0 !important;
+  left: 50% !important;
+
+  width: 280% !important;
+  height: 29% !important;
+
+  background: #D9A13D !important;
+
+  transform: translateX(-50%) !important;
+
+  border: 0 !important;
+  box-shadow: none !important;
+
+  z-index: -1 !important;
+}
+
+
+/* ============================================================
+   PIE ROJO DE LA L
+   Empieza en el asta y sale SÓLO hacia la derecha.
+   ============================================================ */
+
+body .first-screen .mosaic.warm::after {
+  content: "" !important;
+
+  position: absolute !important;
+
+  left: 0 !important;
+  bottom: 0 !important;
+
+  width: 230% !important;
+  height: 27% !important;
+
+  background: #AE4036 !important;
+
+  transform: none !important;
+
+  border: 0 !important;
+  box-shadow: none !important;
+
+  z-index: 1 !important;
+}
+
+
+/* ============================================================
+   MÓVIL
+   MISMO SIGNO, OTRA ESCALA.
+   ============================================================ */
+
+@media (max-width: 700px) {
+
+  body .first-screen .mosaic.warm {
+    top: 4% !important;
+    right: 8% !important;
+
+    width: clamp(54px, 15vw, 72px) !important;
+    height: clamp(220px, 57vw, 280px) !important;
+  }
+
+
+  body .first-screen .mosaic.warm::before {
+    width: 260% !important;
+  }
+
+
+  body .first-screen .mosaic.warm::after {
+    width: 220% !important;
+  }
+
+
+  body .first-screen .eyebrow,
+  body .first-screen .address {
+    color: #30322f !important;
+  }
+}
