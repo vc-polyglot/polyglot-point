@@ -513,17 +513,22 @@ canonicalHistoryTabs.forEach((tab) => {
 });
 
 
-/* SAN IGNACIO GALLERY LIGHTBOX V1 */
+
+/* SAN IGNACIO GALLERY LIGHTBOX V2 */
 
 (() => {
+
   const launch = document.querySelector("#gallery-launch");
   const lightbox = document.querySelector("#gallery-lightbox");
   const image = document.querySelector("#gallery-image");
+
   const close = document.querySelector("#gallery-close");
   const previous = document.querySelector("#gallery-prev");
   const next = document.querySelector("#gallery-next");
   const counter = document.querySelector("#gallery-counter");
+
   const dataNode = document.querySelector("#gallery-data");
+
 
   if (
     !launch ||
@@ -538,132 +543,481 @@ canonicalHistoryTabs.forEach((tab) => {
     return;
   }
 
-  let photos = [];
+
+  let galleryPhotos = [];
 
   try {
-    photos = JSON.parse(dataNode.textContent || "[]");
+
+    galleryPhotos = JSON.parse(
+      dataNode.textContent || "[]"
+    );
+
   } catch {
+
     return;
   }
 
-  if (!Array.isArray(photos) || photos.length === 0) {
+
+  if (
+    !Array.isArray(galleryPhotos) ||
+    galleryPhotos.length === 0
+  ) {
     return;
   }
 
+
+  /*
+    Fotografías visibles en las demás secciones.
+  */
+
+  const pagePhotoNodes = Array.from(
+    document.querySelectorAll(
+      'main img[src^="/img/site-photos/"]:not(#gallery-image)'
+    )
+  );
+
+
+  const pagePhotoUrls = pagePhotoNodes
+    .map((node) => node.getAttribute("src"))
+    .filter(Boolean);
+
+
+  /*
+    Una sola colección general, sin duplicados.
+  */
+
+  const allPhotos = Array.from(
+    new Set([
+      ...pagePhotoUrls,
+      ...galleryPhotos
+    ])
+  );
+
+
+  let activePhotos = galleryPhotos;
   let index = 0;
+
   let touchStartX = 0;
   let touchStartY = 0;
+
   let opener = null;
 
+
   const normalize = (value) => {
-    if (value < 0) return photos.length - 1;
-    if (value >= photos.length) return 0;
+
+    if (value < 0) {
+      return activePhotos.length - 1;
+    }
+
+    if (value >= activePhotos.length) {
+      return 0;
+    }
+
     return value;
   };
 
+
   const show = (value) => {
+
     index = normalize(value);
 
-    image.src = photos[index];
-    image.alt = `Fotografía ${index + 1} de ${photos.length}`;
-    counter.textContent = `${index + 1} / ${photos.length}`;
+    image.src = activePhotos[index];
+
+    image.alt =
+      `Fotografía ${index + 1} de ${activePhotos.length}`;
+
+    counter.textContent =
+      `${index + 1} / ${activePhotos.length}`;
   };
+
 
   const showNext = () => {
     show(index + 1);
   };
 
+
   const showPrevious = () => {
     show(index - 1);
   };
 
-  const openGallery = () => {
+
+  const openGallery = (
+    source,
+    collection
+  ) => {
+
     opener = document.activeElement;
+
+    activePhotos =
+      Array.isArray(collection) && collection.length
+        ? collection
+        : galleryPhotos;
+
+
+    const requestedIndex =
+      activePhotos.indexOf(source);
+
+
+    index =
+      requestedIndex >= 0
+        ? requestedIndex
+        : 0;
+
 
     show(index);
 
     lightbox.hidden = false;
-    document.body.classList.add("gallery-open");
+
+    document.body.classList.add(
+      "gallery-open"
+    );
 
     close.focus();
   };
 
-  const closeGallery = () => {
-    lightbox.hidden = true;
-    document.body.classList.remove("gallery-open");
 
-    if (opener && typeof opener.focus === "function") {
+  const closeGallery = () => {
+
+    lightbox.hidden = true;
+
+    document.body.classList.remove(
+      "gallery-open"
+    );
+
+    if (
+      opener &&
+      typeof opener.focus === "function"
+    ) {
       opener.focus();
     }
   };
 
-  launch.addEventListener("click", openGallery);
 
-  close.addEventListener("click", closeGallery);
+  /* ============================================================
+     PORTADA DE GALERÍA
+     ============================================================ */
 
-  next.addEventListener("click", showNext);
+  launch.addEventListener(
+    "click",
+    (event) => {
 
-  previous.addEventListener("click", showPrevious);
-
-  image.addEventListener("click", showNext);
-
-  lightbox.addEventListener("click", (event) => {
-    if (event.target === lightbox || event.target.classList.contains("gallery-stage")) {
-      closeGallery();
-    }
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (lightbox.hidden) return;
-
-    if (event.key === "Escape") {
       event.preventDefault();
-      closeGallery();
+
+      openGallery(
+        galleryPhotos[0],
+        galleryPhotos
+      );
+    }
+  );
+
+
+  /* ============================================================
+     TODAS LAS DEMÁS FOTOS
+     ============================================================ */
+
+  pagePhotoNodes.forEach((photo) => {
+
+    /*
+      La portada de Galería ya tiene controlador propio.
+    */
+
+    if (photo.closest("#gallery-launch")) {
       return;
     }
 
-    if (event.key === "ArrowRight") {
-      event.preventDefault();
-      showNext();
-      return;
-    }
 
-    if (event.key === "ArrowLeft") {
-      event.preventDefault();
-      showPrevious();
-    }
+    photo.setAttribute(
+      "tabindex",
+      "0"
+    );
+
+
+    photo.setAttribute(
+      "role",
+      "button"
+    );
+
+
+    photo.setAttribute(
+      "aria-label",
+      `${
+        photo.alt ||
+        "Fotografía"
+      }. Abrir imagen`
+    );
+
+
+    const openPhoto = () => {
+
+      const source =
+        photo.getAttribute("src");
+
+      openGallery(
+        source,
+        allPhotos
+      );
+    };
+
+
+    photo.addEventListener(
+      "click",
+      openPhoto
+    );
+
+
+    photo.addEventListener(
+      "keydown",
+      (event) => {
+
+        if (
+          event.key === "Enter" ||
+          event.key === " "
+        ) {
+          event.preventDefault();
+
+          openPhoto();
+        }
+      }
+    );
   });
+
+
+  /* ============================================================
+     CONTROLES
+     ============================================================ */
+
+  close.addEventListener(
+    "click",
+    closeGallery
+  );
+
+
+  next.addEventListener(
+    "click",
+    showNext
+  );
+
+
+  previous.addEventListener(
+    "click",
+    showPrevious
+  );
+
+
+  image.addEventListener(
+    "click",
+    showNext
+  );
+
+
+  /*
+    Tocar el fondo oscuro cierra.
+  */
+
+  lightbox.addEventListener(
+    "click",
+    (event) => {
+
+      if (
+        event.target === lightbox ||
+        event.target.classList.contains(
+          "gallery-stage"
+        )
+      ) {
+        closeGallery();
+      }
+    }
+  );
+
+
+  /* ============================================================
+     TECLADO
+     ============================================================ */
+
+  document.addEventListener(
+    "keydown",
+    (event) => {
+
+      if (lightbox.hidden) {
+        return;
+      }
+
+
+      if (event.key === "Escape") {
+
+        event.preventDefault();
+
+        closeGallery();
+
+        return;
+      }
+
+
+      if (event.key === "ArrowRight") {
+
+        event.preventDefault();
+
+        showNext();
+
+        return;
+      }
+
+
+      if (event.key === "ArrowLeft") {
+
+        event.preventDefault();
+
+        showPrevious();
+      }
+    }
+  );
+
+
+  /* ============================================================
+     SWIPE
+     ============================================================ */
 
   image.addEventListener(
     "touchstart",
     (event) => {
-      const touch = event.changedTouches[0];
 
-      touchStartX = touch.clientX;
-      touchStartY = touch.clientY;
+      const touch =
+        event.changedTouches[0];
+
+      touchStartX =
+        touch.clientX;
+
+      touchStartY =
+        touch.clientY;
     },
-    { passive: true }
+    {
+      passive: true
+    }
   );
+
 
   image.addEventListener(
     "touchend",
     (event) => {
-      const touch = event.changedTouches[0];
 
-      const dx = touch.clientX - touchStartX;
-      const dy = touch.clientY - touchStartY;
+      const touch =
+        event.changedTouches[0];
 
-      if (Math.abs(dx) < 45) return;
-      if (Math.abs(dx) <= Math.abs(dy)) return;
+      const dx =
+        touch.clientX -
+        touchStartX;
+
+      const dy =
+        touch.clientY -
+        touchStartY;
+
+
+      if (Math.abs(dx) < 45) {
+        return;
+      }
+
+
+      if (
+        Math.abs(dx) <=
+        Math.abs(dy)
+      ) {
+        return;
+      }
+
 
       if (dx < 0) {
         showNext();
-      } else {
+      }
+      else {
         showPrevious();
       }
     },
-    { passive: true }
+    {
+      passive: true
+    }
   );
+
 })();
 
-/* END SAN IGNACIO GALLERY LIGHTBOX V1 */
+/* END SAN IGNACIO GALLERY LIGHTBOX V2 */
+
+
+/* SAN IGNACIO MENU OUTSIDE CLOSE V1 */
+
+(() => {
+
+  const toggle =
+    document.querySelector(".nav-toggle");
+
+  const nav =
+    document.querySelector("#primary-nav");
+
+
+  if (!toggle || !nav) {
+    return;
+  }
+
+
+  const closeMenu = () => {
+
+    nav.classList.remove("open");
+
+    toggle.setAttribute(
+      "aria-expanded",
+      "false"
+    );
+  };
+
+
+  /*
+    Si el menú está abierto y se toca cualquier zona que NO sea:
+
+    - el propio menú
+    - el botón Menú
+
+    entonces se cierra.
+  */
+
+  document.addEventListener(
+    "pointerdown",
+    (event) => {
+
+      if (!nav.classList.contains("open")) {
+        return;
+      }
+
+
+      if (nav.contains(event.target)) {
+        return;
+      }
+
+
+      if (toggle.contains(event.target)) {
+        return;
+      }
+
+
+      closeMenu();
+    }
+  );
+
+
+  document.addEventListener(
+    "keydown",
+    (event) => {
+
+      if (
+        event.key === "Escape" &&
+        nav.classList.contains("open")
+      ) {
+
+        closeMenu();
+
+        toggle.focus();
+      }
+    }
+  );
+
+})();
+
+/* END SAN IGNACIO MENU OUTSIDE CLOSE V1 */

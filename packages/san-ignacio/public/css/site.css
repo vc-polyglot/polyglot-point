@@ -3309,3 +3309,90 @@ body .first-screen .mosaic.warm {
 
 
 /* END SAN IGNACIO HERO BALANCE V1 */
+
+
+/* SAN IGNACIO PHOTO INTERACTION V2 */
+
+
+/* ============================================================
+   TODAS LAS FOTOGRAFÍAS SON INTERACTIVAS
+
+   Usamos la propiedad individual "scale" y NO "transform".
+
+   Así el pequeño aumento de hover puede convivir con
+   el zoom automático de la fotografía de Galería,
+   que actualmente usa transform en sus keyframes.
+   ============================================================ */
+
+body main img[src^="/img/site-photos/"]:not(#gallery-image) {
+  cursor: zoom-in;
+
+  scale: 1;
+
+  transition:
+    scale .55s cubic-bezier(.2,.7,.2,1),
+    filter .55s ease;
+
+  will-change: scale;
+}
+
+
+/*
+   En computadora:
+   al pasar el puntero se amplía apenas.
+
+   Es una pista de interacción, no un efecto llamativo.
+*/
+
+@media (hover: hover) and (pointer: fine) {
+
+  body main img[src^="/img/site-photos/"]:not(#gallery-image):hover {
+    scale: 1.025;
+    filter: brightness(1.025);
+  }
+
+}
+
+
+/*
+   Las figuras que contienen nuestras fotografías
+   recortan ese pequeño crecimiento para que el efecto
+   permanezca limpio.
+*/
+
+body main .site-section-photo,
+body main .history-photo-grid figure,
+body main .gallery-launch {
+  overflow: hidden;
+}
+
+
+/* ============================================================
+   VIDA LITÚRGICA
+
+   Quitar la alineación al extremo derecho.
+   ============================================================ */
+
+body .site-section-photo--liturgia {
+  justify-self: center !important;
+
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+
+/* ============================================================
+   RESPETO A REDUCCIÓN DE MOVIMIENTO
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  body main img[src^="/img/site-photos/"]:not(#gallery-image) {
+    scale: 1 !important;
+    transition: none !important;
+  }
+
+}
+
+
+/* END SAN IGNACIO PHOTO INTERACTION V2 */
