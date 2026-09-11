@@ -2918,3 +2918,284 @@ body.gallery-open {
 }
 
 /* END SAN IGNACIO CONTACT SOCIAL AND GALLERY MOTION V2 */
+
+
+/* SAN IGNACIO HERO IL2 V2 */
+
+
+/* ============================================================
+   HERO MÁS CONTENIDO
+
+   La composición ya no se extiende tanto horizontalmente.
+   ============================================================ */
+
+body .first-screen {
+  width: 100% !important;
+  max-width: 1380px !important;
+
+  margin-left: auto !important;
+  margin-right: auto !important;
+
+  padding-left: clamp(48px, 5vw, 76px) !important;
+  padding-right: clamp(48px, 5vw, 76px) !important;
+
+  overflow: hidden !important;
+}
+
+
+/* El bloque de identidad tampoco se expande innecesariamente. */
+
+body .first-screen .identity {
+  position: relative !important;
+  z-index: 3 !important;
+
+  width: min(100%, 620px) !important;
+  max-width: 620px !important;
+}
+
+
+/* ============================================================
+   TEXTOS SECUNDARIOS
+
+   MÁS GRANDES.
+   MÁS OSCUROS.
+   UN POCO MÁS LARGOS.
+   ============================================================ */
+
+body .first-screen .eyebrow {
+  color: #343633 !important;
+  opacity: 1 !important;
+
+  font-size: clamp(.92rem, 1vw, 1.08rem) !important;
+  font-weight: 700 !important;
+
+  letter-spacing: .27em !important;
+
+  line-height: 1.35 !important;
+
+  width: max-content !important;
+  max-width: none !important;
+
+  white-space: nowrap !important;
+}
+
+
+body .first-screen .address {
+  color: #343633 !important;
+  opacity: 1 !important;
+
+  font-size: clamp(1.12rem, 1.25vw, 1.32rem) !important;
+  font-weight: 550 !important;
+
+  letter-spacing: .09em !important;
+
+  line-height: 1.35 !important;
+
+  width: max-content !important;
+  max-width: none !important;
+
+  white-space: nowrap !important;
+}
+
+
+/* ============================================================
+   EMBLEMA IL
+
+   REFERENCIA: IL 2 APROBADO
+
+   División horizontal:
+
+   31.5% | 35% | 33.5%
+
+   El eje rojo queda centrado visualmente.
+
+   ARRIBA:
+   amarillo | rojo | amarillo
+
+   CENTRO:
+              rojo
+
+   ABAJO:
+   naranja  | rojo | rojo
+
+   Sin textura.
+   Sin puntos.
+   Sin adornos.
+   Sin recortes.
+   ============================================================ */
+
+body .first-screen .mosaic.warm {
+  position: absolute !important;
+
+  top: clamp(24px, 3.5vh, 46px) !important;
+  right: clamp(46px, 5vw, 74px) !important;
+
+  width: clamp(285px, 24vw, 370px) !important;
+  height: auto !important;
+
+  aspect-ratio: 370 / 422 !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  border: 0 !important;
+  box-shadow: none !important;
+
+  opacity: 1 !important;
+
+  transform: none !important;
+
+  overflow: visible !important;
+
+  z-index: 1 !important;
+
+  pointer-events: none !important;
+
+
+  /*
+     CAPA 1 — eje rojo vertical.
+
+     CAPA 2 — barra inferior:
+     naranja izquierda + rojo resto.
+
+     CAPA 3 — barra superior:
+     amarillo completo.
+
+     El eje rojo de la primera capa pasa encima de ambas.
+  */
+
+  background:
+
+    linear-gradient(
+      90deg,
+      transparent 0 31.5%,
+      #AE4036 31.5% 66.5%,
+      transparent 66.5% 100%
+    ),
+
+    linear-gradient(
+      90deg,
+      #D96A38 0 31.5%,
+      #AE4036 31.5% 100%
+    )
+    left bottom / 100% 32% no-repeat,
+
+    linear-gradient(
+      #D9A13D 0 0
+    )
+    left top / 100% 37% no-repeat
+
+    !important;
+}
+
+
+/*
+   Nada de pseudo-elementos anteriores:
+   IL 2 sale exclusivamente de las tres capas anteriores.
+*/
+
+body .first-screen .mosaic.warm::before,
+body .first-screen .mosaic.warm::after {
+  content: none !important;
+  display: none !important;
+}
+
+
+/* ============================================================
+   ELEMENTO IZQUIERDO
+
+   Sólo impedir que se vaya demasiado fuera de la composición.
+   Su geometría se conserva.
+   ============================================================ */
+
+body .first-screen .mosaic.cool {
+  left: clamp(22px, 2.5vw, 42px) !important;
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 1050px) {
+
+  body .first-screen {
+    max-width: 100% !important;
+
+    padding-left: clamp(32px, 4.5vw, 54px) !important;
+    padding-right: clamp(32px, 4.5vw, 54px) !important;
+  }
+
+
+  body .first-screen .mosaic.warm {
+    right: clamp(26px, 3vw, 42px) !important;
+
+    width: clamp(225px, 28vw, 300px) !important;
+  }
+
+
+  body .first-screen .eyebrow {
+    font-size: clamp(.84rem, 1.3vw, .96rem) !important;
+  }
+
+
+  body .first-screen .address {
+    font-size: clamp(1rem, 1.6vw, 1.18rem) !important;
+  }
+}
+
+
+/* ============================================================
+   MÓVIL
+   ============================================================ */
+
+@media (max-width: 700px) {
+
+  body .first-screen {
+    max-width: 100% !important;
+
+    padding-left: 22px !important;
+    padding-right: 22px !important;
+  }
+
+
+  body .first-screen .eyebrow {
+    font-size: .78rem !important;
+    letter-spacing: .19em !important;
+
+    width: auto !important;
+    max-width: 100% !important;
+
+    white-space: normal !important;
+  }
+
+
+  body .first-screen .address {
+    font-size: 1rem !important;
+    letter-spacing: .06em !important;
+
+    width: auto !important;
+    max-width: 100% !important;
+
+    white-space: normal !important;
+  }
+
+
+  body .first-screen .mosaic.warm {
+    top: 18px !important;
+    right: 18px !important;
+
+    width: clamp(175px, 46vw, 225px) !important;
+  }
+
+
+  body .first-screen .mosaic.cool {
+    left: 14px !important;
+  }
+}
+
+
+/* END SAN IGNACIO HERO IL2 V2 */
