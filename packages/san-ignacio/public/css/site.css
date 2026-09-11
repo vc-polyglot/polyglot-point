@@ -2392,3 +2392,153 @@ body .first-screen .address {
     opacity: 1 !important;
   }
 }
+
+
+/* SAN IGNACIO — SITE PHOTOGRAPHY V1 */
+
+.site-section-photo {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin: clamp(34px, 5vw, 72px) 0 0;
+  overflow: hidden;
+}
+
+.site-section-photo img {
+  display: block;
+  width: 100%;
+  height: clamp(340px, 48vw, 680px);
+  object-fit: cover;
+}
+
+.site-section-photo--nosotros img {
+  object-position: 50% 48%;
+}
+
+.site-section-photo--liturgia {
+  max-width: 560px;
+  justify-self: end;
+}
+
+.site-section-photo--liturgia img {
+  height: min(68vh, 720px);
+  object-position: center;
+}
+
+.site-section-photo--espiritualidad img {
+  height: clamp(320px, 42vw, 620px);
+  object-position: center;
+}
+
+.site-section-photo--pastoral {
+  max-width: 820px;
+  justify-self: end;
+}
+
+.site-section-photo--pastoral img {
+  height: min(70vh, 720px);
+  object-position: center;
+}
+
+.history-photo-grid {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 28px);
+  width: 100%;
+  margin-top: clamp(40px, 6vw, 80px);
+}
+
+.history-photo-grid figure {
+  margin: 0;
+}
+
+.history-photo-grid img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.history-photo-grid figcaption {
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: .16em;
+  font-size: .7rem;
+  font-weight: 700;
+}
+
+.gallery-section {
+  width: 100%;
+  max-width: none;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.gallery-heading {
+  margin-bottom: clamp(34px, 5vw, 72px);
+}
+
+.gallery-heading h2 {
+  margin: 0;
+  font-size: clamp(4.2rem, 10vw, 10rem);
+  line-height: .82;
+  letter-spacing: -.055em;
+  font-weight: 650;
+}
+
+.gallery-grid {
+  columns: 3 300px;
+  column-gap: clamp(10px, 1.5vw, 18px);
+}
+
+.gallery-item {
+  display: inline-block;
+  width: 100%;
+  margin: 0 0 clamp(10px, 1.5vw, 18px);
+  break-inside: avoid;
+  overflow: hidden;
+}
+
+.gallery-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 760px) {
+
+  .history-photo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .site-section-photo,
+  .site-section-photo--liturgia,
+  .site-section-photo--pastoral {
+    max-width: none;
+  }
+
+  .site-section-photo img,
+  .site-section-photo--liturgia img,
+  .site-section-photo--pastoral img {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+  }
+
+  .gallery-heading h2 {
+    font-size: clamp(3.8rem, 18vw, 6.5rem);
+  }
+
+  .gallery-grid {
+    columns: 2 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-grid {
+    columns: 1;
+  }
+}
+
+/* END SAN IGNACIO — SITE PHOTOGRAPHY V1 */
