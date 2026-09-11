@@ -2798,27 +2798,20 @@ body.gallery-open {
 /* SAN IGNACIO CONTACT SOCIAL AND GALLERY MOTION V1 */
 
 
-/* ============================================================
-   CONTACTO DIRECTO
-   ============================================================ */
+/* CONTACTO */
 
 .direct-contact {
   grid-column: 1 / -1;
-
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-
   width: 100%;
-
   margin-top: clamp(40px, 6vw, 80px);
-
   border-top: 1px solid currentColor;
   border-bottom: 1px solid currentColor;
 }
 
 .direct-contact-item {
   min-width: 0;
-
   padding:
     clamp(22px, 3vw, 38px)
     clamp(18px, 3vw, 34px);
@@ -2830,26 +2823,19 @@ body.gallery-open {
 
 .direct-contact-label {
   display: block;
-
   margin-bottom: 10px;
-
   font-size: .68rem;
   font-weight: 700;
-
   letter-spacing: .18em;
   text-transform: uppercase;
-
   opacity: .62;
 }
 
 .direct-contact-link {
   display: inline-block;
-
   color: inherit;
-
   font-size: clamp(1.15rem, 2vw, 1.65rem);
   line-height: 1.2;
-
   text-decoration-thickness: 1px;
   text-underline-offset: .18em;
 }
@@ -2859,17 +2845,7 @@ body.gallery-open {
 }
 
 
-/* ============================================================
-   GALERÍA — MOVIMIENTO LENTÍSIMO
-   ============================================================ */
-
-/*
-   La foto apenas crece.
-   No es un zoom evidente ni agresivo.
-
-   1.000 -> 1.035
-   duración completa: 32 segundos
-*/
+/* GALERÍA — ZOOM LENTÍSIMO */
 
 @keyframes sanIgnacioGallerySlowZoom {
 
@@ -2882,32 +2858,15 @@ body.gallery-open {
   }
 }
 
-
-/*
-   FOTO DE ENTRADA DE GALERÍA
-*/
-
 .gallery-launch {
   overflow: hidden;
 }
 
 .gallery-launch img {
   transform-origin: center center;
-
-  animation:
-    sanIgnacioGallerySlowZoom
-    32s
-    ease-in-out
-    infinite
-    alternate;
-
+  animation: sanIgnacioGallerySlowZoom 32s ease-in-out infinite alternate;
   will-change: transform;
 }
-
-
-/*
-   FOTOS DENTRO DEL VISOR
-*/
 
 .gallery-stage {
   overflow: hidden;
@@ -2915,22 +2874,9 @@ body.gallery-open {
 
 .gallery-lightbox-image {
   transform-origin: center center;
-
-  animation:
-    sanIgnacioGallerySlowZoom
-    32s
-    ease-in-out
-    infinite
-    alternate;
-
+  animation: sanIgnacioGallerySlowZoom 32s ease-in-out infinite alternate;
   will-change: transform;
 }
-
-
-/*
-   Si el dispositivo solicita reducción de movimiento,
-   se respeta.
-*/
 
 @media (prefers-reduced-motion: reduce) {
 
@@ -2940,7 +2886,6 @@ body.gallery-open {
     transform: none !important;
   }
 }
-
 
 @media (max-width: 700px) {
 
