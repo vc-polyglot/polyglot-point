@@ -2542,3 +2542,254 @@ body .first-screen .address {
 }
 
 /* END SAN IGNACIO — SITE PHOTOGRAPHY V1 */
+
+
+/* SAN IGNACIO GALLERY LIGHTBOX V1 */
+
+.gallery-entry {
+  width: min(100%, 1050px);
+  margin-top: clamp(36px, 6vw, 84px);
+}
+
+.gallery-launch {
+  appearance: none;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: zoom-in;
+}
+
+.gallery-launch img {
+  display: block;
+  width: 100%;
+  height: clamp(330px, 58vw, 720px);
+  object-fit: cover;
+  object-position: center;
+}
+
+.gallery-launch-meta {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+body.gallery-open {
+  overflow: hidden;
+}
+
+.gallery-lightbox[hidden] {
+  display: none !important;
+}
+
+.gallery-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+
+  width: 100vw;
+  height: 100svh;
+
+  background: rgba(13, 16, 17, .97);
+  color: #f4efe5;
+}
+
+.gallery-lightbox-toolbar {
+  min-height: 68px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 12px clamp(18px, 3vw, 42px);
+
+  position: relative;
+  z-index: 2;
+}
+
+.gallery-counter {
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+}
+
+.gallery-close {
+  appearance: none;
+
+  width: 48px;
+  height: 48px;
+
+  border: 0;
+  padding: 0;
+
+  display: grid;
+  place-items: center;
+
+  background: transparent;
+  color: inherit;
+
+  font: inherit;
+  font-size: 2.3rem;
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+.gallery-stage {
+  position: relative;
+
+  min-width: 0;
+  min-height: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+.gallery-lightbox-image {
+  display: block;
+
+  max-width: calc(100vw - 180px);
+  max-height: calc(100svh - 155px);
+
+  width: auto;
+  height: auto;
+
+  object-fit: contain;
+
+  user-select: none;
+  -webkit-user-select: none;
+
+  cursor: pointer;
+
+  touch-action: pan-y;
+}
+
+.gallery-arrow {
+  appearance: none;
+
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+
+  width: 64px;
+  height: 96px;
+
+  transform: translateY(-50%);
+
+  border: 0;
+  padding: 0;
+
+  display: grid;
+  place-items: center;
+
+  background: rgba(255,255,255,.07);
+  color: #fff;
+
+  font: inherit;
+  font-size: 4rem;
+  font-weight: 200;
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+.gallery-arrow:hover,
+.gallery-close:hover {
+  background: rgba(255,255,255,.13);
+}
+
+.gallery-arrow--prev {
+  left: 22px;
+}
+
+.gallery-arrow--next {
+  right: 22px;
+}
+
+.gallery-lightbox-help {
+  min-height: 54px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 8px 20px 16px;
+
+  text-align: center;
+
+  font-size: .68rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+
+  opacity: .68;
+}
+
+
+@media (max-width: 700px) {
+
+  .gallery-entry {
+    width: 100%;
+  }
+
+  .gallery-launch img {
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+  }
+
+  .gallery-lightbox-toolbar {
+    min-height: 58px;
+    padding: 7px 12px;
+  }
+
+  .gallery-close {
+    width: 44px;
+    height: 44px;
+  }
+
+  .gallery-lightbox-image {
+    max-width: calc(100vw - 20px);
+    max-height: calc(100svh - 125px);
+
+    cursor: default;
+  }
+
+  .gallery-arrow {
+    width: 46px;
+    height: 76px;
+
+    background: rgba(0,0,0,.38);
+
+    font-size: 3rem;
+  }
+
+  .gallery-arrow--prev {
+    left: 4px;
+  }
+
+  .gallery-arrow--next {
+    right: 4px;
+  }
+
+  .gallery-lightbox-help {
+    min-height: 46px;
+
+    padding: 6px 12px 10px;
+
+    font-size: .58rem;
+  }
+}
+
+/* END SAN IGNACIO GALLERY LIGHTBOX V1 */

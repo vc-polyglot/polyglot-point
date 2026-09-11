@@ -511,3 +511,159 @@ canonicalHistoryTabs.forEach((tab) => {
     });
   });
 });
+
+
+/* SAN IGNACIO GALLERY LIGHTBOX V1 */
+
+(() => {
+  const launch = document.querySelector("#gallery-launch");
+  const lightbox = document.querySelector("#gallery-lightbox");
+  const image = document.querySelector("#gallery-image");
+  const close = document.querySelector("#gallery-close");
+  const previous = document.querySelector("#gallery-prev");
+  const next = document.querySelector("#gallery-next");
+  const counter = document.querySelector("#gallery-counter");
+  const dataNode = document.querySelector("#gallery-data");
+
+  if (
+    !launch ||
+    !lightbox ||
+    !image ||
+    !close ||
+    !previous ||
+    !next ||
+    !counter ||
+    !dataNode
+  ) {
+    return;
+  }
+
+  let photos = [];
+
+  try {
+    photos = JSON.parse(dataNode.textContent || "[]");
+  } catch {
+    return;
+  }
+
+  if (!Array.isArray(photos) || photos.length === 0) {
+    return;
+  }
+
+  let index = 0;
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let opener = null;
+
+  const normalize = (value) => {
+    if (value < 0) return photos.length - 1;
+    if (value >= photos.length) return 0;
+    return value;
+  };
+
+  const show = (value) => {
+    index = normalize(value);
+
+    image.src = photos[index];
+    image.alt = `Fotografía ${index + 1} de ${photos.length}`;
+    counter.textContent = `${index + 1} / ${photos.length}`;
+  };
+
+  const showNext = () => {
+    show(index + 1);
+  };
+
+  const showPrevious = () => {
+    show(index - 1);
+  };
+
+  const openGallery = () => {
+    opener = document.activeElement;
+
+    show(index);
+
+    lightbox.hidden = false;
+    document.body.classList.add("gallery-open");
+
+    close.focus();
+  };
+
+  const closeGallery = () => {
+    lightbox.hidden = true;
+    document.body.classList.remove("gallery-open");
+
+    if (opener && typeof opener.focus === "function") {
+      opener.focus();
+    }
+  };
+
+  launch.addEventListener("click", openGallery);
+
+  close.addEventListener("click", closeGallery);
+
+  next.addEventListener("click", showNext);
+
+  previous.addEventListener("click", showPrevious);
+
+  image.addEventListener("click", showNext);
+
+  lightbox.addEventListener("click", (event) => {
+    if (event.target === lightbox || event.target.classList.contains("gallery-stage")) {
+      closeGallery();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (lightbox.hidden) return;
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeGallery();
+      return;
+    }
+
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      showNext();
+      return;
+    }
+
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      showPrevious();
+    }
+  });
+
+  image.addEventListener(
+    "touchstart",
+    (event) => {
+      const touch = event.changedTouches[0];
+
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    },
+    { passive: true }
+  );
+
+  image.addEventListener(
+    "touchend",
+    (event) => {
+      const touch = event.changedTouches[0];
+
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+
+      if (Math.abs(dx) < 45) return;
+      if (Math.abs(dx) <= Math.abs(dy)) return;
+
+      if (dx < 0) {
+        showNext();
+      } else {
+        showPrevious();
+      }
+    },
+    { passive: true }
+  );
+})();
+
+/* END SAN IGNACIO GALLERY LIGHTBOX V1 */

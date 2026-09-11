@@ -362,174 +362,93 @@
 
 <!-- SAN IGNACIO PHOTO: gallery -->
 <section id="galeria" class="gallery-section section-shell" aria-labelledby="gallery-title">
+
   <header class="gallery-heading">
     <h2 id="gallery-title">Galería</h2>
   </header>
 
-  <div class="gallery-grid">
+  <div class="gallery-entry">
+    <button
+      id="gallery-launch"
+      class="gallery-launch"
+      type="button"
+      aria-haspopup="dialog"
+      aria-controls="gallery-lightbox">
 
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-01.jpg"
-            alt="San Ignacio de Loyola — galería 1"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-02.jpg"
-            alt="San Ignacio de Loyola — galería 2"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-03.jpg"
-            alt="San Ignacio de Loyola — galería 3"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-04.jpg"
-            alt="San Ignacio de Loyola — galería 4"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-05.jpg"
-            alt="San Ignacio de Loyola — galería 5"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-06.jpg"
-            alt="San Ignacio de Loyola — galería 6"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-07.jpg"
-            alt="San Ignacio de Loyola — galería 7"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-08.jpg"
-            alt="San Ignacio de Loyola — galería 8"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-09.jpg"
-            alt="San Ignacio de Loyola — galería 9"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-10.jpg"
-            alt="San Ignacio de Loyola — galería 10"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-11.jpg"
-            alt="San Ignacio de Loyola — galería 11"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-12.jpg"
-            alt="San Ignacio de Loyola — galería 12"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-13.jpg"
-            alt="San Ignacio de Loyola — galería 13"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-14.jpg"
-            alt="San Ignacio de Loyola — galería 14"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-15.jpg"
-            alt="San Ignacio de Loyola — galería 15"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-16.jpg"
-            alt="San Ignacio de Loyola — galería 16"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-17.jpg"
-            alt="San Ignacio de Loyola — galería 17"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-18.jpg"
-            alt="San Ignacio de Loyola — galería 18"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-19.jpg"
-            alt="San Ignacio de Loyola — galería 19"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-20.jpg"
-            alt="San Ignacio de Loyola — galería 20"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-21.jpg"
-            alt="San Ignacio de Loyola — galería 21"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-22.jpg"
-            alt="San Ignacio de Loyola — galería 22"
-            loading="lazy"
-            decoding="async">
-        </figure>
-        <figure class="gallery-item">
-          <img
-            src="/img/site-photos/galeria-23.jpg"
-            alt="San Ignacio de Loyola — galería 23"
-            loading="lazy"
-            decoding="async">
-        </figure>
+      <img
+        src="/img/site-photos/galeria-01.jpg"
+        alt="Abrir galería fotográfica de San Ignacio de Loyola"
+        loading="lazy"
+        decoding="async">
+
+      <span class="gallery-launch-meta">
+        Ver galería · 23 fotografías
+      </span>
+    </button>
   </div>
+
+  <script id="gallery-data" type="application/json">["/img/site-photos/galeria-01.jpg","/img/site-photos/galeria-02.jpg","/img/site-photos/galeria-03.jpg","/img/site-photos/galeria-04.jpg","/img/site-photos/galeria-05.jpg","/img/site-photos/galeria-06.jpg","/img/site-photos/galeria-07.jpg","/img/site-photos/galeria-08.jpg","/img/site-photos/galeria-09.jpg","/img/site-photos/galeria-10.jpg","/img/site-photos/galeria-11.jpg","/img/site-photos/galeria-12.jpg","/img/site-photos/galeria-13.jpg","/img/site-photos/galeria-14.jpg","/img/site-photos/galeria-15.jpg","/img/site-photos/galeria-16.jpg","/img/site-photos/galeria-17.jpg","/img/site-photos/galeria-18.jpg","/img/site-photos/galeria-19.jpg","/img/site-photos/galeria-20.jpg","/img/site-photos/galeria-21.jpg","/img/site-photos/galeria-22.jpg","/img/site-photos/galeria-23.jpg"]</script>
+
+  <div
+    id="gallery-lightbox"
+    class="gallery-lightbox"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Galería fotográfica"
+    hidden>
+
+    <div class="gallery-lightbox-toolbar">
+
+      <div
+        id="gallery-counter"
+        class="gallery-counter"
+        aria-live="polite">
+        1 / 23
+      </div>
+
+      <button
+        id="gallery-close"
+        class="gallery-close"
+        type="button"
+        aria-label="Cerrar galería">
+        ×
+      </button>
+
+    </div>
+
+    <div class="gallery-stage">
+
+      <button
+        id="gallery-prev"
+        class="gallery-arrow gallery-arrow--prev"
+        type="button"
+        aria-label="Fotografía anterior">
+        ‹
+      </button>
+
+      <img
+        id="gallery-image"
+        class="gallery-lightbox-image"
+        src="/img/site-photos/galeria-01.jpg"
+        alt="Fotografía 1 de 23"
+        draggable="false">
+
+      <button
+        id="gallery-next"
+        class="gallery-arrow gallery-arrow--next"
+        type="button"
+        aria-label="Fotografía siguiente">
+        ›
+      </button>
+
+    </div>
+
+    <div class="gallery-lightbox-help">
+      <span>Desliza o usa las flechas para recorrer las fotografías</span>
+    </div>
+
+  </div>
+
 </section>
 <!-- END SAN IGNACIO PHOTO -->
 <section id="contacto" class="contact-section section-shell">
