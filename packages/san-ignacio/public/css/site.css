@@ -3199,3 +3199,113 @@ body .first-screen .mosaic.cool {
 
 
 /* END SAN IGNACIO HERO IL2 V2 */
+
+
+/* SAN IGNACIO HERO BALANCE V1 */
+
+
+/* ============================================================
+   BARRAS IZQUIERDAS
+
+   Antes tenían demasiado peso y se metían dentro del nombre.
+
+   Se conserva exactamente su lenguaje gráfico, pero:
+   - menor escala
+   - más abajo
+   - más hacia el borde izquierdo
+   ============================================================ */
+
+body .first-screen .mosaic.cool {
+  width: clamp(145px, 10.5vw, 180px) !important;
+  height: clamp(285px, 23vw, 365px) !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  left: clamp(16px, 1.8vw, 30px) !important;
+  bottom: clamp(-105px, -8vh, -64px) !important;
+
+  z-index: 1 !important;
+}
+
+
+/* ============================================================
+   IL DERECHO
+
+   La geometría IL2 permanece INTACTA.
+
+   Único cambio:
+   acercarlo al centro para cerrar el gran vacío existente
+   entre el nombre y el emblema.
+   ============================================================ */
+
+body .first-screen .mosaic.warm {
+  right: clamp(108px, 9vw, 154px) !important;
+}
+
+
+/* ============================================================
+   DESKTOP MUY ANCHO
+
+   Evita que vuelva a alejarse excesivamente.
+   ============================================================ */
+
+@media (min-width: 1500px) {
+
+  body .first-screen .mosaic.warm {
+    right: 150px !important;
+  }
+
+}
+
+
+/* ============================================================
+   TABLET
+
+   Reducimos el desplazamiento porque hay menos superficie útil.
+   ============================================================ */
+
+@media (max-width: 1050px) {
+
+  body .first-screen .mosaic.cool {
+    width: clamp(125px, 15vw, 155px) !important;
+    height: clamp(255px, 31vw, 325px) !important;
+
+    left: 14px !important;
+    bottom: -72px !important;
+  }
+
+
+  body .first-screen .mosaic.warm {
+    right: clamp(42px, 6vw, 72px) !important;
+  }
+
+}
+
+
+/* ============================================================
+   MÓVIL
+
+   No intentamos reproducir el gran desplazamiento de escritorio.
+   Sólo garantizamos que las barras no tapen el nombre.
+   ============================================================ */
+
+@media (max-width: 700px) {
+
+  body .first-screen .mosaic.cool {
+    width: clamp(105px, 28vw, 132px) !important;
+    height: clamp(220px, 57vw, 285px) !important;
+
+    left: 6px !important;
+    bottom: -58px !important;
+  }
+
+
+  body .first-screen .mosaic.warm {
+    right: 18px !important;
+  }
+
+}
+
+
+/* END SAN IGNACIO HERO BALANCE V1 */
