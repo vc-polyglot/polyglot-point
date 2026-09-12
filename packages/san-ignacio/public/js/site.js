@@ -1137,3 +1137,248 @@ canonicalHistoryTabs.forEach((tab) => {
 })();
 
 /* END SAN IGNACIO LITURGY LEGACY CLEAN V117 */
+
+/* SAN IGNACIO REMOVE DUPLICATE LITURGY V121 */
+
+(() => {
+
+  const normalize = (value = "") =>
+    value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+
+
+  let cleaning = false;
+
+
+  const cleanLiturgy = () => {
+
+    if (cleaning) return;
+
+    cleaning = true;
+
+    try {
+
+      const liturgy =
+        document.querySelector("#liturgia");
+
+      if (!liturgy) return;
+
+
+      /*
+       * ÉSTE ES EL HORARIO BUENO.
+       * JAMÁS se toca.
+       */
+      const approved =
+        liturgy.querySelector(".mass-hours-primary");
+
+      if (!approved) return;
+
+
+      /*
+       * Buscar fuera del bloque aprobado un contenedor
+       * que reúna los tres días y los horarios.
+       *
+       * En la captura éste es el bloque inferior
+       * de tres columnas.
+       */
+      const candidates =
+        Array.from(
+          liturgy.querySelectorAll(
+            "div, section, article, aside"
+          )
+        )
+        .filter((el) => {
+
+          if (
+            el === approved ||
+            approved.contains(el) ||
+            el.contains(approved)
+          ) {
+            return false;
+          }
+
+          const text =
+            normalize(el.textContent);
+
+          return (
+            text.includes("lunes a viernes") &&
+            text.includes("sabado") &&
+            text.includes("domingo") &&
+            text.includes("7:30") &&
+            text.includes("18:30")
+          );
+        })
+        .sort(
+          (a,b) =>
+            a.textContent.length -
+            b.textContent.length
+        );
+
+
+      const duplicate =
+        candidates[0];
+
+
+      if (duplicate) {
+
+        const previous =
+          duplicate.previousElementSibling;
+
+        if (
+          previous &&
+          normalize(previous.textContent) ===
+            "horarios de misa"
+        ) {
+          previous.remove();
+        }
+
+        duplicate.remove();
+      }
+
+
+      /*
+       * Quitar cualquier segundo rótulo
+       * "Horarios de misa" fuera del bloque bueno.
+       */
+      Array.from(
+        liturgy.querySelectorAll(
+          "h1,h2,h3,h4,h5,h6,p,span,strong,div"
+        )
+      ).forEach((el) => {
+
+        if (
+          el === approved ||
+          approved.contains(el) ||
+          el.contains(approved)
+        ) {
+          return;
+        }
+
+        if (
+          normalize(el.textContent) ===
+          "horarios de misa"
+        ) {
+          el.remove();
+        }
+      });
+
+
+      /*
+       * Celebraciones especiales:
+       * fuera por ahora.
+       */
+      const notices =
+        liturgy.querySelector("#notices");
+
+      if (
+        notices &&
+        !approved.contains(notices)
+      ) {
+
+        const card =
+          notices.closest(
+            "article, aside, .card, .panel"
+          );
+
+        if (
+          card &&
+          !card.contains(approved)
+        ) {
+          card.remove();
+        }
+        else {
+          notices.remove();
+        }
+      }
+
+
+      Array.from(
+        liturgy.querySelectorAll(
+          "h1,h2,h3,h4,h5,h6,p,span,strong"
+        )
+      ).forEach((el) => {
+
+        if (approved.contains(el)) {
+          return;
+        }
+
+        if (
+          normalize(el.textContent) ===
+          "celebraciones especiales"
+        ) {
+          el.remove();
+        }
+      });
+
+    }
+    finally {
+      cleaning = false;
+    }
+  };
+
+
+  const start = () => {
+
+    const liturgy =
+      document.querySelector("#liturgia");
+
+    if (!liturgy) return;
+
+
+    cleanLiturgy();
+
+
+    /*
+     * El horario viejo parece estar entrando después,
+     * cuando llegan los datos del CMS.
+     *
+     * Por eso vigilamos la sección.
+     */
+    const observer =
+      new MutationObserver(() => {
+        requestAnimationFrame(cleanLiturgy);
+      });
+
+
+    observer.observe(
+      liturgy,
+      {
+        childList: true,
+        subtree: true
+      }
+    );
+
+
+    /*
+     * Refuerzo durante la carga inicial.
+     */
+    setTimeout(cleanLiturgy, 50);
+    setTimeout(cleanLiturgy, 250);
+    setTimeout(cleanLiturgy, 750);
+    setTimeout(cleanLiturgy, 1500);
+    setTimeout(cleanLiturgy, 3000);
+  };
+
+
+  if (document.readyState === "loading") {
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      start,
+      { once: true }
+    );
+
+  }
+  else {
+
+    start();
+
+  }
+
+})();
+
+/* END SAN IGNACIO REMOVE DUPLICATE LITURGY V121 */
