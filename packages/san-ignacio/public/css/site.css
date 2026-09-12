@@ -3396,3 +3396,160 @@ body .site-section-photo--liturgia {
 
 
 /* END SAN IGNACIO PHOTO INTERACTION V2 */
+
+
+/* SAN IGNACIO LITURGY HOURS V1 */
+
+
+/* ============================================================
+   OCULTAR TEMPORALMENTE EL BLOQUE DE CELEBRACIONES ESPECIALES
+
+   El nodo permanece en el HTML para que pueda volver a activarse
+   más adelante desde el CMS.
+   ============================================================ */
+
+body #liturgia #notices,
+body #liturgia .notices {
+  display: none !important;
+}
+
+
+/* ============================================================
+   OCULTAR EL HORARIO DINÁMICO ANTERIOR
+
+   Evita que aparezcan datos provisionales o duplicados.
+   ============================================================ */
+
+body #liturgia #schedule-grid {
+  display: none !important;
+}
+
+
+/* ============================================================
+   HORARIOS REALES
+   ============================================================ */
+
+body #liturgia .liturgy-hours {
+  grid-column: 1 / -1;
+
+  width: min(100%, 1050px);
+
+  margin:
+    clamp(28px, 4vw, 48px)
+    auto
+    clamp(38px, 5vw, 64px);
+
+  color: inherit;
+}
+
+
+body #liturgia .liturgy-hours-title {
+  margin: 0 0 24px;
+
+  font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+  line-height: 1.15;
+  font-weight: 700;
+
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+
+body #liturgia .liturgy-hours-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  border-top:
+    1px solid rgba(255,255,255,.42);
+
+  border-bottom:
+    1px solid rgba(255,255,255,.42);
+}
+
+
+body #liturgia .liturgy-hours-item {
+  min-width: 0;
+
+  padding:
+    clamp(22px, 3vw, 34px)
+    clamp(18px, 2.7vw, 30px);
+}
+
+
+body #liturgia .liturgy-hours-item +
+body #liturgia .liturgy-hours-item {
+  border-left:
+    1px solid rgba(255,255,255,.28);
+}
+
+
+body #liturgia .liturgy-hours-day {
+  display: block;
+
+  margin-bottom: 12px;
+
+  font-size: .72rem;
+  font-weight: 700;
+
+  letter-spacing: .16em;
+  text-transform: uppercase;
+
+  opacity: .72;
+}
+
+
+body #liturgia .liturgy-hours-time {
+  display: block;
+
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  line-height: 1.35;
+  font-weight: 600;
+}
+
+
+body #liturgia .liturgy-hours-time em {
+  font-size: .7em;
+  font-style: normal;
+  font-weight: 500;
+
+  white-space: nowrap;
+
+  opacity: .78;
+}
+
+
+/* ============================================================
+   MÓVIL
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+  body #liturgia .liturgy-hours {
+    width: 100%;
+  }
+
+
+  body #liturgia .liturgy-hours-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  body #liturgia .liturgy-hours-item +
+  body #liturgia .liturgy-hours-item {
+    border-left: 0;
+
+    border-top:
+      1px solid rgba(255,255,255,.28);
+  }
+
+
+  body #liturgia .liturgy-hours-time {
+    font-size: clamp(1.18rem, 5.5vw, 1.48rem);
+  }
+
+}
+
+
+/* END SAN IGNACIO LITURGY HOURS V1 */
