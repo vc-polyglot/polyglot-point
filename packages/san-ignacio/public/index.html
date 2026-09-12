@@ -58,19 +58,41 @@
       </header>
 
       <div class="liturgy-content">
-                <aside class="special-celebrations">
-          <p class="special-celebrations-title">
-            Celebraciones especiales
-          </p>
 
-          <div
-            id="notices"
-            class="notices"
-            hidden
-          ></div>
-        </aside>
+<!-- SAN IGNACIO MASS HOURS V116 -->
+<div class="mass-hours-primary" aria-labelledby="mass-hours-title">
 
-        <div id="schedule-grid" class="schedule-grid" aria-live="polite">
+  <p class="mass-hours-kicker">Horarios de misa</p>
+
+  <h3 id="mass-hours-title" class="mass-hours-heading">
+    Celebración de la Eucaristía
+  </h3>
+
+  <div class="mass-hours-list">
+
+    <div class="mass-hours-row">
+      <div class="mass-hours-day">Lunes a viernes</div>
+      <div class="mass-hours-times">7:30 · 13:30 · 18:30 h</div>
+    </div>
+
+    <div class="mass-hours-row">
+      <div class="mass-hours-day">Sábado</div>
+      <div class="mass-hours-times">7:30 · 18:30 h</div>
+    </div>
+
+    <div class="mass-hours-row mass-hours-row--sunday">
+      <div class="mass-hours-day">Domingo</div>
+      <div class="mass-hours-times">
+        9:00 · 10:30 <span class="mass-hours-note">(misa de niños)</span> · 12:00 · 13:30 · 18:30 h
+      </div>
+    </div>
+
+  </div>
+
+</div>
+<!-- END SAN IGNACIO MASS HOURS V116 -->
+
+<div id="schedule-grid" class="schedule-grid" aria-live="polite">
           <p class="loading">Cargando horarios…</p>
         </div>
       </div>

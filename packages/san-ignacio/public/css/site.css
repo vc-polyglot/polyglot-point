@@ -3553,3 +3553,191 @@ body #liturgia .liturgy-hours-time em {
 
 
 /* END SAN IGNACIO LITURGY HOURS V1 */
+
+
+/* SAN IGNACIO MASS HOURS V116 */
+
+
+/* ============================================================
+   HORARIOS DE MISA
+   Información principal de Vida litúrgica.
+   ============================================================ */
+
+body #liturgia .mass-hours-primary {
+  width: min(100%, 1180px);
+  margin:
+    clamp(36px, 5vw, 68px)
+    auto
+    clamp(48px, 6vw, 82px);
+
+  padding:
+    clamp(32px, 4vw, 52px)
+    clamp(28px, 4.8vw, 64px);
+
+  border-top: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+}
+
+
+body #liturgia .mass-hours-kicker {
+  margin: 0 0 12px;
+
+  font-size: clamp(.94rem, 1vw, 1.08rem);
+  line-height: 1.2;
+
+  font-weight: 750;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+
+  opacity: .78;
+}
+
+
+body #liturgia .mass-hours-heading {
+  margin: 0 0 clamp(30px, 4vw, 48px);
+
+  max-width: 900px;
+
+  font-size: clamp(2rem, 3.4vw, 3.4rem);
+  line-height: 1.02;
+
+  font-weight: 650;
+  letter-spacing: -.025em;
+}
+
+
+body #liturgia .mass-hours-list {
+  width: 100%;
+}
+
+
+body #liturgia .mass-hours-row {
+  display: grid;
+  grid-template-columns:
+    minmax(190px, .72fr)
+    minmax(0, 2fr);
+
+  gap: clamp(24px, 4vw, 70px);
+
+  align-items: baseline;
+
+  padding:
+    clamp(22px, 2.6vw, 32px)
+    0;
+
+  border-top:
+    1px solid currentColor;
+}
+
+
+body #liturgia .mass-hours-row:last-child {
+  border-bottom:
+    1px solid currentColor;
+}
+
+
+body #liturgia .mass-hours-day {
+  font-size: clamp(1.05rem, 1.45vw, 1.38rem);
+  line-height: 1.25;
+
+  font-weight: 700;
+}
+
+
+body #liturgia .mass-hours-times {
+  font-size: clamp(1.65rem, 2.65vw, 2.65rem);
+  line-height: 1.18;
+
+  font-weight: 600;
+  letter-spacing: -.018em;
+}
+
+
+body #liturgia .mass-hours-note {
+  font-size: .62em;
+  font-weight: 500;
+
+  white-space: nowrap;
+
+  opacity: .74;
+}
+
+
+/* ============================================================
+   EL HORARIO CMS ANTERIOR NO SE MUESTRA.
+
+   Conservamos #schedule-grid técnicamente para no romper
+   el JavaScript existente, pero la información pública principal
+   es el horario definitivo de arriba.
+   ============================================================ */
+
+body #liturgia #schedule-grid {
+  display: none !important;
+}
+
+
+/* ============================================================
+   CELEBRACIONES ESPECIALES
+
+   No dejamos tarjeta ni espacio visible.
+   Si el JS llegara a recrear #notices, tampoco aparece.
+   ============================================================ */
+
+body #liturgia #notices {
+  display: none !important;
+}
+
+
+/* ============================================================
+   MÓVIL
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+  body #liturgia .mass-hours-primary {
+    width: 100%;
+
+    margin-top: 30px;
+    margin-bottom: 48px;
+
+    padding:
+      28px
+      0;
+  }
+
+
+  body #liturgia .mass-hours-heading {
+    font-size: clamp(1.85rem, 9vw, 2.6rem);
+    margin-bottom: 30px;
+  }
+
+
+  body #liturgia .mass-hours-row {
+    grid-template-columns: 1fr;
+    gap: 9px;
+
+    padding:
+      22px
+      0;
+  }
+
+
+  body #liturgia .mass-hours-day {
+    font-size: 1rem;
+  }
+
+
+  body #liturgia .mass-hours-times {
+    font-size: clamp(1.45rem, 7vw, 2rem);
+    line-height: 1.25;
+  }
+
+
+  body #liturgia .mass-hours-note {
+    white-space: normal;
+  }
+
+}
+
+
+/* END SAN IGNACIO MASS HOURS V116 */
