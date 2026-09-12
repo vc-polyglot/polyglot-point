@@ -3759,3 +3759,28 @@ body #liturgia #notices {
 }
 
 /* END SAN IGNACIO LITURGY LEGACY CLEAN V117 */
+
+
+/* SAN IGNACIO LEGACY LITURGY STUBS V119 */
+
+body #liturgia .legacy-cms-stub,
+body #liturgia #schedule-grid[hidden],
+body #liturgia #notices[hidden] {
+  display: none !important;
+  visibility: hidden !important;
+  position: absolute !important;
+
+  width: 0 !important;
+  height: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+/* END SAN IGNACIO LEGACY LITURGY STUBS V119 */
