@@ -1382,3 +1382,190 @@ canonicalHistoryTabs.forEach((tab) => {
 })();
 
 /* END SAN IGNACIO REMOVE DUPLICATE LITURGY V121 */
+
+/* SAN IGNACIO NOSOTROS DIRECTORY V123 */
+
+(() => {
+
+  const root =
+    document.querySelector(
+      "#nosotros .community-directory"
+    );
+
+  if (!root) return;
+
+
+  const buttons =
+    Array.from(
+      root.querySelectorAll(
+        "[data-community-role]"
+      )
+    );
+
+
+  const detail =
+    root.querySelector(
+      "#community-role-detail"
+    );
+
+
+  if (!buttons.length || !detail) {
+    return;
+  }
+
+
+  /*
+   * Estructura provisional para presentar el espacio.
+   * No se inventan nombres particulares.
+   */
+
+  const data = {
+
+    rector: [
+      {
+        role: "Rector",
+        name: "P. Luis González-Cosío Elcoro, S.J.",
+        info: "Teléfono por integrar"
+      }
+    ],
+
+
+    sacerdote: [
+      {
+        role: "Sacerdote colaborador",
+        name: "Nombre por confirmar",
+        info: "Información por integrar"
+      }
+    ],
+
+
+    administracion: [
+      {
+        role: "Administración",
+        name: "Nombre por confirmar",
+        info: "Información por integrar"
+      },
+      {
+        role: "Administración",
+        name: "Nombre por confirmar",
+        info: "Información por integrar"
+      }
+    ],
+
+
+    catequesis: [
+      {
+        role: "Catequesis",
+        name: "Equipo de catequesis",
+        info: "Información por integrar"
+      }
+    ],
+
+
+    sacristanes: [
+      {
+        role: "Sacristanes",
+        name: "Equipo de sacristanes",
+        info: "Información por integrar"
+      }
+    ]
+
+  };
+
+
+  const escapeHtml = (value = "") =>
+
+    String(value)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+
+
+  const render = (key) => {
+
+    const people =
+      data[key] || [];
+
+
+    buttons.forEach((button) => {
+
+      const active =
+        button.dataset.communityRole === key;
+
+
+      button.classList.toggle(
+        "is-active",
+        active
+      );
+
+
+      button.setAttribute(
+        "aria-expanded",
+        active ? "true" : "false"
+      );
+
+    });
+
+
+    detail.innerHTML = `
+      <div
+        class="community-person-grid"
+        data-count="${people.length}"
+      >
+
+        ${people.map((person) => `
+
+          <article class="community-person">
+
+            <div class="community-person-photo">
+              Foto
+            </div>
+
+            <div>
+
+              <p class="community-person-role">
+                ${escapeHtml(person.role)}
+              </p>
+
+              <h3 class="community-person-name">
+                ${escapeHtml(person.name)}
+              </h3>
+
+              <p class="community-person-phone">
+                ${escapeHtml(person.info)}
+              </p>
+
+            </div>
+
+          </article>
+
+        `).join("")}
+
+      </div>
+    `;
+  };
+
+
+  buttons.forEach((button) => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        render(
+          button.dataset.communityRole
+        );
+
+      }
+    );
+
+  });
+
+
+  render("rector");
+
+})();
+
+/* END SAN IGNACIO NOSOTROS DIRECTORY V123 */

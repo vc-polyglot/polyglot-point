@@ -3784,3 +3784,348 @@ body #liturgia #notices[hidden] {
 }
 
 /* END SAN IGNACIO LEGACY LITURGY STUBS V119 */
+
+/* SAN IGNACIO NOSOTROS DIRECTORY V123 */
+
+
+/* El staff antiguo sigue disponible para CMS, pero no se muestra. */
+
+body #nosotros #staff-grid {
+  display: none !important;
+}
+
+
+/* La foto vieja independiente desaparece porque ahora se integra
+   dentro de la nueva composición. */
+
+body #nosotros .site-section-photo--nosotros {
+  display: none !important;
+}
+
+
+/* ============================================================
+   ESTRUCTURA
+   ============================================================ */
+
+body #nosotros .community-directory {
+  width: min(100%, 1420px);
+
+  margin:
+    clamp(34px, 5vw, 68px)
+    auto
+    clamp(64px, 7vw, 100px);
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(340px, .86fr)
+    minmax(500px, 1.14fr);
+
+  gap: clamp(60px, 8vw, 125px);
+
+  align-items: start;
+}
+
+
+/* ============================================================
+   FOTO
+   ============================================================ */
+
+body #nosotros .community-directory-photo {
+  margin: 0;
+
+  width: 100%;
+  height: clamp(470px, 40vw, 610px);
+
+  overflow: hidden;
+}
+
+
+body #nosotros .community-directory-photo img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center;
+
+  cursor: zoom-in;
+
+  scale: 1;
+
+  transition:
+    scale .55s cubic-bezier(.2,.7,.2,1),
+    filter .55s ease;
+}
+
+
+@media (hover:hover) and (pointer:fine) {
+
+  body #nosotros .community-directory-photo:hover img {
+    scale: 1.025;
+    filter: brightness(1.025);
+  }
+
+}
+
+
+/* ============================================================
+   DIRECTORIO
+   ============================================================ */
+
+body #nosotros .community-directory-kicker {
+  margin: 0 0 26px;
+
+  font-size: .82rem;
+  font-weight: 750;
+
+  letter-spacing: .19em;
+  text-transform: uppercase;
+
+  opacity: .72;
+}
+
+
+body #nosotros .community-directory-roles {
+  border-top:
+    2px solid rgba(238,183,59,.9);
+}
+
+
+body #nosotros .community-role {
+  width: 100%;
+
+  padding:
+    clamp(22px,2.5vw,31px)
+    4px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  border: 0;
+
+  border-bottom:
+    2px solid rgba(238,183,59,.78);
+
+  background: transparent;
+
+  color: inherit;
+
+  font: inherit;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  transition:
+    padding-left .25s ease,
+    background-color .25s ease;
+}
+
+
+body #nosotros .community-role > span:first-child {
+  font-size: clamp(1.2rem,1.7vw,1.65rem);
+  font-weight: 650;
+  line-height: 1.15;
+}
+
+
+body #nosotros .community-role-mark {
+  font-size: 1.7rem;
+  line-height: 1;
+
+  transition:
+    transform .25s ease;
+}
+
+
+body #nosotros .community-role:hover,
+body #nosotros .community-role:focus-visible,
+body #nosotros .community-role.is-active {
+  padding-left: 14px;
+
+  background:
+    rgba(255,255,255,.035);
+}
+
+
+body #nosotros .community-role.is-active .community-role-mark {
+  transform: rotate(45deg);
+}
+
+
+/* ============================================================
+   FICHAS DESPLEGADAS
+   ============================================================ */
+
+body #nosotros .community-role-detail {
+  margin-top:
+    clamp(26px,3.5vw,46px);
+}
+
+
+body #nosotros .community-person-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  gap: 16px;
+}
+
+
+body #nosotros .community-person-grid[data-count="1"] {
+  grid-template-columns: 1fr;
+}
+
+
+body #nosotros .community-person {
+  display: grid;
+
+  grid-template-columns:
+    94px
+    minmax(0,1fr);
+
+  gap: 18px;
+
+  align-items: center;
+
+  padding: 17px;
+
+  background:
+    rgba(244,235,218,.96);
+
+  color: #171b1d;
+}
+
+
+body #nosotros .community-person-photo {
+  width: 94px;
+  aspect-ratio: 4 / 5;
+
+  display: grid;
+  place-items: center;
+
+  background:
+    rgba(23,27,29,.1);
+
+  color:
+    rgba(23,27,29,.5);
+
+  font-size: .68rem;
+  font-weight: 700;
+
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+
+body #nosotros .community-person-role {
+  margin: 0 0 7px;
+
+  font-size: .66rem;
+  font-weight: 750;
+
+  letter-spacing: .13em;
+  text-transform: uppercase;
+
+  opacity: .58;
+}
+
+
+body #nosotros .community-person-name {
+  margin: 0;
+
+  font-size: clamp(1rem,1.3vw,1.32rem);
+  line-height: 1.18;
+
+  font-weight: 700;
+}
+
+
+body #nosotros .community-person-phone {
+  margin: 10px 0 0;
+
+  font-size: .84rem;
+
+  opacity: .6;
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width:1050px) {
+
+  body #nosotros .community-directory {
+    grid-template-columns:
+      minmax(290px,.82fr)
+      minmax(420px,1.18fr);
+
+    gap: 42px;
+  }
+
+
+  body #nosotros .community-person-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* ============================================================
+   MÓVIL
+   ============================================================ */
+
+@media (max-width:760px) {
+
+  body #nosotros .community-directory {
+    grid-template-columns: 1fr;
+
+    gap: 38px;
+
+    width: 100%;
+  }
+
+
+  body #nosotros .community-directory-photo {
+    height: 390px;
+  }
+
+
+  body #nosotros .community-role {
+    padding:
+      19px
+      2px;
+  }
+
+
+  body #nosotros .community-role > span:first-child {
+    font-size: 1.17rem;
+  }
+
+
+  body #nosotros .community-person {
+    grid-template-columns:
+      78px
+      minmax(0,1fr);
+
+    gap: 14px;
+
+    padding: 14px;
+  }
+
+
+  body #nosotros .community-person-photo {
+    width: 78px;
+  }
+
+}
+
+
+/* END SAN IGNACIO NOSOTROS DIRECTORY V123 */
