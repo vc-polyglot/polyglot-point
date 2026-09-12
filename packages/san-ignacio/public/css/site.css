@@ -3741,3 +3741,21 @@ body #liturgia #notices {
 
 
 /* END SAN IGNACIO MASS HOURS V116 */
+
+
+/* SAN IGNACIO LITURGY LEGACY CLEAN V117 */
+
+/*
+   La nueva información de horarios es .mass-hours-primary.
+
+   Estos elementos pertenecen al bloque anterior y ya no deben
+   formar parte de la composición pública.
+*/
+
+body #liturgia .liturgy-legacy-hidden,
+body #liturgia #schedule-grid,
+body #liturgia #notices {
+  display: none !important;
+}
+
+/* END SAN IGNACIO LITURGY LEGACY CLEAN V117 */

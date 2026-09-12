@@ -1021,3 +1021,119 @@ canonicalHistoryTabs.forEach((tab) => {
 })();
 
 /* END SAN IGNACIO MENU OUTSIDE CLOSE V1 */
+
+
+/* SAN IGNACIO LITURGY LEGACY CLEAN V117 */
+
+(() => {
+
+  const cleanLegacyLiturgy = () => {
+
+    const liturgy =
+      document.querySelector("#liturgia");
+
+    if (!liturgy) {
+      return;
+    }
+
+
+    /*
+      HORARIO VIEJO
+
+      Ocultamos el padre inmediato de #schedule-grid.
+      Así desaparecen juntos:
+      - el segundo "Horarios de misa"
+      - lunes a viernes
+      - sábado
+      - domingo
+
+      El horario nuevo .mass-hours-primary NO se toca.
+    */
+
+    const oldSchedule =
+      liturgy.querySelector("#schedule-grid");
+
+    if (oldSchedule) {
+
+      const parent =
+        oldSchedule.parentElement;
+
+      if (
+        parent &&
+        !parent.classList.contains("mass-hours-primary") &&
+        !parent.querySelector(".mass-hours-primary")
+      ) {
+        parent.classList.add(
+          "liturgy-legacy-hidden"
+        );
+
+        parent.setAttribute(
+          "aria-hidden",
+          "true"
+        );
+      }
+      else {
+        oldSchedule.classList.add(
+          "liturgy-legacy-hidden"
+        );
+      }
+    }
+
+
+    /*
+      CELEBRACIONES ESPECIALES
+
+      Mismo criterio:
+      fuera de la composición pública por ahora,
+      sin romper el nodo que puede utilizar el CMS.
+    */
+
+    const notices =
+      liturgy.querySelector("#notices");
+
+    if (notices) {
+
+      const parent =
+        notices.parentElement;
+
+      if (
+        parent &&
+        !parent.classList.contains("mass-hours-primary") &&
+        !parent.querySelector(".mass-hours-primary")
+      ) {
+        parent.classList.add(
+          "liturgy-legacy-hidden"
+        );
+
+        parent.setAttribute(
+          "aria-hidden",
+          "true"
+        );
+      }
+      else {
+        notices.classList.add(
+          "liturgy-legacy-hidden"
+        );
+      }
+    }
+  };
+
+
+  if (document.readyState === "loading") {
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      cleanLegacyLiturgy,
+      { once: true }
+    );
+
+  }
+  else {
+
+    cleanLegacyLiturgy();
+
+  }
+
+})();
+
+/* END SAN IGNACIO LITURGY LEGACY CLEAN V117 */
