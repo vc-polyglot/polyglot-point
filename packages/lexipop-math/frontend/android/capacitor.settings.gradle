@@ -4,3 +4,6 @@ project(':capacitor-android').projectDir = new File('../../../../node_modules/.p
 
 include ':capgo-capacitor-social-login'
 project(':capgo-capacitor-social-login').projectDir = new File('../../../../node_modules/.pnpm/@capgo+capacitor-social-login@8.3.20_@capacitor+core@8.3.0/node_modules/@capgo/capacitor-social-login/android')
+
+include ':revenuecat-purchases-capacitor'
+project(':revenuecat-purchases-capacitor').projectDir = new File('../../../../node_modules/.pnpm/@revenuecat+purchases-capacitor@13.1.7_@capacitor+core@8.3.0/node_modules/@revenuecat/purchases-capacitor/android')
