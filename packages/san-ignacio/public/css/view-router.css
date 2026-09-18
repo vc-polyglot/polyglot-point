@@ -1,4 +1,4 @@
-/* SAN IGNACIO MULTIVIEW V5 */
+/* SAN IGNACIO MULTIVIEW V6 */
 
 /*
   El DOM y el CMS permanecen completos; la experiencia pública deja de ser
@@ -93,4 +93,34 @@ body.si-multiview .site-footer {
   }
 }
 
-/* END SAN IGNACIO MULTIVIEW V5 */
+/* END SAN IGNACIO MULTIVIEW V6 */
+
+
+/* SAN IGNACIO SCROLL NAVIGATION V6 */
+
+body.si-multiview[data-si-nav-direction="next"] main > section.si-view-active {
+  animation: si-view-enter-next .38s cubic-bezier(.2,.72,.2,1) both;
+}
+
+body.si-multiview[data-si-nav-direction="previous"] main > section.si-view-active {
+  animation: si-view-enter-previous .38s cubic-bezier(.2,.72,.2,1) both;
+}
+
+@keyframes si-view-enter-next {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes si-view-enter-previous {
+  from { opacity: 0; transform: translateY(-24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.si-multiview[data-si-nav-direction="next"] main > section.si-view-active,
+  body.si-multiview[data-si-nav-direction="previous"] main > section.si-view-active {
+    animation: none !important;
+  }
+}
+
+/* END SAN IGNACIO SCROLL NAVIGATION V6 */

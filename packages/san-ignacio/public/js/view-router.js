@@ -1,4 +1,4 @@
-/* SAN IGNACIO MULTIVIEW ROUTER V5 */
+/* SAN IGNACIO MULTIVIEW ROUTER V6 */
 (() => {
   "use strict";
 
@@ -159,10 +159,27 @@
     body.classList.add("si-router-ready");
   }
 
-  function navigate(route, replace = false) {
+  function navigate(route, replace = false, direction = 0) {
     if (!route || !routeElements.has(route.id)) return;
+
+    if (direction > 0) body.dataset.siNavDirection = "next";
+    else if (direction < 0) body.dataset.siNavDirection = "previous";
+    else delete body.dataset.siNavDirection;
+
     history[replace ? "replaceState" : "pushState"]({ siView: route.id }, "", route.path);
-    applyRoute(route);
+    applyRoute(route, { scroll: false });
+
+    requestAnimationFrame(() => {
+      if (direction < 0) {
+        const maxScroll = Math.max(
+          0,
+          document.documentElement.scrollHeight - window.innerHeight
+        );
+        window.scrollTo({ top: maxScroll, left: 0, behavior: "auto" });
+      } else {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      }
+    });
   }
 
   // Captura primero para neutralizar cualquier viejo comportamiento de anclas.
@@ -193,7 +210,7 @@
 
     if (!route || !routeElements.has(route.id)) return;
     event.preventDefault();
-    navigate(route);
+    navigate(route, false, 0);
   }, true);
 
   addEventListener("popstate", () => applyRoute(resolveRoute(), { scroll: false }));
@@ -212,16 +229,160 @@
     }
   });
 
+
+  // ============================================================
+  // SCROLL-DRIVEN VIEW NAVIGATION V6
+  // ============================================================
+
+  const availableRoutes = routes.filter(route => routeElements.has(route.id));
+  let wheelSum = 0;
+  let wheelDirection = 0;
+  let routeLockedUntil = 0;
+  let touchStartY = null;
+  let touchStartAtTop = false;
+  let touchStartAtBottom = false;
+
+  const ROUTE_LOCK_MS = 680;
+  const WHEEL_THRESHOLD = 82;
+  const TOUCH_THRESHOLD = 72;
+  const EDGE_EPSILON = 4;
+
+  function routeIndex() {
+    return availableRoutes.findIndex(route => route.id === body.dataset.siCurrentView);
+  }
+
+  function maxScrollY() {
+    return Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+  }
+
+  function atTop() {
+    return window.scrollY <= EDGE_EPSILON;
+  }
+
+  function atBottom() {
+    return window.scrollY >= maxScrollY() - EDGE_EPSILON;
+  }
+
+  function interactionIsBlocked(target) {
+    if (!target) return false;
+
+    if (target.closest?.(
+      'input, textarea, select, [contenteditable="true"], [role="dialog"], ' +
+      '.lightbox, .gallery-lightbox, .modal, [data-lightbox]'
+    )) {
+      return true;
+    }
+
+    const style = getComputedStyle(document.body);
+    return style.overflowY === "hidden" || style.overflow === "hidden";
+  }
+
+  function moveByScrollDirection(direction) {
+    const now = performance.now();
+    if (now < routeLockedUntil) return false;
+
+    const index = routeIndex();
+    if (index < 0) return false;
+
+    const nextIndex = index + direction;
+    if (nextIndex < 0 || nextIndex >= availableRoutes.length) {
+      wheelSum = 0;
+      wheelDirection = 0;
+      return false;
+    }
+
+    routeLockedUntil = now + ROUTE_LOCK_MS;
+    wheelSum = 0;
+    wheelDirection = 0;
+
+    navigate(availableRoutes[nextIndex], false, direction);
+    return true;
+  }
+
+  window.addEventListener("wheel", event => {
+    if (interactionIsBlocked(event.target)) return;
+    if (Math.abs(event.deltaY) < 2) return;
+
+    const direction = event.deltaY > 0 ? 1 : -1;
+
+    if (direction > 0 && !atBottom()) {
+      wheelSum = 0;
+      wheelDirection = 0;
+      return;
+    }
+
+    if (direction < 0 && !atTop()) {
+      wheelSum = 0;
+      wheelDirection = 0;
+      return;
+    }
+
+    if (performance.now() < routeLockedUntil) {
+      event.preventDefault();
+      return;
+    }
+
+    if (wheelDirection !== direction) {
+      wheelDirection = direction;
+      wheelSum = 0;
+    }
+
+    wheelSum += Math.abs(event.deltaY);
+
+    if (wheelSum >= WHEEL_THRESHOLD) {
+      if (moveByScrollDirection(direction)) {
+        event.preventDefault();
+      }
+    }
+  }, { passive: false });
+
+  window.addEventListener("touchstart", event => {
+    if (event.touches.length !== 1 || interactionIsBlocked(event.target)) {
+      touchStartY = null;
+      return;
+    }
+
+    touchStartY = event.touches[0].clientY;
+    touchStartAtTop = atTop();
+    touchStartAtBottom = atBottom();
+  }, { passive: true });
+
+  window.addEventListener("touchend", event => {
+    if (touchStartY === null || event.changedTouches.length !== 1) return;
+
+    const delta = touchStartY - event.changedTouches[0].clientY;
+    const distance = Math.abs(delta);
+    const direction = delta > 0 ? 1 : -1;
+
+    touchStartY = null;
+
+    if (distance < TOUCH_THRESHOLD) return;
+    if (direction > 0 && !touchStartAtBottom) return;
+    if (direction < 0 && !touchStartAtTop) return;
+
+    moveByScrollDirection(direction);
+  }, { passive: true });
+
+  window.addEventListener("keydown", event => {
+    if (interactionIsBlocked(event.target)) return;
+
+    if ((event.key === "PageDown" || event.key === "ArrowDown") && atBottom()) {
+      if (moveByScrollDirection(1)) event.preventDefault();
+    } else if ((event.key === "PageUp" || event.key === "ArrowUp") && atTop()) {
+      if (moveByScrollDirection(-1)) event.preventDefault();
+    }
+  });
+
   window.SanIgnacioViews = Object.freeze({
     routes: routes
       .filter(route => routeElements.has(route.id))
       .map(({ id, path, label }) => ({ id, path, label })),
     show(id) {
       const route = routeById.get(id);
-      if (route) navigate(route);
+      if (route) navigate(route, false, 0);
     }
   });
 
   applyRoute(resolveRoute(), { scroll: false });
 })();
-/* END SAN IGNACIO MULTIVIEW ROUTER V5 */
+/* END SAN IGNACIO MULTIVIEW ROUTER V6 */
