@@ -1,4 +1,4 @@
-/* SAN IGNACIO MULTIVIEW V6 */
+/* SAN IGNACIO MULTIVIEW V7 */
 
 /*
   El DOM y el CMS permanecen completos; la experiencia pública deja de ser
@@ -93,34 +93,54 @@ body.si-multiview .site-footer {
   }
 }
 
-/* END SAN IGNACIO MULTIVIEW V6 */
+/* END SAN IGNACIO MULTIVIEW V7 */
 
 
-/* SAN IGNACIO SCROLL NAVIGATION V6 */
+/* SAN IGNACIO GALLERY FULLSCREEN V7 */
 
-body.si-multiview[data-si-nav-direction="next"] main > section.si-view-active {
-  animation: si-view-enter-next .38s cubic-bezier(.2,.72,.2,1) both;
+.si-gallery-fullscreen {
+  position: fixed !important;
+  inset: 0 !important;
+
+  width: 100dvw !important;
+  height: 100dvh !important;
+  max-width: none !important;
+  max-height: none !important;
+
+  margin: 0 !important;
+
+  z-index: 2147483000 !important;
+
+  box-sizing: border-box !important;
+
+  background: rgba(17, 19, 20, .99) !important;
 }
 
-body.si-multiview[data-si-nav-direction="previous"] main > section.si-view-active {
-  animation: si-view-enter-previous .38s cubic-bezier(.2,.72,.2,1) both;
+.si-gallery-fullscreen-image {
+  position: absolute !important;
+
+  top: 50% !important;
+  left: 50% !important;
+
+  translate: -50% -50% !important;
+
+  width: auto !important;
+  height: auto !important;
+
+  max-width: calc(100dvw - 160px) !important;
+  max-height: calc(100dvh - 112px) !important;
+
+  margin: 0 !important;
+
+  object-fit: contain !important;
+  object-position: center center !important;
 }
 
-@keyframes si-view-enter-next {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes si-view-enter-previous {
-  from { opacity: 0; transform: translateY(-24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body.si-multiview[data-si-nav-direction="next"] main > section.si-view-active,
-  body.si-multiview[data-si-nav-direction="previous"] main > section.si-view-active {
-    animation: none !important;
+@media (max-width: 760px) {
+  .si-gallery-fullscreen-image {
+    max-width: calc(100dvw - 32px) !important;
+    max-height: calc(100dvh - 88px) !important;
   }
 }
 
-/* END SAN IGNACIO SCROLL NAVIGATION V6 */
+/* END SAN IGNACIO GALLERY FULLSCREEN V7 */
