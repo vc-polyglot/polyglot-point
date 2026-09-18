@@ -1,0 +1,96 @@
+/* SAN IGNACIO MULTIVIEW V5 */
+
+/*
+  El DOM y el CMS permanecen completos; la experiencia pública deja de ser
+  un documento vertical único y muestra una sola vista a la vez.
+*/
+
+body.si-multiview:not(.si-router-ready) main > section {
+  visibility: hidden;
+}
+
+body.si-multiview main > section[hidden] {
+  display: none !important;
+}
+
+body.si-multiview main > section.si-view-active {
+  display: block;
+  visibility: visible;
+  width: 100% !important;
+  max-width: none;
+  min-height: calc(100svh - 76px) !important;
+  margin-left: auto;
+  margin-right: auto;
+  animation: si-view-enter .3s cubic-bezier(.2,.7,.2,1) both;
+}
+
+body.si-multiview main > .first-screen.si-view-active {
+  display: grid;
+}
+
+body.si-multiview main {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  overflow-x: clip;
+}
+
+body.si-multiview .primary-nav a {
+  position: relative;
+}
+
+body.si-multiview .primary-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -8px;
+  height: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform .22s ease;
+  opacity: .9;
+}
+
+body.si-multiview .primary-nav a:hover::after,
+body.si-multiview .primary-nav a:focus-visible::after,
+body.si-multiview .primary-nav a.is-current-view::after {
+  transform: scaleX(1);
+}
+
+body.si-multiview .primary-nav a.is-current-view {
+  font-weight: 700;
+}
+
+body.si-multiview .site-footer {
+  margin-top: 0;
+}
+
+@keyframes si-view-enter {
+  from { opacity: 0; transform: translateY(9px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 900px) {
+  body.si-multiview main > section.si-view-active {
+    min-height: calc(100svh - 68px) !important;
+  }
+
+  body.si-multiview .primary-nav a::after {
+    bottom: -3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.si-multiview main > section.si-view-active {
+    animation: none !important;
+  }
+
+  body.si-multiview .primary-nav a::after {
+    transition: none !important;
+  }
+}
+
+/* END SAN IGNACIO MULTIVIEW V5 */

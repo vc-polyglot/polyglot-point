@@ -146,6 +146,26 @@ app.use(express.static(path.join(rootDir, "public"), {
   maxAge: 0
 }));
 
+
+// SAN IGNACIO MULTIVIEW ROUTES V5
+const publicViewRoutes = [
+  "/vida-liturgica",
+  "/pastoral",
+  "/espiritualidad",
+  "/nosotros",
+  "/musica",
+  "/donativos",
+  "/historia",
+  "/galeria",
+  "/contacto"
+];
+
+for (const publicViewRoute of publicViewRoutes) {
+  app.get(publicViewRoute, (_req, res) => {
+    res.sendFile(path.join(rootDir, "public", "index.html"));
+  });
+}
+// END SAN IGNACIO MULTIVIEW ROUTES V5
 app.use((req, res) => {
   if (req.path.startsWith("/api/")) {
     return res.status(404).json({ error: "Ruta no encontrada." });
