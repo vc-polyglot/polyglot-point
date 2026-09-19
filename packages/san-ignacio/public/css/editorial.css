@@ -601,19 +601,39 @@ html.si-lightbox-open {
 
 /* END SAN IGNACIO EDITORIAL PUBLIC V8 */
 
-/* SAN IGNACIO TRINITY V16 */
+/* SAN IGNACIO TRINITY V17 */
 
 body .first-screen {
   overflow: hidden !important;
 }
 
-body .first-screen .trinity-motif-v16 {
+/* ESTA ERA LA BARRA HUÉRFANA */
+body .first-screen .identity::before,
+body .first-screen .identity::after {
+  content: none !important;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/*
+  Motivo completo:
+  - 3 barras
+  - todas 92 x 406
+  - central encima
+  - inferiores separadas
+  - colocado AL LADO del texto
+*/
+body .first-screen .trinity-motif-v17 {
   position: absolute !important;
 
-  left: clamp(70px, 8.7vw, 143px) !important;
+  left: clamp(-92px, -4.4vw, -68px) !important;
   top: clamp(230px, 30vh, 274px) !important;
 
-  width: clamp(160px, 12.4vw, 204px) !important;
+  width: clamp(164px, 12.65vw, 208px) !important;
   height: auto !important;
 
   display: block !important;
@@ -627,23 +647,22 @@ body .first-screen .trinity-motif-v16 {
   pointer-events: none !important;
 }
 
-/* El texto queda independiente del motivo. */
 body .first-screen .identity {
   position: relative !important;
   z-index: 2 !important;
 }
 
-/* Agenda sólo en su propia vista. */
+/* Agenda sólo en su propia vista */
 body.si-multiview main > #musica.si-agenda-section[hidden] {
   display: none !important;
 }
 
 @media (max-width: 760px) {
-  body .first-screen .trinity-motif-v16 {
-    left: 18px !important;
+  body .first-screen .trinity-motif-v17 {
+    left: -42px !important;
     top: 46% !important;
-    width: 150px !important;
+    width: 152px !important;
   }
 }
 
-/* END SAN IGNACIO TRINITY V16 */
+/* END SAN IGNACIO TRINITY V17 */
