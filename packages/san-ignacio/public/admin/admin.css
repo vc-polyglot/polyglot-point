@@ -738,3 +738,23 @@ select:focus {
 }
 
 /* END SAN IGNACIO NOTICE ADMIN V1 */
+/* SAN IGNACIO OVERVIEW LINKS V1 */
+
+.stat-grid article[data-overview-panel] {
+  cursor: pointer;
+  transition:
+    transform .15s ease,
+    box-shadow .15s ease;
+}
+
+.stat-grid article[data-overview-panel]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .08);
+}
+
+.stat-grid article[data-overview-panel]:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 3px;
+}
+
+/* END SAN IGNACIO OVERVIEW LINKS V1 */

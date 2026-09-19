@@ -95,20 +95,66 @@ $("#logout-button").addEventListener("click", async () => {
 
 async function loadOverview() {
   const data = await api("/api/admin/overview");
-  $("#overview-cards").innerHTML = `
-    <article>
+  const cards = $("#overview-cards");
+
+  cards.innerHTML = `
+    <article
+      data-overview-panel="pastoral"
+      role="button"
+      tabindex="0"
+      aria-label="Abrir mensajes pastorales"
+    >
       <span>${Number(data.pastoral.total || 0)}</span>
-      <small>Mensajes pastorales · ${Number(data.pastoral.published || 0)} publicados</small>
+      <small>
+        Mensajes pastorales ·
+        ${Number(data.pastoral.published || 0)} publicados
+      </small>
     </article>
-    <article>
+
+    <article
+      data-overview-panel="schedules"
+      role="button"
+      tabindex="0"
+      aria-label="Abrir horarios"
+    >
       <span>${Number(data.schedules || 0)}</span>
       <small>Horarios activos</small>
     </article>
-    <article>
+
+    <article
+      data-overview-panel="notices"
+      role="button"
+      tabindex="0"
+      aria-label="Abrir avisos activos"
+    >
       <span>${Number(data.notices || 0)}</span>
       <small>Avisos activos</small>
     </article>
   `;
+
+  const openOverviewPanel = (card) => {
+    const panel = card.dataset.overviewPanel;
+    const button = $(`[data-panel="${panel}"]`);
+
+    if (button) {
+      button.click();
+    }
+  };
+
+  cards
+    .querySelectorAll("[data-overview-panel]")
+    .forEach((card) => {
+      card.addEventListener("click", () => {
+        openOverviewPanel(card);
+      });
+
+      card.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openOverviewPanel(card);
+        }
+      });
+    });
 }
 
 async function loadPastoral() {
