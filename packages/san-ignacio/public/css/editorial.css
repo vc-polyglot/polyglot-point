@@ -601,55 +601,76 @@ html.si-lightbox-open {
 
 /* END SAN IGNACIO EDITORIAL PUBLIC V8 */
 
-/* SAN IGNACIO TRINITY V14 */
+/* SAN IGNACIO TRINITY V15 */
 
-/*
-  EXACTAMENTE TRES BARRAS.
-  Las tres son 58 x 220.
-  No usan .mosaic.cool.
-  No usan ::before.
-  No usan ::after.
-  No usan gradientes.
-*/
+/* matar cualquier resto gráfico anterior */
+body .first-screen .mosaic.cool,
+body .first-screen .trinity-motif,
+body .first-screen .trinity-motif-v13,
 body .first-screen .trinity-motif-v14 {
-  position: absolute;
-  z-index: 1;
-
-  left: clamp(34px, 15vw, 288px);
-  right: auto;
-
-  top: auto;
-  bottom: clamp(48px, 7vh, 76px);
-
-  display: block;
-
-  width: clamp(170px, 10.5vw, 205px);
-  height: auto;
-
-  margin: 0;
-  padding: 0;
-
-  overflow: visible;
-  pointer-events: none;
+  display: none !important;
 }
 
+/* matar barras huérfanas de pseudo-elementos viejos */
+body .first-screen::before,
+body .first-screen::after,
+body .first-screen .identity::before,
+body .first-screen .identity::after {
+  content: none !important;
+  display: none !important;
+}
 
-/* Agenda únicamente en su propia página. */
+/*
+  MOTIVO DEFINITIVO
+
+  Tres barras iguales:
+  92 x 406.
+
+  Central:
+  arriba y dibujada encima.
+
+  Laterales:
+  empiezan 196 unidades más abajo.
+
+  El tamaño reproduce la barra grande de referencia.
+*/
+body .first-screen {
+  overflow: hidden !important;
+}
+
+body .first-screen .trinity-motif-v15 {
+  position: absolute !important;
+
+  left: 15vw !important;
+  top: 40% !important;
+
+  width: clamp(145px, 9.5vw, 180px) !important;
+  height: auto !important;
+
+  display: block !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow: visible !important;
+
+  z-index: 1 !important;
+
+  pointer-events: none !important;
+}
+
+/* Agenda únicamente en su propia página */
 body.si-multiview main > #musica.si-agenda-section[hidden] {
   display: none !important;
 }
 
-
 @media (max-width: 760px) {
 
-  body .first-screen .trinity-motif-v14 {
-    left: clamp(24px, 6vw, 38px);
-
-    bottom: 30px;
-
-    width: clamp(138px, 35vw, 158px);
+  body .first-screen .trinity-motif-v15 {
+    left: 5vw !important;
+    top: 43% !important;
+    width: clamp(135px, 36vw, 158px) !important;
   }
-
 }
 
-/* END SAN IGNACIO TRINITY V14 */
+/* END SAN IGNACIO TRINITY V15 */
