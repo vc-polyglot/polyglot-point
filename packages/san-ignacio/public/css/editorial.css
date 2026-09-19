@@ -601,50 +601,19 @@ html.si-lightbox-open {
 
 /* END SAN IGNACIO EDITORIAL PUBLIC V8 */
 
-/* SAN IGNACIO TRINITY V15 */
+/* SAN IGNACIO TRINITY V16 */
 
-/* matar cualquier resto gráfico anterior */
-body .first-screen .mosaic.cool,
-body .first-screen .trinity-motif,
-body .first-screen .trinity-motif-v13,
-body .first-screen .trinity-motif-v14 {
-  display: none !important;
-}
-
-/* matar barras huérfanas de pseudo-elementos viejos */
-body .first-screen::before,
-body .first-screen::after,
-body .first-screen .identity::before,
-body .first-screen .identity::after {
-  content: none !important;
-  display: none !important;
-}
-
-/*
-  MOTIVO DEFINITIVO
-
-  Tres barras iguales:
-  92 x 406.
-
-  Central:
-  arriba y dibujada encima.
-
-  Laterales:
-  empiezan 196 unidades más abajo.
-
-  El tamaño reproduce la barra grande de referencia.
-*/
 body .first-screen {
   overflow: hidden !important;
 }
 
-body .first-screen .trinity-motif-v15 {
+body .first-screen .trinity-motif-v16 {
   position: absolute !important;
 
-  left: 15vw !important;
-  top: 40% !important;
+  left: clamp(70px, 8.7vw, 143px) !important;
+  top: clamp(230px, 30vh, 274px) !important;
 
-  width: clamp(145px, 9.5vw, 180px) !important;
+  width: clamp(160px, 12.4vw, 204px) !important;
   height: auto !important;
 
   display: block !important;
@@ -655,22 +624,26 @@ body .first-screen .trinity-motif-v15 {
   overflow: visible !important;
 
   z-index: 1 !important;
-
   pointer-events: none !important;
 }
 
-/* Agenda únicamente en su propia página */
+/* El texto queda independiente del motivo. */
+body .first-screen .identity {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* Agenda sólo en su propia vista. */
 body.si-multiview main > #musica.si-agenda-section[hidden] {
   display: none !important;
 }
 
 @media (max-width: 760px) {
-
-  body .first-screen .trinity-motif-v15 {
-    left: 5vw !important;
-    top: 43% !important;
-    width: clamp(135px, 36vw, 158px) !important;
+  body .first-screen .trinity-motif-v16 {
+    left: 18px !important;
+    top: 46% !important;
+    width: 150px !important;
   }
 }
 
-/* END SAN IGNACIO TRINITY V15 */
+/* END SAN IGNACIO TRINITY V16 */
