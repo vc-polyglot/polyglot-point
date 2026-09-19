@@ -601,17 +601,30 @@ html.si-lightbox-open {
 
 /* END SAN IGNACIO EDITORIAL PUBLIC V8 */
 
-/* SAN IGNACIO TRINITY V19 */
+/* SAN IGNACIO TRINITY V20 */
 
 body .first-screen {
   overflow: hidden !important;
 }
 
-body .first-screen .trinity-motif-v19 {
+body .first-screen .identity {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/*
+  El motivo pertenece a .identity.
+  Su borde derecho queda 30px antes
+  del borde izquierdo del texto.
+*/
+body .first-screen .identity .trinity-motif-v20 {
   position: absolute !important;
 
-  left: 110px !important;
-  top: 248px !important;
+  right: calc(100% + 30px) !important;
+  left: auto !important;
+
+  top: 62px !important;
+  bottom: auto !important;
 
   width: 208px !important;
   height: auto !important;
@@ -621,30 +634,27 @@ body .first-screen .trinity-motif-v19 {
   margin: 0 !important;
   padding: 0 !important;
 
-  overflow: visible !important;
-
   z-index: 1 !important;
-
   pointer-events: none !important;
 }
 
-body .first-screen .identity {
-  position: relative !important;
-  z-index: 2 !important;
-}
-
-/* Agenda sólo aparece en su propia vista. */
+/* Agenda únicamente en su propia vista. */
 body.si-multiview main > #musica.si-agenda-section[hidden] {
   display: none !important;
 }
 
 @media (max-width: 920px) {
+  body .first-screen .identity .trinity-motif-v20 {
+    position: relative !important;
 
-  body .first-screen .trinity-motif-v19 {
-    left: 18px !important;
-    top: 330px !important;
+    right: auto !important;
+    left: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+
     width: 156px !important;
+    margin: 30px 0 0 !important;
   }
 }
 
-/* END SAN IGNACIO TRINITY V19 */
+/* END SAN IGNACIO TRINITY V20 */
