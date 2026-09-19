@@ -601,143 +601,51 @@ html.si-lightbox-open {
 
 /* END SAN IGNACIO EDITORIAL PUBLIC V8 */
 
-/* SAN IGNACIO PUBLIC FIX V9
-   1) Agenda y eventos sólo existe como vista /agenda.
-   2) El motivo azul/morado de portada se comporta como UNA sola pieza.
-*/
+/* SAN IGNACIO CLEAN PUBLIC V11B */
 
-/* ------------------------------------------------------------
-   AGENDA: cuando el router marca #musica como hidden, NADA del
-   módulo editorial puede volver a forzar display:block.
-   ------------------------------------------------------------ */
+/* Agenda únicamente en su propia vista. */
 body.si-multiview main > #musica.si-agenda-section[hidden] {
   display: none !important;
 }
 
-/* ------------------------------------------------------------
-   MOTIVO TRINIDAD / ARQUITECTURA
-   Un solo nodo .mosaic.cool, una sola caja responsive.
-   Las tres barras viven dentro del mismo background y por tanto
-   jamás pueden separarse entre escritorio y móvil.
-
-   Proporción tomada de la composición aprobada:
-   - barra violeta central: alta
-   - barra azul: nace a media altura por la izquierda
-   - barra violeta lateral: nace a media altura por la derecha
-   ------------------------------------------------------------ */
-body .first-screen .mosaic.cool {
-  width: clamp(145px, 15vw, 190px) !important;
-  height: auto !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  aspect-ratio: 180 / 485 !important;
-
-  overflow: visible !important;
-
-  background:
-    linear-gradient(var(--cool-violet), var(--cool-violet))
-      25.6% 0 / 51.1% 83.9% no-repeat,
-    linear-gradient(var(--cool-blue), var(--cool-blue))
-      0 40.4% / 63.9% 59.6% no-repeat,
-    linear-gradient(var(--cool-violet), var(--cool-violet))
-      64% 40.4% / 36% 59.6% no-repeat !important;
-
-  opacity: .9 !important;
-
-  transform: none !important;
-  transform-origin: 0 100% !important;
-}
-
-/* Neutraliza cualquier construcción anterior de piezas sueltas. */
-body .first-screen .mosaic.cool::before,
-body .first-screen .mosaic.cool::after {
-  content: none !important;
-  display: none !important;
-}
-
-/* En móvil cambia la escala del CONJUNTO, nunca las barras internas. */
-@media (max-width: 920px) {
-  body .first-screen .mosaic.cool {
-    width: clamp(132px, 27vw, 165px) !important;
-    height: auto !important;
-    aspect-ratio: 180 / 485 !important;
-  }
-}
-
-@media (max-width: 560px) {
-  body .first-screen .mosaic.cool {
-    width: clamp(126px, 30vw, 150px) !important;
-  }
-}
-
-/* END SAN IGNACIO PUBLIC FIX V9 */
-/* SAN IGNACIO TRINITY MOTIF V10
-   EXACTAMENTE TRES BARRAS.
+/*
+  Motivo Trinidad / arquitectura:
+  UN solo SVG con EXACTAMENTE TRES rectángulos.
 */
 body .first-screen .mosaic.cool {
   width: clamp(145px, 15vw, 190px) !important;
   height: auto !important;
-
   min-width: 0 !important;
   min-height: 0 !important;
-
   aspect-ratio: 180 / 485 !important;
 
+  border: 0 !important;
+  box-shadow: none !important;
+
+  background-color: transparent !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 485'%3E%3Crect x='0' y='196' width='81' height='289' fill='%23375A82'/%3E%3Crect x='115' y='196' width='65' height='289' fill='%235F4C7C'/%3E%3Crect x='46' y='0' width='92' height='406' fill='%23594573'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 100% 100% !important;
+
+  opacity: 1 !important;
   overflow: visible !important;
-
-  /*
-    BARRA 1: azul izquierda.
-    BARRA 2: violeta derecha.
-    Ambas forman la base posterior.
-  */
-  background:
-    linear-gradient(
-      90deg,
-      var(--cool-blue) 0 63.9%,
-      var(--cool-violet) 63.9% 100%
-    )
-    0 40.4% / 100% 59.6%
-    no-repeat !important;
-
-  opacity: .9 !important;
-
   transform: none !important;
   transform-origin: center bottom !important;
 }
 
-/*
-  BARRA 3:
-  una sola barra violeta central y vertical,
-  superpuesta sobre las dos inferiores.
-*/
-body .first-screen .mosaic.cool::before {
-  content: "" !important;
-
-  display: block !important;
-
-  position: absolute !important;
-
-  left: 25.6% !important;
-  top: 0 !important;
-
-  width: 51.1% !important;
-  height: 83.9% !important;
-
-  margin: 0 !important;
-
-  background: var(--cool-violet) !important;
-
-  opacity: 1 !important;
-
-  transform: none !important;
-
-  z-index: 2 !important;
-}
-
-/* NO EXISTE UNA CUARTA BARRA. */
+/* Ninguna capa extra puede dibujar una cuarta barra. */
+body .first-screen .mosaic.cool::before,
 body .first-screen .mosaic.cool::after {
   content: none !important;
   display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 @media (max-width: 920px) {
@@ -752,4 +660,4 @@ body .first-screen .mosaic.cool::after {
   }
 }
 
-/* END SAN IGNACIO TRINITY MOTIF V10 */
+/* END SAN IGNACIO CLEAN PUBLIC V11B */
