@@ -671,3 +671,85 @@ body .first-screen .mosaic.cool::after {
 }
 
 /* END SAN IGNACIO PUBLIC FIX V9 */
+/* SAN IGNACIO TRINITY MOTIF V10
+   EXACTAMENTE TRES BARRAS.
+*/
+body .first-screen .mosaic.cool {
+  width: clamp(145px, 15vw, 190px) !important;
+  height: auto !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  aspect-ratio: 180 / 485 !important;
+
+  overflow: visible !important;
+
+  /*
+    BARRA 1: azul izquierda.
+    BARRA 2: violeta derecha.
+    Ambas forman la base posterior.
+  */
+  background:
+    linear-gradient(
+      90deg,
+      var(--cool-blue) 0 63.9%,
+      var(--cool-violet) 63.9% 100%
+    )
+    0 40.4% / 100% 59.6%
+    no-repeat !important;
+
+  opacity: .9 !important;
+
+  transform: none !important;
+  transform-origin: center bottom !important;
+}
+
+/*
+  BARRA 3:
+  una sola barra violeta central y vertical,
+  superpuesta sobre las dos inferiores.
+*/
+body .first-screen .mosaic.cool::before {
+  content: "" !important;
+
+  display: block !important;
+
+  position: absolute !important;
+
+  left: 25.6% !important;
+  top: 0 !important;
+
+  width: 51.1% !important;
+  height: 83.9% !important;
+
+  margin: 0 !important;
+
+  background: var(--cool-violet) !important;
+
+  opacity: 1 !important;
+
+  transform: none !important;
+
+  z-index: 2 !important;
+}
+
+/* NO EXISTE UNA CUARTA BARRA. */
+body .first-screen .mosaic.cool::after {
+  content: none !important;
+  display: none !important;
+}
+
+@media (max-width: 920px) {
+  body .first-screen .mosaic.cool {
+    width: clamp(132px, 27vw, 165px) !important;
+  }
+}
+
+@media (max-width: 560px) {
+  body .first-screen .mosaic.cool {
+    width: clamp(126px, 30vw, 150px) !important;
+  }
+}
+
+/* END SAN IGNACIO TRINITY MOTIF V10 */
