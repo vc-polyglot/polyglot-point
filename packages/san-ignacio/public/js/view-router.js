@@ -18,9 +18,9 @@
     { id: "nosotros", path: "/nosotros", selector: "#nosotros", label: "Nosotros",
       title: "Nosotros · San Ignacio de Loyola",
       description: "Comunidad y equipo de San Ignacio de Loyola, Polanco." },
-    { id: "musica", path: "/musica", selector: "#musica", label: "Música",
-      title: "Música · San Ignacio de Loyola",
-      description: "Música y vida musical de San Ignacio de Loyola, Polanco." },
+    { id: "musica", path: "/agenda", selector: "#musica", label: "Agenda y eventos",
+      title: "Agenda y eventos · San Ignacio de Loyola",
+      description: "Agenda, celebraciones, conciertos y actividades de San Ignacio de Loyola, Polanco." },
     { id: "donativos", path: "/donativos", selector: "#donativos", label: "Donativos",
       title: "Donativos · San Ignacio de Loyola",
       description: "Información para apoyar a la comunidad de San Ignacio de Loyola, Polanco." },
@@ -41,6 +41,7 @@
     return path === "/" ? "/" : path.replace(/\/+$/, "");
   };
   const routeByPath = new Map(routes.map(route => [normalizePath(route.path), route]));
+  routeByPath.set("/musica", routeById.get("musica"));
   const hashToRoute = new Map([
     ["#liturgia", "liturgia"],
     ["#pastoral", "pastoral"],

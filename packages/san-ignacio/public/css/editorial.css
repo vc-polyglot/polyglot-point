@@ -1,0 +1,602 @@
+/* SAN IGNACIO EDITORIAL PUBLIC V8 */
+
+/* Portada: carrusel discreto y editorial, sin tocar el motivo de las tres barras. */
+.first-screen.has-editorial-carousel {
+  padding-bottom: clamp(150px, 18vh, 190px) !important;
+}
+
+.si-home-carousel {
+  position: absolute;
+  z-index: 15;
+
+  left: clamp(22px, 4vw, 58px);
+  right: clamp(22px, 4vw, 58px);
+  bottom: clamp(18px, 2.5vh, 30px);
+
+  min-height: 104px;
+
+  background: rgba(238, 232, 220, .96);
+  color: #171a1c;
+
+  border-left: 7px solid #ae4036;
+
+  box-shadow: 0 18px 45px rgba(0, 0, 0, .12);
+
+  overflow: hidden;
+}
+
+.si-home-carousel-stage {
+  min-height: 104px;
+}
+
+.si-home-slide {
+  display: none;
+  min-height: 104px;
+}
+
+.si-home-slide.is-active {
+  display: block;
+  animation: si-featured-in .34s ease both;
+}
+
+.si-home-slide-link {
+  min-height: 104px;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 170px);
+
+  color: inherit;
+  text-decoration: none;
+}
+
+.si-home-slide-copy {
+  padding: 18px 22px 22px;
+}
+
+.si-home-slide-copy p {
+  margin: 0 0 5px;
+
+  font-size: .68rem;
+  font-weight: 800;
+
+  letter-spacing: .15em;
+  text-transform: uppercase;
+
+  opacity: .62;
+}
+
+.si-home-slide-copy h2 {
+  margin: 0;
+
+  font-size: clamp(1.25rem, 2vw, 2rem);
+  line-height: 1;
+
+  letter-spacing: -.025em;
+}
+
+.si-home-slide-copy span {
+  display: block;
+
+  margin-top: 8px;
+
+  max-width: 72ch;
+
+  font-size: .88rem;
+  line-height: 1.35;
+
+  opacity: .72;
+}
+
+.si-home-slide img {
+  width: 100%;
+  height: 100%;
+  min-height: 104px;
+
+  object-fit: cover;
+}
+
+.si-home-carousel-dots {
+  position: absolute;
+
+  left: 20px;
+  bottom: 8px;
+
+  display: flex;
+  gap: 7px;
+}
+
+.si-home-carousel-dots button {
+  width: 7px;
+  height: 7px;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: rgba(23, 26, 28, .28);
+
+  cursor: pointer;
+}
+
+.si-home-carousel-dots button.is-active {
+  background: #171a1c;
+}
+
+@keyframes si-featured-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Vida litúrgica: el editor de Horarios ya existente alimenta este bloque. */
+.si-editorial-schedule {
+  width: min(100%, 1120px);
+
+  margin:
+    clamp(34px, 5vw, 64px)
+    auto
+    clamp(54px, 7vw, 90px);
+
+  padding:
+    0
+    clamp(22px, 5vw, 60px);
+}
+
+.si-editorial-schedule-heading {
+  margin-bottom: clamp(24px, 4vw, 42px);
+}
+
+.si-editorial-schedule-heading h2 {
+  margin: 0;
+
+  max-width: 12ch;
+
+  font-size: clamp(2.8rem, 6vw, 6rem);
+  line-height: .9;
+
+  letter-spacing: -.05em;
+}
+
+.si-editorial-schedule-rows {
+  border-top: 1px solid currentColor;
+}
+
+.si-editorial-schedule-row {
+  display: grid;
+  grid-template-columns: minmax(180px, .7fr) minmax(0, 1.3fr);
+  grid-template-areas:
+    "day time"
+    "day detail";
+
+  gap: 5px 30px;
+
+  padding: clamp(18px, 2.7vw, 28px) 0;
+
+  border-bottom: 1px solid color-mix(in srgb, currentColor 34%, transparent);
+}
+
+.si-editorial-schedule-row strong {
+  grid-area: day;
+
+  align-self: center;
+
+  font-size: clamp(1rem, 1.4vw, 1.3rem);
+}
+
+.si-editorial-schedule-row > span {
+  grid-area: time;
+
+  font-size: clamp(1.45rem, 2.4vw, 2.45rem);
+  line-height: 1.1;
+
+  letter-spacing: -.025em;
+}
+
+.si-editorial-schedule-row small {
+  grid-area: detail;
+
+  opacity: .68;
+}
+
+@media (max-width: 680px) {
+  .si-editorial-schedule-row {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "day"
+      "time"
+      "detail";
+  }
+}
+
+/* Agenda y eventos */
+#musica.si-agenda-section {
+  display: block !important;
+
+  padding:
+    clamp(56px, 7vw, 100px)
+    clamp(24px, 5vw, 74px)
+    clamp(80px, 9vw, 130px) !important;
+}
+
+.si-agenda-heading {
+  width: min(100%, 1180px);
+  margin: 0 auto clamp(38px, 5vw, 68px);
+}
+
+.si-agenda-heading h2 {
+  margin: 0;
+
+  font-size: clamp(3rem, 7vw, 7rem) !important;
+  line-height: .9 !important;
+
+  letter-spacing: -.055em !important;
+}
+
+.si-agenda-group {
+  width: min(100%, 1180px);
+  margin: 0 auto 70px;
+}
+
+.si-agenda-group > h3 {
+  margin: 0 0 20px;
+
+  font-size: .78rem;
+  font-weight: 800;
+
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.si-event-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 22px;
+}
+
+.si-event-card {
+  min-width: 0;
+
+  background: rgba(255, 255, 255, .2);
+
+  border-top: 5px solid rgba(217, 161, 61, .95);
+}
+
+.si-event-card > figure {
+  margin: 0;
+
+  aspect-ratio: 16 / 9;
+
+  overflow: hidden;
+}
+
+.si-event-card > figure img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.si-event-card-copy {
+  padding: clamp(22px, 3vw, 34px);
+}
+
+.si-event-meta {
+  margin: 0 0 10px;
+
+  font-size: .68rem;
+  font-weight: 800;
+
+  letter-spacing: .13em;
+  text-transform: uppercase;
+
+  opacity: .58;
+}
+
+.si-event-card h3 {
+  margin: 0;
+
+  font-size: clamp(1.6rem, 2.6vw, 2.7rem);
+  line-height: 1;
+
+  letter-spacing: -.03em;
+}
+
+.si-event-location,
+.si-event-excerpt,
+.si-event-body {
+  max-width: 68ch;
+}
+
+.si-event-location {
+  margin: 12px 0 0;
+
+  font-weight: 700;
+}
+
+.si-event-excerpt {
+  margin: 16px 0 0;
+
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.si-event-body {
+  margin-top: 18px;
+
+  white-space: pre-line;
+
+  line-height: 1.55;
+}
+
+.si-event-video {
+  position: relative;
+
+  width: 100%;
+  aspect-ratio: 16 / 9;
+
+  margin-top: 22px;
+
+  background: #111;
+}
+
+.si-event-video iframe {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  border: 0;
+}
+
+.si-agenda-past {
+  opacity: .82;
+}
+
+.si-agenda-empty {
+  width: min(100%, 1180px);
+  margin: 0 auto;
+}
+
+
+/* Galería CMS: se activa sólo cuando Secretaría haya guardado fotos aquí. */
+.si-editorial-gallery-shell {
+  width: min(100%, 1260px);
+
+  margin: 0 auto;
+
+  padding:
+    clamp(52px, 7vw, 92px)
+    clamp(22px, 5vw, 70px)
+    clamp(72px, 9vw, 120px);
+}
+
+.si-editorial-gallery-shell h2 {
+  margin: 0 0 36px;
+
+  font-size: clamp(4rem, 10vw, 10rem);
+  line-height: .83;
+
+  letter-spacing: -.065em;
+}
+
+.si-editorial-gallery-cover {
+  position: relative;
+
+  display: block;
+
+  width: min(100%, 860px);
+
+  margin: 0 auto;
+
+  padding: 0;
+
+  border: 0;
+
+  background: #111;
+
+  overflow: hidden;
+
+  cursor: zoom-in;
+}
+
+.si-editorial-gallery-cover img {
+  display: block;
+
+  width: 100%;
+  max-height: 68vh;
+
+  object-fit: cover;
+
+  transition: transform 18s ease;
+}
+
+.si-editorial-gallery-cover:hover img {
+  transform: scale(1.065);
+}
+
+.si-editorial-gallery-cover span {
+  position: absolute;
+
+  right: 16px;
+  bottom: 16px;
+
+  padding: 8px 10px;
+
+  background: rgba(17, 19, 20, .85);
+  color: white;
+
+  font-size: .72rem;
+  font-weight: 800;
+
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.si-editorial-lightbox[hidden] {
+  display: none !important;
+}
+
+.si-editorial-lightbox {
+  position: fixed;
+  inset: 0;
+
+  z-index: 2147483200;
+
+  display: grid;
+  place-items: center;
+
+  background: rgba(17, 19, 20, .995);
+}
+
+.si-editorial-lightbox-image {
+  display: block;
+
+  width: auto;
+  height: auto;
+
+  max-width: calc(100dvw - 160px);
+  max-height: calc(100dvh - 112px);
+
+  object-fit: contain;
+
+  cursor: pointer;
+}
+
+.si-editorial-lightbox-close,
+.si-editorial-lightbox-prev,
+.si-editorial-lightbox-next {
+  position: fixed;
+  z-index: 2;
+
+  border: 0;
+
+  background: rgba(255,255,255,.09);
+  color: white;
+
+  cursor: pointer;
+}
+
+.si-editorial-lightbox-close {
+  top: 20px;
+  right: 24px;
+
+  width: 44px;
+  height: 44px;
+
+  font-size: 2rem;
+}
+
+.si-editorial-lightbox-prev,
+.si-editorial-lightbox-next {
+  top: 50%;
+
+  width: 54px;
+  height: 74px;
+
+  transform: translateY(-50%);
+
+  font-size: 2rem;
+}
+
+.si-editorial-lightbox-prev {
+  left: 20px;
+}
+
+.si-editorial-lightbox-next {
+  right: 20px;
+}
+
+.si-editorial-lightbox-counter {
+  position: fixed;
+
+  top: 24px;
+  left: 28px;
+
+  color: white;
+
+  font-size: .72rem;
+  font-weight: 800;
+
+  letter-spacing: .12em;
+}
+
+.si-editorial-lightbox-caption {
+  position: fixed;
+
+  left: 50%;
+  bottom: 20px;
+
+  max-width: min(80vw, 760px);
+
+  transform: translateX(-50%);
+
+  color: rgba(255,255,255,.78);
+
+  text-align: center;
+}
+
+html.si-lightbox-open {
+  overflow: hidden;
+}
+
+
+@media (max-width: 780px) {
+  .first-screen.has-editorial-carousel {
+    padding-bottom: 0 !important;
+  }
+
+  .si-home-carousel {
+    position: relative;
+
+    left: auto;
+    right: auto;
+    bottom: auto;
+
+    grid-column: 1 / -1;
+
+    width: calc(100% - 32px);
+
+    margin:
+      24px
+      16px
+      18px;
+  }
+
+  .si-home-slide-link {
+    grid-template-columns: 1fr;
+  }
+
+  .si-home-slide img {
+    display: none;
+  }
+
+  .si-event-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .si-editorial-lightbox-image {
+    max-width: calc(100dvw - 32px);
+    max-height: calc(100dvh - 88px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .si-home-slide.is-active,
+  .si-editorial-gallery-cover img {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* END SAN IGNACIO EDITORIAL PUBLIC V8 */

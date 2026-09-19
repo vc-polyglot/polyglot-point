@@ -12,6 +12,9 @@ import { redisClient, connectRedis } from "./lib/redis.js";
 import { publicApi } from "./routes/public-api.js";
 import { adminAuth } from "./routes/admin-auth.js";
 import { adminApi } from "./routes/admin-api.js";
+import { ensureEditorialSchema } from "./db/editorial-schema.js";
+import { editorialPublicApi } from "./routes/editorial-public-api.js";
+import { editorialAdminApi } from "./routes/editorial-admin-api.js";
 import { requireAuth } from "./middleware/auth.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -19,6 +22,7 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
 
 await connectRedis();
+await ensureEditorialSchema();
 
 const app = express();
 
@@ -80,8 +84,10 @@ app.get("/health", async (_req, res) => {
 });
 
 app.use("/api", publicApi);
+app.use("/api/editorial", editorialPublicApi);
 app.use("/api/admin", adminAuth);
 app.use("/api/admin", adminApi);
+app.use("/api/admin/editorial", editorialAdminApi);
 
 
 app.use("/admin", (_req, res, next) => {
@@ -153,6 +159,7 @@ const publicViewRoutes = [
   "/pastoral",
   "/espiritualidad",
   "/nosotros",
+  "/agenda",
   "/musica",
   "/donativos",
   "/historia",

@@ -236,3 +236,51 @@ VALUES
     TRUE
   )
 ON CONFLICT (slug) DO NOTHING;
+
+-- SAN IGNACIO EDITORIAL CMS V8
+
+CREATE TABLE IF NOT EXISTS editorial_events (
+  id BIGSERIAL PRIMARY KEY,
+  event_type TEXT NOT NULL DEFAULT 'Evento',
+  title TEXT NOT NULL,
+  excerpt TEXT,
+  body TEXT,
+  starts_at TIMESTAMPTZ NOT NULL,
+  ends_at TIMESTAMPTZ,
+  location TEXT,
+  image_media_id BIGINT REFERENCES media(id) ON DELETE SET NULL,
+  youtube_url TEXT,
+  featured_home BOOLEAN NOT NULL DEFAULT FALSE,
+  published BOOLEAN NOT NULL DEFAULT FALSE,
+  published_at TIMESTAMPTZ,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  deleted_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS editorial_events_public_idx
+  ON editorial_events (published, deleted_at, starts_at, featured_home);
+
+CREATE TABLE IF NOT EXISTS gallery_items (
+  id BIGSERIAL PRIMARY KEY,
+  media_id BIGINT NOT NULL REFERENCES media(id) ON DELETE CASCADE,
+  caption TEXT,
+  alt_text TEXT,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  published BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS gallery_items_public_idx
+  ON gallery_items (published, sort_order, id);
+
+CREATE TABLE IF NOT EXISTS site_image_slots (
+  slot TEXT PRIMARY KEY,
+  media_id BIGINT REFERENCES media(id) ON DELETE SET NULL,
+  alt_text TEXT,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- END SAN IGNACIO EDITORIAL CMS V8
