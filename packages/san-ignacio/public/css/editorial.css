@@ -601,60 +601,55 @@ html.si-lightbox-open {
 
 /* END SAN IGNACIO EDITORIAL PUBLIC V8 */
 
-/* SAN IGNACIO EQUAL TRINITY V12 */
+/* SAN IGNACIO TRINITY V14 */
 
-/* Agenda únicamente en su propia vista. */
+/*
+  EXACTAMENTE TRES BARRAS.
+  Las tres son 58 x 220.
+  No usan .mosaic.cool.
+  No usan ::before.
+  No usan ::after.
+  No usan gradientes.
+*/
+body .first-screen .trinity-motif-v14 {
+  position: absolute;
+  z-index: 1;
+
+  left: clamp(34px, 15vw, 288px);
+  right: auto;
+
+  top: auto;
+  bottom: clamp(48px, 7vh, 76px);
+
+  display: block;
+
+  width: clamp(170px, 10.5vw, 205px);
+  height: auto;
+
+  margin: 0;
+  padding: 0;
+
+  overflow: visible;
+  pointer-events: none;
+}
+
+
+/* Agenda únicamente en su propia página. */
 body.si-multiview main > #musica.si-agenda-section[hidden] {
   display: none !important;
 }
 
-/*
-  TRINIDAD:
-  exactamente 3 barras;
-  las 3 tienen exactamente el mismo largo: 260;
-  las 3 tienen el mismo grosor: 80;
-  una sola imagen SVG; sin capas auxiliares.
-*/
-body .first-screen .mosaic.cool {
-  width: clamp(170px, 12vw, 220px) !important;
-  height: auto !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  aspect-ratio: 200 / 370 !important;
-
-  border: 0 !important;
-  box-shadow: none !important;
-
-  background: transparent !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 370'%3E%3Crect x='0' y='110' width='80' height='260' fill='%23375A82'/%3E%3Crect x='60' y='0' width='80' height='260' fill='%23594573'/%3E%3Crect x='120' y='110' width='80' height='260' fill='%235F4C7D'/%3E%3C/svg%3E") !important;
-  background-repeat: no-repeat !important;
-  background-position: center !important;
-  background-size: 100% 100% !important;
-
-  opacity: 1 !important;
-  overflow: visible !important;
-  transform: none !important;
-  transform-origin: center bottom !important;
-}
-
-/* No puede aparecer ninguna cuarta barra. */
-body .first-screen .mosaic.cool::before,
-body .first-screen .mosaic.cool::after {
-  content: none !important;
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-  background: none !important;
-  background-image: none !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  transform: none !important;
-}
 
 @media (max-width: 760px) {
-  body .first-screen .mosaic.cool {
-    width: clamp(145px, 36vw, 180px) !important;
+
+  body .first-screen .trinity-motif-v14 {
+    left: clamp(24px, 6vw, 38px);
+
+    bottom: 30px;
+
+    width: clamp(138px, 35vw, 158px);
   }
+
 }
 
-/* END SAN IGNACIO EQUAL TRINITY V12 */
+/* END SAN IGNACIO TRINITY V14 */
