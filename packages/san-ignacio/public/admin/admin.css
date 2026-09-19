@@ -689,3 +689,52 @@ select:focus {
     grid-template-columns: 1fr;
   }
 }
+/* SAN IGNACIO NOTICE ADMIN V1 */
+
+.notice-admin-item {
+  padding: 18px 0;
+}
+
+.notice-admin-image {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  margin: 0 0 16px;
+  object-fit: cover;
+  background: var(--paper-2);
+}
+
+.notice-admin-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.notice-admin-heading .status-badge {
+  flex: 0 0 auto;
+  margin-top: 0;
+}
+
+.notice-admin-meta {
+  display: grid;
+  gap: 5px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: .78rem;
+}
+
+.notice-admin-body {
+  margin: 16px 0 0;
+  white-space: pre-wrap;
+}
+
+.notice-admin-actions {
+  margin-top: 16px;
+}
+
+.notice-admin-actions button {
+  padding: 9px 12px !important;
+}
+
+/* END SAN IGNACIO NOTICE ADMIN V1 */

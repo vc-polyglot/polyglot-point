@@ -481,14 +481,53 @@ adminApi.patch("/pastoral/:id/publish", requireRole("admin"), async (req, res, n
   }
 });
 
+async function noticeImageId(value) {
+  if (value === null || value === undefined || value === "") {
+    return null;
+  }
+
+  const id = Number(value);
+
+  if (!Number.isInteger(id) || id <= 0) {
+    return false;
+  }
+
+  const result = await db.query(`
+    SELECT id
+    FROM media
+    WHERE id = $1
+      AND media_type = 'image'
+      AND provider = 'cloudinary'
+  `, [id]);
+
+  return result.rows[0] ? id : false;
+}
+
 adminApi.get("/notices", async (_req, res, next) => {
   try {
     const result = await db.query(`
-      SELECT id, title, body, starts_at, ends_at, priority, active, created_at
-      FROM notices
-      ORDER BY created_at DESC
-      LIMIT 50
+      SELECT
+        n.id,
+        n.title,
+        n.body,
+        n.starts_at,
+        n.ends_at,
+        n.priority,
+        n.active,
+        n.created_at,
+        n.updated_at,
+        n.image_media_id,
+        m.secure_url AS image_url,
+        m.alt_text AS image_alt
+      FROM notices n
+      LEFT JOIN media m
+        ON m.id = n.image_media_id
+      ORDER BY
+        COALESCE(n.starts_at, n.created_at) DESC,
+        n.created_at DESC
+      LIMIT 100
     `);
+
     res.json({ notices: result.rows });
   } catch (error) {
     next(error);
@@ -501,21 +540,104 @@ adminApi.post("/notices", requireRole("admin"), async (req, res, next) => {
     const body = String(req.body?.body || "").trim();
 
     if (!title || !body) {
-      return res.status(400).json({ error: "Título y texto son obligatorios." });
+      return res.status(400).json({
+        error: "Título y texto son obligatorios."
+      });
     }
 
-    const startsAt = req.body?.starts_at || null;
-    const endsAt = req.body?.ends_at || null;
-    const priority = Math.max(0, Math.min(10, Number(req.body?.priority || 0)));
+    const startsAtRaw = String(req.body?.starts_at || "").trim();
+    const endsAtRaw = String(req.body?.ends_at || "").trim();
+
+    const startsAt = startsAtRaw ? new Date(startsAtRaw) : null;
+    const endsAt = endsAtRaw ? new Date(endsAtRaw) : null;
+
+    if (startsAt && Number.isNaN(startsAt.getTime())) {
+      return res.status(400).json({
+        error: "La fecha de inicio no es válida."
+      });
+    }
+
+    if (endsAt && Number.isNaN(endsAt.getTime())) {
+      return res.status(400).json({
+        error: "La fecha de retiro no es válida."
+      });
+    }
+
+    if (startsAt && endsAt && endsAt <= startsAt) {
+      return res.status(400).json({
+        error: "La fecha de retiro debe ser posterior a la fecha de publicación."
+      });
+    }
+
+    const priority = Math.max(
+      0,
+      Math.min(10, Number(req.body?.priority || 0))
+    );
+
+    const imageMediaId = await noticeImageId(
+      req.body?.image_media_id
+    );
+
+    if (imageMediaId === false) {
+      return res.status(400).json({
+        error: "La fotografía seleccionada no existe."
+      });
+    }
 
     const result = await db.query(`
       INSERT INTO notices
-        (title, body, starts_at, ends_at, priority, active)
-      VALUES ($1, $2, $3, $4, $5, TRUE)
+        (
+          title,
+          body,
+          starts_at,
+          ends_at,
+          priority,
+          active,
+          image_media_id
+        )
+      VALUES
+        ($1, $2, $3, $4, $5, TRUE, $6)
       RETURNING *
-    `, [title, body, startsAt, endsAt, priority]);
+    `, [
+      title,
+      body,
+      startsAt ? startsAt.toISOString() : null,
+      endsAt ? endsAt.toISOString() : null,
+      priority,
+      imageMediaId
+    ]);
 
-    res.status(201).json({ notice: result.rows[0] });
+    res.status(201).json({
+      notice: result.rows[0]
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminApi.delete("/notices/:id", requireRole("admin"), async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({
+        error: "ID inválido."
+      });
+    }
+
+    const result = await db.query(`
+      DELETE FROM notices
+      WHERE id = $1
+      RETURNING id
+    `, [id]);
+
+    if (!result.rows[0]) {
+      return res.status(404).json({
+        error: "Aviso no encontrado."
+      });
+    }
+
+    res.status(204).end();
   } catch (error) {
     next(error);
   }

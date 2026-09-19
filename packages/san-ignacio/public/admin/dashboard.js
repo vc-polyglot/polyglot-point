@@ -60,7 +60,13 @@ async function initSession() {
     return;
   }
 
-  $("#current-user").textContent = `${user.name} · ${user.role}`;
+  const rawUserName = String(user.name || "").trim();
+  const displayUserName =
+    /Ã|Â|Æ|â€/.test(rawUserName)
+      ? "Secretaría"
+      : (rawUserName || "Secretaría");
+
+  $("#current-user").textContent = `${displayUserName} · ${user.role}`;
 }
 
 $$(".sidebar-link").forEach((button) => {
@@ -262,49 +268,229 @@ $("#schedules-form").addEventListener("submit", async (event) => {
   }
 });
 
+function noticeStatus(notice) {
+  if (!notice.active) {
+    return "Inactivo";
+  }
+
+  const now = Date.now();
+  const starts = notice.starts_at
+    ? new Date(notice.starts_at).getTime()
+    : null;
+  const ends = notice.ends_at
+    ? new Date(notice.ends_at).getTime()
+    : null;
+
+  if (starts && starts > now) {
+    return "Programado";
+  }
+
+  if (ends && ends < now) {
+    return "Finalizado";
+  }
+
+  return "Visible ahora";
+}
+
+function noticeDate(value, emptyLabel) {
+  return value ? formatDate(value) : emptyLabel;
+}
+
 async function loadNotices() {
   const { notices } = await api("/api/admin/notices");
   const list = $("#notice-list");
 
   if (!notices.length) {
-    list.innerHTML = `<div class="list-item">Todavía no hay avisos.</div>`;
+    list.innerHTML =
+      `<div class="list-item">Todavía no hay avisos.</div>`;
     return;
   }
 
   list.innerHTML = notices.map((notice) => `
-    <article class="list-item">
-      <strong>${escapeHtml(notice.title)}</strong>
-      <small>Prioridad ${Number(notice.priority || 0)} · ${formatDate(notice.created_at)}</small>
-      <p>${escapeHtml(notice.body)}</p>
+    <article class="list-item notice-admin-item">
+
+      ${notice.image_url ? `
+        <img
+          class="notice-admin-image"
+          src="${escapeHtml(notice.image_url)}"
+          alt="${escapeHtml(notice.image_alt || notice.title)}"
+        >
+      ` : ""}
+
+      <div class="notice-admin-heading">
+        <strong>${escapeHtml(notice.title)}</strong>
+        <span class="status-badge">
+          ${escapeHtml(noticeStatus(notice))}
+        </span>
+      </div>
+
+      <div class="notice-admin-meta">
+        <span>
+          <b>Se publica:</b>
+          ${escapeHtml(
+            noticeDate(
+              notice.starts_at,
+              "Inmediatamente"
+            )
+          )}
+        </span>
+
+        <span>
+          <b>Se retira:</b>
+          ${escapeHtml(
+            noticeDate(
+              notice.ends_at,
+              "Sin fecha de retiro"
+            )
+          )}
+        </span>
+
+        <span>
+          <b>Prioridad:</b>
+          ${Number(notice.priority || 0)}
+        </span>
+
+        <span>
+          <b>Creado:</b>
+          ${escapeHtml(formatDate(notice.created_at))}
+        </span>
+      </div>
+
+      <p class="notice-admin-body">
+        ${escapeHtml(notice.body)}
+      </p>
+
+      <div class="notice-admin-actions">
+        <button
+          type="button"
+          class="danger-button"
+          data-delete-notice="${notice.id}"
+        >
+          Eliminar aviso
+        </button>
+      </div>
     </article>
   `).join("");
+
+  list.querySelectorAll("[data-delete-notice]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const confirmed = confirm(
+        "¿Eliminar definitivamente este aviso?"
+      );
+
+      if (!confirmed) return;
+
+      button.disabled = true;
+
+      try {
+        await api(
+          `/api/admin/notices/${button.dataset.deleteNotice}`,
+          {
+            method: "DELETE"
+          }
+        );
+
+        await Promise.all([
+          loadNotices(),
+          loadOverview()
+        ]);
+      } catch (error) {
+        alert(error.message);
+        button.disabled = false;
+      }
+    });
+  });
 }
 
 $("#notice-form").addEventListener("submit", async (event) => {
   event.preventDefault();
+
   const form = event.currentTarget;
   const data = new FormData(form);
   const status = $("#notice-status");
-  status.classList.remove("error");
-  status.textContent = "Publicando…";
 
-  const localDateToIso = (value) => value ? new Date(value).toISOString() : null;
+  status.classList.remove("error");
+  status.textContent = "Guardando aviso…";
+
+  const localDateToIso = (value) =>
+    value
+      ? new Date(value).toISOString()
+      : null;
+
+  let imageMediaId = null;
 
   try {
+    const startsAt = data.get("starts_at");
+    const endsAt = data.get("ends_at");
+
+    if (
+      startsAt &&
+      endsAt &&
+      new Date(endsAt) <= new Date(startsAt)
+    ) {
+      throw new Error(
+        "La fecha de retiro debe ser posterior a la fecha de publicación."
+      );
+    }
+
+    const imageFile = data.get("image");
+
+    if (
+      imageFile instanceof File &&
+      imageFile.size > 0
+    ) {
+      status.textContent = "Subiendo fotografía…";
+
+      const uploadData = new FormData();
+
+      uploadData.append(
+        "image",
+        imageFile
+      );
+
+      uploadData.append(
+        "alt_text",
+        String(data.get("title") || "Aviso")
+      );
+
+      const uploaded = await api(
+        "/api/admin/media/images",
+        {
+          method: "POST",
+          body: uploadData
+        }
+      );
+
+      imageMediaId =
+        uploaded?.image?.id || null;
+    }
+
+    status.textContent = "Guardando aviso…";
+
     await api("/api/admin/notices", {
       method: "POST",
       body: JSON.stringify({
         title: data.get("title"),
         body: data.get("body"),
-        starts_at: localDateToIso(data.get("starts_at")),
-        ends_at: localDateToIso(data.get("ends_at")),
-        priority: Number(data.get("priority") || 0)
+        starts_at: localDateToIso(startsAt),
+        ends_at: localDateToIso(endsAt),
+        priority: Number(
+          data.get("priority") || 0
+        ),
+        image_media_id: imageMediaId
       })
     });
 
     form.reset();
-    status.textContent = "Aviso publicado.";
-    await Promise.all([loadNotices(), loadOverview()]);
+
+    status.textContent =
+      "Aviso guardado correctamente.";
+
+    await Promise.all([
+      loadNotices(),
+      loadOverview()
+    ]);
+
   } catch (error) {
     status.textContent = error.message;
     status.classList.add("error");

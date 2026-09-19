@@ -152,13 +152,21 @@
             <textarea name="body" rows="5" required></textarea>
           </label>
 
+          <label>
+            Fotografía
+            <input name="image" type="file" accept="image/*">
+            <span class="help-text">
+              Opcional. La fotografía se guardará también en la biblioteca del sitio.
+            </span>
+          </label>
+
           <div class="inline-fields">
             <label>
-              Desde
+              Se publica desde
               <input name="starts_at" type="datetime-local">
             </label>
             <label>
-              Hasta
+              Se retira después de
               <input name="ends_at" type="datetime-local">
             </label>
           </div>
@@ -168,7 +176,7 @@
             <input name="priority" type="number" min="0" max="10" value="0">
           </label>
 
-          <button type="submit">Publicar aviso</button>
+          <button type="submit">Guardar aviso</button>
           <p id="notice-status" class="form-status" role="status"></p>
         </form>
 
