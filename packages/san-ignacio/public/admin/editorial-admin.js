@@ -393,6 +393,19 @@
   const cancelEdit = $("#si-event-cancel-edit");
   let eventsCache = [];
   let imagesCache = [];
+
+window.addEventListener("si:image-picked", (event) => {
+  const image = event.detail?.image;
+
+  if (!image?.id) return;
+
+  imagesCache = [
+    image,
+    ...imagesCache.filter(
+      (item) => Number(item.id) !== Number(image.id)
+    )
+  ];
+});
   let galleryState = [];
   let siteSlotState = new Map();
 

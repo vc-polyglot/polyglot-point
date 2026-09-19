@@ -463,7 +463,7 @@ $("#notice-form").addEventListener("submit", async (event) => {
       ? new Date(value).toISOString()
       : null;
 
-  let imageMediaId = null;
+  let imageMediaId = Number(data.get("image_media_id") || 0) || null;
 
   try {
     const startsAt = data.get("starts_at");
@@ -479,37 +479,6 @@ $("#notice-form").addEventListener("submit", async (event) => {
       );
     }
 
-    const imageFile = data.get("image");
-
-    if (
-      imageFile instanceof File &&
-      imageFile.size > 0
-    ) {
-      status.textContent = "Subiendo fotografía…";
-
-      const uploadData = new FormData();
-
-      uploadData.append(
-        "image",
-        imageFile
-      );
-
-      uploadData.append(
-        "alt_text",
-        String(data.get("title") || "Aviso")
-      );
-
-      const uploaded = await api(
-        "/api/admin/media/images",
-        {
-          method: "POST",
-          body: uploadData
-        }
-      );
-
-      imageMediaId =
-        uploaded?.image?.id || null;
-    }
 
     status.textContent = "Guardando aviso…";
 
