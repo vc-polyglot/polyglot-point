@@ -600,3 +600,74 @@ html.si-lightbox-open {
 }
 
 /* END SAN IGNACIO EDITORIAL PUBLIC V8 */
+
+/* SAN IGNACIO PUBLIC FIX V9
+   1) Agenda y eventos sólo existe como vista /agenda.
+   2) El motivo azul/morado de portada se comporta como UNA sola pieza.
+*/
+
+/* ------------------------------------------------------------
+   AGENDA: cuando el router marca #musica como hidden, NADA del
+   módulo editorial puede volver a forzar display:block.
+   ------------------------------------------------------------ */
+body.si-multiview main > #musica.si-agenda-section[hidden] {
+  display: none !important;
+}
+
+/* ------------------------------------------------------------
+   MOTIVO TRINIDAD / ARQUITECTURA
+   Un solo nodo .mosaic.cool, una sola caja responsive.
+   Las tres barras viven dentro del mismo background y por tanto
+   jamás pueden separarse entre escritorio y móvil.
+
+   Proporción tomada de la composición aprobada:
+   - barra violeta central: alta
+   - barra azul: nace a media altura por la izquierda
+   - barra violeta lateral: nace a media altura por la derecha
+   ------------------------------------------------------------ */
+body .first-screen .mosaic.cool {
+  width: clamp(145px, 15vw, 190px) !important;
+  height: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  aspect-ratio: 180 / 485 !important;
+
+  overflow: visible !important;
+
+  background:
+    linear-gradient(var(--cool-violet), var(--cool-violet))
+      25.6% 0 / 51.1% 83.9% no-repeat,
+    linear-gradient(var(--cool-blue), var(--cool-blue))
+      0 40.4% / 63.9% 59.6% no-repeat,
+    linear-gradient(var(--cool-violet), var(--cool-violet))
+      64% 40.4% / 36% 59.6% no-repeat !important;
+
+  opacity: .9 !important;
+
+  transform: none !important;
+  transform-origin: 0 100% !important;
+}
+
+/* Neutraliza cualquier construcción anterior de piezas sueltas. */
+body .first-screen .mosaic.cool::before,
+body .first-screen .mosaic.cool::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* En móvil cambia la escala del CONJUNTO, nunca las barras internas. */
+@media (max-width: 920px) {
+  body .first-screen .mosaic.cool {
+    width: clamp(132px, 27vw, 165px) !important;
+    height: auto !important;
+    aspect-ratio: 180 / 485 !important;
+  }
+}
+
+@media (max-width: 560px) {
+  body .first-screen .mosaic.cool {
+    width: clamp(126px, 30vw, 150px) !important;
+  }
+}
+
+/* END SAN IGNACIO PUBLIC FIX V9 */
