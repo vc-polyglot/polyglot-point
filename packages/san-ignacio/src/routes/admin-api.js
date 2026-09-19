@@ -615,6 +615,117 @@ adminApi.post("/notices", requireRole("admin"), async (req, res, next) => {
   }
 });
 
+
+adminApi.patch("/notices/:id", requireRole("admin"), async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({
+        error: "ID inválido."
+      });
+    }
+
+    const title = String(req.body?.title || "").trim();
+    const body = String(req.body?.body || "").trim();
+
+    if (!title || !body) {
+      return res.status(400).json({
+        error: "Título y texto son obligatorios."
+      });
+    }
+
+    const startsAtRaw =
+      String(req.body?.starts_at || "").trim();
+
+    const endsAtRaw =
+      String(req.body?.ends_at || "").trim();
+
+    const startsAt =
+      startsAtRaw ? new Date(startsAtRaw) : null;
+
+    const endsAt =
+      endsAtRaw ? new Date(endsAtRaw) : null;
+
+    if (startsAt && Number.isNaN(startsAt.getTime())) {
+      return res.status(400).json({
+        error: "La fecha de inicio no es válida."
+      });
+    }
+
+    if (endsAt && Number.isNaN(endsAt.getTime())) {
+      return res.status(400).json({
+        error: "La fecha de retiro no es válida."
+      });
+    }
+
+    if (
+      startsAt &&
+      endsAt &&
+      endsAt <= startsAt
+    ) {
+      return res.status(400).json({
+        error:
+          "La fecha de retiro debe ser posterior a la fecha de publicación."
+      });
+    }
+
+    const priority = Math.max(
+      0,
+      Math.min(
+        10,
+        Number(req.body?.priority || 0)
+      )
+    );
+
+    const imageMediaId =
+      await noticeImageId(
+        req.body?.image_media_id
+      );
+
+    if (imageMediaId === false) {
+      return res.status(400).json({
+        error:
+          "La fotografía seleccionada no existe."
+      });
+    }
+
+    const result = await db.query(`
+      UPDATE notices
+      SET
+        title = $2,
+        body = $3,
+        starts_at = $4,
+        ends_at = $5,
+        priority = $6,
+        image_media_id = $7,
+        updated_at = NOW()
+      WHERE id = $1
+      RETURNING *
+    `, [
+      id,
+      title,
+      body,
+      startsAt ? startsAt.toISOString() : null,
+      endsAt ? endsAt.toISOString() : null,
+      priority,
+      imageMediaId
+    ]);
+
+    if (!result.rows[0]) {
+      return res.status(404).json({
+        error: "Aviso no encontrado."
+      });
+    }
+
+    res.json({
+      notice: result.rows[0]
+    });
+
+  } catch (error) {
+    next(error);
+  }
+});
 adminApi.delete("/notices/:id", requireRole("admin"), async (req, res, next) => {
   try {
     const id = Number(req.params.id);
