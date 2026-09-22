@@ -601,7 +601,7 @@ html.si-lightbox-open {
 
 /* END SAN IGNACIO EDITORIAL PUBLIC V8 */
 
-/* SAN IGNACIO TRINITY IMAGE V21 */
+/* SAN IGNACIO TRINITY V20 */
 
 body .first-screen {
   overflow: hidden !important;
@@ -613,11 +613,11 @@ body .first-screen .identity {
 }
 
 /*
-  Ya NO existe ningún SVG Trinity.
-
-  Esto es una sola imagen PNG.
+  El motivo pertenece a .identity.
+  Su borde derecho queda 30px antes
+  del borde izquierdo del texto.
 */
-body .first-screen .identity .trinity-hero-image {
+body .first-screen .identity .trinity-motif-v20 {
   position: absolute !important;
 
   right: calc(100% + 30px) !important;
@@ -634,33 +634,54 @@ body .first-screen .identity .trinity-hero-image {
   margin: 0 !important;
   padding: 0 !important;
 
-  object-fit: contain !important;
-
   z-index: 1 !important;
-
   pointer-events: none !important;
-  user-select: none !important;
 }
 
-/*
-  En celular va debajo del texto,
-  como un solo objeto.
-*/
-@media (max-width: 920px) {
+/* Agenda únicamente en su propia vista. */
+body.si-multiview main > #musica.si-agenda-section[hidden] {
+  display: none !important;
+}
 
-  body .first-screen .identity .trinity-hero-image {
+@media (max-width: 920px) {
+  body .first-screen .identity .trinity-motif-v20 {
     position: relative !important;
 
     right: auto !important;
     left: auto !important;
-
     top: auto !important;
     bottom: auto !important;
 
     width: 156px !important;
-
     margin: 30px 0 0 !important;
   }
 }
 
-/* END SAN IGNACIO TRINITY IMAGE V21 */
+/* END SAN IGNACIO TRINITY V20 */
+
+/* SAN IGNACIO KILL LEGACY COOL MOTIFS */
+
+body .first-screen .mosaic.cool,
+body .first-screen [class^="trinity-motif"]:not(.trinity-motif-v20),
+body .first-screen [class*=" trinity-motif"]:not(.trinity-motif-v20) {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  background: none !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+body .first-screen .mosaic.cool::before,
+body .first-screen .mosaic.cool::after,
+body .first-screen [class^="trinity-motif"]:not(.trinity-motif-v20)::before,
+body .first-screen [class^="trinity-motif"]:not(.trinity-motif-v20)::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* END SAN IGNACIO KILL LEGACY COOL MOTIFS */
