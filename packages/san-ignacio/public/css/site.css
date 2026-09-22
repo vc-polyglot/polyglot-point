@@ -245,17 +245,6 @@ a { color: inherit; }
     linear-gradient(0deg, var(--warm-orange) 0 32%, transparent 32% 63%, var(--warm-amber) 63%);
 }
 
-.mosaic.cool {
-  width: 16vw;
-  height: 26vw;
-  min-width: 160px;
-  min-height: 250px;
-  left: -8vw;
-  bottom: -8vh;
-  background:
-    linear-gradient(90deg, var(--cool-blue) 0 45%, transparent 45% 64%, var(--cool-violet) 64%);
-}
-
 .section-shell {
   max-width: var(--max);
   margin: 0 auto;
@@ -3111,12 +3100,7 @@ body .first-screen .mosaic.warm::after {
    Su geometría se conserva.
    ============================================================ */
 
-body .first-screen .mosaic.cool {
-  left: clamp(22px, 2.5vw, 42px) !important;
-}
-
-
-/* ============================================================
+body .first-screen /* ============================================================
    TABLET
    ============================================================ */
 
@@ -3192,10 +3176,7 @@ body .first-screen .mosaic.cool {
   }
 
 
-  body .first-screen .mosaic.cool {
-    left: 14px !important;
-  }
-}
+  body .first-screen }
 
 
 /* END SAN IGNACIO HERO IL2 V2 */
@@ -3215,21 +3196,7 @@ body .first-screen .mosaic.cool {
    - más hacia el borde izquierdo
    ============================================================ */
 
-body .first-screen .mosaic.cool {
-  width: clamp(145px, 10.5vw, 180px) !important;
-  height: clamp(285px, 23vw, 365px) !important;
-
-  min-width: 0 !important;
-  min-height: 0 !important;
-
-  left: clamp(16px, 1.8vw, 30px) !important;
-  bottom: clamp(-105px, -8vh, -64px) !important;
-
-  z-index: 1 !important;
-}
-
-
-/* ============================================================
+body .first-screen /* ============================================================
    IL DERECHO
 
    La geometría IL2 permanece INTACTA.
@@ -3267,16 +3234,7 @@ body .first-screen .mosaic.warm {
 
 @media (max-width: 1050px) {
 
-  body .first-screen .mosaic.cool {
-    width: clamp(125px, 15vw, 155px) !important;
-    height: clamp(255px, 31vw, 325px) !important;
-
-    left: 14px !important;
-    bottom: -72px !important;
-  }
-
-
-  body .first-screen .mosaic.warm {
+  body .first-screen body .first-screen .mosaic.warm {
     right: clamp(42px, 6vw, 72px) !important;
   }
 
@@ -3292,16 +3250,7 @@ body .first-screen .mosaic.warm {
 
 @media (max-width: 700px) {
 
-  body .first-screen .mosaic.cool {
-    width: clamp(105px, 28vw, 132px) !important;
-    height: clamp(220px, 57vw, 285px) !important;
-
-    left: 6px !important;
-    bottom: -58px !important;
-  }
-
-
-  body .first-screen .mosaic.warm {
+  body .first-screen body .first-screen .mosaic.warm {
     right: 18px !important;
   }
 
