@@ -2,7 +2,7 @@ FROM node:20-alpine
 
 ENV VITE_API_URL=https://diogenes-server-production.up.railway.app
 
-ARG CACHEBUST=1
+ARG CACHEBUST=2
 
 WORKDIR /app
 
