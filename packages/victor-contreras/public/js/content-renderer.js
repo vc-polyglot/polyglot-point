@@ -180,9 +180,28 @@
         <div class="journal-grid">
           ${entries.map(entry => `
             <article class="journal-entry">
-              ${entry.date ? `<p class="section-label">${escapeHTML(entry.date)}</p>` : ''}
-              ${entry.title ? `<h2 class="section-title">${escapeHTML(entry.title)}</h2>` : ''}
-              ${entry.text ? `<p>${escapeHTML(entry.text)}</p>` : ''}
+              ${entry.image ? `
+                <figure class="journal-image">
+                  <img
+                    src="${escapeHTML(entry.image)}"
+                    alt="${escapeHTML(entry.alt)}"
+                    loading="lazy"
+                  >
+                </figure>
+              ` : ''}
+
+              <div class="journal-content">
+                ${(entry.date || entry.place) ? `
+                  <p class="section-label">
+                    ${entry.date ? escapeHTML(entry.date) : ''}
+                    ${entry.date && entry.place ? ' · ' : ''}
+                    ${entry.place ? escapeHTML(entry.place) : ''}
+                  </p>
+                ` : ''}
+
+                ${entry.title ? `<h2 class="section-title">${escapeHTML(entry.title)}</h2>` : ''}
+                ${entry.text ? `<p>${escapeHTML(entry.text)}</p>` : ''}
+              </div>
             </article>
           `).join('')}
         </div>

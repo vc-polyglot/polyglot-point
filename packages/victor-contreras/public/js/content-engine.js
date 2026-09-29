@@ -89,9 +89,34 @@
   }
 
   function normalizeCuaderno(data) {
+    const entries = Array.isArray(data?.entries) ? data.entries : [];
+
+    const normalized = entries.map((entry, index) => ({
+      id: entry.id || `journal-${index + 1}`,
+      date: entry.date || null,
+      place: entry.place || '',
+      title: entry.title || '',
+      text: entry.text || '',
+      image: entry.image || null,
+      alt: entry.alt || ''
+    }));
+
+    normalized.sort((a, b) => {
+      const aTime = a.date ? Date.parse(`${a.date}T12:00:00`) : NaN;
+      const bTime = b.date ? Date.parse(`${b.date}T12:00:00`) : NaN;
+
+      const aValid = !Number.isNaN(aTime);
+      const bValid = !Number.isNaN(bTime);
+
+      if (aValid && bValid) return bTime - aTime;
+      if (aValid) return -1;
+      if (bValid) return 1;
+      return 0;
+    });
+
     return {
       updatedAt: data?.updatedAt || null,
-      entries: Array.isArray(data?.entries) ? data.entries : []
+      entries: normalized
     };
   }
 
