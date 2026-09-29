@@ -373,3 +373,25 @@
     padding-right: 22px;
   }
 }
+
+/* CONTACT STATES */
+
+.contact-honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.form-error {
+  display: none;
+  padding: 18px;
+  border: 1px solid #9a5757;
+  color: #e0b0b0;
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  text-align: center;
+  margin-top: 16px;
+}

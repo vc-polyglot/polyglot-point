@@ -104,14 +104,31 @@ var currentLang = 'es';
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: form.name.value, email: form.email.value, subject: form.subject.value, message: form.message.value, lang: currentLang })
+        body: JSON.stringify({ name: form.name.value, email: form.email.value, subject: form.subject.value, message: form.message.value, lang: currentLang, website: form.website.value })
       });
       if (res.ok) {
+
         form.reset();
         const success = document.getElementById('formSuccess');
         success.style.display = 'block';
         const idx = ['es','en','fr','it'].indexOf(currentLang);
         success.querySelectorAll('.inline-lang').forEach((s, i) => s.classList.toggle('lang-active', i === idx));
+      
+      } else {
+        const error = document.getElementById('formError');
+        const success = document.getElementById('formSuccess');
+
+        if (success) success.style.display = 'none';
+
+        if (error) {
+          error.style.display = 'block';
+
+          const idx = ['es','en','fr','it'].indexOf(currentLang);
+
+          error.querySelectorAll('.inline-lang').forEach((s, i) => {
+            s.classList.toggle('lang-active', i === idx);
+          });
+        }
       }
     } catch(err) { console.error(err); }
     finally { btn.disabled = false; btn.style.opacity = '1'; }
