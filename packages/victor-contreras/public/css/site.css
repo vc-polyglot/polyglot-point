@@ -275,3 +275,66 @@
   margin: 0 auto;
   padding: 100px 6vw 30px;
 }
+
+/* HIERARCHY: ACTIVITIES VS PROJECTS */
+
+.activities-inner {
+  padding-top: 72px;
+  padding-bottom: 72px;
+}
+
+.activities-grid {
+  margin-top: 36px;
+}
+
+.activity-card {
+  padding: 34px 28px;
+}
+
+.activity-title {
+  font-size: 1.35rem;
+}
+
+.activity-text {
+  font-size: 0.84rem;
+}
+
+.activity-link {
+  display: inline-block;
+  margin-top: 18px;
+  color: var(--silver-light);
+  text-decoration: none;
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(158,184,208,0.35);
+  padding-bottom: 3px;
+  transition: color 0.25s, border-color 0.25s;
+}
+
+.activity-link:hover {
+  color: var(--cream);
+  border-color: var(--silver-light);
+}
+
+.projects-section {
+  background: var(--bg2);
+}
+
+.projects-heading {
+  padding-top: 110px;
+  padding-bottom: 18px;
+}
+
+.projects-heading .section-title {
+  font-size: clamp(2.4rem, 5.6vw, 4rem);
+  margin-bottom: 0;
+}
+
+.projects-section .orch-wrap {
+  background: transparent;
+}
+
+.projects-section #osjut {
+  background: transparent;
+}
