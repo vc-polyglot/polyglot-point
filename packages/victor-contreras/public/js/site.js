@@ -133,3 +133,31 @@ var currentLang = 'es';
     } catch(err) { console.error(err); }
     finally { btn.disabled = false; btn.style.opacity = '1'; }
   });
+
+/* YOUTUBE LAZY EMBEDS */
+
+document.addEventListener('click', (event) => {
+  const button = event.target.closest('.youtube-play');
+
+  if (!button) return;
+
+  const facade = button.closest('.youtube-facade');
+
+  if (!facade) return;
+
+  const src = facade.dataset.youtubeSrc;
+
+  if (!src) return;
+
+  const iframe = document.createElement('iframe');
+
+  iframe.className = 'youtube-embed';
+  iframe.src = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
+  iframe.title = facade.dataset.youtubeTitle || 'YouTube video';
+  iframe.loading = 'lazy';
+  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+  iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+  iframe.allowFullscreen = true;
+
+  facade.replaceWith(iframe);
+});
