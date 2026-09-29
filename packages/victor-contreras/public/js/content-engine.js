@@ -44,10 +44,48 @@
   }
 
   function normalizeAhora(data) {
+    const items = Array.isArray(data?.items) ? data.items : [];
+
     return {
       updatedAt: data?.updatedAt || null,
-      items: Array.isArray(data?.items) ? data.items : []
+      items: items.map((item, index) => ({
+        id: item.id || `now-${index + 1}`,
+        kicker: item.kicker || '',
+        title: item.title || '',
+        text: item.text || '',
+        publishedAt: item.publishedAt || null,
+        expiresAt: item.expiresAt || null
+      }))
     };
+  }
+
+  function parseDate(value) {
+    if (!value) return null;
+
+    const timestamp = Date.parse(`${value}T23:59:59`);
+
+    return Number.isNaN(timestamp) ? null : timestamp;
+  }
+
+  function activeNowItems(items, now = new Date()) {
+    const current = now.getTime();
+    const maxAge = 120 * 24 * 60 * 60 * 1000;
+
+    return items.filter(item => {
+      const expires = parseDate(item.expiresAt);
+
+      if (expires !== null) {
+        return expires >= current;
+      }
+
+      const published = parseDate(item.publishedAt);
+
+      if (published === null) {
+        return false;
+      }
+
+      return (published + maxAge) >= current;
+    });
   }
 
   function normalizeCuaderno(data) {
@@ -103,7 +141,14 @@
         ...agenda,
         ...splitEvents(agenda.events)
       },
-      ahora: normalizeAhora(ahoraRaw),
+      ahora: (() => {
+        const normalized = normalizeAhora(ahoraRaw);
+
+        return {
+          ...normalized,
+          activeItems: activeNowItems(normalized.items)
+        };
+      })(),
       cuaderno: normalizeCuaderno(cuadernoRaw)
     };
   }

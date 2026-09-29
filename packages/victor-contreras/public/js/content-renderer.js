@@ -130,8 +130,8 @@
     const root = document.getElementById('ahoraDynamic');
     if (!root) return;
 
-    const items = Array.isArray(data?.ahora?.items)
-      ? data.ahora.items
+    const items = Array.isArray(data?.ahora?.activeItems)
+      ? data.ahora.activeItems
       : [];
 
     if (!items.length) {
