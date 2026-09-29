@@ -338,3 +338,38 @@
 .projects-section #osjut {
   background: transparent;
 }
+
+/* HERO ACTIONS */
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.hero-actions .hero-cta {
+  animation: fadeUp 1s 0.8s forwards;
+}
+
+.hero-cta-secondary {
+  background: rgba(30,32,36,0.35);
+  border-color: rgba(200,220,234,0.35);
+  color: var(--cream-dim);
+}
+
+.hero-cta-secondary:hover {
+  background: var(--cream);
+  border-color: var(--cream);
+  color: var(--bg);
+}
+
+@media (max-width: 600px) {
+  .hero-actions {
+    align-items: flex-start;
+  }
+
+  .hero-actions .hero-cta {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+}
