@@ -115,7 +115,7 @@ body .first-screen.si-revelation-hero .si-home-carousel {
 }
 
 .si-revelation-hero.is-photo-revealed .si-hero-white {
-  opacity: 0;
+  opacity: 1;
 }
 
 
@@ -538,3 +538,93 @@ body .first-screen.si-revelation-hero .si-hero-copy .address {
 }
 
 /* END SAN IGNACIO HERO REVELATION V171 */
+
+/* ==========================================================
+   SAN IGNACIO CROSS FADE V179
+
+   NO cambia el momento de salida.
+   Evita visibility:hidden durante el fade.
+   La cruz pierde opacidad progresivamente.
+   ========================================================== */
+
+.si-revelation-hero.is-logo-gone .si-hero-symbol {
+  opacity:
+    0 !important;
+
+  visibility:
+    visible !important;
+
+  filter:
+    blur(8px) !important;
+
+  transform:
+    translate(-50%, -48%)
+    scale(1.015) !important;
+
+  transition:
+    opacity 1.4s linear,
+    filter 1.4s ease-out !important;
+
+  pointer-events:
+    none !important;
+}
+
+
+.si-revelation-hero.is-live .si-hero-symbol {
+  opacity:
+    0 !important;
+
+  visibility:
+    visible !important;
+
+  pointer-events:
+    none !important;
+}
+
+/* SAN IGNACIO MIST KILL V183B START */
+
+/*
+  NO EXISTE NIEBLA.
+
+  Aunque los DIV .si-hero-mist
+  siguieran en HTML por cualquier motivo,
+  nunca se renderizan.
+*/
+
+body .first-screen.si-revelation-hero
+.si-hero-mist {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  animation: none !important;
+  transition: none !important;
+  background: none !important;
+  filter: none !important;
+}
+
+
+/*
+  La fotografía puede quedar lista debajo,
+  pero el blanco permanece completamente opaco
+  hasta que JS inicia el fade a los 4.75 s.
+*/
+
+body .first-screen.si-revelation-hero.is-photo-revealed
+.si-hero-white {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+/*
+  Estado final DESPUÉS del fade.
+*/
+
+body .first-screen.si-revelation-hero.is-white-gone
+.si-hero-white {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* SAN IGNACIO MIST KILL V183B END */
