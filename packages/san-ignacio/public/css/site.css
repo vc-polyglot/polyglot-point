@@ -1460,25 +1460,6 @@ body .first-screen .identity {
 }
 
 
-/* Morado nuevo: lateral, independiente de las letras */
-
-body .first-screen .identity::before {
-  content: "" !important;
-
-  position: absolute !important;
-
-  left: 0 !important;
-  top: 42% !important;
-  bottom: -6rem !important;
-
-  width: clamp(4.25rem, 5vw, 5.75rem) !important;
-
-  background: var(--si-purple, #594573) !important;
-
-  z-index: -1 !important;
-}
-
-
 /*
    Si el diseño original tenía otro pseudo-elemento
    atravesando el título, desaparece.
@@ -1626,15 +1607,9 @@ body .first-screen .schedule-card::before {
     row-gap: 2.5rem !important;
   }
 
-  body .first-screen .identity {
-    padding-left: 4.5rem !important;
-  }
 
-  body .first-screen .identity::before {
-    width: 3.25rem !important;
-    top: 38% !important;
-    bottom: -2rem !important;
-  }
+
+
 
   body .first-screen .schedule-panel,
   body .first-screen .schedule-card {
