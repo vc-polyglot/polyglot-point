@@ -1,0 +1,859 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Iglesia de San Ignacio de Loyola, Polanco, Ciudad de México. Horarios, pastoral, espiritualidad jesuita y música.">
+  <title>San Ignacio de Loyola · Polanco</title>
+  <link rel="stylesheet" href="/css/site.css?v=20260908142324">
+  <!-- SAN IGNACIO MULTIVIEW CSS V5 -->
+  <link rel="stylesheet" href="/css/view-router.css">
+  <!-- END SAN IGNACIO MULTIVIEW CSS V5 -->
+  <link rel="stylesheet" href="/css/editorial.css?v=17">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="San Ignacio de Loyola, inicio">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>
+        <strong>San Ignacio</strong>
+        <small>de Loyola · Polanco</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+      Menú
+    </button>
+
+    <nav id="primary-nav" class="primary-nav" aria-label="Navegación principal">
+      <a href="#liturgia">Vida litúrgica</a>
+      <a href="#pastoral">Pastoral</a>
+      <a href="#espiritualidad">Espiritualidad</a>
+      <a href="#nosotros">Nosotros</a>
+      <a href="#musica">Música</a>
+      <a href="#donativos">Donativos</a>
+      <a href="#historia">Historia</a>
+      <a href="#galeria">Galería</a>
+      <a href="#contacto">Contacto</a>    </nav>
+  </header>
+
+  <main>
+    <section class="first-screen" aria-labelledby="home-title">
+      <div class="identity">
+        <p class="eyebrow">Iglesia jesuita · Ciudad de México</p>
+        <h1 id="home-title">San Ignacio<br>de Loyola</h1>
+        <p class="address">Séneca 306 · Polanco</p>
+      </div>
+
+      <div class="mosaic warm" aria-hidden="true"></div>
+      <!-- SAN IGNACIO TRINITY V17 -->
+<svg
+  class="trinity-motif-v17"
+  viewBox="0 0 208 602"
+  aria-hidden="true"
+  focusable="false"
+  preserveAspectRatio="xMidYMin meet"
+>
+  <rect
+    data-trinity-bar="left"
+    x="0"
+    y="196"
+    width="92"
+    height="406"
+    fill="#375A82">
+  </rect>
+
+  <rect
+    data-trinity-bar="right"
+    x="116"
+    y="196"
+    width="92"
+    height="406"
+    fill="#5F4C7D">
+  </rect>
+
+  <rect
+    data-trinity-bar="center"
+    x="58"
+    y="0"
+    width="92"
+    height="406"
+    fill="#594573">
+  </rect>
+</svg>
+<!-- END SAN IGNACIO TRINITY V17 -->
+    </section>
+
+<section id="liturgia" class="liturgy-section section-shell">
+      <header class="liturgy-heading">
+        <h2>Vida litúrgica</h2>
+        <p class="liturgy-subtitle">Horarios</p>
+
+        <div
+          id="liturgy-fixed-info"
+          class="liturgy-fixed-info"
+          hidden
+        ></div>
+      </header>
+
+      <div class="liturgy-content">
+
+<!-- SAN IGNACIO MASS HOURS V116 -->
+<div class="mass-hours-primary" aria-labelledby="mass-hours-title">
+
+  <p class="mass-hours-kicker">Horarios de misa</p>
+
+  <h3 id="mass-hours-title" class="mass-hours-heading">
+    Celebración de la Eucaristía
+  </h3>
+
+  <div class="mass-hours-list">
+
+    <div class="mass-hours-row">
+      <div class="mass-hours-day">Lunes a viernes</div>
+      <div class="mass-hours-times">7:30 · 13:30 · 18:30 h</div>
+    </div>
+
+    <div class="mass-hours-row">
+      <div class="mass-hours-day">Sábado</div>
+      <div class="mass-hours-times">7:30 · 18:30 h</div>
+    </div>
+
+    <div class="mass-hours-row mass-hours-row--sunday">
+      <div class="mass-hours-day">Domingo</div>
+      <div class="mass-hours-times">
+        9:00 · 10:30 <span class="mass-hours-note">(misa de niños)</span> · 12:00 · 13:30 · 18:30 h
+      </div>
+    </div>
+
+  </div>
+
+</div>
+<!-- END SAN IGNACIO MASS HOURS V116 -->
+
+<div id="schedule-grid"
+     class="legacy-cms-stub"
+     hidden
+     aria-hidden="true"></div>
+      </div>
+<!-- SAN IGNACIO PHOTO: liturgia -->
+
+<!-- SAN IGNACIO LITURGY HOURS V1 -->
+<div class="liturgy-hours" aria-label="">
+
+
+
+  <div class="liturgy-hours-grid">
+
+    <div class="liturgy-hours-item">
+      <span class="liturgy-hours-day">Lunes a viernes</span>
+      <span class="liturgy-hours-time">7:30 · 13:30 · 18:30 h</span>
+    </div>
+
+    <div class="liturgy-hours-item">
+      <span class="liturgy-hours-day">Sábado</span>
+      <span class="liturgy-hours-time">7:30 · 18:30 h</span>
+    </div>
+
+    <div class="liturgy-hours-item liturgy-hours-item--sunday">
+      <span class="liturgy-hours-day">Domingo</span>
+      <span class="liturgy-hours-time">
+        9 · 10:30 <em>(misa de niños)</em> · 12 · 13:30 · 18:30 h
+      </span>
+    </div>
+
+  </div>
+
+</div>
+<!-- END SAN IGNACIO LITURGY HOURS V1 -->
+
+<figure class="site-section-photo site-section-photo--liturgia">
+  <img
+    src="/img/site-photos/liturgia.jpg"
+    alt="Presbiterio y crucifijo de San Ignacio de Loyola"
+    loading="lazy"
+    decoding="async">
+</figure>
+<!-- END SAN IGNACIO PHOTO -->
+</section>
+
+<section id="pastoral" class="pastoral-section section-shell">
+      <div>
+        <p class="section-kicker">Esta semana</p>
+        <h2>Mensaje pastoral</h2>
+      </div>
+      <article id="pastoral-card" class="pastoral-card">
+        <p class="loading">Cargando mensaje…</p>
+      </article>
+<!-- SAN IGNACIO PHOTO: pastoral -->
+<figure class="site-section-photo site-section-photo--pastoral">
+  <img
+    src="/img/site-photos/pastoral.jpeg"
+    alt="Comunidad reunida en San Ignacio de Loyola"
+    loading="lazy"
+    decoding="async">
+</figure>
+<!-- END SAN IGNACIO PHOTO -->
+</section>
+
+<section id="espiritualidad" class="three-paths section-shell">
+      <p id="spirituality-eyebrow" class="section-kicker">Espiritualidad jesuita</p>
+      <div class="spirituality-intro">
+        <h2 id="spirituality-title">Encontrar a Dios en todas las cosas.</h2>
+        <p id="spirituality-body"></p>
+      </div>
+
+      <div id="spirituality-cards" class="path-grid">
+        <p class="loading">Cargando contenido…</p>
+      </div>
+<!-- SAN IGNACIO PHOTO: espiritualidad -->
+<figure class="site-section-photo site-section-photo--espiritualidad">
+  <img
+    src="/img/site-photos/espiritualidad.jpeg"
+    alt="Cristo y frase de san Ignacio de Loyola en el templo"
+    loading="lazy"
+    decoding="async">
+</figure>
+<!-- END SAN IGNACIO PHOTO -->
+</section>
+
+<section id="nosotros" class="staff-section section-shell">
+      <div class="staff-heading">
+        <p class="section-kicker">Comunidad</p>
+        <h2>Nosotros</h2>
+      </div>
+
+      <!-- SAN IGNACIO NOSOTROS DIRECTORY V123 -->
+
+<div class="community-directory">
+
+  <figure class="community-directory-photo">
+    <img
+      src="/img/site-photos/nosotros.jpeg"
+      alt="Comunidad de San Ignacio de Loyola"
+      loading="lazy"
+    >
+  </figure>
+
+
+  <div class="community-directory-main">
+
+    <p class="community-directory-kicker">
+      Nuestra comunidad
+    </p>
+
+
+    <div class="community-directory-roles">
+
+      <button
+        type="button"
+        class="community-role is-active"
+        data-community-role="rector"
+        aria-expanded="true"
+      >
+        <span>Rector</span>
+        <span class="community-role-mark">+</span>
+      </button>
+
+
+      <button
+        type="button"
+        class="community-role"
+        data-community-role="sacerdote"
+        aria-expanded="false"
+      >
+        <span>Sacerdote colaborador</span>
+        <span class="community-role-mark">+</span>
+      </button>
+
+
+      <button
+        type="button"
+        class="community-role"
+        data-community-role="administracion"
+        aria-expanded="false"
+      >
+        <span>Administración</span>
+        <span class="community-role-mark">+</span>
+      </button>
+
+
+      <button
+        type="button"
+        class="community-role"
+        data-community-role="catequesis"
+        aria-expanded="false"
+      >
+        <span>Catequesis</span>
+        <span class="community-role-mark">+</span>
+      </button>
+
+
+      <button
+        type="button"
+        class="community-role"
+        data-community-role="sacristanes"
+        aria-expanded="false"
+      >
+        <span>Sacristanes</span>
+        <span class="community-role-mark">+</span>
+      </button>
+
+    </div>
+
+
+    <div
+      id="community-role-detail"
+      class="community-role-detail"
+      aria-live="polite"
+    ></div>
+
+  </div>
+
+</div>
+
+<!-- END SAN IGNACIO NOSOTROS DIRECTORY V123 -->
+
+<div id="staff-grid" class="staff-grid">
+        <p class="loading">Cargando equipo…</p>
+      </div>
+<!-- SAN IGNACIO PHOTO: nosotros -->
+<figure class="site-section-photo site-section-photo--nosotros">
+  <img
+    src="/img/site-photos/nosotros.jpeg"
+    alt="Interior de la iglesia de San Ignacio de Loyola"
+    loading="lazy"
+    decoding="async">
+</figure>
+<!-- END SAN IGNACIO PHOTO -->
+</section>
+
+<section id="musica" class="music-section section-shell">
+      <div>
+        <p class="section-kicker">Música</p>
+        <h2>La música como parte de la vida del templo.</h2>
+      </div>
+
+      <div class="music-copy">
+        <div class="music-public-group">
+          <h3>Próximos conciertos</h3>
+          <div id="concerts-public" class="music-public-list">
+            <p class="music-public-empty">Consultando agenda…</p>
+          </div>
+        </div>
+
+        <div class="music-public-group">
+          <h3>Grabaciones, repertorio y publicaciones</h3>
+          <div id="music-items-public" class="music-public-list">
+            <p class="music-public-empty">Consultando contenido…</p>
+          </div>
+        </div>
+
+        <p class="music-celebrations">
+          Información sobre música para celebraciones disponible en la Secretaría del templo.
+        </p>
+      </div>
+    </section>
+
+<section id="donativos" class="donations-section section-shell">
+      <div class="donations-intro">
+        <p class="section-kicker">Donativos</p>
+        <h2>Sostener el templo también es participar en su vida.</h2>
+        <p>
+          Por ahora, los donativos pueden realizarse por transferencia bancaria.
+          Las opciones con tarjeta y plataformas digitales se incorporarán más adelante,
+          cuando la parroquia lo confirme con su administración y su contabilidad.
+        </p>
+      </div>
+
+      <div class="donations-grid">
+        <article class="donation-card donation-card--bank">
+          <div class="donation-card-heading">
+            <h3>Transferencia bancaria</h3>
+            <span class="donation-badge donation-badge--live">Disponible</span>
+          </div>
+
+          <dl class="bank-details">
+            <div>
+              <dt>Titular</dt>
+              <dd>Por confirmar</dd>
+            </div>
+            <div>
+              <dt>Banco</dt>
+              <dd>Por confirmar</dd>
+            </div>
+            <div>
+              <dt>Cuenta</dt>
+              <dd>Por confirmar</dd>
+            </div>
+            <div>
+              <dt>CLABE</dt>
+              <dd>Por confirmar</dd>
+            </div>
+          </dl>
+
+          <p class="bank-note">
+            En cuanto tengamos los datos bancarios definitivos de la parroquia,
+            aparecerán aquí.
+          </p>
+        </article>
+
+        <article class="donation-card donation-card--methods">
+          <div class="donation-card-heading">
+            <h3>Otras formas de donar</h3>
+            <span class="donation-badge">Próximamente</span>
+          </div>
+
+          <div class="donation-method-badges">
+            <span class="donation-chip donation-chip--active">Transferencia</span>
+            <span class="donation-chip">Tarjeta</span>
+            <span class="donation-chip">PayPal</span>
+            <span class="donation-chip">Mercado Pago</span>
+          </div>
+
+          <p class="bank-note">
+            Esta sección muestra cómo se verán las opciones futuras,
+            sin conectar todavía ninguna pasarela de cobro.
+          </p>
+        </article>
+      </div>
+    </section>
+
+<section id="historia" class="architecture-section history-section history-section--canonical">
+
+      <div class="architecture-copy history-copy">
+
+        <p class="section-kicker">Historia</p>
+
+        <h2>Historia</h2>
+
+        <nav
+          class="history-tabs"
+          role="tablist"
+          aria-label="Historia de San Ignacio de Loyola"
+        >
+
+          <button
+            class="history-tab active"
+            type="button"
+            role="tab"
+            aria-selected="true"
+            aria-controls="history-patria"
+            data-history-tab="patria"
+          >
+            Instituto Patria
+          </button>
+
+          <button
+            class="history-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="history-capilla"
+            data-history-tab="capilla"
+          >
+            Capilla
+          </button>
+
+          <button
+            class="history-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="history-arquitectura"
+            data-history-tab="arquitectura"
+          >
+            Arquitectura
+          </button>
+
+        </nav>
+
+        <div class="history-panels">
+
+          <article
+            id="history-patria"
+            class="history-panel active"
+            role="tabpanel"
+            data-history-panel="patria"
+          >
+            <h3>Instituto Patria</h3>
+          </article>
+
+          <article
+            id="history-capilla"
+            class="history-panel"
+            role="tabpanel"
+            data-history-panel="capilla"
+            hidden
+          >
+            <h3>Capilla</h3>
+          </article>
+
+          <article
+            id="history-arquitectura"
+            class="history-panel"
+            role="tabpanel"
+            data-history-panel="arquitectura"
+            hidden
+          >
+            <p id="about-eyebrow" class="section-kicker"></p>
+            <h3 id="about-title"></h3>
+            <p id="about-body"></p>
+
+            <div
+              id="about-image"
+              hidden
+              aria-hidden="true"
+              style="display:none !important"
+            ></div>
+          </article>
+
+        </div>
+
+      </div>
+
+      <div
+        id="history-palette"
+        class="architecture-placeholder"
+        role="img"
+        aria-label="Interior del templo de San Ignacio de Loyola"
+      >
+        <span>San Ignacio de Loyola</span>
+      </div>
+<!-- SAN IGNACIO PHOTO: historia -->
+<div class="history-photo-grid">
+  <figure>
+    <img
+      src="/img/site-photos/historia-capilla.jpg"
+      alt="Vista de la capilla de San Ignacio de Loyola"
+      loading="lazy"
+      decoding="async">
+    <figcaption>Capilla</figcaption>
+  </figure>
+
+  <figure>
+    <img
+      src="/img/site-photos/historia-arquitectura.jpeg"
+      alt="Estructura de San Ignacio de Loyola durante su construcción"
+      loading="lazy"
+      decoding="async">
+    <figcaption>Arquitectura</figcaption>
+  </figure>
+</div>
+<!-- END SAN IGNACIO PHOTO -->
+</section>
+
+<section id="galeria" class="gallery-section section-shell" aria-labelledby="gallery-title">
+
+  <header class="gallery-heading">
+    <h2 id="gallery-title">Galería</h2>
+  </header>
+
+  <div class="gallery-entry">
+    <button
+      id="gallery-launch"
+      class="gallery-launch"
+      type="button"
+      aria-haspopup="dialog"
+      aria-controls="gallery-lightbox">
+
+      <img
+        src="/img/site-photos/galeria-01.jpg"
+        alt="Abrir galería fotográfica de San Ignacio de Loyola"
+        loading="lazy"
+        decoding="async">
+
+      <span class="gallery-launch-meta">
+        Ver galería · 23 fotografías
+      </span>
+    </button>
+  </div>
+
+  <script id="gallery-data" type="application/json">["/img/site-photos/galeria-01.jpg","/img/site-photos/galeria-02.jpg","/img/site-photos/galeria-03.jpg","/img/site-photos/galeria-04.jpg","/img/site-photos/galeria-05.jpg","/img/site-photos/galeria-06.jpg","/img/site-photos/galeria-07.jpg","/img/site-photos/galeria-08.jpg","/img/site-photos/galeria-09.jpg","/img/site-photos/galeria-10.jpg","/img/site-photos/galeria-11.jpg","/img/site-photos/galeria-12.jpg","/img/site-photos/galeria-13.jpg","/img/site-photos/galeria-14.jpg","/img/site-photos/galeria-15.jpg","/img/site-photos/galeria-16.jpg","/img/site-photos/galeria-17.jpg","/img/site-photos/galeria-18.jpg","/img/site-photos/galeria-19.jpg","/img/site-photos/galeria-20.jpg","/img/site-photos/galeria-21.jpg","/img/site-photos/galeria-22.jpg","/img/site-photos/galeria-23.jpg"]</script>
+
+  <div
+    id="gallery-lightbox"
+    class="gallery-lightbox"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Galería fotográfica"
+    hidden>
+
+    <div class="gallery-lightbox-toolbar">
+
+      <div
+        id="gallery-counter"
+        class="gallery-counter"
+        aria-live="polite">
+        1 / 23
+      </div>
+
+      <button
+        id="gallery-close"
+        class="gallery-close"
+        type="button"
+        aria-label="Cerrar galería">
+        ×
+      </button>
+
+    </div>
+
+    <div class="gallery-stage">
+
+      <button
+        id="gallery-prev"
+        class="gallery-arrow gallery-arrow--prev"
+        type="button"
+        aria-label="Fotografía anterior">
+        ‹
+      </button>
+
+      <img
+        id="gallery-image"
+        class="gallery-lightbox-image"
+        src="/img/site-photos/galeria-01.jpg"
+        alt="Fotografía 1 de 23"
+        draggable="false">
+
+      <button
+        id="gallery-next"
+        class="gallery-arrow gallery-arrow--next"
+        type="button"
+        aria-label="Fotografía siguiente">
+        ›
+      </button>
+
+    </div>
+
+    <div class="gallery-lightbox-help">
+      <span>Desliza o usa las flechas para recorrer las fotografías</span>
+    </div>
+
+  </div>
+
+</section>
+
+<section id="contacto" class="contact-section section-shell">
+      <div class="contact-intro">
+        <p class="section-kicker">Contacto</p>
+        <h2>San Ignacio de Loyola</h2>
+        <p class="contact-address">
+          Séneca 306, Polanco, Ciudad de México.
+        </p>
+        <p class="contact-copy">
+          Envíenos un mensaje y la parroquia podrá atenderlo desde su sistema administrativo.
+        </p>
+      </div>
+
+      <form id="contact-form" class="contact-form">
+        <div class="contact-form-row">
+          <label>
+            Nombre
+            <input
+              name="name"
+              type="text"
+              maxlength="160"
+              autocomplete="name"
+              required
+            >
+          </label>
+
+          <label>
+            Correo electrónico
+            <input
+              name="email"
+              type="email"
+              maxlength="254"
+              autocomplete="email"
+              required
+            >
+          </label>
+        </div>
+
+        <div class="contact-form-row">
+          <label>
+            Teléfono
+            <input
+              name="phone"
+              type="tel"
+              maxlength="60"
+              autocomplete="tel"
+            >
+          </label>
+
+          <label>
+            Asunto
+            <input
+              name="subject"
+              type="text"
+              maxlength="200"
+              required
+            >
+          </label>
+        </div>
+
+        <label>
+          Mensaje
+          <textarea
+            name="message"
+            rows="7"
+            maxlength="5000"
+            required
+          ></textarea>
+        </label>
+
+        <div class="contact-honeypot" aria-hidden="true">
+          <label>
+            Sitio web
+            <input
+              name="website"
+              type="text"
+              tabindex="-1"
+              autocomplete="off"
+            >
+          </label>
+        </div>
+
+        <div class="contact-submit-row">
+          <button type="submit" class="button-link">
+            Enviar mensaje
+          </button>
+
+          <p id="contact-status" class="contact-status" role="status"></p>
+        </div>
+      </form>
+
+<!-- SAN IGNACIO DIRECT CONTACT V2 -->
+<div class="direct-contact" aria-label="Datos directos de contacto">
+
+  <div class="direct-contact-header">
+    <h3 class="direct-contact-title">Iglesia San Ignacio de Loyola Polanco</h3>
+    <p class="direct-contact-subtitle">Página · Iglesia católica</p>
+  </div>
+
+  <div class="direct-contact-grid">
+
+    <a
+      class="direct-contact-item"
+      href="https://www.facebook.com/IglesiaSanIgnacioPolanco/"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Facebook de Iglesia San Ignacio de Loyola Polanco">
+      <span class="direct-contact-icon direct-contact-icon-facebook" aria-hidden="true">f</span>
+      <span class="direct-contact-copy">
+        <span class="direct-contact-label">Facebook</span>
+        <span class="direct-contact-value">Iglesia San Ignacio de Loyola Polanco</span>
+      </span>
+    </a>
+
+    <div class="direct-contact-item" aria-label="Dirección">
+      <span class="direct-contact-icon" aria-hidden="true">⌂</span>
+      <span class="direct-contact-copy">
+        <span class="direct-contact-label">Dirección</span>
+        <span class="direct-contact-value">Avenida Horacio esquina Avenida Moliere, Ciudad de México</span>
+      </span>
+    </div>
+
+    <a
+      class="direct-contact-item"
+      href="tel:+525552806586"
+      aria-label="Llamar al 55 5280 6586">
+      <span class="direct-contact-icon" aria-hidden="true">☎</span>
+      <span class="direct-contact-copy">
+        <span class="direct-contact-label">Teléfono</span>
+        <span class="direct-contact-value">55 5280 6586</span>
+      </span>
+    </a>
+
+    <a
+      class="direct-contact-item"
+      href="mailto:amdg1@prodigy.net.mx"
+      aria-label="Enviar correo a amdg1@prodigy.net.mx">
+      <span class="direct-contact-icon" aria-hidden="true">✉</span>
+      <span class="direct-contact-copy">
+        <span class="direct-contact-label">Correo</span>
+        <span class="direct-contact-value">amdg1@prodigy.net.mx</span>
+      </span>
+    </a>
+
+    <a
+      class="direct-contact-item"
+      href="https://jesuitasmexico.org/"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Ir a jesuitasmexico.org">
+      <span class="direct-contact-icon" aria-hidden="true">↗</span>
+      <span class="direct-contact-copy">
+        <span class="direct-contact-label">Sitio relacionado</span>
+        <span class="direct-contact-value">jesuitasmexico.org</span>
+      </span>
+    </a>
+
+  </div>
+
+</div>
+<!-- END SAN IGNACIO DIRECT CONTACT V2 -->
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- SAN IGNACIO PHOTO: gallery -->
+
+<!-- END SAN IGNACIO PHOTO -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+
+</main>
+
+  <footer class="site-footer">
+    <span>San Ignacio de Loyola · Polanco</span>
+  </footer>
+
+  <script src="/js/site.js?v=20260908142324" defer></script>
+  <!-- SAN IGNACIO MULTIVIEW JS V5 -->
+  <script src="/js/view-router.js" defer></script>
+  <!-- END SAN IGNACIO MULTIVIEW JS V5 -->
+  <script src="/js/editorial.js" defer></script>
+</body>
+</html>

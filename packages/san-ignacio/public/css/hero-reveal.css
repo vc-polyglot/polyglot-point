@@ -1,5 +1,5 @@
 /* ============================================================
-   SAN IGNACIO — HERO REVELATION V171
+   SAN IGNACIO — HERO REVELATION V174
    LOGO ABSTRACTO -> NIEBLA -> CRUCES REALES -> INTERIOR
    ============================================================ */
 
@@ -152,9 +152,10 @@ body .first-screen.si-revelation-hero .si-home-carousel {
     forwards;
 
   transition:
-    opacity 2.3s ease,
-    filter 2.3s ease,
-    transform 2.3s ease;
+    opacity 1.4s ease,
+    filter 1.4s ease,
+    transform 1.4s ease,
+    visibility 0s linear 1.4s;
 }
 
 .si-hero-symbol img {
@@ -167,10 +168,23 @@ body .first-screen.si-revelation-hero .si-home-carousel {
 }
 
 .si-revelation-hero.is-photo-revealed .si-hero-symbol {
-  opacity: .18;
+  opacity: 1;
 
   filter:
-    blur(4px);
+    blur(1px);
+
+  transform:
+    translate(-50%, -48%)
+    scale(1.015);
+}
+
+.si-revelation-hero.is-logo-gone .si-hero-symbol {
+  opacity: 0;
+
+  visibility: hidden;
+
+  filter:
+    blur(8px);
 
   transform:
     translate(-50%, -49%)
@@ -265,7 +279,7 @@ body .first-screen.si-revelation-hero .si-hero-copy {
 
   opacity: 0;
 
-  transform: translateY(18px);
+  transform: none;
 
   text-shadow:
     0 2px 8px rgba(0,0,0,.26),
@@ -278,7 +292,7 @@ body .first-screen.si-revelation-hero .si-hero-copy {
 
 body .first-screen.si-revelation-hero.is-live .si-hero-copy {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
 }
 
 body .first-screen.si-revelation-hero .si-hero-copy .eyebrow {

@@ -1,6 +1,8 @@
 (() => {
   "use strict";
 
+  /* SAN IGNACIO HERO REVELATION V174 */
+
   const hero =
     document.querySelector(".si-revelation-hero");
 
@@ -70,6 +72,7 @@
 
     hero.classList.add(
       "is-photo-revealed",
+      "is-logo-gone",
       "is-live"
     );
 
@@ -79,12 +82,32 @@
   }
 
   /*
-    0.0s  fondo blanco
-    0.2s  nace el logotipo en la neblina
-    3.5s  comienza a aparecer la fotografía real
-    5.9s  desaparece el símbolo abstracto
-    6.1s  aparece texto
-    9.0s  empieza la rotación de interiores
+    V174
+
+    0.0 s
+    Fondo blanco.
+
+    0.2 - 3.2 s
+    Cruces abstractas emergen.
+
+    3.25 s
+    Empieza a revelarse la fotografía real.
+
+    4.75 s
+    El logo abstracto sigue vivo 1 segundo más.
+    Aquí comienza su desvanecimiento.
+
+    4.75 - 6.15 s
+    Fade suave del logo abstracto.
+
+    ~6.15 s
+    Logo completamente fuera.
+
+    6.4 s
+    Texto visible EN EL MISMO SITIO.
+
+    9.4 s
+    Comienza carrusel interior.
   */
 
   window.setTimeout(
@@ -93,7 +116,16 @@
         "is-photo-revealed"
       );
     },
-    3500
+    3250
+  );
+
+  window.setTimeout(
+    () => {
+      hero.classList.add(
+        "is-logo-gone"
+      );
+    },
+    4750
   );
 
   window.setTimeout(
@@ -102,14 +134,14 @@
         "is-live"
       );
     },
-    5900
+    6400
   );
 
   window.setTimeout(
     () => {
       beginRotation();
     },
-    9000
+    9400
   );
 
   document.addEventListener(
