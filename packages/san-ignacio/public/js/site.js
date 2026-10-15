@@ -1569,3 +1569,44 @@ canonicalHistoryTabs.forEach((tab) => {
 })();
 
 /* END SAN IGNACIO NOSOTROS DIRECTORY V123 */
+
+/* SAN-IGNACIO-INTENCIONES-AJUSTE-V1 */
+{
+  const headings = [...document.querySelectorAll("h1, h2, h3, h4")];
+  const title = headings.find(el => el.textContent.trim().toLowerCase() === "intenciones de misa");
+
+  if (title) {
+    const scope =
+      title.closest("section, article, div") || document;
+
+    const kicker =
+      scope.querySelector(".section-kicker") ||
+      title.parentElement?.querySelector(".section-kicker");
+
+    if (kicker) {
+      kicker.remove();
+    }
+
+    const paragraphs = [...scope.querySelectorAll("p")].filter(
+      p =>
+        !p.classList.contains("section-kicker") &&
+        p.textContent.trim().toLowerCase().includes("para solicitar una intención de misa")
+    );
+
+    const intro = paragraphs[0];
+    if (intro) {
+      intro.style.setProperty("font-size", "1.65rem", "important");
+      intro.style.lineHeight = "1.6";
+    }
+  }
+}
+
+/* SAN-IGNACIO-INTENCION-TEXTO-GRANDE-V2 */
+setTimeout(() => {
+  [...document.querySelectorAll("p, div, span")].forEach((el) => {
+    if (el.textContent.trim() === "Para solicitar una intención de misa, consulte disponibilidad y registro en la oficina de la iglesia.") {
+      el.style.setProperty("font-size", "1.75rem", "important");
+      el.style.setProperty("line-height", "1.45", "important");
+    }
+  });
+}, 300);
