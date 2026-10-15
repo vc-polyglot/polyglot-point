@@ -1,4 +1,4 @@
-/* SAN IGNACIO MULTIVIEW ROUTER V7 */
+/* SAN IGNACIO MULTIVIEW ROUTER V8 */
 (() => {
   "use strict";
 
@@ -8,25 +8,25 @@
       description: "Iglesia de San Ignacio de Loyola, Polanco, Ciudad de México." },
     { id: "liturgia", path: "/vida-liturgica", selector: "#liturgia", label: "Vida litúrgica",
       title: "Vida litúrgica · San Ignacio de Loyola",
-      description: "Horarios de misa y vida litúrgica de San Ignacio de Loyola, Polanco." },
+      description: "Horarios de misa e intenciones de San Ignacio de Loyola, Polanco." },
+    { id: "sacramentos", path: "/sacramentos", selector: "#sacramentos", label: "Sacramentos",
+      title: "Sacramentos · San Ignacio de Loyola",
+      description: "Información sobre sacramentos en San Ignacio de Loyola, Polanco." },
     { id: "pastoral", path: "/pastoral", selector: "#pastoral", label: "Pastoral",
       title: "Pastoral · San Ignacio de Loyola",
       description: "Vida pastoral de la comunidad de San Ignacio de Loyola, Polanco." },
-    { id: "espiritualidad", path: "/espiritualidad", selector: "#espiritualidad", label: "Espiritualidad",
-      title: "Espiritualidad · San Ignacio de Loyola",
-      description: "Espiritualidad ignaciana y jesuita en San Ignacio de Loyola, Polanco." },
+    { id: "agenda", path: "/agenda", selector: "#musica", label: "Agenda y eventos",
+      title: "Agenda y eventos · San Ignacio de Loyola",
+      description: "Agenda, celebraciones, conciertos y actividades de San Ignacio de Loyola, Polanco." },
     { id: "nosotros", path: "/nosotros", selector: "#nosotros", label: "Nosotros",
       title: "Nosotros · San Ignacio de Loyola",
       description: "Comunidad y equipo de San Ignacio de Loyola, Polanco." },
-    { id: "musica", path: "/agenda", selector: "#musica", label: "Agenda y eventos",
-      title: "Agenda y eventos · San Ignacio de Loyola",
-      description: "Agenda, celebraciones, conciertos y actividades de San Ignacio de Loyola, Polanco." },
-    { id: "donativos", path: "/donativos", selector: "#donativos", label: "Donativos",
-      title: "Donativos · San Ignacio de Loyola",
-      description: "Información para apoyar a la comunidad de San Ignacio de Loyola, Polanco." },
+    { id: "agua", path: "/agua-de-san-ignacio", selector: "#agua", label: "Agua de San Ignacio",
+      title: "Agua de San Ignacio · San Ignacio de Loyola",
+      description: "Información sobre el Agua de San Ignacio y cómo obtenerla." },
     { id: "historia", path: "/historia", selector: "#historia", label: "Historia",
       title: "Historia · San Ignacio de Loyola",
-      description: "Historia, capilla y arquitectura de San Ignacio de Loyola, Polanco." },
+      description: "Historia, capilla, arquitectura y rectores de San Ignacio de Loyola, Polanco." },
     { id: "galeria", path: "/galeria", selector: "#galeria", label: "Galería",
       title: "Galería · San Ignacio de Loyola",
       description: "Galería fotográfica de San Ignacio de Loyola, Polanco." },
@@ -40,15 +40,18 @@
     const path = String(value || "/").split("?")[0].split("#")[0] || "/";
     return path === "/" ? "/" : path.replace(/\/+$/, "");
   };
+
   const routeByPath = new Map(routes.map(route => [normalizePath(route.path), route]));
-  routeByPath.set("/musica", routeById.get("musica"));
+  routeByPath.set("/musica", routeById.get("agenda"));
+
   const hashToRoute = new Map([
     ["#liturgia", "liturgia"],
+    ["#sacramentos", "sacramentos"],
     ["#pastoral", "pastoral"],
-    ["#espiritualidad", "espiritualidad"],
+    ["#musica", "agenda"],
+    ["#agenda", "agenda"],
     ["#nosotros", "nosotros"],
-    ["#musica", "musica"],
-    ["#donativos", "donativos"],
+    ["#agua", "agua"],
     ["#historia", "historia"],
     ["#galeria", "galeria"],
     ["#contacto", "contacto"]
@@ -125,7 +128,6 @@
   function resolveRoute() {
     let route = routeByPath.get(normalizePath(location.pathname));
 
-    // Compatibilidad: las viejas anclas se convierten una sola vez a URL real.
     if (!route && normalizePath(location.pathname) === "/" && hashToRoute.has(location.hash)) {
       route = routeById.get(hashToRoute.get(location.hash));
       if (route && routeElements.has(route.id)) {
@@ -166,7 +168,6 @@
     applyRoute(route);
   }
 
-  // Captura primero para neutralizar cualquier viejo comportamiento de anclas.
   document.addEventListener("click", event => {
     if (event.defaultPrevented || event.button !== 0) return;
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -199,7 +200,6 @@
 
   addEventListener("popstate", () => applyRoute(resolveRoute(), { scroll: false }));
 
-  // Menú: conserva el botón actual y agrega cierre al tocar/clicar fuera.
   document.addEventListener("pointerdown", event => {
     if (!nav?.classList.contains("open")) return;
     if (nav.contains(event.target) || navToggle?.contains(event.target)) return;
@@ -212,15 +212,6 @@
       navToggle?.focus();
     }
   });
-
-
-  // ============================================================
-  // GALLERY FULLSCREEN V7
-  //
-  // El visor existente se mueve al <body> para que ningún transform,
-  // overflow o sección activa lo limite. Sus handlers existentes,
-  // contador, cierre y flechas se conservan intactos.
-  // ============================================================
 
   function promoteGalleryLightbox() {
     const galleryImage = document.querySelector("#gallery-image");
@@ -291,4 +282,4 @@
 
   applyRoute(resolveRoute(), { scroll: false });
 })();
-/* END SAN IGNACIO MULTIVIEW ROUTER V7 */
+/* END SAN IGNACIO MULTIVIEW ROUTER V8 */

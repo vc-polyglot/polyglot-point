@@ -1,0 +1,1035 @@
+/* SAN IGNACIO RECONVERSION PUBLIC V1 */
+
+.si-section-heading {
+  width: min(100%, 1080px);
+  margin: 0 auto clamp(34px, 5vw, 64px);
+}
+
+.si-section-heading h2,
+.si-sacraments-section h2,
+.si-water-section h2 {
+  margin: 0;
+  font-size: clamp(3rem, 7vw, 7rem);
+  line-height: .9;
+  letter-spacing: -.055em;
+}
+
+.si-section-heading > p:last-child {
+  max-width: 72ch;
+  color: #c8c4bc;
+}
+
+.si-intentions-card {
+  width: min(100%, 1120px);
+  margin: 0 auto clamp(48px, 7vw, 90px);
+  padding: clamp(24px, 4vw, 42px);
+  color: #171a1c;
+  background: #eee8dc;
+  border-left: 7px solid #a72e24;
+}
+
+.si-intentions-card h3 {
+  margin: 0 0 14px;
+  font-size: clamp(1.8rem, 3.2vw, 3.4rem);
+  line-height: 1;
+  letter-spacing: -.035em;
+}
+
+.si-managed-body {
+  white-space: pre-line;
+  line-height: 1.65;
+}
+
+.si-sacraments-section {
+  width: 100%;
+  max-width: none;
+  background: #101214;
+}
+
+.si-sacraments-section > * {
+  width: min(100%, 1180px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.si-sacraments-list {
+  display: grid;
+  gap: 1px;
+  background: rgba(255,255,255,.15);
+}
+
+.si-sacrament-card {
+  background: #1a1d20;
+}
+
+.si-sacrament-card summary {
+  position: relative;
+  padding: 24px clamp(22px, 4vw, 42px);
+  cursor: pointer;
+  list-style: none;
+  font-size: clamp(1.35rem, 2.6vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -.025em;
+}
+
+.si-sacrament-card summary::-webkit-details-marker {
+  display: none;
+}
+
+.si-sacrament-card summary::after {
+  content: "+";
+  position: absolute;
+  right: clamp(22px, 4vw, 42px);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2em;
+  font-weight: 400;
+}
+
+.si-sacrament-card[open] summary::after {
+  content: "−";
+}
+
+.si-sacrament-card .si-managed-body {
+  padding: 0 clamp(22px, 4vw, 42px) 34px;
+  max-width: 88ch;
+  color: #d8d4cc;
+}
+
+.si-pastoral-intro {
+  max-width: 42ch;
+  color: #b8b4ac;
+}
+
+.si-pastoral-categories-wrap {
+  grid-column: 1 / -1;
+  margin-top: 30px;
+}
+
+.si-pastoral-categories {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: rgba(255,255,255,.15);
+}
+
+.si-pastoral-categories:empty {
+  display: none;
+}
+
+.si-pastoral-category {
+  padding: clamp(24px, 4vw, 40px);
+  background: #1a1d20;
+}
+
+.si-pastoral-category h3 {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.6vw, 2.6rem);
+  line-height: 1;
+}
+
+.si-pastoral-category-summary,
+.si-pastoral-category-contact {
+  margin: 14px 0 0;
+  color: #b8b4ac;
+}
+
+.si-pastoral-category .si-managed-body {
+  margin-top: 18px;
+  color: #d8d4cc;
+}
+
+.si-water-section {
+  width: 100%;
+  max-width: none;
+  color: #171a1c;
+  background: #eee8dc;
+}
+
+.si-water-layout {
+  width: min(100%, 1180px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(260px, .7fr) minmax(0, 1.3fr);
+  gap: clamp(40px, 8vw, 120px);
+}
+
+.si-water-section .section-kicker {
+  color: #6a655d;
+}
+
+.si-water-section .si-managed-body {
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  color: #4d4943;
+}
+
+.si-history-rectors {
+  margin-top: clamp(48px, 7vw, 90px);
+  padding-top: 30px;
+  border-top: 1px solid #bdb7ad;
+}
+
+.si-history-rectors h3 {
+  margin: 0 0 22px;
+  font-size: clamp(1.8rem, 3vw, 3.2rem);
+}
+
+.si-history-rectors-list {
+  display: grid;
+  gap: 1px;
+  background: #cfc8bd;
+}
+
+.si-history-rector {
+  display: grid;
+  grid-template-columns: minmax(180px, .55fr) minmax(0, 1.45fr);
+  gap: 24px;
+  padding: 20px;
+  background: #f1eee7;
+}
+
+.si-history-rector h4 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.si-history-rector p {
+  margin: 5px 0 0 !important;
+  font-size: .88rem !important;
+}
+
+.si-history-rectors-empty {
+  margin: 0;
+  color: #706d67;
+}
+
+body.si-multiview main > #musica.si-agenda-section[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 760px) {
+  .si-pastoral-categories,
+  .si-water-layout,
+  .si-history-rector {
+    grid-template-columns: 1fr;
+  }
+
+  .si-sacrament-card summary {
+    padding-right: 54px;
+  }
+}
+
+/* END SAN IGNACIO RECONVERSION PUBLIC V1 */
+
+/* SAN-IGNACIO-SACRAMENTOS-HOTFIX-V1 */
+body.si-sacramentos-claro main {
+  background:#f7f4ec !important;
+  color:#182126 !important;
+  min-height:100vh;
+}
+
+body.si-sacramentos-claro main h1,
+body.si-sacramentos-claro main h2,
+body.si-sacramentos-claro main h3 {
+  color:#172126 !important;
+}
+
+body.si-sacramentos-claro main h1 {
+  font-size:clamp(3.5rem,6vw,5.8rem) !important;
+  line-height:.95 !important;
+  letter-spacing:-.04em !important;
+}
+
+body.si-sacramentos-claro main p,
+body.si-sacramentos-claro main li {
+  color:#30383c !important;
+  font-size:clamp(1.12rem,1.25vw,1.32rem) !important;
+  line-height:1.7 !important;
+}
+
+body.si-sacramentos-claro main details,
+body.si-sacramentos-claro main article,
+body.si-sacramentos-claro main .accordion-item,
+body.si-sacramentos-claro main [data-accordion-item] {
+  background:#fffdf8 !important;
+  color:#182126 !important;
+  border:1px solid #ddd4c4 !important;
+  border-radius:18px !important;
+  box-shadow:0 12px 30px rgba(30,36,38,.07) !important;
+}
+
+body.si-sacramentos-claro main summary,
+body.si-sacramentos-claro main .accordion-title {
+  color:#182126 !important;
+  font-size:clamp(1.5rem,2vw,1.9rem) !important;
+}
+
+body.si-sacramentos-claro main a,
+body.si-sacramentos-claro main [class*="eyebrow"],
+body.si-sacramentos-claro main [class*="kicker"] {
+  color:#b34b2f !important;
+}
+
+/* SAN-IGNACIO-SACRAMENTOS-DESIGN-V2 */
+
+/* Fondo general: misma familia marfil de Historia */
+body.si-sacramentos-claro,
+body.si-sacramentos-claro #app,
+body.si-sacramentos-claro main,
+body.si-sacramentos-claro .view,
+body.si-sacramentos-claro .page,
+body.si-sacramentos-claro [data-view="sacramentos"] {
+  background: #eee8dc !important;
+  color: #172126 !important;
+}
+
+/* Nunca un gran lienzo negro dentro de Sacramentos */
+body.si-sacramentos-claro main > section,
+body.si-sacramentos-claro main > div,
+body.si-sacramentos-claro [data-view="sacramentos"] > section,
+body.si-sacramentos-claro [data-view="sacramentos"] > div {
+  background-color: transparent !important;
+}
+
+/* Contenedor editorial */
+body.si-sacramentos-claro main {
+  padding-top: 64px !important;
+  padding-bottom: 96px !important;
+}
+
+/* Títulos */
+body.si-sacramentos-claro main h1 {
+  color: #172126 !important;
+  font-size: clamp(3.6rem, 6vw, 5.8rem) !important;
+  line-height: .94 !important;
+  letter-spacing: -.045em !important;
+  margin-bottom: 18px !important;
+}
+
+body.si-sacramentos-claro main h2,
+body.si-sacramentos-claro main h3,
+body.si-sacramentos-claro main summary {
+  color: #172126 !important;
+}
+
+/* Entrada y texto */
+body.si-sacramentos-claro main p,
+body.si-sacramentos-claro main li {
+  color: #34393b !important;
+  font-size: clamp(1.08rem, 1.18vw, 1.25rem) !important;
+  line-height: 1.72 !important;
+  letter-spacing: .005em !important;
+}
+
+/* Etiqueta superior */
+body.si-sacramentos-claro main [class*="eyebrow"],
+body.si-sacramentos-claro main [class*="kicker"] {
+  color: #aa3d31 !important;
+  font-weight: 700 !important;
+  letter-spacing: .18em !important;
+}
+
+/* Tarjetas */
+body.si-sacramentos-claro main details,
+body.si-sacramentos-claro main article,
+body.si-sacramentos-claro main .accordion-item,
+body.si-sacramentos-claro main [data-accordion-item] {
+  background: #fffdf8 !important;
+  color: #172126 !important;
+  border: 1px solid rgba(23,33,38,.12) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 8px 24px rgba(23,33,38,.055) !important;
+  overflow: hidden !important;
+  margin-bottom: 14px !important;
+}
+
+/* Título de cada sacramento */
+body.si-sacramentos-claro main summary,
+body.si-sacramentos-claro main .accordion-title {
+  color: #172126 !important;
+  font-size: clamp(1.45rem, 2vw, 1.85rem) !important;
+  line-height: 1.15 !important;
+  font-weight: 700 !important;
+  padding-top: 22px !important;
+  padding-bottom: 22px !important;
+}
+
+/* Mucho mejor contraste dentro de tarjetas abiertas */
+body.si-sacramentos-claro main details[open] p,
+body.si-sacramentos-claro main details[open] li,
+body.si-sacramentos-claro main .accordion-item p,
+body.si-sacramentos-claro main [data-accordion-item] p {
+  color: #3c4142 !important;
+}
+
+/* Paleta aplicada como acento, no como bloques */
+body.si-sacramentos-claro main details:nth-of-type(5n+1),
+body.si-sacramentos-claro main .accordion-item:nth-of-type(5n+1) {
+  border-top: 5px solid #b33a31 !important;
+}
+
+body.si-sacramentos-claro main details:nth-of-type(5n+2),
+body.si-sacramentos-claro main .accordion-item:nth-of-type(5n+2) {
+  border-top: 5px solid #cb5d27 !important;
+}
+
+body.si-sacramentos-claro main details:nth-of-type(5n+3),
+body.si-sacramentos-claro main .accordion-item:nth-of-type(5n+3) {
+  border-top: 5px solid #35638d !important;
+}
+
+body.si-sacramentos-claro main details:nth-of-type(5n+4),
+body.si-sacramentos-claro main .accordion-item:nth-of-type(5n+4) {
+  border-top: 5px solid #665080 !important;
+}
+
+body.si-sacramentos-claro main details:nth-of-type(5n),
+body.si-sacramentos-claro main .accordion-item:nth-of-type(5n) {
+  border-top: 5px solid #293033 !important;
+}
+
+/* Enlaces */
+body.si-sacramentos-claro main a {
+  color: #a33d2c !important;
+  text-decoration-thickness: 1px !important;
+  text-underline-offset: 3px !important;
+}
+
+/* Móvil */
+@media (max-width: 700px) {
+  body.si-sacramentos-claro main {
+    padding-top: 34px !important;
+    padding-bottom: 60px !important;
+  }
+
+  body.si-sacramentos-claro main h1 {
+    font-size: clamp(3rem, 15vw, 4.3rem) !important;
+  }
+
+  body.si-sacramentos-claro main p,
+  body.si-sacramentos-claro main li {
+    font-size: 1.06rem !important;
+    line-height: 1.65 !important;
+  }
+}
+
+/* SAN-IGNACIO-SACRAMENTOS-COLOR-CARDS-V3 */
+
+/* Tamaño general */
+body.si-sacramentos-claro main p,
+body.si-sacramentos-claro main li {
+  font-size: clamp(1.22rem, 1.35vw, 1.48rem) !important;
+  line-height: 1.72 !important;
+}
+
+body.si-sacramentos-claro main summary,
+body.si-sacramentos-claro main .accordion-title {
+  font-size: clamp(1.65rem, 2.1vw, 2rem) !important;
+  line-height: 1.15 !important;
+  font-weight: 750 !important;
+}
+
+/* TARJETA 1 — Bautismo — rojo */
+body.si-sacramentos-claro main details:nth-of-type(1),
+body.si-sacramentos-claro main .accordion-item:nth-of-type(1),
+body.si-sacramentos-claro main [data-accordion-item]:nth-of-type(1) {
+  background: #b33a31 !important;
+  color: #fff8f1 !important;
+  border: none !important;
+}
+
+body.si-sacramentos-claro main details:nth-of-type(1) summary,
+body.si-sacramentos-claro main details:nth-of-type(1) p,
+body.si-sacramentos-claro main details:nth-of-type(1) li,
+body.si-sacramentos-claro main .accordion-item:nth-of-type(1),
+body.si-sacramentos-claro main .accordion-item:nth-of-type(1) * {
+  color: #fff8f1 !important;
+}
+
+/* TARJETA 2 — Primera comunión — naranja */
+body.si-sacramentos-claro main details:nth-of-type(2),
+body.si-sacramentos-claro main .accordion-item:nth-of-type(2),
+body.si-sacramentos-claro main [data-accordion-item]:nth-of-type(2) {
+  background: #cb5d27 !important;
+  color: #fff8f1 !important;
+  border: none !important;
+}
+
+body.si-sacramentos-claro main details:nth-of-type(2) summary,
+body.si-sacramentos-claro main details:nth-of-type(2) p,
+body.si-sacramentos-claro main details:nth-of-type(2) li,
+body.si-sacramentos-claro main .accordion-item:nth-of-type(2),
+body.si-sacramentos-claro main .accordion-item:nth-of-type(2) * {
+  color: #fff8f1 !important;
+}
+
+/* TARJETA 3 — Confirmación — azul */
+body.si-sacramentos-claro main details:nth-of-type(3),
+body.si-sacramentos-claro main .accordion-item:nth-of-type(3),
+body.si-sacramentos-claro main [data-accordion-item]:nth-of-type(3) {
+  background: #35638d !important;
+  color: #fffaf4 !important;
+  border: none !important;
+}
+
+body.si-sacramentos-claro main details:nth-of-type(3) summary,
+body.si-sacramentos-claro main details:nth-of-type(3) p,
+body.si-sacramentos-claro main details:nth-of-type(3) li,
+body.si-sacramentos-claro main .accordion-item:nth-of-type(3),
+body.si-sacramentos-claro main .accordion-item:nth-of-type(3) * {
+  color: #fffaf4 !important;
+}
+
+/* TARJETA 4 — Matrimonio — morado */
+body.si-sacramentos-claro main details:nth-of-type(4),
+body.si-sacramentos-claro main .accordion-item:nth-of-type(4),
+body.si-sacramentos-claro main [data-accordion-item]:nth-of-type(4) {
+  background: #665080 !important;
+  color: #fffaf4 !important;
+  border: none !important;
+}
+
+body.si-sacramentos-claro main details:nth-of-type(4) summary,
+body.si-sacramentos-claro main details:nth-of-type(4) p,
+body.si-sacramentos-claro main details:nth-of-type(4) li,
+body.si-sacramentos-claro main .accordion-item:nth-of-type(4),
+body.si-sacramentos-claro main .accordion-item:nth-of-type(4) * {
+  color: #fffaf4 !important;
+}
+
+/* TARJETA 5 — Confesiones — grafito */
+body.si-sacramentos-claro main details:nth-of-type(5),
+body.si-sacramentos-claro main .accordion-item:nth-of-type(5),
+body.si-sacramentos-claro main [data-accordion-item]:nth-of-type(5) {
+  background: #293033 !important;
+  color: #fffaf4 !important;
+  border: none !important;
+}
+
+body.si-sacramentos-claro main details:nth-of-type(5) summary,
+body.si-sacramentos-claro main details:nth-of-type(5) p,
+body.si-sacramentos-claro main details:nth-of-type(5) li,
+body.si-sacramentos-claro main .accordion-item:nth-of-type(5),
+body.si-sacramentos-claro main .accordion-item:nth-of-type(5) * {
+  color: #fffaf4 !important;
+}
+
+/* Todas las tarjetas: mismo tratamiento abiertas y cerradas */
+body.si-sacramentos-claro main details,
+body.si-sacramentos-claro main .accordion-item,
+body.si-sacramentos-claro main [data-accordion-item] {
+  border-radius: 16px !important;
+  box-shadow: 0 10px 26px rgba(23,33,38,.10) !important;
+  overflow: hidden !important;
+  margin-bottom: 16px !important;
+}
+
+body.si-sacramentos-claro main details[open],
+body.si-sacramentos-claro main .accordion-item.is-open,
+body.si-sacramentos-claro main [data-accordion-item].is-open {
+  box-shadow: 0 14px 34px rgba(23,33,38,.14) !important;
+}
+
+/* Interior más respirado */
+body.si-sacramentos-claro main details[open] > *:not(summary) {
+  padding-left: 30px !important;
+  padding-right: 30px !important;
+}
+
+body.si-sacramentos-claro main summary {
+  padding: 24px 30px !important;
+}
+
+/* Móvil */
+@media (max-width: 700px) {
+  body.si-sacramentos-claro main p,
+  body.si-sacramentos-claro main li {
+    font-size: 1.12rem !important;
+    line-height: 1.68 !important;
+  }
+
+  body.si-sacramentos-claro main summary,
+  body.si-sacramentos-claro main .accordion-title {
+    font-size: 1.45rem !important;
+  }
+
+  body.si-sacramentos-claro main summary {
+    padding: 20px 22px !important;
+  }
+
+  body.si-sacramentos-claro main details[open] > *:not(summary) {
+    padding-left: 22px !important;
+    padding-right: 22px !important;
+  }
+}
+
+/* SAN-IGNACIO-LECTURA-Y-ACORDEON-V4 */
+
+/* MARCA GLOBAL: igual y perfectamente visible en TODAS las secciones */
+.si-brand-title-v4 {
+  color: #f7f0e5 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* =========================
+   SACRAMENTOS
+   ========================= */
+
+body.si-sacramentos-v4 main {
+  background: #eee8dc !important;
+}
+
+/* acordeón continuo: SIN boleado, SIN huecos, SIN sombras */
+body.si-sacramentos-v4 main details {
+  border-radius: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  overflow: hidden !important;
+}
+
+body.si-sacramentos-v4 main details + details {
+  margin-top: 0 !important;
+}
+
+/* cada sacramento conserva TODO su color abierto o cerrado */
+body.si-sacramentos-v4 main details:nth-of-type(1) { background:#bd3b32 !important; }
+body.si-sacramentos-v4 main details:nth-of-type(2) { background:#ca5c28 !important; }
+body.si-sacramentos-v4 main details:nth-of-type(3) { background:#38658e !important; }
+body.si-sacramentos-v4 main details:nth-of-type(4) { background:#65507e !important; }
+body.si-sacramentos-v4 main details:nth-of-type(5) { background:#293034 !important; }
+
+/* título de cada pestaña */
+body.si-sacramentos-v4 main details summary {
+  padding: 24px 28px !important;
+  font-size: 1.8rem !important;
+  line-height: 1.18 !important;
+  font-weight: 700 !important;
+  border-radius: 0 !important;
+}
+
+/* contraste correcto sobre los cinco colores */
+body.si-sacramentos-v4 main details,
+body.si-sacramentos-v4 main details summary,
+body.si-sacramentos-v4 main details h1,
+body.si-sacramentos-v4 main details h2,
+body.si-sacramentos-v4 main details h3,
+body.si-sacramentos-v4 main details h4,
+body.si-sacramentos-v4 main details p,
+body.si-sacramentos-v4 main details li,
+body.si-sacramentos-v4 main details a,
+body.si-sacramentos-v4 main details span,
+body.si-sacramentos-v4 main details strong {
+  color: #fffaf2 !important;
+}
+
+/* CUERPO: más grande y JUSTIFICADO COMO WORD */
+body.si-sacramentos-v4 main details p,
+body.si-sacramentos-v4 main details li {
+  font-size: 1.4rem !important;
+  line-height: 1.72 !important;
+  text-align: justify !important;
+  text-justify: inter-word !important;
+  hyphens: auto !important;
+}
+
+/* aire interior de tarjeta abierta */
+body.si-sacramentos-v4 main details[open] > *:not(summary) {
+  margin-left: 28px !important;
+  margin-right: 28px !important;
+}
+
+body.si-sacramentos-v4 main details[open] > *:last-child {
+  margin-bottom: 30px !important;
+}
+
+/* =========================
+   AGUA DE SAN IGNACIO
+   ========================= */
+
+body.si-agua-v4 main p,
+body.si-agua-v4 main li {
+  font-size: 1.4rem !important;
+  line-height: 1.72 !important;
+  text-align: justify !important;
+  text-justify: inter-word !important;
+  hyphens: auto !important;
+  color: #293034 !important;
+}
+
+/* títulos NO se justifican */
+body.si-agua-v4 main h1,
+body.si-agua-v4 main h2,
+body.si-agua-v4 main h3,
+body.si-agua-v4 main h4,
+body.si-sacramentos-v4 main h1,
+body.si-sacramentos-v4 main h2,
+body.si-sacramentos-v4 main h3 {
+  text-align: left !important;
+  text-justify: auto !important;
+}
+
+/* móvil: sigue siendo claramente legible */
+@media (max-width:700px) {
+  body.si-sacramentos-v4 main details summary {
+    padding: 20px 20px !important;
+    font-size: 1.55rem !important;
+  }
+
+  body.si-sacramentos-v4 main details p,
+  body.si-sacramentos-v4 main details li,
+  body.si-agua-v4 main p,
+  body.si-agua-v4 main li {
+    font-size: 1.18rem !important;
+    line-height: 1.68 !important;
+  }
+
+  body.si-sacramentos-v4 main details[open] > *:not(summary) {
+    margin-left: 20px !important;
+    margin-right: 20px !important;
+  }
+}
+
+/* SAN-IGNACIO-LECTURA-LISTAS-V6 */
+
+/* PÁRRAFOS: más grandes y justificados como Word */
+body.si-sacramentos-v4 main p,
+body.si-agua-v4 main p {
+  font-size: 1.4rem !important;
+  line-height: 1.72 !important;
+  text-align: justify !important;
+  text-justify: inter-word !important;
+  hyphens: auto !important;
+}
+
+/* LISTAS: no justificar */
+body.si-sacramentos-v4 main ul,
+body.si-agua-v4 main ul {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+/* Cada requisito en su propia línea con guion */
+body.si-sacramentos-v4 main li,
+body.si-agua-v4 main li {
+  position: relative !important;
+  padding-left: 1.2em !important;
+  margin: .3em 0 !important;
+  font-size: 1.4rem !important;
+  line-height: 1.62 !important;
+  text-align: left !important;
+  text-justify: auto !important;
+  hyphens: auto !important;
+}
+
+body.si-sacramentos-v4 main li::before,
+body.si-agua-v4 main li::before {
+  content: "-" !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  font-weight: 700 !important;
+}
+
+/* Móvil: perfectamente legible */
+@media (max-width:700px) {
+  body.si-sacramentos-v4 main p,
+  body.si-agua-v4 main p,
+  body.si-sacramentos-v4 main li,
+  body.si-agua-v4 main li {
+    font-size: 1.2rem !important;
+    line-height: 1.68 !important;
+  }
+}
+
+/* SAN-IGNACIO-LISTAS-REALES-V7 */
+
+body.si-sacramentos-v4 main p {
+  font-size:1.4rem !important;
+  line-height:1.72 !important;
+  text-align:justify !important;
+  text-justify:inter-word !important;
+  hyphens:auto !important;
+}
+
+.si-bloque-lista-v7 {
+  margin:1.35rem 0 !important;
+  text-align:left !important;
+}
+
+.si-titulo-lista-v7 {
+  font-size:1.4rem !important;
+  line-height:1.5 !important;
+  font-weight:700 !important;
+  margin-bottom:.4rem !important;
+}
+
+.si-lista-v7 {
+  list-style:none !important;
+  padding:0 !important;
+  margin:0 !important;
+}
+
+.si-lista-v7 li {
+  position:relative !important;
+  display:block !important;
+  padding-left:1.15em !important;
+  margin:.28rem 0 !important;
+  font-size:1.4rem !important;
+  line-height:1.58 !important;
+  text-align:left !important;
+}
+
+.si-lista-v7 li::before {
+  content:"-" !important;
+  position:absolute !important;
+  left:0 !important;
+  font-weight:700 !important;
+}
+
+@media(max-width:700px){
+  body.si-sacramentos-v4 main p,
+  .si-titulo-lista-v7,
+  .si-lista-v7 li {
+    font-size:1.2rem !important;
+  }
+}
+
+/* SAN-IGNACIO-STRUCTURED-CONTENT-V8 */
+
+#sacramentos .si-managed-body p,
+#agua .si-managed-body p {
+  font-size:1.4rem !important;
+  line-height:1.72 !important;
+  text-align:justify !important;
+  text-justify:inter-word !important;
+  hyphens:auto !important;
+  margin:0 0 1rem !important;
+}
+
+#sacramentos .si-managed-list-heading,
+#agua .si-managed-list-heading {
+  font-size:1.4rem !important;
+  line-height:1.55 !important;
+  font-weight:700 !important;
+  text-align:left !important;
+  margin:1.25rem 0 .35rem !important;
+}
+
+#sacramentos .si-managed-list,
+#agua .si-managed-list {
+  list-style:none !important;
+  padding:0 !important;
+  margin:0 0 1.35rem !important;
+}
+
+#sacramentos .si-managed-list li,
+#agua .si-managed-list li {
+  position:relative !important;
+  display:block !important;
+  padding-left:1.15em !important;
+  margin:.32rem 0 !important;
+  font-size:1.4rem !important;
+  line-height:1.62 !important;
+  text-align:left !important;
+}
+
+#sacramentos .si-managed-list li::before,
+#agua .si-managed-list li::before {
+  content:"-" !important;
+  position:absolute !important;
+  left:0 !important;
+  top:0 !important;
+  font-weight:700 !important;
+}
+
+@media (max-width:700px) {
+  #sacramentos .si-managed-body p,
+  #agua .si-managed-body p,
+  #sacramentos .si-managed-list-heading,
+  #agua .si-managed-list-heading,
+  #sacramentos .si-managed-list li,
+  #agua .si-managed-list li {
+    font-size:1.2rem !important;
+  }
+}
+
+/* SAN-IGNACIO-SACRAMENTOS-PALETA-V9 */
+
+/* Página clara */
+#sacramentos {
+  background:#eee8dc !important;
+  color:#172126 !important;
+}
+
+#sacramentos > *,
+#sacramentos .section-inner,
+#sacramentos .content-shell {
+  background-color:transparent !important;
+}
+
+#sacramentos h1,
+#sacramentos > h2,
+#sacramentos .section-kicker {
+  color:#172126 !important;
+}
+
+#sacramentos .section-kicker {
+  color:#b33a31 !important;
+}
+
+/* ACORDEÓN: completamente continuo */
+#sacramentos details {
+  margin:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  overflow:hidden !important;
+}
+
+#sacramentos details + details {
+  margin-top:0 !important;
+}
+
+/* 1 — BAUTISMO */
+#sacramentos details:nth-of-type(1) {
+  background:#b33a31 !important;
+}
+
+/* 2 — PRIMERA COMUNIÓN */
+#sacramentos details:nth-of-type(2) {
+  background:#cb5d27 !important;
+}
+
+/* 3 — CONFIRMACIÓN */
+#sacramentos details:nth-of-type(3) {
+  background:#35638d !important;
+}
+
+/* 4 — MATRIMONIO */
+#sacramentos details:nth-of-type(4) {
+  background:#665080 !important;
+}
+
+/* 5 — CONFESIONES */
+#sacramentos details:nth-of-type(5) {
+  background:#293033 !important;
+}
+
+/* Texto claro: rojo, azul, morado y grafito */
+#sacramentos details:nth-of-type(1),
+#sacramentos details:nth-of-type(1) *,
+#sacramentos details:nth-of-type(3),
+#sacramentos details:nth-of-type(3) *,
+#sacramentos details:nth-of-type(4),
+#sacramentos details:nth-of-type(4) *,
+#sacramentos details:nth-of-type(5),
+#sacramentos details:nth-of-type(5) * {
+  color:#fffaf2 !important;
+}
+
+/* Naranja: texto oscuro para mayor contraste */
+#sacramentos details:nth-of-type(2),
+#sacramentos details:nth-of-type(2) * {
+  color:#172126 !important;
+}
+
+/* Encabezado de cada sacramento */
+#sacramentos details summary {
+  background:transparent !important;
+  border-radius:0 !important;
+  padding:24px 28px !important;
+  font-size:1.8rem !important;
+  line-height:1.15 !important;
+  font-weight:700 !important;
+}
+
+/* Interior */
+#sacramentos details[open] .si-managed-body {
+  padding:4px 36px 34px !important;
+}
+
+/* Texto perfectamente legible */
+#sacramentos .si-managed-body p,
+#sacramentos .si-managed-body li,
+#sacramentos .si-managed-list-heading {
+  font-size:1.4rem !important;
+  line-height:1.7 !important;
+}
+
+/* párrafo normal justificado */
+#sacramentos .si-managed-body p {
+  text-align:justify !important;
+  text-justify:inter-word !important;
+  hyphens:auto !important;
+}
+
+/* listas alineadas, no justificadas */
+#sacramentos .si-managed-list li {
+  text-align:left !important;
+}
+
+/* Evitar que reglas antiguas vuelvan a pintar las tarjetas */
+#sacramentos details,
+#sacramentos details[open],
+#sacramentos details article,
+#sacramentos .si-managed-body {
+  border-radius:0 !important;
+}
+
+/* Móvil */
+@media(max-width:700px) {
+  #sacramentos details summary {
+    padding:20px !important;
+    font-size:1.5rem !important;
+  }
+
+  #sacramentos details[open] .si-managed-body {
+    padding:2px 22px 28px !important;
+  }
+
+  #sacramentos .si-managed-body p,
+  #sacramentos .si-managed-body li,
+  #sacramentos .si-managed-list-heading {
+    font-size:1.2rem !important;
+  }
+}
+
+/* SAN-IGNACIO-SACRAMENTOS-INTRO-CONTRASTE-V10 */
+
+#sacramentos > p,
+#sacramentos .section-intro,
+#sacramentos .si-sacraments-intro,
+#sacramentos [class*="intro"] {
+  color:#2f3437 !important;
+  opacity:1 !important;
+  font-size:1.28rem !important;
+  line-height:1.6 !important;
+}
+
+
+/* SAN-IGNACIO-SACRAMENTOS-INTRO-V11 */
+
+#sacramentos .si-section-heading > p:not(.section-kicker) {
+  color:#34393b !important;
+  opacity:1 !important;
+  font-size:1.35rem !important;
+  line-height:1.6 !important;
+  max-width:48rem !important;
+}
+
+
+/* SAN-IGNACIO-AGUA-LISTAS-JUSTIFICADAS-V13 */
+[data-content-slug="agua-san-ignacio"] .si-managed-list li {
+  text-align: justify !important;
+  text-justify: inter-word !important;
+  hyphens: auto !important;
+}
+
+/* SAN-IGNACIO-PRIMERA-COMUNION-BLANCO-V14 */
+#sacramentos details:nth-of-type(2),
+#sacramentos details:nth-of-type(2) * {
+  color:#fffaf2 !important;
+}

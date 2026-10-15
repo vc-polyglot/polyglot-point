@@ -15,6 +15,7 @@ import { adminApi } from "./routes/admin-api.js";
 import { ensureEditorialSchema } from "./db/editorial-schema.js";
 import { editorialPublicApi } from "./routes/editorial-public-api.js";
 import { editorialAdminApi } from "./routes/editorial-admin-api.js";
+import { reconversionPublicApi, reconversionAdminApi } from "./routes/reconversion-api.js";
 import { requireAuth } from "./middleware/auth.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -88,6 +89,8 @@ app.use("/api/editorial", editorialPublicApi);
 app.use("/api/admin", adminAuth);
 app.use("/api/admin", adminApi);
 app.use("/api/admin/editorial", editorialAdminApi);
+app.use("/api/reconversion", reconversionPublicApi);
+app.use("/api/admin/reconversion", reconversionAdminApi);
 
 
 app.use("/admin", (_req, res, next) => {
@@ -153,15 +156,26 @@ app.use(express.static(path.join(rootDir, "public"), {
 }));
 
 
-// SAN IGNACIO MULTIVIEW ROUTES V5
+// SAN IGNACIO MULTIVIEW ROUTES V8
+app.get("/espiritualidad", (_req, res) => {
+  res.redirect(301, "/pastoral");
+});
+
+app.get("/donativos", (_req, res) => {
+  res.redirect(301, "/");
+});
+
+app.get("/musica", (_req, res) => {
+  res.redirect(301, "/agenda");
+});
+
 const publicViewRoutes = [
   "/vida-liturgica",
+  "/sacramentos",
   "/pastoral",
-  "/espiritualidad",
-  "/nosotros",
   "/agenda",
-  "/musica",
-  "/donativos",
+  "/nosotros",
+  "/agua-de-san-ignacio",
   "/historia",
   "/galeria",
   "/contacto"
@@ -172,7 +186,7 @@ for (const publicViewRoute of publicViewRoutes) {
     res.sendFile(path.join(rootDir, "public", "index.html"));
   });
 }
-// END SAN IGNACIO MULTIVIEW ROUTES V5
+// END SAN IGNACIO MULTIVIEW ROUTES V8
 app.use((req, res) => {
   if (req.path.startsWith("/api/")) {
     return res.status(404).json({ error: "Ruta no encontrada." });

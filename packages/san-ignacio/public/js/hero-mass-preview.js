@@ -31,7 +31,7 @@
 
   block.setAttribute(
     "aria-label",
-    "Horarios de misa"
+    "Horarios de misa e intenciones"
   );
 
 
@@ -65,7 +65,7 @@
         class="si-mass-preview__link"
         href="/vida-liturgica"
       >
-        Horarios de misa
+        Horarios e intenciones
       </a>
 
     </div>

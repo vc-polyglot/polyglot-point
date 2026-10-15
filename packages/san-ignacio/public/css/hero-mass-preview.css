@@ -590,3 +590,361 @@
       pointer !important;
   }
 }
+
+/* SAN IGNACIO DESKTOP TYPOGRAPHY V188 START */
+/* SOLO ESCRITORIO. CELULAR NO SE TOCA. */
+
+@media (min-width: 921px) {
+
+  /* =========================
+     HEADER / MARCA / MENU
+     ========================= */
+
+  body .site-header {
+    min-height: 92px !important;
+    padding: 14px 38px !important;
+    gap: 36px !important;
+  }
+
+  body .site-header .brand {
+    min-width: 340px !important;
+    gap: 12px !important;
+  }
+
+  /* SAN IGNACIO DE LOYOLA */
+  body .site-header .brand strong,
+  body .site-header .site-brand strong,
+  body .site-header .logo-lockup strong {
+    font-size: 24px !important;
+    line-height: 26px !important;
+    font-weight: 800 !important;
+    letter-spacing: .6px !important;
+  }
+
+  /* Ciudad de México · Polanco */
+  body .site-header .brand small,
+  body .site-header .site-brand small,
+  body .site-header .logo-lockup small {
+    font-size: 17px !important;
+    line-height: 20px !important;
+    font-weight: 550 !important;
+    letter-spacing: .15px !important;
+  }
+
+  body .site-header .primary-nav,
+  body .site-header nav,
+  body .site-header .menu {
+    gap: 24px !important;
+    align-items: center !important;
+  }
+
+  /* Vida litúrgica, Pastoral, etc */
+  body .site-header .primary-nav a,
+  body .site-header nav a,
+  body .site-header .menu a {
+    font-size: 20px !important;
+    line-height: 24px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  /* =========================
+     RECUADRO HORARIOS
+     ========================= */
+
+  body .si-mass-preview {
+    width: min(980px, 60vw) !important;
+    min-height: 108px !important;
+    padding: 18px 22px !important;
+
+    display: grid !important;
+    grid-template-columns: 225px minmax(420px, 1fr) auto !important;
+    column-gap: 22px !important;
+    align-items: center !important;
+  }
+
+  /* NO tocar el titulo, lo dejamos como está */
+  body .si-mass-preview__title {
+    margin: 0 !important;
+  }
+
+  body .si-mass-preview__schedule {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    row-gap: 7px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body .si-mass-preview__row {
+    display: grid !important;
+    grid-template-columns: 160px minmax(260px, 1fr) !important;
+    column-gap: 16px !important;
+    align-items: start !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* DÍAS */
+body .si-mass-preview__day {
+  font-size: 30px !important;
+  line-height: 36px !important;
+  font-weight: 750 !important;
+}
+
+/* HORAS */
+body .si-mass-preview__times {
+  font-size: 30px !important;
+  line-height: 36px !important;
+  font-weight: 650 !important;
+}
+
+  /* Botón: NO tocarlo, solo aseguramos que no se descuadre */
+  body .si-mass-preview__link {
+    align-self: center !important;
+    justify-self: end !important;
+  }
+}
+
+/* SAN IGNACIO DESKTOP TYPOGRAPHY V188 END */
+
+/* SAN IGNACIO DESKTOP BIG TYPE V189 START */
+
+@media (min-width: 921px) {
+
+  /* ========================================================
+     MARCA PARROQUIAL — MUCHO MAS GRANDE
+     ======================================================== */
+
+  body .site-header .brand {
+    min-width: 390px !important;
+  }
+
+  body .site-header .brand strong {
+    font-size: 30px !important;
+    line-height: 32px !important;
+    font-weight: 850 !important;
+    letter-spacing: .4px !important;
+  }
+
+  body .site-header .brand small {
+    font-size: 19px !important;
+    line-height: 23px !important;
+    font-weight: 600 !important;
+    letter-spacing: .1px !important;
+  }
+
+
+  /* ========================================================
+     HORARIOS — GRANDES DE VERDAD
+     ======================================================== */
+
+  body .si-mass-preview {
+    width: min(1080px, 66vw) !important;
+  }
+
+  body .si-mass-preview__schedule {
+    row-gap: 11px !important;
+  }
+
+  body .si-mass-preview__row {
+    grid-template-columns:
+      205px minmax(390px, 1fr) !important;
+
+    column-gap: 24px !important;
+  }
+
+  body .si-mass-preview__day {
+    font-size: 25px !important;
+    line-height: 29px !important;
+    font-weight: 800 !important;
+    text-align: right !important;
+    white-space: nowrap !important;
+  }
+
+  body .si-mass-preview__times {
+    font-size: 25px !important;
+    line-height: 29px !important;
+    font-weight: 700 !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+  }
+
+}
+
+/* SAN IGNACIO DESKTOP BIG TYPE V189 END */
+
+/* SAN IGNACIO HORARIOS REAL V190 START */
+
+@media (min-width: 921px) {
+
+  body .si-mass-preview__day strong {
+    font-size: 30px !important;
+    line-height: 36px !important;
+    font-weight: 800 !important;
+  }
+
+  body .si-mass-preview__day span {
+    font-size: 30px !important;
+    line-height: 36px !important;
+    font-weight: 700 !important;
+  }
+
+}
+
+/* SAN IGNACIO HORARIOS REAL V190 END */
+
+/* SAN IGNACIO HORARIOS V192B START */
+
+@media (min-width: 921px) {
+
+  body .si-mass-preview__day strong {
+    font-size: 22px !important;
+    line-height: 26px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+  }
+
+  body .si-mass-preview__day span {
+    font-size: 22px !important;
+    line-height: 26px !important;
+    font-weight: 650 !important;
+    white-space: nowrap !important;
+  }
+
+}
+
+/* SAN IGNACIO HORARIOS V192B END */
+
+/* SAN IGNACIO HORARIOS ACOMODO V193 START */
+
+@media (min-width: 921px) {
+
+  /*
+    RECUADRO COMPACTO:
+    título izquierda | horarios centro | botón derecha
+  */
+
+  body .si-mass-preview {
+    width: min(790px, 50vw) !important;
+    min-height: 0 !important;
+    height: auto !important;
+
+    padding: 8px 14px !important;
+
+    display: grid !important;
+    grid-template-columns:
+      132px minmax(0, 1fr) auto !important;
+
+    column-gap: 14px !important;
+    align-items: center !important;
+  }
+
+
+  /*
+    "Horarios de misa"
+    NO CAMBIAMOS SU TAMAÑO.
+  */
+
+  body .si-mass-preview__title {
+    margin: 0 !important;
+    align-self: center !important;
+  }
+
+
+  /*
+    Las tres filas de horarios.
+  */
+
+  body .si-mass-preview__grid,
+  body .si-mass-preview__schedule {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+
+    row-gap: 0 !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    align-self: center !important;
+  }
+
+
+  /*
+    CADA FILA:
+    día | horas
+
+    Esto elimina el encimado que se ve
+    en "Lunes a viernes / 7:30".
+  */
+
+  body .si-mass-preview__day {
+    display: grid !important;
+
+    grid-template-columns:
+      150px minmax(0, 1fr) !important;
+
+    column-gap: 16px !important;
+
+    align-items: baseline !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    min-width: 0 !important;
+  }
+
+
+  /*
+    DÍAS — CONSERVAMOS 22 / 26
+  */
+
+  body .si-mass-preview__day strong {
+    display: block !important;
+
+    font-size: 22px !important;
+    line-height: 26px !important;
+    font-weight: 800 !important;
+
+    text-align: right !important;
+    white-space: nowrap !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+
+  /*
+    HORAS — CONSERVAMOS 22 / 26
+  */
+
+  body .si-mass-preview__day span {
+    display: block !important;
+
+    font-size: 22px !important;
+    line-height: 26px !important;
+    font-weight: 650 !important;
+
+    text-align: left !important;
+    white-space: nowrap !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+
+  /*
+    BOTÓN:
+    no cambiamos tamaño, fuente ni padding.
+    Sólo vuelve a su columna derecha.
+  */
+
+  body .si-mass-preview__link {
+    justify-self: end !important;
+    align-self: center !important;
+    margin: 0 !important;
+  }
+}
+
+/* SAN IGNACIO HORARIOS ACOMODO V193 END */

@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/admin-assets/admin.css">
   <link rel="stylesheet" href="/admin-assets/editorial-admin.css">
   <link rel="stylesheet" href="/admin-assets/image-picker.css?v=1">
+  <link rel="stylesheet" href="/admin-assets/reconversion-admin.css?v=1">
 </head>
 <body class="dashboard-body">
   <aside class="admin-sidebar">
@@ -19,12 +20,16 @@
 
     <nav>
       <button class="sidebar-link active" data-panel="overview">Resumen</button>
-      <button class="sidebar-link" data-panel="pastoral">Mensaje pastoral</button>
-      <button class="sidebar-link" data-panel="schedules">Horarios</button>
+      <button class="sidebar-link" data-panel="schedules">Vida litúrgica</button>
+      <button class="sidebar-link" data-panel="sacraments">Sacramentos</button>
+      <button class="sidebar-link" data-panel="pastoral">Pastoral</button>
+      <button class="sidebar-link" data-panel="institutional">Nosotros</button>
+      <button class="sidebar-link" data-panel="water">Agua de San Ignacio</button>
+      <button class="sidebar-link" data-panel="history">Historia</button>
       <button class="sidebar-link" data-panel="notices">Avisos</button>
       <button class="sidebar-link" data-panel="images">Biblioteca de fotos</button>
-<button class="sidebar-link" data-panel="contact">Mensajes</button>
-</nav>
+      <button class="sidebar-link" data-panel="contact">Mensajes</button>
+    </nav>
 
     <div class="sidebar-footer">
       <a href="/" target="_blank" rel="noopener">Ver sitio ↗</a>
@@ -106,6 +111,63 @@
           <div id="pastoral-list" class="admin-list"></div>
         </div>
       </div>
+
+      <div class="si-reconversion-block">
+        <div class="admin-card">
+          <p class="admin-kicker">Áreas pastorales</p>
+          <h2>Subcategorías de Pastoral</h2>
+          <p class="help-text">
+            Aquí se agregan Pastoral juvenil, familiar, social y cualquier otra área que tenga la comunidad.
+          </p>
+
+          <form id="pastoral-category-form" class="form-stack">
+            <input type="hidden" name="id">
+
+            <label>
+              Nombre
+              <input name="title" maxlength="180" required>
+            </label>
+
+            <label>
+              Resumen
+              <textarea name="summary" rows="3" maxlength="800"></textarea>
+            </label>
+
+            <label>
+              Información
+              <textarea name="body" rows="7"></textarea>
+            </label>
+
+            <label>
+              Contacto / responsable
+              <input name="contact" maxlength="300">
+            </label>
+
+            <div class="inline-fields">
+              <label>
+                Orden
+                <input name="sort_order" type="number" value="0">
+              </label>
+
+              <label class="checkbox-label">
+                <input name="published" type="checkbox" value="1" checked>
+                Publicado
+              </label>
+            </div>
+
+            <div class="button-row">
+              <button type="submit">Guardar área pastoral</button>
+              <button id="pastoral-category-cancel" type="button" class="secondary-button" hidden>
+                Cancelar edición
+              </button>
+            </div>
+
+            <p id="pastoral-category-status" class="form-status" role="status"></p>
+          </form>
+
+          <div id="pastoral-category-list" class="admin-list si-reconversion-list"></div>
+        </div>
+      </div>
     </section>
 
     <section id="panel-schedules" class="admin-panel">
@@ -126,6 +188,43 @@
           </div>
           <p id="schedules-status" class="form-status" role="status"></p>
         </form>
+      </div>
+
+      <div class="admin-card si-reconversion-block">
+        <p class="admin-kicker">Vida litúrgica</p>
+        <h2>Intenciones de misa</h2>
+        <form id="mass-intentions-form" class="form-stack">
+          <label>
+            Título
+            <input name="title" maxlength="220" required>
+          </label>
+
+          <label>
+            Información para los fieles
+            <textarea name="body" rows="7"></textarea>
+          </label>
+
+          <label class="checkbox-label">
+            <input name="published" type="checkbox" value="1" checked>
+            Publicado
+          </label>
+
+          <button type="submit">Guardar intenciones</button>
+          <p id="mass-intentions-status" class="form-status" role="status"></p>
+        </form>
+      </div>
+    </section>
+
+    <section id="panel-sacraments" class="admin-panel">
+      <div class="admin-card">
+        <p class="admin-kicker">Sacramentos</p>
+        <h2>Información publicada</h2>
+        <p class="help-text">
+          Se administran solamente los sacramentos que actualmente aparecen en la página.
+        </p>
+        <div id="sacrament-admin-list" class="si-managed-admin-grid">
+          <p class="help-text">Cargando sacramentos…</p>
+        </div>
       </div>
     </section>
 
@@ -337,6 +436,91 @@
 
     </section>
 
+    <section id="panel-water" class="admin-panel">
+      <div class="admin-card">
+        <p class="admin-kicker">Sacramental</p>
+        <h2>Agua de San Ignacio</h2>
+        <form id="water-content-form" class="form-stack">
+          <label>
+            Título
+            <input name="title" maxlength="220" required>
+          </label>
+
+          <label>
+            Información
+            <textarea name="body" rows="14"></textarea>
+          </label>
+
+          <label class="checkbox-label">
+            <input name="published" type="checkbox" value="1" checked>
+            Publicado
+          </label>
+
+          <button type="submit">Guardar Agua de San Ignacio</button>
+          <p id="water-content-status" class="form-status" role="status"></p>
+        </form>
+      </div>
+    </section>
+
+    <section id="panel-history" class="admin-panel">
+      <div class="two-column si-reconversion-columns">
+        <div class="admin-card">
+          <p class="admin-kicker">Historia</p>
+          <h2>Textos históricos</h2>
+          <div id="history-content-admin" class="si-managed-admin-grid">
+            <p class="help-text">Cargando textos…</p>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <p class="admin-kicker">Historia</p>
+          <h2>Rectores de San Ignacio</h2>
+
+          <form id="rector-form" class="form-stack">
+            <input type="hidden" name="id">
+
+            <label>
+              Nombre
+              <input name="name" maxlength="220" required>
+            </label>
+
+            <label>
+              Periodo / fechas
+              <input name="period" maxlength="120">
+            </label>
+
+            <label>
+              Reseña
+              <textarea name="body" rows="6"></textarea>
+            </label>
+
+            <div class="inline-fields">
+              <label>
+                Orden
+                <input name="sort_order" type="number" value="0">
+              </label>
+
+              <label class="checkbox-label">
+                <input name="published" type="checkbox" value="1" checked>
+                Publicado
+              </label>
+            </div>
+
+            <div class="button-row">
+              <button type="submit">Guardar rector</button>
+              <button id="rector-cancel" type="button" class="secondary-button" hidden>
+                Cancelar edición
+              </button>
+            </div>
+
+            <p id="rector-status" class="form-status" role="status"></p>
+          </form>
+
+          <div id="rector-list" class="admin-list si-reconversion-list"></div>
+        </div>
+      </div>
+    </section>
+
     <section id="panel-contact" class="admin-panel">
       <div class="admin-card">
         <div class="contact-admin-heading">
@@ -364,7 +548,7 @@
 
       <div class="institutional-admin-grid">
 
-        <form id="about-form" class="admin-card form-stack">
+        <form id="about-form" class="admin-card form-stack si-obsolete-admin">
           <div>
             <p class="admin-kicker">Nosotros</p>
             <h2>Historia y arquitectura</h2>
@@ -401,7 +585,7 @@
           <p id="about-status" class="form-status" role="status"></p>
         </form>
 
-        <form id="spirituality-form" class="admin-card form-stack">
+        <form id="spirituality-form" class="admin-card form-stack si-obsolete-admin">
           <div>
             <p class="admin-kicker">Espiritualidad</p>
             <h2>Introducción</h2>
@@ -435,7 +619,7 @@
 
       <div class="institutional-admin-grid institutional-admin-secondary">
 
-        <div class="admin-card">
+        <div class="admin-card si-obsolete-admin">
           <p class="admin-kicker">Espiritualidad</p>
           <h2>Tarjetas</h2>
 
@@ -487,7 +671,7 @@
 
         <div class="admin-card">
           <p class="admin-kicker">Comunidad</p>
-          <h2>Párrocos y equipo pastoral</h2>
+          <h2>Equipo de San Ignacio</h2>
 
           <form id="staff-form" class="form-stack">
             <input type="hidden" name="id">
@@ -551,5 +735,6 @@
 <script type="module" src="/admin-assets/dashboard.js?v=168"></script>
   <script src="/admin-assets/editorial-admin.js?v=168" defer></script>
 <script src="/admin-assets/secretary-admin.js?v=169" defer></script>
+<script src="/admin-assets/reconversion-admin.js?v=1" defer></script>
 </body>
 </html>

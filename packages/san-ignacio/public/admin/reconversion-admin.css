@@ -1,0 +1,56 @@
+/* SAN IGNACIO RECONVERSION ADMIN V1 */
+
+.si-obsolete-admin {
+  display: none !important;
+}
+
+.si-reconversion-block {
+  margin-top: 22px;
+}
+
+.si-reconversion-columns {
+  align-items: start;
+}
+
+.si-reconversion-list {
+  margin-top: 24px;
+}
+
+.si-managed-admin-grid {
+  display: grid;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.si-managed-admin-card {
+  padding: 18px;
+  background: #f5f2ec;
+  border: 1px solid var(--line);
+}
+
+.si-managed-admin-card h3 {
+  margin: 0 0 14px;
+}
+
+.si-managed-admin-card textarea {
+  min-height: 180px;
+}
+
+.si-reconversion-item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.si-reconversion-item-actions button {
+  margin: 0 !important;
+}
+
+@media (max-width: 900px) {
+  .si-reconversion-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* END SAN IGNACIO RECONVERSION ADMIN V1 */

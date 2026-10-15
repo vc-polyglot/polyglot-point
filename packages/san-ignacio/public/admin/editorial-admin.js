@@ -412,7 +412,6 @@ window.addEventListener("si:image-picked", (event) => {
   const siteSlots = [
     ["liturgia", "Vida litúrgica"],
     ["pastoral", "Pastoral"],
-    ["espiritualidad", "Espiritualidad"],
     ["nosotros", "Nosotros"],
     ["historia_arquitectura", "Historia · Arquitectura"],
     ["historia_capilla", "Historia · Capilla"]
