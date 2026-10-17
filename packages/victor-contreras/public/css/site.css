@@ -41,7 +41,7 @@
     #hero { position: relative; min-height: 100svh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 0 100px; overflow: hidden; }
     #hero-parallax {
       position: absolute; top: -20%; left: 0; right: 0; bottom: -20%;
-      background-image: url('/victor-hero.jpg');
+      background-image: url('victor-hero.jpg');
       background-size: cover; background-position: center 30%;
       filter: grayscale(100%) brightness(1.2) contrast(1.12);
       transition: filter 4.4s ease;
