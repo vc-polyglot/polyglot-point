@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --ink: #101214;
   --ink-soft: #1a1d20;
   --concrete: #d7d4ce;
@@ -86,7 +86,6 @@ a { color: inherit; }
   display: flex;
   align-items: center;
   gap: clamp(14px, 2vw, 28px);
-  font-size: .86rem;
 }
 
 .primary-nav a {
@@ -4053,3 +4052,4 @@ body #nosotros .community-person-phone {
 
 
 /* END SAN IGNACIO NOSOTROS DIRECTORY V123 */
+

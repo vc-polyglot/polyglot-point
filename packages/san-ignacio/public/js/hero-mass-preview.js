@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
   "use strict";
 
   /* SAN IGNACIO HERO POLISH V179 */
@@ -247,3 +247,30 @@
     );
   }
 })();
+
+/* SI HERO ONLY MASS BUTTON START */
+(() => {
+  "use strict";
+
+  const block = document.querySelector(".si-mass-preview");
+  if (!block) return;
+
+  /*
+    El bloque histórico sigue siendo creado por hero-mass-preview.js,
+    pero su contenido público se reduce a un único acceso.
+    Al reemplazar innerHTML también desaparece el listener antiguo
+    que redirigía a Vida litúrgica sin conservar el hash.
+  */
+  block.setAttribute("aria-label", "Ir a horarios de misa");
+
+  block.innerHTML = `
+    <a
+      class="si-mass-preview__link si-mass-preview__link--only"
+      href="/vida-liturgica#horarios-misa"
+    >
+      Horarios de misa
+      <span aria-hidden="true">→</span>
+    </a>
+  `;
+})();
+/* SI HERO ONLY MASS BUTTON END */

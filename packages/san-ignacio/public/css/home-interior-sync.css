@@ -1,0 +1,533 @@
+﻿/* ============================================================
+   SAN IGNACIO — HOME SINCRONIZADA CON INTERIORES
+   Sólo pathname "/"
+   ============================================================ */
+
+body.si-home-interior-sync{
+  --si-home-paper:#f5f0e8;
+  --si-home-ink:#191919;
+  --si-home-muted:#5a544d;
+  --si-home-red:#a53a31;
+  --si-home-blue:#46586b;
+}
+
+/* Fuentes contractuales permanecen en DOM pero no se duplican visualmente */
+body.si-home-interior-sync .si-home-source-hidden{
+  display:none!important;
+}
+
+
+/* ============================================================
+   VIDA LITÚRGICA
+   ============================================================ */
+
+body.si-home-interior-sync #liturgia .si-home-liturgia-three{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  width:100%;
+  margin-top:clamp(38px,5vw,76px);
+  border-top:1px solid rgba(25,25,25,.22);
+  border-bottom:1px solid rgba(25,25,25,.22);
+}
+
+body.si-home-interior-sync #liturgia .si-home-liturgia-three > *{
+  margin:0!important;
+  padding:clamp(30px,3.4vw,52px)!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+
+body.si-home-interior-sync #liturgia .si-home-liturgia-three > * + *{
+  border-left:1px solid rgba(25,25,25,.18)!important;
+}
+
+body.si-home-interior-sync #liturgia .si-home-liturgia-three h3{
+  margin:8px 0 16px;
+  font-size:clamp(28px,2.7vw,44px);
+  line-height:1;
+}
+
+body.si-home-interior-sync #liturgia .si-home-liturgia-three p{
+  line-height:1.6;
+}
+
+body.si-home-interior-sync #liturgia .si-home-liturgia-three a{
+  display:inline-block;
+  margin-top:18px;
+  color:inherit;
+  font-weight:800;
+  text-decoration:none;
+  border-bottom:1px solid currentColor;
+}
+
+
+/* ============================================================
+   SACRAMENTOS
+   ============================================================ */
+
+body.si-home-interior-sync #sacramentos .si-sacraments-list{
+  counter-reset:si-home-sacrament;
+}
+
+body.si-home-interior-sync #sacramentos .si-sacrament-card{
+  counter-increment:si-home-sacrament;
+  margin:0!important;
+  background:transparent!important;
+  border:0!important;
+  border-bottom:1px solid rgba(25,25,25,.20)!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+
+body.si-home-interior-sync #sacramentos .si-sacrament-card summary{
+  display:grid!important;
+  grid-template-columns:70px minmax(0,1fr) 48px;
+  gap:16px;
+  align-items:center;
+  padding:30px 0!important;
+  list-style:none!important;
+  cursor:pointer;
+  font-size:clamp(30px,3vw,48px)!important;
+  font-weight:750!important;
+  line-height:1!important;
+}
+
+body.si-home-interior-sync #sacramentos .si-sacrament-card summary::-webkit-details-marker{
+  display:none;
+}
+
+body.si-home-interior-sync #sacramentos .si-sacrament-card summary::before{
+  content:counter(si-home-sacrament,decimal-leading-zero);
+  color:var(--si-home-red);
+  font-size:14px;
+  font-weight:850;
+  letter-spacing:.08em;
+}
+
+body.si-home-interior-sync #sacramentos .si-sacrament-card summary::after{
+  content:"+";
+  justify-self:end;
+  font-size:34px;
+  font-weight:400;
+  transition:transform .22s ease;
+}
+
+body.si-home-interior-sync #sacramentos .si-sacrament-card[open] summary::after{
+  transform:rotate(45deg);
+}
+
+body.si-home-interior-sync #sacramentos .si-managed-body{
+  max-width:980px;
+  margin-left:86px;
+  padding:0 0 40px;
+  font-size:18px!important;
+  line-height:1.68!important;
+}
+
+
+/* ============================================================
+   PASTORAL
+   ============================================================ */
+
+body.si-home-interior-sync #pastoral .si-home-pastoral-programs{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  margin-top:clamp(36px,5vw,70px);
+  border-top:1px solid rgba(255,255,255,.32);
+  border-left:1px solid rgba(255,255,255,.32);
+}
+
+body.si-home-interior-sync #pastoral .si-home-pastoral-programs > a{
+  min-height:260px;
+  padding:clamp(28px,3.5vw,50px);
+  color:inherit;
+  text-decoration:none;
+  border-right:1px solid rgba(255,255,255,.32);
+  border-bottom:1px solid rgba(255,255,255,.32);
+  transition:background .28s ease,transform .28s ease;
+}
+
+body.si-home-interior-sync #pastoral .si-home-pastoral-programs > a:hover{
+  background:rgba(70,88,107,.18);
+  transform:translateY(-4px);
+}
+
+body.si-home-interior-sync #pastoral .si-home-pastoral-programs > a > span{
+  display:block;
+  margin-bottom:28px;
+  font-size:14px;
+  font-weight:850;
+}
+
+body.si-home-interior-sync #pastoral .si-home-pastoral-programs p{
+  margin:0 0 8px;
+  font-size:13px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+}
+
+body.si-home-interior-sync #pastoral .si-home-pastoral-programs h3{
+  margin:0 0 18px;
+  font-size:clamp(30px,3vw,50px);
+  line-height:.98;
+}
+
+body.si-home-interior-sync #pastoral .si-home-pastoral-programs strong,
+body.si-home-interior-sync #pastoral .si-home-pastoral-programs em{
+  display:block;
+  margin-top:7px;
+  font-style:normal;
+}
+
+
+/* ============================================================
+   NOSOTROS
+   ============================================================ */
+
+body.si-home-interior-sync #nosotros .si-home-nosotros{
+  display:grid;
+  grid-template-columns:minmax(320px,.9fr) minmax(0,1.25fr);
+  gap:clamp(42px,7vw,110px);
+  align-items:start;
+  margin-top:clamp(34px,5vw,72px);
+}
+
+body.si-home-interior-sync #nosotros .si-home-nosotros > figure{
+  margin:0;
+}
+
+body.si-home-interior-sync #nosotros .si-home-nosotros > figure img{
+  display:block;
+  width:100%;
+  height:min(72vh,760px);
+  min-height:600px;
+  object-fit:cover;
+}
+
+body.si-home-interior-sync #nosotros .si-home-nosotros-list{
+  border-top:1px solid rgba(25,25,25,.22);
+}
+
+body.si-home-interior-sync #nosotros .si-home-nosotros-list > a{
+  display:grid;
+  grid-template-columns:150px minmax(0,1fr) 30px;
+  gap:18px;
+  align-items:center;
+  min-height:88px;
+  padding:18px 0;
+  color:inherit;
+  text-decoration:none;
+  border-bottom:1px solid rgba(25,25,25,.20);
+  transition:background .26s ease,padding .26s ease;
+}
+
+body.si-home-interior-sync #nosotros .si-home-nosotros-list > a:hover{
+  padding-left:16px;
+  padding-right:16px;
+  background:rgba(70,88,107,.10);
+}
+
+body.si-home-interior-sync #nosotros .si-home-nosotros-list span{
+  font-size:13px;
+  font-weight:850;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+body.si-home-interior-sync #nosotros .si-home-nosotros-list strong{
+  font-size:clamp(18px,1.6vw,25px);
+  line-height:1.15;
+}
+
+
+/* ============================================================
+   AGUA
+   ============================================================ */
+
+body.si-home-interior-sync #agua .si-home-agua{
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(280px,.65fr);
+  gap:clamp(40px,7vw,110px);
+  margin-top:clamp(34px,5vw,68px);
+  padding-top:clamp(34px,5vw,66px);
+  border-top:1px solid rgba(25,25,25,.20);
+}
+
+body.si-home-interior-sync #agua .si-home-agua-copy{
+  font-size:18px;
+  line-height:1.72;
+}
+
+body.si-home-interior-sync #agua .si-home-agua-copy p{
+  margin:0 0 22px;
+}
+
+body.si-home-interior-sync #agua .si-home-agua-important{
+  align-self:start;
+}
+
+body.si-home-interior-sync #agua .si-home-agua-important > span{
+  display:block;
+  margin-bottom:12px;
+  font-size:13px;
+  font-weight:850;
+  text-transform:uppercase;
+  letter-spacing:.13em;
+}
+
+body.si-home-interior-sync #agua .si-home-agua-important > strong{
+  display:block;
+  font-size:clamp(42px,5vw,76px);
+  line-height:.92;
+}
+
+body.si-home-interior-sync #agua .si-home-agua-important > p{
+  margin-top:20px;
+  line-height:1.55;
+}
+
+body.si-home-interior-sync #agua .si-home-agua-steps{
+  grid-column:1 / -1;
+  display:grid;
+  grid-template-columns:.7fr 1fr 1fr;
+  border-top:1px solid rgba(25,25,25,.20);
+}
+
+body.si-home-interior-sync #agua .si-home-agua-steps > h3{
+  margin:0;
+  padding:30px 30px 30px 0;
+  font-size:clamp(27px,3vw,44px);
+  line-height:1;
+}
+
+body.si-home-interior-sync #agua .si-home-agua-steps > a{
+  display:grid;
+  grid-template-columns:42px 1fr;
+  gap:18px;
+  padding:30px;
+  color:inherit;
+  text-decoration:none;
+  border-left:1px solid rgba(25,25,25,.20);
+}
+
+body.si-home-interior-sync #agua .si-home-agua-steps > a > span{
+  color:var(--si-home-red);
+  font-weight:850;
+}
+
+body.si-home-interior-sync #agua .si-home-agua-steps > a p{
+  margin:0;
+  line-height:1.6;
+}
+
+
+/* ============================================================
+   AGENDA
+   ============================================================ */
+
+body.si-home-interior-sync #musica .si-home-agenda-link{
+  display:inline-block;
+  margin-top:32px;
+  color:inherit;
+  font-weight:800;
+  text-decoration:none;
+  border-bottom:1px solid currentColor;
+}
+
+
+/* ============================================================
+   HISTORIA
+   ============================================================ */
+
+body.si-home-interior-sync #historia .si-home-historia{
+  width:100%;
+  margin-top:clamp(38px,5vw,76px);
+}
+
+body.si-home-interior-sync #historia .si-home-history-chapter{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(340px,.95fr);
+  gap:clamp(44px,7vw,120px);
+  align-items:center;
+  padding:clamp(55px,7vw,105px) 0;
+  border-top:1px solid rgba(25,25,25,.20);
+}
+
+body.si-home-interior-sync #historia .si-home-history-chapter.reverse > div{
+  order:2;
+}
+
+body.si-home-interior-sync #historia .si-home-history-chapter.reverse > figure{
+  order:1;
+}
+
+body.si-home-interior-sync #historia .si-home-history-chapter > div > span{
+  display:block;
+  margin-bottom:28px;
+  color:var(--si-home-red);
+  font-size:14px;
+  font-weight:850;
+}
+
+body.si-home-interior-sync #historia .si-home-history-chapter > div > p{
+  margin:0 0 8px;
+  font-size:13px;
+  font-weight:850;
+  text-transform:uppercase;
+  letter-spacing:.13em;
+}
+
+body.si-home-interior-sync #historia .si-home-history-chapter h3{
+  margin:0 0 24px;
+  font-size:clamp(38px,4.8vw,72px);
+  line-height:.94;
+}
+
+body.si-home-interior-sync #historia .si-home-history-chapter > div > div{
+  max-width:65ch;
+  line-height:1.7;
+}
+
+body.si-home-interior-sync #historia .si-home-history-chapter a{
+  display:inline-block;
+  margin-top:26px;
+  color:inherit;
+  font-weight:800;
+  text-decoration:none;
+  border-bottom:1px solid currentColor;
+}
+
+body.si-home-interior-sync #historia .si-home-history-chapter figure{
+  margin:0;
+}
+
+body.si-home-interior-sync #historia .si-home-history-chapter img{
+  display:block;
+  width:100%;
+  height:min(60vh,620px);
+  min-height:420px;
+  object-fit:cover;
+}
+
+body.si-home-interior-sync #historia .si-home-history-rectors{
+  grid-template-columns:1fr;
+}
+
+
+/* ============================================================
+   CONTACTO
+   ============================================================ */
+
+body.si-home-interior-sync #contacto .si-home-contacto-routes{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  margin:clamp(36px,5vw,70px) 0;
+  border-top:1px solid rgba(25,25,25,.20);
+  border-left:1px solid rgba(25,25,25,.20);
+}
+
+body.si-home-interior-sync #contacto .si-home-contacto-routes > a{
+  min-height:220px;
+  padding:clamp(28px,3.2vw,46px);
+  color:inherit;
+  text-decoration:none;
+  border-right:1px solid rgba(25,25,25,.20);
+  border-bottom:1px solid rgba(25,25,25,.20);
+  transition:background .26s ease,transform .26s ease;
+}
+
+body.si-home-interior-sync #contacto .si-home-contacto-routes > a:hover{
+  background:rgba(70,88,107,.10);
+  transform:translateY(-4px);
+}
+
+body.si-home-interior-sync #contacto .si-home-contacto-routes span{
+  display:block;
+  margin-bottom:24px;
+  font-size:13px;
+  font-weight:850;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+body.si-home-interior-sync #contacto .si-home-contacto-routes h3{
+  margin:0 0 16px;
+  font-size:clamp(26px,2.7vw,42px);
+  line-height:1;
+}
+
+body.si-home-interior-sync #contacto .si-home-contacto-routes strong,
+body.si-home-interior-sync #contacto .si-home-contacto-routes em{
+  display:block;
+  margin-top:7px;
+  font-style:normal;
+  line-height:1.5;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media(max-width:900px){
+
+  body.si-home-interior-sync #liturgia .si-home-liturgia-three,
+  body.si-home-interior-sync #pastoral .si-home-pastoral-programs,
+  body.si-home-interior-sync #contacto .si-home-contacto-routes{
+    grid-template-columns:1fr;
+  }
+
+  body.si-home-interior-sync #liturgia .si-home-liturgia-three > * + *{
+    border-left:0!important;
+    border-top:1px solid rgba(25,25,25,.18)!important;
+  }
+
+  body.si-home-interior-sync #nosotros .si-home-nosotros,
+  body.si-home-interior-sync #agua .si-home-agua,
+  body.si-home-interior-sync #historia .si-home-history-chapter{
+    grid-template-columns:1fr;
+  }
+
+  body.si-home-interior-sync #agua .si-home-agua-steps{
+    grid-template-columns:1fr;
+  }
+
+  body.si-home-interior-sync #agua .si-home-agua-steps > a{
+    border-left:0;
+    border-top:1px solid rgba(25,25,25,.20);
+    padding-left:0;
+    padding-right:0;
+  }
+
+  body.si-home-interior-sync #nosotros .si-home-nosotros > figure img{
+    min-height:420px;
+    height:55vh;
+  }
+
+  body.si-home-interior-sync #historia .si-home-history-chapter.reverse > div,
+  body.si-home-interior-sync #historia .si-home-history-chapter.reverse > figure{
+    order:initial;
+  }
+
+  body.si-home-interior-sync #sacramentos .si-managed-body{
+    margin-left:0;
+  }
+}
+
+@media(max-width:560px){
+
+  body.si-home-interior-sync #sacramentos .si-sacrament-card summary{
+    grid-template-columns:42px minmax(0,1fr) 28px;
+  }
+
+  body.si-home-interior-sync #nosotros .si-home-nosotros-list > a{
+    grid-template-columns:1fr 26px;
+  }
+
+  body.si-home-interior-sync #nosotros .si-home-nosotros-list > a span{
+    grid-column:1 / -1;
+  }
+}
