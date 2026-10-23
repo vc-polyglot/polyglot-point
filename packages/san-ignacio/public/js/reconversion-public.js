@@ -217,3 +217,60 @@
   init();
   window.setTimeout(init, 1400);
 })();
+
+/* SAN IGNACIO / INTENCIONES LEGIBILIDAD */
+(function mejorarLegibilidadIntenciones() {
+  function aplicar() {
+    const headings = Array.from(
+      document.querySelectorAll('h1,h2,h3,h4')
+    );
+
+    const titulo = headings.find(el =>
+      el.textContent.trim().toLowerCase() === 'intenciones de misa'
+    );
+
+    if (!titulo) return;
+
+    const card =
+      titulo.closest('section, article, div');
+
+    if (!card) return;
+
+    titulo.style.fontSize = 'clamp(34px, 3vw, 46px)';
+    titulo.style.lineHeight = '1.08';
+    titulo.style.color = '#171717';
+    titulo.style.fontWeight = '700';
+
+    const textos = Array.from(
+      card.querySelectorAll('p')
+    );
+
+    textos.forEach(p => {
+      p.style.fontSize = '24px';
+      p.style.lineHeight = '1.55';
+      p.style.color = '#222222';
+      p.style.fontWeight = '400';
+    });
+
+    const pequenos = Array.from(
+      card.querySelectorAll(
+        'small, .eyebrow, .kicker, [class*="eyebrow"], [class*="kicker"]'
+      )
+    );
+
+    pequenos.forEach(el => {
+      el.style.fontSize = '14px';
+      el.style.lineHeight = '1.4';
+      el.style.color = '#8a4d32';
+      el.style.fontWeight = '600';
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', aplicar);
+  } else {
+    aplicar();
+  }
+
+  setTimeout(aplicar, 300);
+})();

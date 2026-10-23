@@ -1,0 +1,415 @@
+body.page-pastoral main{margin:0!important;padding:0!important;max-width:none!important;background:#f5f0e8!important}.pasx-page{background:#f5f0e8;color:#191919;min-height:100vh}.pasx-hero{display:grid;grid-template-columns:.78fr 1.22fr;min-height:560px;background:#7d2926;color:#fff}.pasx-copy{padding:72px max(48px,calc((100vw - 1420px)/2));display:flex;flex-direction:column;justify-content:flex-end}.pasx-copy>p,.pasx-label{margin:0 0 14px;text-transform:uppercase;font-size:14px;font-weight:850;letter-spacing:.17em}.pasx-copy h1{margin:0;font-size:clamp(64px,7vw,112px);line-height:.88;letter-spacing:-.06em}.pasx-copy>span{margin-top:22px;font-size:22px}.pasx-hero figure{margin:0}.pasx-hero img{width:100%;height:100%;object-fit:cover}.pasx-message{width:min(1240px,calc(100% - 96px));margin:auto;padding:58px 0;border-bottom:1px solid rgba(0,0,0,.18)}.pasx-message .pasx-label{color:#9a302a}.pasx-message h2{max-width:900px;margin:0 0 18px;font-size:clamp(34px,4vw,60px);line-height:1}.pasx-message p{font-size:19px;line-height:1.65;color:#4d4842}.pasx-programs{width:min(1420px,calc(100% - 96px));margin:auto;padding:0 0 110px;display:grid;grid-template-columns:1fr 1fr}.pasx-programs article{padding:38px;border-bottom:1px solid rgba(0,0,0,.18);min-height:330px}.pasx-programs article:nth-child(odd){border-right:1px solid rgba(0,0,0,.18)}.pasx-programs article>span{font-size:14px;color:#9a302a;font-weight:850}.pasx-programs .pasx-label{margin-top:30px;color:#7b7168}.pasx-programs h2{font-size:36px;margin:0 0 14px}.pasx-programs strong{font-size:19px}.pasx-programs p:last-child{font-size:18px;line-height:1.6;color:#504b45}@media(max-width:850px){.pasx-hero,.pasx-programs{grid-template-columns:1fr}.pasx-copy{padding:50px 24px}.pasx-hero img{height:320px}.pasx-message,.pasx-programs{width:calc(100% - 40px)}.pasx-programs article:nth-child(odd){border-right:0}}
+
+/* PASTORAL — AJUSTE TIPOGRAFICO V18 */
+body.page-pastoral .pasx-programs h2{
+  font-size:clamp(34px,3vw,54px)!important;
+  line-height:.96!important;
+  letter-spacing:-.035em!important;
+  max-width:12ch;
+  margin-top:10px!important;
+  margin-bottom:8px!important;
+}
+
+body.page-pastoral .pasx-programs .pasx-label{
+  font-size:13px!important;
+  line-height:1.35!important;
+  letter-spacing:.16em!important;
+  font-weight:700!important;
+}
+
+body.page-pastoral .pasx-programs strong{
+  font-size:16px!important;
+  line-height:1.4!important;
+  font-weight:700!important;
+}
+
+body.page-pastoral .pasx-programs article>span:first-child{
+  font-size:12px!important;
+}
+
+@media(max-width:850px){
+  body.page-pastoral .pasx-programs h2{
+    font-size:clamp(32px,10vw,46px)!important;
+    max-width:none;
+  }
+}
+
+/* PASTORAL — AJUSTE TIPOGRAFICO V19 */
+body.page-pastoral .pasx-programs h2{
+  font-size:clamp(40px,3.4vw,62px)!important;
+  line-height:.96!important;
+  letter-spacing:-.035em!important;
+}
+
+body.page-pastoral .pasx-programs .pasx-label{
+  font-size:15px!important;
+  line-height:1.35!important;
+  letter-spacing:.14em!important;
+  font-weight:750!important;
+}
+
+body.page-pastoral .pasx-programs strong{
+  display:block!important;
+  font-size:18px!important;
+  line-height:1.4!important;
+  font-weight:750!important;
+  margin-top:7px!important;
+  margin-bottom:14px!important;
+}
+
+body.page-pastoral .pasx-programs article>span:first-child{
+  font-size:12px!important;
+}
+
+@media(max-width:850px){
+  body.page-pastoral .pasx-programs h2{
+    font-size:clamp(36px,10vw,52px)!important;
+  }
+
+  body.page-pastoral .pasx-programs .pasx-label{
+    font-size:14px!important;
+  }
+
+  body.page-pastoral .pasx-programs strong{
+    font-size:17px!important;
+  }
+}
+
+/* PASTORAL — +2 PT GENERAL V20 */
+body.page-pastoral .pasx-programs h2{
+  font-size:clamp(42px,3.55vw,64px)!important;
+}
+
+body.page-pastoral .pasx-programs .pasx-label{
+  font-size:17px!important;
+}
+
+body.page-pastoral .pasx-programs strong{
+  font-size:20px!important;
+}
+
+body.page-pastoral .pasx-programs article>span:first-child{
+  font-size:14px!important;
+}
+
+@media(max-width:850px){
+  body.page-pastoral .pasx-programs h2{
+    font-size:clamp(38px,10vw,54px)!important;
+  }
+
+  body.page-pastoral .pasx-programs .pasx-label{
+    font-size:16px!important;
+  }
+
+  body.page-pastoral .pasx-programs strong{
+    font-size:19px!important;
+  }
+}
+
+/* PASTORAL — AJUSTE FINAL V21 */
+body.page-pastoral .pasx-programs h2{
+  font-size:clamp(42px,3.55vw,64px)!important;
+  line-height:.96!important;
+  letter-spacing:-.035em!important;
+}
+
+body.page-pastoral .pasx-programs .pasx-label{
+  font-size:17px!important;
+  line-height:1.35!important;
+  letter-spacing:.14em!important;
+  font-weight:750!important;
+}
+
+body.page-pastoral .pasx-programs strong{
+  display:block!important;
+  font-size:20px!important;
+  line-height:1.4!important;
+  font-weight:750!important;
+  margin-top:7px!important;
+  margin-bottom:14px!important;
+}
+
+body.page-pastoral .pasx-programs article>span:first-child{
+  font-size:14px!important;
+}
+
+@media(max-width:850px){
+  body.page-pastoral .pasx-programs h2{
+    font-size:clamp(38px,10vw,54px)!important;
+  }
+
+  body.page-pastoral .pasx-programs .pasx-label{
+    font-size:16px!important;
+  }
+
+  body.page-pastoral .pasx-programs strong{
+    font-size:19px!important;
+  }
+}
+
+/* PASTORAL — INTERACCION HUMANA V22 */
+body.page-pastoral .pasx-programs article{
+  position:relative;
+  cursor:pointer;
+  transition:
+    background-color .28s ease,
+    transform .28s ease,
+    box-shadow .28s ease,
+    padding .35s ease;
+}
+
+body.page-pastoral .pasx-programs article:hover{
+  background:rgba(165,58,49,.055);
+  transform:translateY(-4px);
+  box-shadow:0 12px 30px rgba(0,0,0,.07);
+}
+
+body.page-pastoral .pasx-programs article::after{
+  content:"Ver más";
+  position:absolute;
+  right:26px;
+  bottom:22px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:#a53a31;
+  opacity:0;
+  transform:translateY(5px);
+  transition:opacity .22s ease,transform .22s ease;
+}
+
+body.page-pastoral .pasx-programs article:hover::after{
+  opacity:1;
+  transform:translateY(0);
+}
+
+body.page-pastoral .pasx-programs article.is-expanded{
+  grid-column:1 / -1;
+  background:#fffdfa;
+  padding-top:48px!important;
+  padding-bottom:52px!important;
+  transform:none;
+  box-shadow:0 18px 50px rgba(0,0,0,.09);
+  z-index:2;
+}
+
+body.page-pastoral .pasx-programs article.is-expanded::after{
+  content:"Cerrar";
+  opacity:1;
+  transform:none;
+}
+
+body.page-pastoral .pasx-programs article.is-expanded h2{
+  font-size:clamp(52px,4.7vw,76px)!important;
+  max-width:16ch!important;
+}
+
+body.page-pastoral .pasx-programs article.is-expanded .pasx-label{
+  font-size:17px!important;
+}
+
+body.page-pastoral .pasx-programs article.is-expanded strong{
+  font-size:21px!important;
+}
+
+body.page-pastoral .pasx-programs article.is-expanded > p:last-child{
+  max-width:760px;
+  font-size:18px!important;
+  line-height:1.65!important;
+}
+
+body.page-pastoral .pasx-programs article:focus-visible{
+  outline:3px solid #a53a31;
+  outline-offset:-3px;
+}
+
+@media(max-width:850px){
+  body.page-pastoral .pasx-programs article.is-expanded{
+    grid-column:auto;
+  }
+
+  body.page-pastoral .pasx-programs article::after{
+    opacity:1;
+  }
+}
+
+/* ==========================================================
+   PASTORAL V23 — JERARQUIA HUMANA / PANEL DE DETALLE
+   ========================================================== */
+
+/* El mensaje pastoral deja de competir con la cabecera */
+body.page-pastoral .pasx-message{
+  width:min(1420px,calc(100% - 96px))!important;
+  margin:0 auto!important;
+  padding:30px 0 34px!important;
+  display:grid!important;
+  grid-template-columns:180px minmax(0,1fr)!important;
+  column-gap:42px!important;
+  align-items:start!important;
+  border-bottom:1px solid rgba(0,0,0,.16)!important;
+}
+
+body.page-pastoral .pasx-message>.pasx-label{
+  margin:5px 0 0!important;
+  font-size:13px!important;
+  line-height:1.3!important;
+  letter-spacing:.16em!important;
+}
+
+body.page-pastoral #pasx-message-body{
+  max-width:760px!important;
+}
+
+body.page-pastoral #pasx-message-body h2{
+  margin:0 0 7px!important;
+  font-size:clamp(28px,2.4vw,38px)!important;
+  line-height:1.02!important;
+  letter-spacing:-.025em!important;
+}
+
+body.page-pastoral #pasx-message-body p{
+  margin:0!important;
+  font-size:16px!important;
+  line-height:1.55!important;
+  color:#65605a!important;
+}
+
+/* Acerca las opciones a la entrada de la sección */
+body.page-pastoral .pasx-programs{
+  margin-top:0!important;
+}
+
+/* Transición natural entre estado normal y seleccionado */
+body.page-pastoral .pasx-programs article{
+  scroll-margin-top:120px;
+  transition:
+    background-color .3s ease,
+    box-shadow .3s ease,
+    opacity .3s ease,
+    transform .3s ease,
+    padding .35s ease!important;
+}
+
+/* Cuando hay una ficha abierta, las demás siguen disponibles
+   pero dejan de competir con ella */
+body.page-pastoral .pasx-programs:has(article.is-expanded) article:not(.is-expanded){
+  opacity:.38;
+  transform:scale(.985);
+  box-shadow:none!important;
+}
+
+body.page-pastoral .pasx-programs:has(article.is-expanded) article:not(.is-expanded):hover{
+  opacity:.72;
+  transform:scale(.99);
+}
+
+/* La seleccionada se convierte en panel editorial */
+body.page-pastoral .pasx-programs article.is-expanded{
+  grid-column:1 / -1!important;
+  display:grid!important;
+  grid-template-columns:minmax(270px,.9fr) minmax(380px,1.25fr)!important;
+  grid-template-areas:
+    "number details"
+    "label  details"
+    "title  details"!important;
+  column-gap:80px!important;
+  align-items:start!important;
+
+  padding:48px 72px 52px!important;
+  background:#fffdfa!important;
+  border-top:4px solid #a53a31!important;
+  box-shadow:0 18px 48px rgba(0,0,0,.09)!important;
+}
+
+/* Número */
+body.page-pastoral .pasx-programs article.is-expanded>span:first-child{
+  grid-area:number!important;
+  margin:0 0 22px!important;
+}
+
+/* Etiqueta superior */
+body.page-pastoral .pasx-programs article.is-expanded>.pasx-label{
+  grid-area:label!important;
+  margin:0 0 12px!important;
+  align-self:end!important;
+}
+
+/* Título protagonista, sin gigantismo */
+body.page-pastoral .pasx-programs article.is-expanded>h2{
+  grid-area:title!important;
+  margin:0!important;
+  max-width:10ch!important;
+  font-size:clamp(48px,4vw,66px)!important;
+  line-height:.96!important;
+  letter-spacing:-.04em!important;
+}
+
+/* Horario / dato principal a la derecha */
+body.page-pastoral .pasx-programs article.is-expanded>strong{
+  grid-area:details!important;
+  align-self:start!important;
+  margin:12px 0 0!important;
+  padding:0 0 18px!important;
+  font-size:21px!important;
+  line-height:1.4!important;
+  border-bottom:1px solid rgba(0,0,0,.16)!important;
+}
+
+/* Texto explicativo también a la derecha */
+body.page-pastoral .pasx-programs article.is-expanded>p:last-child{
+  grid-column:2!important;
+  grid-row:3!important;
+  margin:14px 0 0!important;
+  max-width:680px!important;
+  font-size:18px!important;
+  line-height:1.65!important;
+  color:#4f4a45!important;
+}
+
+/* Cierre visible donde el ojo lo espera */
+body.page-pastoral .pasx-programs article.is-expanded::after{
+  content:"×  Cerrar"!important;
+  top:20px!important;
+  right:24px!important;
+  bottom:auto!important;
+  opacity:1!important;
+  transform:none!important;
+  font-size:13px!important;
+  letter-spacing:.1em!important;
+  color:#a53a31!important;
+}
+
+/* En reposo: señal discreta, no ruido */
+body.page-pastoral .pasx-programs article:not(.is-expanded)::after{
+  content:"Ver más"!important;
+}
+
+/* Móvil: vuelve a lectura vertical */
+@media(max-width:850px){
+  body.page-pastoral .pasx-message{
+    width:calc(100% - 40px)!important;
+    grid-template-columns:1fr!important;
+    row-gap:10px!important;
+  }
+
+  body.page-pastoral .pasx-programs article.is-expanded{
+    grid-column:auto!important;
+    display:block!important;
+    padding:38px 24px 44px!important;
+  }
+
+  body.page-pastoral .pasx-programs article.is-expanded>h2{
+    max-width:none!important;
+    margin-bottom:18px!important;
+  }
+
+  body.page-pastoral .pasx-programs article.is-expanded>strong{
+    display:block!important;
+    margin-top:0!important;
+  }
+
+  body.page-pastoral .pasx-programs article.is-expanded>p:last-child{
+    margin-top:14px!important;
+  }
+}

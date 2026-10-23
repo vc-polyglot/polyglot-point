@@ -1,0 +1,178 @@
+﻿/* =========================================================
+   SAN IGNACIO — INTERACCION DE SECCIONES
+   UNA SOLA CAPA
+   Complementario: #46586B
+   ========================================================= */
+
+.si-interactive{
+  position:relative;
+  box-sizing:border-box;
+  cursor:pointer;
+
+  transition:
+    transform .32s cubic-bezier(.2,.7,.2,1),
+    background-color .32s ease,
+    box-shadow .32s ease,
+    opacity .32s ease,
+    filter .32s ease;
+}
+
+/* HOVER COMÚN */
+@media (hover:hover) and (pointer:fine){
+
+  .si-interactive:hover:not(.si-open){
+    transform:translateY(-4px);
+
+    background-color:rgba(70,88,107,.10)!important;
+
+    box-shadow:
+      inset 0 0 0 1px rgba(70,88,107,.24),
+      0 13px 32px rgba(40,50,61,.09)!important;
+  }
+}
+
+.si-interactive:focus-visible{
+  outline:2px solid rgba(70,88,107,.72);
+  outline-offset:3px;
+}
+
+.si-interactive.si-muted{
+  opacity:.34!important;
+  filter:saturate(.72);
+}
+
+.si-interactive.si-muted:hover{
+  opacity:.62!important;
+}
+
+
+/* =========================================================
+   VIDA LITÚRGICA
+   Sólo Intenciones / Hora Santa / Confesiones
+   ========================================================= */
+
+body.page-liturgia .litx-grid > .si-open{
+  grid-column:1 / -1!important;
+  background:rgba(70,88,107,.13)!important;
+  box-shadow:
+    inset 5px 0 0 #46586B,
+    0 16px 38px rgba(40,50,61,.10)!important;
+}
+
+
+/* =========================================================
+   SACRAMENTOS
+   DETAILS conserva su contenido real y sólo abre con doble clic
+   ========================================================= */
+
+body.page-sacramentos .sacx-card.si-open{
+  background:rgba(70,88,107,.13)!important;
+
+  box-shadow:
+    inset 5px 0 0 #46586B,
+    0 17px 40px rgba(40,50,61,.11)!important;
+}
+
+
+/* =========================================================
+   PASTORAL
+   El 2x2 permanece intacto en reposo
+   ========================================================= */
+
+body.page-pastoral .pasx-programs > article.si-open{
+  grid-column:1 / -1!important;
+
+  background:rgba(70,88,107,.13)!important;
+
+  box-shadow:
+    inset 5px 0 0 #46586B,
+    0 17px 40px rgba(40,50,61,.11)!important;
+}
+
+
+/* =========================================================
+   NOSOTROS
+   No deformamos las filas: el doble clic abre el perfil existente
+   ========================================================= */
+
+body.page-nosotros .nosx-person:hover{
+  background-color:rgba(70,88,107,.10)!important;
+}
+
+
+/* =========================================================
+   AGUA DE SAN IGNACIO
+   Sólo los hijos directos de Cómo obtenerla
+   ========================================================= */
+
+body.page-agua .agux-steps > .si-open{
+  grid-column:1 / -1!important;
+
+  background:rgba(70,88,107,.13)!important;
+
+  box-shadow:
+    inset 5px 0 0 #46586B,
+    0 16px 38px rgba(40,50,61,.10)!important;
+}
+
+
+/* =========================================================
+   HISTORIA
+   NO cambiamos su estructura ni alternancia.
+   Sólo respuesta visual + protagonismo.
+   ========================================================= */
+
+body.page-historia .hisx-block.si-open,
+body.page-historia .hisx-rectors.si-open{
+  transform:scale(1.008);
+
+  background:rgba(70,88,107,.07)!important;
+
+  box-shadow:
+    inset 5px 0 0 rgba(70,88,107,.80),
+    0 17px 42px rgba(40,50,61,.09)!important;
+}
+
+
+/* =========================================================
+   CONTACTO
+   Sólo las tres vías; formulario queda fuera
+   ========================================================= */
+
+body.page-contacto .conx-info > article.si-open{
+  grid-column:1 / -1!important;
+
+  background:rgba(70,88,107,.13)!important;
+
+  box-shadow:
+    inset 5px 0 0 #46586B,
+    0 17px 40px rgba(40,50,61,.10)!important;
+}
+
+
+/* El contenido jamás desaparece al abrir */
+.si-open{
+  opacity:1!important;
+  filter:none!important;
+  z-index:3;
+}
+
+
+/* Móvil: no hacemos transformaciones agresivas */
+@media(max-width:900px){
+
+  .si-interactive{
+    transform:none!important;
+  }
+
+  .si-interactive.si-muted{
+    opacity:.55!important;
+  }
+
+  body.page-liturgia .litx-grid > .si-open,
+  body.page-pastoral .pasx-programs > article.si-open,
+  body.page-agua .agux-steps > .si-open,
+  body.page-contacto .conx-info > article.si-open{
+    grid-column:auto!important;
+  }
+}

@@ -1,0 +1,563 @@
+
+/* SAN IGNACIO — REDISEÑO LOCAL V1
+   Capa visual reversible. No modifica datos ni backend.
+   Inspiración: claridad institucional, fotografía, aire y navegación funcional.
+*/
+
+:root{
+  --si-bg:#f7f4ed;
+  --si-bg-2:#fff;
+  --si-ink:#17191b;
+  --si-muted:#6e6b66;
+  --si-line:rgba(23,25,27,.14);
+  --si-red:#a43830;
+  --si-orange:#c25a27;
+  --si-amber:#d9a13d;
+  --si-blue:#31577d;
+  --si-purple:#594573;
+  --si-max:1240px;
+  --si-header:82px;
+}
+
+/* ---------- BASE ---------- */
+html{background:var(--si-bg)!important;}
+body{
+  background:var(--si-bg)!important;
+  color:var(--si-ink)!important;
+  font-family:"Avenir Next","Century Gothic","Futura","Trebuchet MS",system-ui,sans-serif!important;
+  letter-spacing:0;
+}
+body main{background:var(--si-bg)!important;}
+body main > section{
+  min-height:calc(100svh - var(--si-header))!important;
+}
+
+/* ---------- CABECERA CASI TRANSPARENTE ---------- */
+.site-header{
+  position:fixed!important;
+  inset:0 0 auto 0!important;
+  z-index:5000!important;
+  min-height:var(--si-header)!important;
+  padding:14px clamp(22px,4vw,66px)!important;
+  border-bottom:1px solid rgba(255,255,255,.22)!important;
+  background:linear-gradient(to bottom,rgba(11,14,16,.58),rgba(11,14,16,.18))!important;
+  -webkit-backdrop-filter:blur(12px) saturate(115%)!important;
+  backdrop-filter:blur(12px) saturate(115%)!important;
+  transition:background .25s ease,border-color .25s ease,color .25s ease!important;
+}
+.site-header .brand,
+.site-header .brand strong,
+.site-header .primary-nav a,
+.site-header .nav-toggle{
+  color:#fff!important;
+}
+.site-header .brand small{color:rgba(255,255,255,.72)!important;}
+.site-header .brand-mark{
+  width:4px!important;
+  height:34px!important;
+  background:linear-gradient(to bottom,var(--si-red) 0 31%,var(--si-orange) 31% 60%,var(--si-blue) 60% 100%)!important;
+}
+.site-header .primary-nav{
+  gap:clamp(12px,1.6vw,24px)!important;
+  font-size:.82rem!important;
+}
+.site-header .primary-nav a{
+  opacity:.86;
+  transition:opacity .2s ease!important;
+}
+.site-header .primary-nav a:hover,
+.site-header .primary-nav a.is-current-view{opacity:1!important;}
+
+/* En vistas interiores la cabecera gana un poco de cuerpo sin volverse pesada */
+body:not(.si-view-home) .site-header{
+  background:rgba(18,21,23,.88)!important;
+  border-bottom-color:rgba(255,255,255,.12)!important;
+}
+
+/* ---------- HERO ---------- */
+body .first-screen.si-revelation-hero{
+  min-height:100svh!important;
+  background:#121416!important;
+}
+body .first-screen.si-revelation-hero .si-hero-stage{
+  inset:0!important;
+}
+body .first-screen.si-revelation-hero .si-hero-slide img{
+  filter:saturate(.82) contrast(.96) brightness(.82)!important;
+}
+body .first-screen.si-revelation-hero .si-hero-vignette{
+  background:
+    linear-gradient(90deg,rgba(8,10,11,.64) 0%,rgba(8,10,11,.18) 52%,rgba(8,10,11,.08) 100%),
+    linear-gradient(0deg,rgba(8,10,11,.58) 0%,transparent 45%)!important;
+}
+body .first-screen.si-revelation-hero .si-hero-copy{
+  left:clamp(26px,6vw,96px)!important;
+  right:auto!important;
+  bottom:clamp(115px,14vh,150px)!important;
+  top:auto!important;
+  width:min(760px,82vw)!important;
+  max-width:760px!important;
+  text-align:left!important;
+  transform:none!important;
+  z-index:40!important;
+}
+body .first-screen.si-revelation-hero .si-hero-copy .eyebrow{
+  margin:0 0 18px!important;
+  color:rgba(255,255,255,.78)!important;
+  font-size:clamp(.76rem,.9vw,.9rem)!important;
+  letter-spacing:.24em!important;
+  text-shadow:0 2px 18px rgba(0,0,0,.32)!important;
+}
+body .first-screen.si-revelation-hero .si-hero-copy h1{
+  margin:0!important;
+  max-width:10ch!important;
+  color:#fff!important;
+  font-size:clamp(3.9rem,7.8vw,8.6rem)!important;
+  line-height:.86!important;
+  letter-spacing:-.062em!important;
+  font-weight:600!important;
+  text-shadow:0 4px 30px rgba(0,0,0,.28)!important;
+}
+body .first-screen.si-revelation-hero .si-hero-copy .address{
+  margin:24px 0 0!important;
+  color:rgba(255,255,255,.86)!important;
+  font-size:clamp(.98rem,1.2vw,1.2rem)!important;
+  letter-spacing:.06em!important;
+  text-shadow:0 2px 16px rgba(0,0,0,.3)!important;
+}
+
+/* Accesos rápidos insertados por redisenio-2026.js */
+.si-hero-quicklinks{
+  position:absolute;
+  z-index:60;
+  left:clamp(26px,6vw,96px);
+  right:clamp(26px,6vw,96px);
+  bottom:28px;
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  border-top:1px solid rgba(255,255,255,.38);
+  border-bottom:1px solid rgba(255,255,255,.25);
+}
+.si-hero-quicklinks a{
+  min-height:64px;
+  display:flex;
+  align-items:center;
+  padding:0 18px;
+  color:#fff;
+  text-decoration:none;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  font-size:.69rem;
+  font-weight:800;
+  border-left:1px solid rgba(255,255,255,.2);
+  background:rgba(10,12,13,.10);
+  backdrop-filter:blur(5px);
+}
+.si-hero-quicklinks a:first-child{border-left:0;}
+.si-hero-quicklinks a:hover{background:rgba(255,255,255,.10);}
+
+/* ---------- MARCO COMÚN DE INTERIORES ---------- */
+body main > section:not(.first-screen){
+  padding:
+    clamp(118px,14vh,155px)
+    clamp(24px,6vw,92px)
+    clamp(72px,9vw,120px)!important;
+  background:var(--si-bg)!important;
+  color:var(--si-ink)!important;
+}
+body main > section:not(.first-screen) > *{
+  max-width:var(--si-max);
+  margin-left:auto;
+  margin-right:auto;
+}
+.section-kicker,
+body main > section:not(.first-screen) .section-kicker{
+  margin-bottom:15px!important;
+  color:var(--si-red)!important;
+  font-size:.72rem!important;
+  font-weight:800!important;
+  letter-spacing:.18em!important;
+  text-transform:uppercase!important;
+}
+body main > section:not(.first-screen) h2{
+  margin:0!important;
+  color:var(--si-ink)!important;
+  font-size:clamp(3rem,6.3vw,6.6rem)!important;
+  line-height:.9!important;
+  letter-spacing:-.055em!important;
+  font-weight:600!important;
+}
+body main > section:not(.first-screen) h3{
+  color:var(--si-ink)!important;
+}
+body main > section:not(.first-screen) p{
+  color:var(--si-muted)!important;
+  font-size:clamp(1rem,1.12vw,1.12rem);
+  line-height:1.68;
+}
+
+/* ---------- VIDA LITÚRGICA ---------- */
+body #liturgia.liturgy-section{
+  display:block!important;
+}
+body #liturgia .liturgy-heading{
+  max-width:var(--si-max)!important;
+  margin:0 auto 58px!important;
+}
+body #liturgia .liturgy-heading h2{
+  max-width:10ch;
+}
+body #liturgia .liturgy-subtitle{
+  margin:20px 0 0!important;
+  color:var(--si-muted)!important;
+  font-size:.78rem!important;
+  letter-spacing:.16em!important;
+}
+body #liturgia .liturgy-content,
+body #liturgia .mass-hours-primary,
+body #liturgia .si-intentions-card,
+body #liturgia .liturgy-hours,
+body #liturgia .site-section-photo--liturgia{
+  width:min(100%,var(--si-max))!important;
+  max-width:var(--si-max)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+body #liturgia .mass-hours-primary{
+  padding:0!important;
+  margin-top:0!important;
+  border-top:1px solid var(--si-line)!important;
+  border-bottom:1px solid var(--si-line)!important;
+}
+body #liturgia .mass-hours-kicker{color:var(--si-red)!important;}
+body #liturgia .mass-hours-heading{
+  color:var(--si-ink)!important;
+  margin-bottom:34px!important;
+}
+body #liturgia .mass-hours-row{
+  border-color:var(--si-line)!important;
+}
+body #liturgia .mass-hours-day,
+body #liturgia .mass-hours-times{color:var(--si-ink)!important;}
+body #liturgia .mass-hours-note{color:var(--si-muted)!important;}
+body #liturgia .si-intentions-card{
+  margin-top:58px!important;
+  padding:34px 0!important;
+  border-top:1px solid var(--si-line);
+  border-bottom:1px solid var(--si-line);
+  background:transparent!important;
+}
+body #liturgia .site-section-photo--liturgia{
+  margin-top:70px!important;
+}
+body #liturgia .site-section-photo--liturgia img{
+  width:100%!important;
+  height:min(62vh,660px)!important;
+  object-fit:cover!important;
+}
+
+/* ---------- SACRAMENTOS ---------- */
+body #sacramentos .si-section-heading{
+  margin-bottom:54px!important;
+}
+body #sacramentos .si-section-heading > p:last-child{
+  max-width:720px;
+  margin-top:22px;
+}
+body #sacramentos .si-sacraments-list{
+  width:min(100%,var(--si-max));
+  margin:0 auto;
+  border-top:1px solid var(--si-line);
+}
+body #sacramentos .si-sacrament-card{
+  border:0!important;
+  border-bottom:1px solid var(--si-line)!important;
+  border-radius:0!important;
+  background:transparent!important;
+}
+body #sacramentos .si-sacrament-card summary{
+  padding:25px 0!important;
+  color:var(--si-ink)!important;
+  font-size:clamp(1.35rem,2vw,2rem)!important;
+  font-weight:650!important;
+  cursor:pointer;
+}
+body #sacramentos .si-sacrament-card[open] summary{
+  color:var(--si-red)!important;
+}
+body #sacramentos .si-managed-body{
+  max-width:820px;
+  padding:0 0 36px!important;
+  color:var(--si-muted)!important;
+  line-height:1.72!important;
+  white-space:pre-line;
+}
+
+/* ---------- PASTORAL ---------- */
+body #pastoral.pastoral-section{
+  display:grid!important;
+  grid-template-columns:minmax(250px,.65fr) minmax(0,1.35fr)!important;
+  gap:clamp(42px,7vw,110px)!important;
+  align-items:start!important;
+}
+body #pastoral .pastoral-card{
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+}
+body #pastoral .si-pastoral-categories-wrap,
+body #pastoral .site-section-photo--pastoral{
+  grid-column:1 / -1;
+}
+body #pastoral .si-pastoral-categories{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:1px;
+  background:var(--si-line);
+}
+body #pastoral .si-pastoral-categories > *{
+  background:var(--si-bg-2)!important;
+}
+body #pastoral .site-section-photo--pastoral{
+  max-width:var(--si-max)!important;
+  margin-top:64px!important;
+}
+body #pastoral .site-section-photo--pastoral img{
+  width:100%!important;
+  height:min(58vh,620px)!important;
+  object-fit:cover!important;
+}
+
+/* ---------- AGENDA ---------- */
+body #musica.si-agenda-section{
+  background:var(--si-bg)!important;
+  color:var(--si-ink)!important;
+}
+body #musica .si-event-grid{
+  gap:1px!important;
+  background:var(--si-line);
+}
+body #musica .si-event-card{
+  border:0!important;
+  border-radius:0!important;
+  background:var(--si-bg-2)!important;
+}
+body #musica .si-event-card-copy{
+  padding:clamp(24px,3vw,38px)!important;
+}
+body #musica .si-event-card h3,
+body #musica .si-event-card strong{color:var(--si-ink)!important;}
+body #musica .si-event-card p,
+body #musica .si-event-card span,
+body #musica .si-event-card small{color:var(--si-muted)!important;}
+
+/* ---------- NOSOTROS ---------- */
+body #nosotros.staff-section{
+  background:var(--si-bg)!important;
+  color:var(--si-ink)!important;
+}
+body #nosotros .community-directory{
+  width:min(100%,var(--si-max))!important;
+  gap:clamp(44px,7vw,96px)!important;
+}
+body #nosotros .community-directory-photo{
+  height:clamp(420px,38vw,590px)!important;
+}
+body #nosotros .community-directory-roles{
+  border-top:1px solid var(--si-line)!important;
+}
+body #nosotros .community-role{
+  border-bottom:1px solid var(--si-line)!important;
+  color:var(--si-ink)!important;
+}
+body #nosotros .community-role:hover,
+body #nosotros .community-role:focus-visible,
+body #nosotros .community-role.is-active{
+  background:rgba(164,56,48,.045)!important;
+}
+body #nosotros .community-person{
+  border:1px solid var(--si-line);
+  background:var(--si-bg-2)!important;
+}
+body #nosotros .community-person-role{color:var(--si-red)!important;}
+
+/* ---------- AGUA ---------- */
+body #agua.si-water-section{
+  background:var(--si-bg-2)!important;
+}
+body #agua .si-water-layout{
+  display:grid;
+  grid-template-columns:minmax(220px,.62fr) minmax(0,1.38fr);
+  gap:clamp(42px,7vw,110px);
+  align-items:start;
+}
+body #agua .si-managed-body{
+  max-width:780px;
+  color:var(--si-muted)!important;
+  font-size:1.08rem;
+  line-height:1.76;
+  white-space:pre-line;
+}
+
+/* ---------- HISTORIA ---------- */
+body #historia.history-section{
+  display:block!important;
+  background:var(--si-bg)!important;
+}
+body #historia .history-copy{
+  width:min(100%,var(--si-max));
+  max-width:var(--si-max)!important;
+  margin:0 auto!important;
+  padding:0!important;
+}
+body #historia #history-palette{
+  display:none!important;
+}
+body #historia .history-tabs{
+  margin-top:42px!important;
+  border-color:var(--si-line)!important;
+}
+body #historia .history-tab{
+  color:var(--si-muted)!important;
+}
+body #historia .history-tab.active{
+  color:var(--si-red)!important;
+}
+body #historia .history-panels{
+  max-width:820px;
+}
+body #historia .history-photo-grid{
+  width:min(100%,var(--si-max));
+  max-width:var(--si-max);
+  margin:70px auto 0!important;
+}
+
+/* ---------- GALERÍA ---------- */
+body #galeria.gallery-section{
+  background:#111416!important;
+  color:#fff!important;
+}
+body #galeria .gallery-heading h2{color:#fff!important;}
+body #galeria .gallery-launch-meta{color:rgba(255,255,255,.72)!important;}
+body #galeria .gallery-entry{
+  width:min(100%,var(--si-max))!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+body #galeria .gallery-launch img{
+  height:min(68vh,720px)!important;
+}
+
+/* ---------- CONTACTO ---------- */
+body #contacto.contact-section{
+  display:grid!important;
+  grid-template-columns:minmax(250px,.72fr) minmax(0,1.28fr)!important;
+  gap:clamp(42px,7vw,110px)!important;
+  background:var(--si-bg)!important;
+  color:var(--si-ink)!important;
+}
+body #contacto .contact-intro,
+body #contacto .contact-form{
+  margin:0!important;
+}
+body #contacto .contact-form{
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+}
+body #contacto .contact-form label{color:var(--si-muted)!important;}
+body #contacto .contact-form input,
+body #contacto .contact-form textarea{
+  border:1px solid var(--si-line)!important;
+  background:var(--si-bg-2)!important;
+  color:var(--si-ink)!important;
+}
+body #contacto .direct-contact{
+  grid-column:1 / -1;
+  border-top:1px solid var(--si-line)!important;
+}
+body #contacto .direct-contact-item{
+  border:1px solid var(--si-line)!important;
+  background:var(--si-bg-2)!important;
+  color:var(--si-ink)!important;
+}
+body #contacto .direct-contact-title{color:var(--si-ink)!important;}
+body #contacto .direct-contact-subtitle,
+body #contacto .direct-contact-label{color:var(--si-muted)!important;}
+
+/* ---------- FOOTER ---------- */
+.site-footer{
+  background:#111416!important;
+  color:rgba(255,255,255,.62)!important;
+  border:0!important;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:980px){
+  .site-header{min-height:72px!important;}
+  .site-header .primary-nav{
+    top:72px!important;
+    padding:22px!important;
+    background:rgba(17,20,22,.96)!important;
+    backdrop-filter:blur(14px)!important;
+  }
+  .si-hero-quicklinks{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+  body #pastoral.pastoral-section,
+  body #contacto.contact-section{
+    grid-template-columns:1fr!important;
+  }
+  body #pastoral .si-pastoral-categories{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  body #agua .si-water-layout{grid-template-columns:1fr;}
+}
+@media (max-width:700px){
+  :root{--si-header:68px;}
+  .site-header{
+    padding:10px 18px!important;
+    background:rgba(17,20,22,.74)!important;
+  }
+  body .first-screen.si-revelation-hero .si-hero-copy{
+    left:22px!important;
+    right:22px!important;
+    bottom:150px!important;
+    width:auto!important;
+  }
+  body .first-screen.si-revelation-hero .si-hero-copy h1{
+    font-size:clamp(3.4rem,16vw,5.2rem)!important;
+  }
+  .si-hero-quicklinks{
+    left:22px;
+    right:22px;
+    bottom:18px;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .si-hero-quicklinks a{
+    min-height:48px;
+    padding:0 10px;
+    font-size:.61rem;
+  }
+  .si-hero-quicklinks a:nth-child(5){display:none;}
+  body main > section:not(.first-screen){
+    padding:100px 22px 64px!important;
+  }
+  body #pastoral .si-pastoral-categories{grid-template-columns:1fr;}
+  body #nosotros .community-directory{grid-template-columns:1fr!important;}
+  body #historia .history-photo-grid{grid-template-columns:1fr!important;}
+}
+
+/* ============================================================
+   SAN IGNACIO — HOME LARGO + VISTAS INDIVIDUALES V2
+   ============================================================ */
+
+body.si-multiview.si-home-all-sections main > section {
+  visibility: visible !important;
+}
+
+body.si-multiview:not(.si-home-all-sections) main > section[hidden] {
+  display: none !important;
+  visibility: hidden !important;
+}
+
