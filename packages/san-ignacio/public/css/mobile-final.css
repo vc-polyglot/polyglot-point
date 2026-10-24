@@ -1,0 +1,65 @@
+﻿/* SAN IGNACIO — MOBILE FINAL AUTHORITY */
+
+@media (max-width:700px){
+
+  html,body{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden;
+  }
+
+  body{
+    -webkit-text-size-adjust:100%;
+  }
+
+  main,
+  main > section,
+  .section-shell{
+    max-width:100%;
+    min-width:0;
+  }
+
+  img{
+    max-width:100%;
+    height:auto;
+  }
+
+  h1,h2,h3,p,span,strong,a,button,label,input,textarea{
+    overflow-wrap:anywhere;
+  }
+
+  /* FOOTER */
+  .site-footer,
+  body footer,
+  body.si-multiview .site-footer{
+    margin:0!important;
+    padding:26px 20px 30px!important;
+
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+
+    min-height:82px!important;
+
+    background:#111416!important;
+    border:0!important;
+    border-top:1px solid rgba(255,255,255,.08)!important;
+
+    color:rgba(255,255,255,.68)!important;
+
+    font-size:13px!important;
+    line-height:1.4!important;
+    font-weight:500!important;
+    letter-spacing:.02em!important;
+
+    text-align:center!important;
+  }
+
+  .site-footer span{
+    display:block!important;
+    width:100%!important;
+    max-width:420px!important;
+    margin:0 auto!important;
+  }
+
+}
