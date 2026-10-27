@@ -1,11 +1,29 @@
-﻿/* SAN IGNACIO — MOBILE FINAL AUTHORITY */
+﻿/* ============================================================
+   SAN IGNACIO DE LOYOLA — AUTORIDAD MOVIL FINAL V2
+   SOLO TELEFONOS / PANTALLAS PEQUENAS
+   ESCRITORIO NO SE TOCA
+   ============================================================ */
 
-@media (max-width:700px){
+@media (max-width:760px){
 
-  html,body{
+  /* ---------- BASE ---------- */
+
+  *,
+  *::before,
+  *::after{
+    box-sizing:border-box;
+  }
+
+  html,
+  body{
     width:100%;
     max-width:100%;
-    overflow-x:hidden;
+    margin:0;
+    overflow-x:hidden!important;
+  }
+
+  html{
+    scroll-padding-top:76px;
   }
 
   body{
@@ -13,52 +31,897 @@
   }
 
   main,
-  main > section,
+  main>section,
   .section-shell{
-    max-width:100%;
-    min-width:0;
+    min-width:0!important;
+    max-width:100%!important;
+  }
+
+  img,
+  picture,
+  video,
+  iframe{
+    max-width:100%!important;
   }
 
   img{
+    display:block;
+  }
+
+  p,
+  li,
+  strong,
+  span,
+  a{
+    overflow-wrap:break-word;
+  }
+
+  input,
+  textarea,
+  select,
+  button{
     max-width:100%;
-    height:auto;
+    font:inherit;
   }
 
-  h1,h2,h3,p,span,strong,a,button,label,input,textarea{
-    overflow-wrap:anywhere;
+
+  /* ---------- HEADER ---------- */
+
+  body .site-header{
+    min-height:68px!important;
+    height:auto!important;
+    padding:10px 16px!important;
+    gap:10px!important;
+    align-items:center!important;
   }
 
-  /* FOOTER */
+  body .site-header .brand,
+  body .site-header .site-brand,
+  body .site-header .logo-lockup{
+    min-width:0!important;
+    max-width:calc(100% - 54px)!important;
+    gap:3px!important;
+  }
+
+  body .site-header .brand strong,
+  body .site-header .site-brand strong,
+  body .site-header .logo-lockup strong{
+    font-size:16px!important;
+    line-height:18px!important;
+    letter-spacing:.15px!important;
+    white-space:normal!important;
+  }
+
+  body .site-header .brand small,
+  body .site-header .site-brand small,
+  body .site-header .logo-lockup small{
+    font-size:11px!important;
+    line-height:14px!important;
+    letter-spacing:.05em!important;
+  }
+
+  body .nav-toggle{
+    width:44px!important;
+    min-width:44px!important;
+    height:44px!important;
+    padding:0!important;
+    margin-left:auto!important;
+  }
+
+  body .site-header .primary-nav{
+    left:0!important;
+    right:0!important;
+    top:68px!important;
+    width:100%!important;
+    max-width:none!important;
+    max-height:calc(100svh - 68px)!important;
+    padding:12px 18px 24px!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    background:rgba(17,20,22,.985)!important;
+  }
+
+  body .site-header .primary-nav a{
+    width:100%!important;
+    min-height:46px!important;
+    padding:12px 4px!important;
+    font-size:17px!important;
+    line-height:22px!important;
+    white-space:normal!important;
+  }
+
+
+  /* ---------- HERO HOME ---------- */
+
+  body .si-revelation-hero,
+  body .first-screen{
+    width:100%!important;
+    min-height:calc(100svh - 68px)!important;
+    overflow:hidden!important;
+  }
+
+  body .si-revelation-hero .si-hero-stage,
+  body .si-revelation-hero .si-hero-slides,
+  body .si-revelation-hero .si-hero-slide{
+    width:100%!important;
+    max-width:none!important;
+  }
+
+  body .si-revelation-hero .si-hero-slide img{
+    width:100%!important;
+    height:100%!important;
+    min-height:calc(100svh - 68px)!important;
+    object-fit:cover!important;
+  }
+
+  body .si-hero-copy{
+    left:0!important;
+    right:auto!important;
+    bottom:0!important;
+    width:100%!important;
+    max-width:none!important;
+    padding:30px 20px 28px!important;
+  }
+
+  body .si-hero-copy h1{
+    max-width:9ch!important;
+    margin:0!important;
+    font-size:clamp(43px,13vw,62px)!important;
+    line-height:.91!important;
+    letter-spacing:-.045em!important;
+  }
+
+  body .si-hero-copy p,
+  body .si-hero-copy address{
+    max-width:28ch!important;
+    margin-top:13px!important;
+    font-size:15px!important;
+    line-height:1.45!important;
+  }
+
+  body .si-hero-mass-button,
+  body .si-hero-copy .si-mass-button,
+  body .si-hero-copy a[href="/vida-liturgica#horarios-misa"]{
+    width:auto!important;
+    max-width:100%!important;
+    min-height:46px!important;
+    margin-top:18px!important;
+    padding:12px 17px!important;
+    font-size:14px!important;
+    line-height:20px!important;
+  }
+
+  body .si-mass-preview{
+    display:none!important;
+  }
+
+
+  /* ---------- HOME: REGLA GENERAL ---------- */
+
+  body.si-home-all-sections #liturgia,
+  body.si-home-all-sections #sacramentos,
+  body.si-home-all-sections #pastoral,
+  body.si-home-all-sections #nosotros,
+  body.si-home-all-sections #agua,
+  body.si-home-all-sections #musica,
+  body.si-home-all-sections #historia,
+  body.si-home-all-sections #galeria,
+  body.si-home-all-sections #contacto,
+  body #liturgia,
+  body #sacramentos,
+  body #pastoral,
+  body #nosotros,
+  body #agua,
+  body #musica,
+  body #historia,
+  body #galeria,
+  body #contacto{
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+  }
+
+  body #liturgia>div,
+  body #sacramentos>div,
+  body #pastoral>div,
+  body #nosotros>div,
+  body #agua>div,
+  body #musica>div,
+  body #historia>div,
+  body #contacto>div{
+    min-width:0!important;
+    max-width:100%!important;
+  }
+
+  body #liturgia,
+  body #sacramentos,
+  body #pastoral,
+  body #nosotros,
+  body #agua,
+  body #musica,
+  body #historia,
+  body #contacto{
+    padding-left:20px!important;
+    padding-right:20px!important;
+  }
+
+  body #liturgia h2,
+  body #sacramentos h2,
+  body #pastoral h2,
+  body #nosotros h2,
+  body #agua h2,
+  body #musica h2,
+  body #historia h2,
+  body #contacto h2{
+    max-width:none!important;
+    font-size:clamp(31px,9vw,43px)!important;
+    line-height:1!important;
+    letter-spacing:-.035em!important;
+  }
+
+  body #liturgia p,
+  body #sacramentos p,
+  body #pastoral p,
+  body #nosotros p,
+  body #agua p,
+  body #musica p,
+  body #historia p,
+  body #contacto p{
+    max-width:none!important;
+    font-size:16px;
+    line-height:1.62;
+  }
+
+
+  /* ---------- HOME LITURGIA ---------- */
+
+  body #liturgia .mass-hours-primary,
+  body #liturgia .liturgy-hours,
+  body #liturgia .litx-times{
+    width:100%!important;
+    max-width:none!important;
+  }
+
+  body #liturgia .mass-hours-primary>*,
+  body #liturgia .liturgy-hours>*{
+    min-width:0!important;
+  }
+
+
+  /* ---------- HOME SACRAMENTOS ---------- */
+
+  body #sacramentos details,
+  body #sacramentos .si-sacrament-card{
+    width:100%!important;
+  }
+
+  body #sacramentos summary{
+    min-height:58px!important;
+    padding:16px 0!important;
+    font-size:18px!important;
+    line-height:1.25!important;
+  }
+
+  body #sacramentos .si-managed-body{
+    padding-left:0!important;
+    padding-right:0!important;
+    font-size:16px!important;
+    line-height:1.62!important;
+  }
+
+
+  /* ---------- HOME PASTORAL ---------- */
+
+  body #pastoral .pasx-programs,
+  body #pastoral .pastoral-programs,
+  body #pastoral .si-pastoral-programs{
+    grid-template-columns:1fr!important;
+    width:100%!important;
+  }
+
+  body #pastoral article{
+    min-width:0!important;
+  }
+
+
+  /* ---------- HOME NOSOTROS ---------- */
+
+  body #nosotros .community-directory,
+  body #nosotros .staff-grid,
+  body #nosotros .nosx-directory{
+    grid-template-columns:1fr!important;
+    width:100%!important;
+  }
+
+  body #nosotros button{
+    max-width:100%!important;
+  }
+
+
+  /* ---------- HOME AGUA ---------- */
+
+  body #agua .agux-body,
+  body #agua .si-water-grid{
+    grid-template-columns:1fr!important;
+    width:100%!important;
+  }
+
+
+  /* ---------- HOME HISTORIA ---------- */
+
+  body #historia .history-layout,
+  body #historia .hisx-block,
+  body #historia .history-panel{
+    grid-template-columns:1fr!important;
+    width:100%!important;
+  }
+
+  body #historia figure{
+    margin-left:0!important;
+    margin-right:0!important;
+  }
+
+
+  /* ---------- HOME GALERIA ---------- */
+
+  body #galeria{
+    padding-left:14px!important;
+    padding-right:14px!important;
+  }
+
+  body #galeria img{
+    width:100%!important;
+    object-fit:cover!important;
+  }
+
+
+  /* ---------- HOME CONTACTO ---------- */
+
+  body #contacto form,
+  body #contacto .contact-form{
+    width:100%!important;
+    max-width:none!important;
+  }
+
+  body #contacto input,
+  body #contacto textarea,
+  body #contacto select{
+    width:100%!important;
+    min-width:0!important;
+    font-size:16px!important;
+  }
+
+
+  /* ============================================================
+     PAGINAS INTERIORES
+     ============================================================ */
+
+  body.page-liturgia main,
+  body.page-sacramentos main,
+  body.page-pastoral main,
+  body.page-agenda main,
+  body.page-nosotros main,
+  body.page-agua main,
+  body.page-historia main,
+  body.page-galeria main,
+  body.page-contacto main{
+    width:100%!important;
+    overflow-x:hidden!important;
+  }
+
+
+  /* ---------- TITULOS INTERIORES ---------- */
+
+  .litx-hero,
+  .litx-schedule,
+  .litx-grid,
+  .sacx-head,
+  .sacx-list,
+  .pasx-message,
+  .pasx-programs,
+  .agex-head,
+  .agex-events,
+  .nosx-head,
+  .nosx-directory,
+  .agux-head,
+  .agux-body,
+  .hisx-head,
+  .hisx-block,
+  .hisx-rectors,
+  .galx-head,
+  .galx-grid,
+  .conx-head,
+  .conx-info,
+  .conx-form-section{
+    width:calc(100% - 32px)!important;
+    max-width:none!important;
+    min-width:0!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+  }
+
+  .litx-hero h1,
+  .sacx-head h1,
+  .pasx-copy h1,
+  .agex-head h1,
+  .nosx-head h1,
+  .agux-head h1,
+  .hisx-head h1,
+  .galx-head h1,
+  .conx-head h1{
+    max-width:none!important;
+    font-size:clamp(43px,13vw,60px)!important;
+    line-height:.92!important;
+    letter-spacing:-.045em!important;
+    overflow-wrap:normal!important;
+  }
+
+
+  /* ---------- VIDA LITURGICA ---------- */
+
+  .litx-hero{
+    grid-template-columns:1fr!important;
+    gap:24px!important;
+    padding-top:38px!important;
+  }
+
+  .litx-hero img{
+    width:100%!important;
+    height:230px!important;
+    object-fit:cover!important;
+  }
+
+  .litx-lead{
+    max-width:none!important;
+    font-size:18px!important;
+    line-height:1.55!important;
+  }
+
+  .litx-schedule{
+    padding:38px 0!important;
+  }
+
+  .litx-section-title{
+    grid-template-columns:34px 1fr!important;
+    gap:10px!important;
+  }
+
+  .litx-section-title h2{
+    font-size:34px!important;
+  }
+
+  .litx-times article{
+    grid-template-columns:1fr!important;
+    gap:6px!important;
+    padding:19px 0!important;
+  }
+
+  .litx-times strong{
+    font-size:17px!important;
+  }
+
+  .litx-times span{
+    font-size:22px!important;
+    line-height:1.35!important;
+  }
+
+  .litx-note{
+    font-size:16px!important;
+  }
+
+  .litx-grid{
+    grid-template-columns:1fr!important;
+    padding-bottom:58px!important;
+  }
+
+  .litx-grid article{
+    min-height:0!important;
+    padding:25px 20px!important;
+  }
+
+
+  /* ---------- SACRAMENTOS ---------- */
+
+  .sacx-head{
+    grid-template-columns:1fr!important;
+    gap:16px!important;
+    padding:40px 0 30px!important;
+  }
+
+  .sacx-head div{
+    margin-top:8px!important;
+    font-size:17px!important;
+  }
+
+  .sacx-list{
+    padding-bottom:60px!important;
+  }
+
+  .sacx-card summary{
+    grid-template-columns:34px minmax(0,1fr) 28px!important;
+    gap:9px!important;
+    padding:21px 0!important;
+  }
+
+  .sacx-card summary strong{
+    font-size:27px!important;
+    line-height:1.05!important;
+  }
+
+  .sacx-copy{
+    max-width:none!important;
+    margin-left:0!important;
+    padding:0 0 28px!important;
+    font-size:16px!important;
+  }
+
+
+  /* ---------- PASTORAL ---------- */
+
+  .pasx-hero{
+    grid-template-columns:1fr!important;
+    min-height:0!important;
+  }
+
+  .pasx-copy{
+    min-height:300px!important;
+    padding:42px 20px 30px!important;
+  }
+
+  .pasx-copy>span{
+    font-size:18px!important;
+  }
+
+  .pasx-hero img{
+    height:250px!important;
+  }
+
+  .pasx-message{
+    padding:38px 0!important;
+  }
+
+  .pasx-message h2{
+    max-width:none!important;
+    font-size:34px!important;
+  }
+
+  .pasx-programs{
+    grid-template-columns:1fr!important;
+    padding-bottom:60px!important;
+  }
+
+  .pasx-programs article{
+    min-height:0!important;
+    padding:27px 0!important;
+    border-right:0!important;
+  }
+
+  .pasx-programs h2{
+    font-size:30px!important;
+  }
+
+
+  /* ---------- AGENDA ---------- */
+
+  .agex-head{
+    grid-template-columns:1fr!important;
+    gap:18px!important;
+    padding:40px 0 30px!important;
+  }
+
+  .agex-head div{
+    font-size:18px!important;
+  }
+
+  .agex-events{
+    padding-bottom:60px!important;
+  }
+
+  .agex-card{
+    grid-template-columns:34px minmax(0,1fr)!important;
+    gap:12px!important;
+    padding:24px 0!important;
+  }
+
+  .agex-card img{
+    grid-column:1/-1!important;
+    width:100%!important;
+    height:210px!important;
+    margin-top:8px!important;
+    object-fit:cover!important;
+  }
+
+  .agex-card div:last-child{
+    grid-column:1/-1!important;
+  }
+
+  .agex-card h2{
+    font-size:29px!important;
+  }
+
+
+  /* ---------- NOSOTROS ---------- */
+
+  .nosx-head{
+    grid-template-columns:1fr!important;
+    gap:25px!important;
+    padding:40px 0 32px!important;
+  }
+
+  .nosx-head img{
+    height:240px!important;
+  }
+
+  .nosx-directory{
+    padding-bottom:60px!important;
+  }
+
+  .nosx-person{
+    grid-template-columns:1fr!important;
+    gap:7px!important;
+    padding:20px 4px!important;
+  }
+
+  .nosx-person strong{
+    font-size:22px!important;
+    line-height:1.2!important;
+  }
+
+  .nosx-person b{
+    text-align:left!important;
+  }
+
+  .nosx-modal{
+    padding:12px!important;
+    align-items:flex-start!important;
+    overflow:auto!important;
+  }
+
+  .nosx-modal article{
+    grid-template-columns:1fr!important;
+    width:100%!important;
+    max-height:none!important;
+  }
+
+  .nosx-photo,
+  .nosx-photo img{
+    min-height:260px!important;
+    height:260px!important;
+  }
+
+  .nosx-cv{
+    padding:28px 20px!important;
+  }
+
+  .nosx-cv h2{
+    font-size:32px!important;
+  }
+
+
+  /* ---------- AGUA DE SAN IGNACIO ---------- */
+
+  .agux-head,
+  .agux-body{
+    grid-template-columns:1fr!important;
+  }
+
+  .agux-head{
+    gap:24px!important;
+    padding:40px 0 30px!important;
+  }
+
+  .agux-head aside{
+    padding-left:18px!important;
+  }
+
+  .agux-head strong{
+    font-size:26px!important;
+  }
+
+  .agux-body{
+    gap:30px!important;
+    padding:36px 0 60px!important;
+  }
+
+  .agux-body article p{
+    font-size:17px!important;
+    line-height:1.65!important;
+  }
+
+  .agux-steps h2{
+    font-size:31px!important;
+  }
+
+  .agux-steps>div{
+    grid-template-columns:32px minmax(0,1fr)!important;
+    gap:11px!important;
+    padding:20px 0!important;
+  }
+
+
+  /* ---------- HISTORIA ---------- */
+
+  .hisx-head{
+    padding:40px 0 28px!important;
+  }
+
+  .hisx-nav{
+    top:0!important;
+    justify-content:flex-start!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+
+  .hisx-nav::-webkit-scrollbar{
+    display:none;
+  }
+
+  .hisx-nav a{
+    flex:0 0 auto!important;
+    padding:14px 17px!important;
+    font-size:12px!important;
+    white-space:nowrap!important;
+  }
+
+  .hisx-block{
+    grid-template-columns:1fr!important;
+    gap:26px!important;
+    padding:40px 0!important;
+  }
+
+  .hisx-block.reverse>div{
+    order:0!important;
+  }
+
+  .hisx-block h2,
+  .hisx-rectors h2{
+    font-size:34px!important;
+  }
+
+  .hisx-block img{
+    height:240px!important;
+  }
+
+  .hisx-block div div{
+    font-size:17px!important;
+    line-height:1.65!important;
+  }
+
+  .hisx-rectors{
+    padding:40px 0 60px!important;
+  }
+
+  .hisx-rector-list>div{
+    grid-template-columns:1fr!important;
+    gap:7px!important;
+  }
+
+
+  /* ---------- GALERIA ---------- */
+
+  .galx-head{
+    display:block!important;
+    padding:38px 0 25px!important;
+  }
+
+  .galx-head span{
+    display:block!important;
+    margin:14px 0 0!important;
+  }
+
+  .galx-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:7px!important;
+    padding-bottom:45px!important;
+  }
+
+  .galx-grid button{
+    width:100%!important;
+  }
+
+  .galx-lightbox img{
+    max-width:94vw!important;
+    max-height:80svh!important;
+  }
+
+  .galx-close{
+    right:10px!important;
+    top:8px!important;
+  }
+
+  .galx-prev{
+    left:5px!important;
+  }
+
+  .galx-next{
+    right:5px!important;
+  }
+
+
+  /* ---------- CONTACTO ---------- */
+
+  .conx-head{
+    padding:40px 0 30px!important;
+  }
+
+  .conx-head span{
+    font-size:18px!important;
+  }
+
+  .conx-info{
+    grid-template-columns:1fr!important;
+  }
+
+  .conx-info article{
+    min-height:0!important;
+    padding:26px 0!important;
+    border-left:0!important;
+  }
+
+  .conx-info h2{
+    margin:17px 0 11px!important;
+    font-size:29px!important;
+  }
+
+  .conx-form-section{
+    grid-template-columns:1fr!important;
+    gap:28px!important;
+    padding:42px 0 60px!important;
+  }
+
+  .conx-form-section h2{
+    font-size:34px!important;
+  }
+
+  .conx-row{
+    grid-template-columns:1fr!important;
+    gap:0!important;
+  }
+
+  .conx-form-section input,
+  .conx-form-section textarea{
+    width:100%!important;
+    min-width:0!important;
+    font-size:16px!important;
+  }
+
+  .conx-submit{
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    gap:12px!important;
+  }
+
+
+  /* ---------- FOOTER INSTITUCIONAL ---------- */
+
   .site-footer,
   body footer,
   body.si-multiview .site-footer{
+    width:100%!important;
+    min-height:76px!important;
     margin:0!important;
-    padding:26px 20px 30px!important;
-
+    padding:24px 20px 26px!important;
     display:flex!important;
     align-items:center!important;
     justify-content:center!important;
-
-    min-height:82px!important;
-
+    gap:0!important;
     background:#111416!important;
     border:0!important;
     border-top:1px solid rgba(255,255,255,.08)!important;
-
-    color:rgba(255,255,255,.68)!important;
-
-    font-size:13px!important;
-    line-height:1.4!important;
+    color:rgba(255,255,255,.64)!important;
+    font-size:12px!important;
+    line-height:1.45!important;
     font-weight:500!important;
-    letter-spacing:.02em!important;
-
+    letter-spacing:.035em!important;
     text-align:center!important;
   }
 
   .site-footer span{
     display:block!important;
-    width:100%!important;
-    max-width:420px!important;
+    width:auto!important;
+    max-width:100%!important;
     margin:0 auto!important;
   }
 
