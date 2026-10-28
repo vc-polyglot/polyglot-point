@@ -2,18 +2,41 @@ const express = require('express');
 const path = require('path');
 const https = require('https');
 
+function createApp({ env = process.env, sendMail } = {}) {
 const app = express();
-const PORT = process.env.PORT || 3003;
+app.disable('x-powered-by');
+// Railway is the only reverse proxy in the deployed service. Local requests use the socket IP.
+app.set('trust proxy', 1);
+app.use((req, res, next) => {
+  res.set('X-Content-Type-Options', 'nosniff');
+  res.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  let pathname;
+  try { pathname = decodeURIComponent(req.path); } catch { return res.sendStatus(400); }
+  if (/\.(?:backup|bak)(?:[.-].*)?$/i.test(pathname)) return res.sendStatus(404);
+  next();
+});
+app.get('/healthz', (req, res) => res.json({ status: 'ok' }));
 
-app.use(express.static(path.join(__dirname, '../public')));
-app.use(express.json());
+app.use(express.static(path.join(__dirname, '../public'), {
+  dotfiles: 'deny',
+  setHeaders(res, file) {
+    res.set('Cache-Control', /\.(?:jpe?g|png|svg|webp)$/i.test(file)
+      ? 'public, max-age=86400' : 'no-cache');
+  }
+}));
+app.use(express.json({ limit: '32kb' }));
+app.use(express.urlencoded({ extended: false, limit: '32kb' }));
 
 // Contact form endpoint
 const CONTACT_MAX_LENGTH = 5000;
 const contactAttempts = new Map();
+const SUBJECTS = {
+  concert: 'Concierto / Recital', masterclass: 'Clase magistral',
+  festival: 'Festival', media: 'Prensa', other: 'Otro'
+};
 
 function cleanText(value) {
-  return String(value ?? '').trim();
+  return typeof value === 'string' ? value.trim() : '';
 }
 
 function isValidEmail(value) {
@@ -24,6 +47,11 @@ function isRateLimited(ip) {
   const now = Date.now();
   const windowMs = 10 * 60 * 1000;
   const maxAttempts = 5;
+
+  // Bound memory growth without keeping a background timer alive.
+  for (const [key, attempts] of contactAttempts) {
+    if (!attempts.some(timestamp => now - timestamp < windowMs)) contactAttempts.delete(key);
+  }
 
   const previous = contactAttempts.get(ip) || [];
   const recent = previous.filter(timestamp => (now - timestamp) < windowMs);
@@ -137,12 +165,10 @@ app.post('/api/contact', async (req, res) => {
     });
   }
 
-  const forwarded = req.headers['x-forwarded-for'];
-  const ip = forwarded
-    ? String(forwarded).split(',')[0].trim()
-    : (req.socket?.remoteAddress || 'unknown');
+  const ip = req.ip || req.socket?.remoteAddress || 'unknown';
 
   if (isRateLimited(ip)) {
+    res.set('Retry-After', '600');
     return res.status(429).json({
       success: false,
       error: 'rate_limited'
@@ -151,7 +177,8 @@ app.post('/api/contact', async (req, res) => {
 
   const cleanName = cleanText(name);
   const cleanEmail = cleanText(email);
-  const cleanSubject = cleanText(subject);
+  const rawSubject = cleanText(subject);
+  const cleanSubject = SUBJECTS[rawSubject] || rawSubject;
   const cleanMessage = cleanText(message);
   const cleanLang = cleanText(lang) || 'es';
 
@@ -181,10 +208,10 @@ app.post('/api/contact', async (req, res) => {
     });
   }
 
-  const resendApiKey = cleanText(process.env.RESEND_API_KEY);
-  const contactTo = cleanText(process.env.CONTACT_TO_EMAIL);
+  const resendApiKey = cleanText(env.RESEND_API_KEY);
+  const contactTo = cleanText(env.CONTACT_TO_EMAIL);
   const contactFrom =
-    cleanText(process.env.CONTACT_FROM_EMAIL) ||
+    cleanText(env.CONTACT_FROM_EMAIL) ||
     'Víctor Contreras <contacto@victorcontreras.mx>';
 
   if (!resendApiKey || !contactTo) {
@@ -220,7 +247,7 @@ app.post('/api/contact', async (req, res) => {
   ].join('\n');
 
   try {
-    await sendViaResend({
+    await (sendMail || sendViaResend)({
       apiKey: resendApiKey,
       from: contactFrom,
       to: contactTo,
@@ -244,10 +271,24 @@ app.post('/api/contact', async (req, res) => {
     });
   }
 });
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/index.html'));
+app.use('/api', (req, res) => {
+  res.status(404).json({ success: false, error: 'not_found' });
 });
+app.use((req, res) => {
+  res.status(404).type('html').send('<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Página no encontrada | Víctor Contreras</title><main><h1>Página no encontrada</h1><p>La dirección que buscas no está disponible.</p><a href="/">Volver al sitio de Víctor Contreras</a></main></html>');
+});
+app.use((error, req, res, next) => {
+  if (res.headersSent) return next(error);
+  const status = error.type === 'entity.too.large' ? 413 : error instanceof SyntaxError ? 400 : 500;
+  res.status(status).json({ success: false, error: status === 413 ? 'too_long' : status === 400 ? 'invalid_submission' : 'server_error' });
+});
+return app;
+}
 
-app.listen(PORT, () => {
-  console.log(`Victor Contreras site running on port ${PORT}`);
-});
+module.exports = { createApp };
+if (require.main === module) {
+  const PORT = process.env.PORT || 3003;
+  createApp().listen(PORT, process.env.HOST || '0.0.0.0', () => {
+    console.log(`Victor Contreras site running on port ${PORT}`);
+  });
+}

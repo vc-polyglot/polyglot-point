@@ -1,13 +1,22 @@
-FROM node:20-alpine
+FROM node:24-alpine
 
 WORKDIR /app
 
-COPY packages/victor-contreras/package.json ./
+ENV NODE_ENV=production
+COPY packages/victor-contreras/package.json packages/victor-contreras/package-lock.json ./
 
-RUN npm install --production
+RUN npm ci --omit=dev
 
-COPY packages/victor-contreras/ ./
+# Ship the website derivatives; historical originals remain in Git and in the backup.
+COPY packages/victor-contreras/backend/ ./backend/
+COPY packages/victor-contreras/public/index.html packages/victor-contreras/public/cv.html packages/victor-contreras/public/cv-victor-contreras.txt packages/victor-contreras/public/favicon.svg packages/victor-contreras/public/robots.txt packages/victor-contreras/public/sitemap.xml ./public/
+COPY packages/victor-contreras/public/css/ ./public/css/
+COPY packages/victor-contreras/public/js/ ./public/js/
+COPY packages/victor-contreras/public/data/ ./public/data/
+COPY packages/victor-contreras/public/media/ ./public/media/
 
 EXPOSE 3003
+USER node
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s CMD node -e "fetch('http://127.0.0.1:'+(process.env.PORT||3003)+'/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
 CMD ["node", "backend/index.js"]

@@ -1,0 +1,187 @@
+{
+  "hero": {
+    "height": 640,
+    "width": 960,
+    "src": "/media/director-960.jpg",
+    "bytes": 54087
+  },
+  "bio": {
+    "height": 1200,
+    "width": 800,
+    "src": "/media/organo-1200.jpg",
+    "bytes": 134930
+  },
+  "orchestra": {
+    "height": 1170,
+    "width": 1400,
+    "src": "/media/barroca-1400.jpg",
+    "bytes": 399332
+  },
+  "gallery": [
+    {
+      "thumbnail": {
+        "height": 640,
+        "width": 495,
+        "src": "/media/g01-640.jpg",
+        "bytes": 20194
+      },
+      "full": {
+        "height": 1600,
+        "width": 1237,
+        "src": "/media/g01-1600.jpg",
+        "bytes": 124369
+      },
+      "original": "galeria/g01.jpg"
+    },
+    {
+      "thumbnail": {
+        "height": 427,
+        "width": 640,
+        "src": "/media/g02-640.jpg",
+        "bytes": 23202
+      },
+      "full": {
+        "height": 1067,
+        "width": 1600,
+        "src": "/media/g02-1600.jpg",
+        "bytes": 119963
+      },
+      "original": "galeria/g02.jpg"
+    },
+    {
+      "thumbnail": {
+        "height": 427,
+        "width": 640,
+        "src": "/media/g03-640.jpg",
+        "bytes": 37012
+      },
+      "full": {
+        "height": 1067,
+        "width": 1600,
+        "src": "/media/g03-1600.jpg",
+        "bytes": 201239
+      },
+      "original": "galeria/g03.jpg"
+    },
+    {
+      "thumbnail": {
+        "height": 427,
+        "width": 640,
+        "src": "/media/g04-640.jpg",
+        "bytes": 31288
+      },
+      "full": {
+        "height": 1067,
+        "width": 1600,
+        "src": "/media/g04-1600.jpg",
+        "bytes": 177893
+      },
+      "original": "galeria/g04.jpg"
+    },
+    {
+      "thumbnail": {
+        "height": 640,
+        "width": 427,
+        "src": "/media/g05-640.jpg",
+        "bytes": 39155
+      },
+      "full": {
+        "height": 1600,
+        "width": 1067,
+        "src": "/media/g05-1600.jpg",
+        "bytes": 208202
+      },
+      "original": "galeria/g05.jpg"
+    },
+    {
+      "thumbnail": {
+        "height": 640,
+        "width": 427,
+        "src": "/media/g06-640.jpg",
+        "bytes": 39097
+      },
+      "full": {
+        "height": 1600,
+        "width": 1067,
+        "src": "/media/g06-1600.jpg",
+        "bytes": 213460
+      },
+      "original": "galeria/g06.jpg"
+    },
+    {
+      "thumbnail": {
+        "height": 427,
+        "width": 640,
+        "src": "/media/g07-640.jpg",
+        "bytes": 24594
+      },
+      "full": {
+        "height": 1067,
+        "width": 1600,
+        "src": "/media/g07-1600.jpg",
+        "bytes": 116271
+      },
+      "original": "galeria/g07.jpg"
+    },
+    {
+      "thumbnail": {
+        "height": 427,
+        "width": 640,
+        "src": "/media/g08-640.jpg",
+        "bytes": 30352
+      },
+      "full": {
+        "height": 1067,
+        "width": 1600,
+        "src": "/media/g08-1600.jpg",
+        "bytes": 162114
+      },
+      "original": "galeria/g08.jpg"
+    },
+    {
+      "thumbnail": {
+        "height": 214,
+        "width": 640,
+        "src": "/media/g09-640.jpg",
+        "bytes": 53123
+      },
+      "full": {
+        "height": 534,
+        "width": 1600,
+        "src": "/media/g09-1600.jpg",
+        "bytes": 263839
+      },
+      "original": "galeria/g09.jpg"
+    },
+    {
+      "thumbnail": {
+        "height": 480,
+        "width": 640,
+        "src": "/media/g10-640.jpg",
+        "bytes": 61634
+      },
+      "full": {
+        "height": 1200,
+        "width": 1600,
+        "src": "/media/g10-1600.jpg",
+        "bytes": 314533
+      },
+      "original": "galeria/g10.jpg"
+    },
+    {
+      "thumbnail": {
+        "height": 480,
+        "width": 640,
+        "src": "/media/g11-640.jpg",
+        "bytes": 63784
+      },
+      "full": {
+        "height": 1200,
+        "width": 1600,
+        "src": "/media/g11-1600.jpg",
+        "bytes": 323584
+      },
+      "original": "galeria/g11.jpg"
+    }
+  ]
+}
