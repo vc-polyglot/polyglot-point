@@ -1,0 +1,12 @@
+body.si-gal-page main{margin:0!important;padding:0!important;max-width:none!important;background:#111!important}
+body.si-gal-page main>section:not(.gal-page){display:none!important}
+.gal-page{display:block!important;visibility:visible!important;opacity:1!important;background:#111;color:#fff;min-height:calc(100svh - 132px)}
+.gal-head{width:min(1500px,calc(100% - 80px));margin:auto;padding:64px 0 34px}
+.gal-kicker{margin:0 0 12px;font-size:16px;font-weight:850;letter-spacing:.16em;text-transform:uppercase;color:#d8b35b}
+.gal-title{margin:0;font-size:clamp(58px,6.3vw,106px);line-height:.9;letter-spacing:-.055em;color:#fff}
+.gal-body{width:min(1500px,calc(100% - 80px));margin:auto;padding:10px 0 90px}
+.gal-body .gallery-entry{width:100%!important;max-width:none!important;margin:0!important}
+.gal-body .gallery-launch{width:100%!important;border:0!important;padding:0!important;background:transparent!important}
+.gal-body .gallery-launch img{display:block;width:100%!important;max-height:720px;object-fit:cover}
+.gal-body .gallery-launch-meta{display:block;padding:18px 0;font-size:18px;color:#eee;text-align:left}
+@media(max-width:800px){.gal-head,.gal-body{width:calc(100% - 32px)}.gal-title{font-size:52px}}

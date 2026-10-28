@@ -1,4 +1,8 @@
 node_modules/
-.env
-.DS_Store
+.env*
+!.env.example
+.local/
+uploads/
+_backup*/
+*.backup*
 npm-debug.log*

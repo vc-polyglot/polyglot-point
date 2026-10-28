@@ -1,0 +1,37 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {setupNavigation} from '../assets/navigation-motion.js';
+function environment({coarse=false,reduced=false}={}){
+ const timers=new Map();let sequence=0;
+ class Node{
+  constructor(parent=null){this.parentElement=parent;this.listeners=new Map();this.attrs=new Map();this.classes=new Set();this.hidden=false;this.classList={contains:v=>this.classes.has(v),add:(...values)=>values.forEach(v=>this.classes.add(v)),remove:(...values)=>values.forEach(v=>this.classes.delete(v)),toggle:(v,yes)=>yes?this.classes.add(v):this.classes.delete(v)};}
+  addEventListener(type,callback){if(!this.listeners.has(type))this.listeners.set(type,[]);this.listeners.get(type).push(callback);}
+  emit(type,event={}){for(const callback of this.listeners.get(type)||[])callback(event);}
+  getAttribute(name){return this.attrs.get(name);}setAttribute(name,value){this.attrs.set(name,String(value));}
+  contains(other){for(let n=other;n;n=n.parentElement)if(n===this)return true;return false;}
+  focus(){document.activeElement=this;}
+  animate(frames,options){let resolve,reject;const animation={frames,options,finished:new Promise((yes,no)=>{resolve=yes;reject=no;}),cancel(){reject(new Error('Canceled'));},finish(){resolve();}};this.animation=animation;return animation;}
+ }
+ const document=new Node(),menu=new Node(),nav=new Node();document.documentElement=new Node();document.activeElement=null;menu.setAttribute('aria-expanded','false');
+ function group(parent){const group=new Node(parent);group.button=new Node(group);group.panel=new Node(group);group.panel.hidden=true;group.link=new Node(group.panel);group.querySelector=selector=>selector.includes('[data-nav-toggle]')?group.button:group.panel;group.panel.querySelector=()=>group.link;return group;}
+ const roots=[group(nav),group(nav),group(nav)],nested=group(roots[1].panel),groups=[roots[0],roots[1],nested,roots[2]];
+ document.querySelector=selector=>selector==='.menu-toggle'?menu:nav;document.querySelectorAll=()=>groups;
+ const win={matchMedia:q=>({matches:q.includes('reduced-motion')?reduced:!coarse,addEventListener(){}}),getComputedStyle:()=>({opacity:'1',transform:'none'}),setTimeout:(cb,ms)=>{const id=++sequence;timers.set(id,{cb,ms});return id;},clearTimeout:id=>timers.delete(id)};
+ const controller=setupNavigation(document,win);
+ return {document,menu,nav,groups,roots,nested,timers,controller,flush(){const callbacks=[...timers.values()];timers.clear();for(const item of callbacks)item.cb();}};
+}
+const settle=async()=>{await Promise.resolve();await Promise.resolve();};
+const click=button=>button.emit('click',{detail:1,preventDefault(){}});
+test('Hover abre suavemente, tolera el recorrido y termina de cerrar sin interceptar enlaces',async()=>{
+ const e=environment(),group=e.roots[0];group.emit('pointerenter',{pointerType:'mouse'});
+ assert.equal(group.open,true);assert.equal(group.panel.hidden,false);assert.equal(group.button.getAttribute('aria-expanded'),'true');assert.equal(group.panel.animation.options.duration,330);assert.equal(group.panel.animation.frames[0].transform,'translateY(-8px)');
+ group.panel.animation.finish();await settle();group.emit('pointerleave',{pointerType:'mouse'});assert.equal([...e.timers.values()][0].ms,180);group.emit('pointerenter',{pointerType:'mouse'});e.flush();assert.equal(group.open,true);
+ group.emit('pointerleave',{pointerType:'mouse'});e.flush();assert.equal(group.panel.inert,false);assert.equal(e.controller.states.get(group).phase,'closing');group.panel.animation.finish();await settle();assert.equal(group.open,false);assert.equal(group.panel.hidden,true);assert.equal(group.panel.inert,true);
+});
+test('Volver durante el fundido revierte el cierre sin ocultar el panel',async()=>{const e=environment(),group=e.roots[0];e.controller.open(group);group.panel.animation.finish();await settle();e.controller.close(group);const closing=group.panel.animation;e.controller.open(group);closing.finish();await settle();assert.equal(group.open,true);assert.equal(group.panel.hidden,false);assert.equal(e.controller.states.get(group).phase,'opening');group.panel.animation.finish();await settle();assert.equal(e.controller.states.get(group).phase,'open');});
+test('Abrir Catecismo mantiene Pastoral abierto; cambiar de menú cierra ambos',()=>{const e=environment();e.controller.open(e.nested);assert.equal(e.roots[1].open,true);assert.equal(e.nested.open,true);e.controller.open(e.roots[0]);assert.equal(e.roots[1].open,false);assert.equal(e.nested.open,false);assert.equal(e.nested.panel.hidden,true);assert.equal(e.roots[0].open,true);click(e.roots[0].button);assert.equal(e.roots[0].open,true);});
+test('El toque abre y cierra con botones separados sin depender de hover',async()=>{const e=environment({coarse:true}),group=e.roots[1];group.emit('pointerenter',{pointerType:'touch'});assert.equal(group.open,false);e.menu.emit('click');assert.equal(e.menu.getAttribute('aria-expanded'),'true');e.document.emit('pointerdown',{pointerType:'touch'});click(group.button);group.panel.animation.finish();await settle();click(e.nested.button);assert.equal(group.open,true);assert.equal(e.nested.open,true);group.emit('pointerleave',{pointerType:'touch'});e.flush();assert.equal(group.open,true);click(group.button);group.panel.animation.finish();await settle();assert.equal(group.open,false);assert.equal(e.nested.open,false);});
+test('Escape cierra el nivel más profundo y devuelve el foco sin cerrar su padre',()=>{const e=environment();e.controller.open(e.nested);e.nested.link.focus();e.document.emit('keydown',{key:'Escape'});assert.equal(e.nested.open,false);assert.equal(e.roots[1].open,true);assert.equal(e.document.activeElement,e.nested.button);e.document.emit('keydown',{key:'Escape'});assert.equal(e.roots[1].open,false);assert.equal(e.document.activeElement,e.roots[1].button);e.menu.emit('click');e.document.emit('keydown',{key:'Escape'});assert.equal(e.menu.getAttribute('aria-expanded'),'false');assert.equal(e.document.activeElement,e.menu);});
+test('Flechas abren y enfocan opciones; el foco de teclado impide cierres por puntero',()=>{const e=environment(),group=e.roots[1];group.button.focus();let prevented=false;e.document.emit('keydown',{key:'ArrowDown',preventDefault(){prevented=true;}});assert.equal(prevented,true);assert.equal(e.document.activeElement,group.link);group.emit('pointerleave',{pointerType:'mouse'});e.flush();assert.equal(group.open,true);e.controller.open(e.nested);e.nested.link.focus();e.document.emit('keydown',{key:'ArrowLeft',preventDefault(){}});assert.equal(e.nested.open,false);assert.equal(group.open,true);assert.equal(e.document.activeElement,e.nested.button);});
+test('Movimiento reducido no anima y el clic exterior cierra todos los niveles',()=>{const e=environment({reduced:true});e.controller.open(e.nested);assert.equal(e.nested.panel.animation,undefined);e.document.emit('click',{target:{closest:()=>null}});for(const group of e.groups){assert.equal(group.open,false);assert.equal(group.panel.hidden,true);}});
+test('Seleccionar un enlace o ancla despeja el menú móvil sin cancelar la navegación nativa',()=>{const e=environment({coarse:true});e.menu.emit('click');e.controller.open(e.nested);e.nav.emit('click',{target:{closest:()=>e.nested.link}});assert.equal(e.menu.getAttribute('aria-expanded'),'false');assert.equal(e.nav.classes.has('is-open'),false);assert.equal(e.nested.open,false);});

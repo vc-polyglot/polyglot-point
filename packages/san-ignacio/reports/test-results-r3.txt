@@ -1,0 +1,231 @@
+TAP version 13
+# Subtest: Circuito editorial y persistencia, aislados del contenido de revisión
+    # Subtest: Las páginas entregan HTML propio y sólo una hoja y un script
+    ok 1 - Las páginas entregan HTML propio y sólo una hoja y un script
+      ---
+      duration_ms: 93.0862
+      type: 'test'
+      ...
+    # Subtest: Rutas privadas, archivos de configuración y respaldos no se exponen
+    ok 2 - Rutas privadas, archivos de configuración y respaldos no se exponen
+      ---
+      duration_ms: 21.3194
+      type: 'test'
+      ...
+    # Subtest: CSRF y origen impiden escrituras no autorizadas
+    ok 3 - CSRF y origen impiden escrituras no autorizadas
+      ---
+      duration_ms: 6.1275
+      type: 'test'
+      ...
+    # Subtest: Un borrador no aparece en público y sí en vista previa privada
+    ok 4 - Un borrador no aparece en público y sí en vista previa privada
+      ---
+      duration_ms: 18.9564
+      type: 'test'
+      ...
+    # Subtest: Publicación sincronizada en portada e interior
+    ok 5 - Publicación sincronizada en portada e interior
+      ---
+      duration_ms: 15.9337
+      type: 'test'
+      ...
+    # Subtest: Editar borrador conserva la versión pública y detecta conflictos
+    ok 6 - Editar borrador conserva la versión pública y detecta conflictos
+      ---
+      duration_ms: 35.1639
+      type: 'test'
+      ...
+    # Subtest: Archivar, restaurar y recuperar revisiones no borra registros
+    ok 7 - Archivar, restaurar y recuperar revisiones no borra registros
+      ---
+      duration_ms: 28.0907
+      type: 'test'
+      ...
+    # Subtest: Programas y personas se editan desde una fuente común
+    ok 8 - Programas y personas se editan desde una fuente común
+      ---
+      duration_ms: 19.6592
+      type: 'test'
+      ...
+    # Subtest: Los rectores históricos usan su fuente y el enlace Biblia tiene destino
+    ok 9 - Los rectores históricos usan su fuente y el enlace Biblia tiene destino
+      ---
+      duration_ms: 26.7829
+      type: 'test'
+      ...
+    # Subtest: Galería vacía no vuelve a mostrar fotos de respaldo
+    ok 10 - Galería vacía no vuelve a mostrar fotos de respaldo
+      ---
+      duration_ms: 141.383
+      type: 'test'
+      ...
+    # Subtest: Eventos incluyen fecha local y página propia
+    ok 11 - Eventos incluyen fecha local y página propia
+      ---
+      duration_ms: 28.2392
+      type: 'test'
+      ...
+    # Subtest: Subida local de imagen real y rechazo de archivo inválido
+    ok 12 - Subida local de imagen real y rechazo de archivo inválido
+      ---
+      duration_ms: 31.3385
+      type: 'test'
+      ...
+    # Subtest: Contacto llega a la bandeja y cambia de estado
+    ok 13 - Contacto llega a la bandeja y cambia de estado
+      ---
+      duration_ms: 9.7362
+      type: 'test'
+      ...
+    # Subtest: Validación editorial impide publicar donativos incompletos y categorías inválidas
+    ok 14 - Validación editorial impide publicar donativos incompletos y categorías inválidas
+      ---
+      duration_ms: 8.1678
+      type: 'test'
+      ...
+    # Subtest: Exportación preserva versiones y no exporta contraseñas
+    ok 15 - Exportación preserva versiones y no exporta contraseñas
+      ---
+      duration_ms: 4.684
+      type: 'test'
+      ...
+    # Subtest: Cerrar sesión invalida el acceso
+    ok 16 - Cerrar sesión invalida el acceso
+      ---
+      duration_ms: 4.5866
+      type: 'test'
+      ...
+    # Subtest: Los datos persisten después de reiniciar el servidor
+    ok 17 - Los datos persisten después de reiniciar el servidor
+      ---
+      duration_ms: 795.2422
+      type: 'test'
+      ...
+    1..17
+ok 1 - Circuito editorial y persistencia, aislados del contenido de revisión
+  ---
+  duration_ms: 2561.4531
+  type: 'test'
+  ...
+# Subtest: Hover abre con fade/slide y mantiene el panel mientras se atraviesa hacia las opciones
+ok 2 - Hover abre con fade/slide y mantiene el panel mientras se atraviesa hacia las opciones
+  ---
+  duration_ms: 3.4583
+  type: 'test'
+  ...
+# Subtest: Volver durante el fade de cierre revierte el cierre sin parpadeo
+ok 3 - Volver durante el fade de cierre revierte el cierre sin parpadeo
+  ---
+  duration_ms: 0.4253
+  type: 'test'
+  ...
+# Subtest: Cambiar de grupo evita paneles superpuestos y el clic de ratón no cierra bajo hover
+ok 4 - Cambiar de grupo evita paneles superpuestos y el clic de ratón no cierra bajo hover
+  ---
+  duration_ms: 0.5342
+  type: 'test'
+  ...
+# Subtest: Táctil abre por pulsación y no conserva efectos de hover
+ok 5 - Táctil abre por pulsación y no conserva efectos de hover
+  ---
+  duration_ms: 0.6715
+  type: 'test'
+  ...
+# Subtest: Escape cierra y devuelve foco; foco en opciones evita el cierre por movimiento del puntero
+ok 6 - Escape cierra y devuelve foco; foco en opciones evita el cierre por movimiento del puntero
+  ---
+  duration_ms: 0.6127
+  type: 'test'
+  ...
+# Subtest: Movimiento reducido usa estados inmediatos sin animación
+ok 7 - Movimiento reducido usa estados inmediatos sin animación
+  ---
+  duration_ms: 0.402
+  type: 'test'
+  ...
+# (node:3788) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Importación aditiva conserva datos y rechaza sobrescribir un destino existente
+ok 8 - Importación aditiva conserva datos y rechaza sobrescribir un destino existente
+  ---
+  duration_ms: 241.8667
+  type: 'test'
+  ...
+# Subtest: El punto sigue sin esperar al RAF y el anillo interpola hasta detener el bucle
+ok 9 - El punto sigue sin esperar al RAF y el anillo interpola hasta detener el bucle
+  ---
+  duration_ms: 3.0838
+  type: 'test'
+  ...
+# Subtest: Los campos editables conservan el cursor nativo y el movimiento no se cancela
+ok 10 - Los campos editables conservan el cursor nativo y el movimiento no se cancela
+  ---
+  duration_ms: 0.4045
+  type: 'test'
+  ...
+# Subtest: Táctil y movimiento reducido no crean el cursor; blur devuelve el cursor nativo
+ok 11 - Táctil y movimiento reducido no crean el cursor; blur devuelve el cursor nativo
+  ---
+  duration_ms: 0.3743
+  type: 'test'
+  ...
+# Subtest: El contraste distingue superficies claras/oscuras y el lerp se ajusta al refresco
+ok 12 - El contraste distingue superficies claras/oscuras y el lerp se ajusta al refresco
+  ---
+  duration_ms: 0.3309
+  type: 'test'
+  ...
+# Subtest: El reveal se reserva a la portada sin ancla, una vez por sesión y sin movimiento reducido
+ok 13 - El reveal se reserva a la portada sin ancla, una vez por sesión y sin movimiento reducido
+  ---
+  duration_ms: 0.2323
+  type: 'test'
+  ...
+# (node:17372) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Las cuatro fotografías se normalizan desde EXIF y conservan originales
+ok 14 - Las cuatro fotografías se normalizan desde EXIF y conservan originales
+  ---
+  duration_ms: 86.1795
+  type: 'test'
+  ...
+# Subtest: El logotipo conserva el archivo institucional y sus proporciones
+ok 15 - El logotipo conserva el archivo institucional y sus proporciones
+  ---
+  duration_ms: 8.0404
+  type: 'test'
+  ...
+# Subtest: Agua, Pastoral, Comunidad, Música y Nosotros tienen rutas propias
+ok 16 - Agua, Pastoral, Comunidad, Música y Nosotros tienen rutas propias
+  ---
+  duration_ms: 3.922
+  type: 'test'
+  ...
+# Subtest: Catecismo encabeza Pastoral y separa Primera Comunión de Confirmación
+ok 17 - Catecismo encabeza Pastoral y separa Primera Comunión de Confirmación
+  ---
+  duration_ms: 0.7265
+  type: 'test'
+  ...
+# Subtest: Las categorías de Música y la preparación de Confirmación tienen vista previa correcta
+ok 18 - Las categorías de Música y la preparación de Confirmación tienen vista previa correcta
+  ---
+  duration_ms: 0.5436
+  type: 'test'
+  ...
+# Subtest: El ajuste editorial local conserva borradores y es idempotente
+ok 19 - El ajuste editorial local conserva borradores y es idempotente
+  ---
+  duration_ms: 544.9553
+  type: 'test'
+  ...
+1..19
+# tests 36
+# suites 0
+# pass 36
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3652.2118

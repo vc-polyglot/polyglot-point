@@ -1,0 +1,175 @@
+﻿/* SAN IGNACIO — NOSOTROS INTERIOR RECONSTRUIDO V1 */
+
+body.si-nosotros-interior main > section:not(#si-nosotros-interior){
+  display:none!important;
+}
+
+body.si-nosotros-interior main{
+  width:100%;
+  max-width:none;
+  margin:0;
+  padding:0;
+  background:#f4efe6;
+}
+
+#si-nosotros-interior{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  width:100%;
+  min-height:calc(100svh - 132px);
+  margin:0;
+  padding:0;
+  background:#f4efe6;
+  color:#1b1b1b;
+}
+
+.si-ni-hero{
+  width:min(1480px,calc(100% - 96px));
+  margin:0 auto;
+  padding:72px 0 42px;
+}
+
+.si-ni-kicker{
+  margin:0 0 14px;
+  font-size:18px;
+  line-height:1;
+  font-weight:800;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:#8e2d28;
+}
+
+.si-ni-title{
+  margin:0;
+  font-size:clamp(64px,7vw,118px);
+  line-height:.88;
+  letter-spacing:-.055em;
+  font-weight:800;
+  color:#171717;
+}
+
+.si-ni-intro{
+  max-width:900px;
+  margin:28px 0 0;
+  font-size:25px;
+  line-height:1.48;
+  color:#47423c;
+}
+
+.si-ni-grid{
+  width:min(1480px,calc(100% - 96px));
+  margin:0 auto;
+  padding:26px 0 110px;
+  display:grid;
+  grid-template-columns:minmax(420px,.88fr) minmax(560px,1.12fr);
+  gap:80px;
+  align-items:start;
+}
+
+.si-ni-photo{
+  position:sticky;
+  top:160px;
+  margin:0;
+}
+
+.si-ni-photo img{
+  display:block;
+  width:100%;
+  height:min(640px,62vh);
+  object-fit:cover;
+  object-position:center;
+}
+
+.si-ni-directory{
+  border-top:3px solid #b68a2b;
+}
+
+.si-ni-role{
+  padding:28px 0 26px;
+  border-bottom:1px solid rgba(30,30,30,.22);
+}
+
+.si-ni-role-label{
+  margin:0 0 9px;
+  font-size:17px;
+  font-weight:850;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:#8e2d28;
+}
+
+.si-ni-name{
+  margin:0;
+  font-size:clamp(30px,2.5vw,46px);
+  line-height:1.08;
+  font-weight:720;
+  letter-spacing:-.025em;
+  color:#181818;
+}
+
+.si-ni-note{
+  margin:9px 0 0;
+  font-size:19px;
+  line-height:1.5;
+  color:#5a554f;
+}
+
+@media(max-width:1050px){
+  .si-ni-hero,
+  .si-ni-grid{
+    width:min(100% - 48px,900px);
+  }
+
+  .si-ni-grid{
+    grid-template-columns:1fr;
+    gap:42px;
+  }
+
+  .si-ni-photo{
+    position:static;
+  }
+
+  .si-ni-photo img{
+    height:auto;
+    max-height:600px;
+  }
+}
+
+@media(max-width:700px){
+  .si-ni-hero{
+    padding-top:42px;
+  }
+
+  .si-ni-title{
+    font-size:52px;
+  }
+
+  .si-ni-intro{
+    font-size:20px;
+  }
+
+  .si-ni-grid{
+    width:calc(100% - 32px);
+  }
+
+  .si-ni-name{
+    font-size:30px;
+  }
+}
+
+/* AJUSTE — SOLO NOMBRES DEL DIRECTORIO */
+.si-ni-name{
+  font-size:clamp(24px,1.7vw,34px)!important;
+  line-height:1.12!important;
+  letter-spacing:-.015em!important;
+}
+
+
+body.si-nosotros-interior #si-nosotros-interior .si-ni-directory .si-ni-role h2.si-ni-name{
+  font-size:26px !important;
+  line-height:1.18 !important;
+  letter-spacing:-0.01em !important;
+  font-weight:700 !important;
+}
+

@@ -1,0 +1,62 @@
+SAN IGNACIO DE LOYOLA — COPIA LOCAL DE REVISIÓN
+
+INICIAR
+Haz doble clic en ABRIR-SAN-IGNACIO.cmd.
+Después abre http://127.0.0.1:3310/ en tu navegador.
+Administración: http://127.0.0.1:3310/admin
+Las credenciales exclusivas de esta copia están en .local\ACCESO-LOCAL.txt.
+No son las de Railway y no cambian el usuario alojado.
+
+DETENER
+Haz doble clic en DETENER-SAN-IGNACIO.cmd.
+El lanzador sólo detiene su propia instancia, tras comprobar su identidad.
+
+EDITAR Y PUBLICAR
+1. Inicia sesión y elige una sección.
+2. Abre un contenido o crea uno nuevo.
+3. Guarda el borrador. La versión pública anterior permanece visible.
+4. Abre la vista previa para revisar el borrador guardado.
+5. Publica para actualizar el sitio local.
+6. Retira de publicación o archiva si ya no debe verse.
+7. Recupera un archivado desde Archivo y recuperación.
+8. Recupera revisiones anteriores desde el historial; se guardan como borrador.
+Si otra persona guardó antes una versión nueva, se rechaza sobrescribirla.
+
+FOTOGRAFÍAS
+Usa Biblioteca dentro de un contenido para seleccionar una fotografía.
+Puedes subir JPEG, PNG o WebP de hasta 8 MB y escribir su descripción.
+En esta copia se guardan en .local\uploads. No se suben a Railway ni Cloudinary.
+Los originales permanecen conservados en public\img y en el respaldo inicial.
+La versión pública usa derivados optimizados de distinto tamaño.
+
+MENSAJES
+El formulario de contacto guarda el mensaje en la bandeja de la consola.
+Puedes marcarlo Nuevo, Leído o Archivado. No envía correo SMTP ni mensajes
+a terceros; para responder usa tu cuenta de correo habitual.
+
+RESPALDOS
+La consola permite descargar una exportación editorial de contenidos y mensajes.
+Esa exportación no incluye contraseñas ni los archivos binarios de imágenes.
+Para un respaldo local completo de la base y las imágenes subidas, ejecuta
+npm run backup:local desde esta carpeta. Se guarda en .local\backups.
+Cada archivo queda registrado con SHA-256. La recuperación se realiza en una
+carpeta nueva; no sobrescribe la base de revisión. Se probó una restauración.
+
+ESTADO Y LÍMITES
+Esta copia usa SQLite persistente y sesiones temporales de revisión.
+Reiniciar el servidor conserva contenidos y mensajes; exige volver a ingresar.
+El camino alojado conserva PostgreSQL y Redis. Su migración es aditiva y
+requiere exportar y cotejar primero la información real de Railway.
+No se ha conectado ni modificado Railway. No se hicieron pushes ni despliegues.
+El material inicial viene de los archivos existentes, no de una exportación
+actual de la base alojada. Hay textos institucionales que siguen pendientes.
+Donativos y aviso de privacidad quedan preparados como borradores.
+La navegación visual, el ajuste fino móvil y la interacción en navegador
+requieren comprobación adicional: el navegador no está disponible para el
+agente en esta sesión. No se atribuye a pruebas por HTTP esa validación visual.
+
+DEPENDENCIAS
+La copia usa las dependencias ya instaladas mediante una unión a node_modules
+del proyecto original. No se modificaron esas dependencias. Para trasladarla
+a otro equipo habrá que ejecutar npm ci con acceso al registro de npm.
+Node local verificado: 22.17.0. El contenedor propuesto usa Node 24.

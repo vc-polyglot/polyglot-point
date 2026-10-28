@@ -1,0 +1,15 @@
+body.si-liturgia-page main{margin:0!important;padding:0!important;max-width:none!important;background:#f4efe6!important}
+body.si-liturgia-page main>section:not(.lit-page){display:none!important}
+.lit-page{display:block!important;visibility:visible!important;opacity:1!important;min-height:calc(100svh - 132px);background:#f4efe6;color:#191919}
+.lit-head{width:min(1440px,calc(100% - 96px));margin:auto;padding:72px 0 38px;border-bottom:1px solid rgba(0,0,0,.16)}
+.lit-kicker{margin:0 0 14px;font-size:16px;font-weight:850;letter-spacing:.16em;text-transform:uppercase;color:#8e2d28}
+.lit-title{margin:0;font-size:clamp(58px,6.5vw,108px);line-height:.9;letter-spacing:-.055em;color:#181818}
+.lit-lead{max-width:880px;margin:24px 0 0;font-size:21px;line-height:1.55;color:#4e4943}
+.lit-body{width:min(1440px,calc(100% - 96px));margin:auto;padding:48px 0 110px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);gap:58px;align-items:start}
+.lit-main,.lit-side{min-width:0}
+.lit-main .mass-hours-primary,.lit-main .liturgy-hours,.lit-side .si-intentions-card,.lit-side .liturgy-fixed-info{background:transparent!important;color:#191919!important;box-shadow:none!important}
+.lit-main .mass-hours-heading,.lit-side h3{color:#181818!important}
+.lit-main .mass-hours-row,.lit-main .liturgy-hours-item{border-color:rgba(0,0,0,.18)!important}
+.lit-photo{grid-column:1/-1;margin:18px 0 0}
+.lit-photo img{display:block;width:100%;max-height:680px;object-fit:cover}
+@media(max-width:900px){.lit-head,.lit-body{width:calc(100% - 40px)}.lit-body{grid-template-columns:1fr}.lit-title{font-size:52px}}

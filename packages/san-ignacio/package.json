@@ -1,18 +1,22 @@
 {
   "name": "san-ignacio-polanco",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Sitio institucional y panel de administración de San Ignacio de Loyola, Polanco.",
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=22.17"
   },
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
-    "db:migrate": "node src/db/migrate.js",
+    "local:init": "node scripts/init-local.mjs",
+    "db:migrate": "node scripts/migrate-review.mjs",
     "db:seed-admin": "node src/db/seed-admin.js",
-    "check": "node --check src/server.js && node --check src/routes/public-api.js && node --check src/routes/admin-auth.js && node --check src/routes/admin-api.js"
+    "check": "node scripts/check.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "backup:local": "node scripts/backup-local.mjs",
+    "assets:motion": "node scripts/build-motion.mjs"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

@@ -1,0 +1,17 @@
+{
+  "createdAt": "2026-10-28T05:58:58.187Z",
+  "pages": 12,
+  "links": 31,
+  "assets": 63,
+  "errors": [],
+  "originals": 37,
+  "corrected": [
+    "galeria-06.jpg",
+    "galeria-08.jpg",
+    "galeria-12.jpg",
+    "pastoral.jpeg"
+  ],
+  "realBrowserVerified": false,
+  "browserBlocker": "Windows app access approval timed out; no UI inputs were sent.",
+  "externalActions": false
+}

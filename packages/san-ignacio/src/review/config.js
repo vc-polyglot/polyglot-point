@@ -1,0 +1,12 @@
+import 'dotenv/config';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+export const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+export const local = process.env.LOCAL_REVIEW_MODE === '1';
+export const production = process.env.NODE_ENV === 'production';
+if (local && production) throw new Error('El modo local no está permitido en producción.');
+if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32) throw new Error('SESSION_SECRET debe contener al menos 32 caracteres.');
+if (!local && (!process.env.DATABASE_URL || !process.env.REDIS_URL)) throw new Error('Configure PostgreSQL y Redis.');
+export const dataPath = process.env.LOCAL_DATA_PATH || path.join(root, '.local');
+export const port = Number(process.env.PORT || 3310);
+export const host = local ? '127.0.0.1' : (process.env.HOST || '0.0.0.0');

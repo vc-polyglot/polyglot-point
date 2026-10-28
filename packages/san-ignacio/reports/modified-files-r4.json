@@ -1,0 +1,22 @@
+{
+  "createdAt": "2026-10-28T06:48:20.952Z",
+  "backup": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-diagnostico-2026-10-27\\antes-navegacion-r4-1793168753574",
+  "files": [
+    "src/review/intro.js",
+    "src/review/navigation.js",
+    "src/review/pages.js",
+    "src/review/sections.js",
+    "src/server-next.js",
+    "assets/cursor.js",
+    "assets/entrance.js",
+    "assets/motion-r3.css",
+    "assets/navigation-motion.js",
+    "assets/site.css",
+    "scripts/audit-r4.mjs",
+    "tests/editorial.test.mjs",
+    "tests/menu-behavior.test.mjs",
+    "tests/motion-r3.test.mjs",
+    "tests/navigation-r4.test.mjs",
+    "tests/redesign-r2.test.mjs"
+  ]
+}

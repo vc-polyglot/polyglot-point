@@ -1,0 +1,27 @@
+[
+  {
+    "file": "site.js",
+    "status": 200,
+    "type": "text/javascript; charset=utf-8"
+  },
+  {
+    "file": "navigation-motion.js",
+    "status": 200,
+    "type": "text/javascript; charset=utf-8"
+  },
+  {
+    "file": "cursor.js",
+    "status": 200,
+    "type": "text/javascript; charset=utf-8"
+  },
+  {
+    "file": "entrance.js",
+    "status": 200,
+    "type": "text/javascript; charset=utf-8"
+  },
+  {
+    "file": "site.css",
+    "status": 200,
+    "type": "text/css; charset=utf-8"
+  }
+]

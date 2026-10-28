@@ -1,145 +1,118 @@
-# San Ignacio de Loyola — paquete 01
+# San Ignacio de Loyola, Polanco — revisión local
 
-Primera entrega funcional del nuevo sitio institucional.
+Sitio institucional con páginas renderizadas en servidor y consola editorial.
+Esta carpeta está separada del monorepositorio original. No contiene una
+conexión activa a Railway ni tiene un remoto Git que dispare despliegues.
 
-## Qué incluye
+## Inicio
 
-- Express + Node.js 20.
-- Frontend institucional público.
-- PostgreSQL.
-- Login administrativo con `bcrypt`.
-- Sesiones persistidas en Redis mediante `connect-redis`.
-- Panel de administración protegido.
-- Edición de horarios.
-- Creación y publicación de mensajes pastorales.
-- Avisos extraordinarios.
-- Dockerfile compatible con Railway.
-- Esquema preparado para multimedia, música y conciertos.
+En Windows, ejecutar `ABRIR-SAN-IGNACIO.cmd` y abrir
+http://127.0.0.1:3310/. La consola está en `/admin`; las credenciales exclusivas
+de revisión se encuentran en `.local/ACCESO-LOCAL.txt`.
 
-## Qué NO incluye todavía
+En una terminal situada en esta carpeta:
 
-Se deja deliberadamente para los siguientes paquetes:
-
-- Cloudinary y subida nativa de fotografía/video.
-- Panel completo de Música.
-- Stripe/Donativos.
-- Formulario de contacto/Nodemailer.
-- Páginas interiores finales: Nosotros, Espiritualidad jesuita, Párrocos, etc.
-- Integración con `@platform/core`.
-
-No se acopló todavía a `@platform/core` porque este paquete debe correr de forma autónoma y no estamos suponiendo una API interna del monorepo sin verla.
-
----
-
-## 1. Copiar al monorepo desde Descargas
-
-Si descomprimes `san-ignacio-package-01.zip` en Descargas, tendrás una carpeta:
-
-`$HOME\Downloads\san-ignacio-package-01`
-
-Desde PowerShell, situado en la raíz de `polyglot-point`:
-
-```powershell
-Copy-Item "$HOME\Downloads\san-ignacio-package-01" ".\services\san-ignacio" -Recurse -Force
-code ".\services\san-ignacio"
-```
-
-Si el monorepo usa otra carpeta en vez de `services`, cambia únicamente ese tramo.
-
-Si quieres moverla, no copiarla:
-
-```powershell
-Move-Item "$HOME\Downloads\san-ignacio-package-01" ".\services\san-ignacio"
-code ".\services\san-ignacio"
-```
-
----
-
-## 2. Variables de entorno
-
-```powershell
-cd .\services\san-ignacio
-Copy-Item .env.example .env
-code .env
-```
-
-Configura al menos:
-
-- `DATABASE_URL`
-- `REDIS_URL`
-- `SESSION_SECRET`
-- `ADMIN_EMAIL`
-- `ADMIN_PASSWORD`
-
----
-
-## 3. Instalar y preparar DB
-
-```powershell
-npm install
-npm run db:migrate
-npm run db:seed-admin
-npm run dev
-```
-
-Abrir:
-
-- Sitio: http://localhost:3000
-- Panel: http://localhost:3000/admin
-
----
-
-## 4. Railway
-
-Variables mínimas:
-
-- `DATABASE_URL`
-- `REDIS_URL`
-- `SESSION_SECRET`
-- `NODE_ENV=production`
-- `TRUST_PROXY=1`
-
-Para una instalación nueva, ejecutar una vez:
-
-```bash
-npm run db:migrate
-npm run db:seed-admin
-```
-
-Después el servicio arranca con:
-
-```bash
+```text
+npm run local:init
 npm start
 ```
 
-El endpoint de salud es:
+La inicialización es idempotente: conserva los registros que ya existen.
+El lanzador también conserva la instancia activa si ya corresponde a esta app.
+`DETENER-SAN-IGNACIO.cmd` detiene exclusivamente la instancia que registró.
 
-`GET /health`
+Node local verificado: 22.17.0, con `node:sqlite`. Las dependencias existentes
+se utilizan mediante una unión a `node_modules` del paquete original, sin
+modificarlas. Para trasladar esta carpeta, ejecutar `npm ci` en el destino.
 
----
+## Arquitectura
 
-## Modelo de esta entrega
+- `src/review/pages.js`: páginas públicas y estructura compartida.
+- `src/review/html.js`: escape, texto y metadatos de imágenes.
+- `src/review/model.js`: estados editoriales, revisiones y validación.
+- `src/review/store.js`: SQLite local / PostgreSQL alojado.
+- `src/server-next.js`: HTTP, sesiones, permisos, contacto y biblioteca.
+- `assets/site.css` y `assets/site.js`: interfaz pública.
+- `assets/admin.css` y `assets/admin.js`: consola.
+- `assets/images`: derivados; los originales se conservan en `public/img`.
+- `public`, `private` y rutas anteriores se conservan como referencia, pero
+  el servidor nuevo sólo sirve explícitamente `assets` y las subidas locales.
 
-### Horarios
+El contenido publicado y su borrador son versiones separadas. Se guardan hasta
+40 revisiones por registro. Archivar no elimina datos. El control de versión
+rechaza sobrescrituras concurrentes. Las vistas previas requieren sesión.
 
-Se guardan en `schedules`. El panel reemplaza atómicamente la lista activa.
+## Almacenamiento y sesiones
 
-### Mensaje pastoral
+`LOCAL_REVIEW_MODE=1` usa `.local/site.sqlite` y subidas en `.local/uploads`.
+Las sesiones locales están en memoria: reiniciar conserva datos y requiere
+ingresar de nuevo. El servidor local escucha exclusivamente en loopback.
+El modo local se rechaza si `NODE_ENV=production`.
 
-Se puede guardar como borrador o publicar. El sitio público muestra el publicado más reciente.
+El camino alojado usa PostgreSQL y Redis. Su esquema nuevo se prepara
+explícitamente con `npm run db:migrate`; el arranque no ejecuta semillas ni
+migraciones automáticas. La migración nueva es aditiva. Antes de aplicarla se
+requieren respaldo y restauración de prueba de la base existente.
 
-### Avisos
+La subida alojada requiere las variables Cloudinary existentes. Si no están
+configuradas, la consola devuelve un error claro sin anunciar guardado.
+La subida local y las pruebas de imágenes no usan servicios remotos.
 
-Ya existe API para avisos y el sitio muestra los que se encuentren dentro de su intervalo de vigencia.
+## Validación ejecutada
 
-### Autenticación
+```text
+npm run check
+npm test
+npm run backup:local
+```
 
-La contraseña nunca se guarda en claro: `seed-admin.js` la convierte a bcrypt.
+Pasaron 17 escenarios de HTTP y persistencia, más una prueba de migración
+aislada. Node informa 19 tests contando el contenedor de los escenarios.
+Se verificaron además las diez páginas, sus anclas y 59 recursos referenciados.
+Se restauró un respaldo en una carpeta nueva con 52 registros e integridad OK.
 
-La cookie de sesión es:
+Las pruebas usan bases separadas dentro de `.local/qa-*` y
+`.local/migration-qa-*`; nunca la base de revisión ni Railway.
 
-- `httpOnly`
-- `sameSite=lax`
-- `secure` en producción
+No se han ejecutado pruebas visuales de navegador, interacción táctil,
+Lighthouse o integración real con PostgreSQL/Redis/Cloudinary en esta sesión.
+El navegador controlable y el acceso conectado a Railway siguen pendientes.
 
-La sesión se guarda en Redis, no en memoria del proceso.
+## Contenido y migración
+
+La referencia local proviene de archivos existentes. No se debe asumir que
+contiene las últimas publicaciones de Railway. Su procedencia se conserva
+en cada registro y en `.local/import-inventory.json`.
+
+`scripts/export-legacy.mjs archivo.json` exporta tablas de contenido desde la
+base existente mediante una transacción de sólo lectura. La conexión se
+configura en el entorno como `LEGACY_DATABASE_URL`, sin incluirla en argumentos.
+No exporta contraseñas de usuarios; las cuentas originales permanecen intactas.
+
+`scripts/import-legacy.mjs archivo.json` lleva esa exportación a las tablas
+editoriales nuevas. Exige un destino vacío y conserva la exportación completa.
+Debe comprobarse en un entorno aislado antes de cualquier uso alojado.
+
+La exportación de contenido no reemplaza un respaldo integral de PostgreSQL
+ni de sus archivos remotos. Consulte `RAILWAY-PREPARACION.txt` para los límites
+y el procedimiento pendiente, incluidos los campos que requieren cotejo.
+
+## Respaldo local
+
+`npm run backup:local` utiliza la API consistente de respaldo de SQLite y copia
+subidas y acceso local. Incluye un manifiesto SHA-256.
+
+```text
+node scripts/restore-local.mjs carpeta-del-respaldo carpeta-nueva-dentro-de-.local
+```
+
+La restauración verifica todos los hashes y rechaza sobrescribir carpetas.
+Para iniciar la copia restaurada, configurar `LOCAL_DATA_PATH` con esa carpeta
+en un proceso de revisión separado. No reemplazar manualmente una base abierta.
+
+## Pendientes antes de desplegar
+
+Completar la revisión visual de móvil y escritorio, cotejar los datos reales,
+validar la integración alojada y recibir el contenido institucional pendiente.
+Donativos y privacidad permanecen en borrador hasta disponer de información
+confirmada. No se han realizado pushes ni despliegues.

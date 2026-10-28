@@ -1,0 +1,195 @@
+TAP version 13
+# Subtest: Circuito editorial y persistencia, aislados del contenido de revisión
+    # Subtest: Las páginas entregan HTML propio y sólo una hoja y un script
+    ok 1 - Las páginas entregan HTML propio y sólo una hoja y un script
+      ---
+      duration_ms: 98.3476
+      type: 'test'
+      ...
+    # Subtest: Rutas privadas, archivos de configuración y respaldos no se exponen
+    ok 2 - Rutas privadas, archivos de configuración y respaldos no se exponen
+      ---
+      duration_ms: 24.1251
+      type: 'test'
+      ...
+    # Subtest: CSRF y origen impiden escrituras no autorizadas
+    ok 3 - CSRF y origen impiden escrituras no autorizadas
+      ---
+      duration_ms: 5.4815
+      type: 'test'
+      ...
+    # Subtest: Un borrador no aparece en público y sí en vista previa privada
+    ok 4 - Un borrador no aparece en público y sí en vista previa privada
+      ---
+      duration_ms: 14.7487
+      type: 'test'
+      ...
+    # Subtest: Publicación sincronizada en portada e interior
+    ok 5 - Publicación sincronizada en portada e interior
+      ---
+      duration_ms: 11.0801
+      type: 'test'
+      ...
+    # Subtest: Editar borrador conserva la versión pública y detecta conflictos
+    ok 6 - Editar borrador conserva la versión pública y detecta conflictos
+      ---
+      duration_ms: 21.7365
+      type: 'test'
+      ...
+    # Subtest: Archivar, restaurar y recuperar revisiones no borra registros
+    ok 7 - Archivar, restaurar y recuperar revisiones no borra registros
+      ---
+      duration_ms: 17.019
+      type: 'test'
+      ...
+    # Subtest: Programas y personas se editan desde una fuente común
+    ok 8 - Programas y personas se editan desde una fuente común
+      ---
+      duration_ms: 9.6934
+      type: 'test'
+      ...
+    # Subtest: Los rectores históricos usan su fuente y el enlace Biblia tiene destino
+    ok 9 - Los rectores históricos usan su fuente y el enlace Biblia tiene destino
+      ---
+      duration_ms: 18.4856
+      type: 'test'
+      ...
+    # Subtest: Galería vacía no vuelve a mostrar fotos de respaldo
+    ok 10 - Galería vacía no vuelve a mostrar fotos de respaldo
+      ---
+      duration_ms: 95.4242
+      type: 'test'
+      ...
+    # Subtest: Eventos incluyen fecha local y página propia
+    ok 11 - Eventos incluyen fecha local y página propia
+      ---
+      duration_ms: 23.5245
+      type: 'test'
+      ...
+    # Subtest: Subida local de imagen real y rechazo de archivo inválido
+    ok 12 - Subida local de imagen real y rechazo de archivo inválido
+      ---
+      duration_ms: 30.1295
+      type: 'test'
+      ...
+    # Subtest: Contacto llega a la bandeja y cambia de estado
+    ok 13 - Contacto llega a la bandeja y cambia de estado
+      ---
+      duration_ms: 10.8263
+      type: 'test'
+      ...
+    # Subtest: Validación editorial impide publicar donativos incompletos y categorías inválidas
+    ok 14 - Validación editorial impide publicar donativos incompletos y categorías inválidas
+      ---
+      duration_ms: 10.7125
+      type: 'test'
+      ...
+    # Subtest: Exportación preserva versiones y no exporta contraseñas
+    ok 15 - Exportación preserva versiones y no exporta contraseñas
+      ---
+      duration_ms: 6.2712
+      type: 'test'
+      ...
+    # Subtest: Cerrar sesión invalida el acceso
+    ok 16 - Cerrar sesión invalida el acceso
+      ---
+      duration_ms: 3.5238
+      type: 'test'
+      ...
+    # Subtest: Los datos persisten después de reiniciar el servidor
+    ok 17 - Los datos persisten después de reiniciar el servidor
+      ---
+      duration_ms: 612.469
+      type: 'test'
+      ...
+    1..17
+ok 1 - Circuito editorial y persistencia, aislados del contenido de revisión
+  ---
+  duration_ms: 2253.3248
+  type: 'test'
+  ...
+# Subtest: Ratón: abre por hover, demora el cierre y permite atravesar hacia las opciones
+ok 2 - Ratón: abre por hover, demora el cierre y permite atravesar hacia las opciones
+  ---
+  duration_ms: 3.0146
+  type: 'test'
+  ...
+# Subtest: Ratón: cambiar de grupo cierra el anterior
+ok 3 - Ratón: cambiar de grupo cierra el anterior
+  ---
+  duration_ms: 0.6593
+  type: 'test'
+  ...
+# Subtest: Táctil: ignora hover y conserva el control de apertura mediante pulsación
+ok 4 - Táctil: ignora hover y conserva el control de apertura mediante pulsación
+  ---
+  duration_ms: 0.8251
+  type: 'test'
+  ...
+# Subtest: Teclado: Escape cierra y devuelve foco al control correcto
+ok 5 - Teclado: Escape cierra y devuelve foco al control correcto
+  ---
+  duration_ms: 0.7612
+  type: 'test'
+  ...
+# Subtest: El logotipo aparece una vez por sesión y respeta movimiento reducido
+ok 6 - El logotipo aparece una vez por sesión y respeta movimiento reducido
+  ---
+  duration_ms: 1.8398
+  type: 'test'
+  ...
+# (node:16832) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Importación aditiva conserva datos y rechaza sobrescribir un destino existente
+ok 7 - Importación aditiva conserva datos y rechaza sobrescribir un destino existente
+  ---
+  duration_ms: 201.3545
+  type: 'test'
+  ...
+# (node:23508) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Las cuatro fotografías se normalizan desde EXIF y conservan originales
+ok 8 - Las cuatro fotografías se normalizan desde EXIF y conservan originales
+  ---
+  duration_ms: 69.5825
+  type: 'test'
+  ...
+# Subtest: El logotipo conserva el archivo institucional y sus proporciones
+ok 9 - El logotipo conserva el archivo institucional y sus proporciones
+  ---
+  duration_ms: 6.9673
+  type: 'test'
+  ...
+# Subtest: Agua, Pastoral, Comunidad, Música y Nosotros tienen rutas propias
+ok 10 - Agua, Pastoral, Comunidad, Música y Nosotros tienen rutas propias
+  ---
+  duration_ms: 3.3503
+  type: 'test'
+  ...
+# Subtest: Catecismo encabeza Pastoral y separa Primera Comunión de Confirmación
+ok 11 - Catecismo encabeza Pastoral y separa Primera Comunión de Confirmación
+  ---
+  duration_ms: 0.7087
+  type: 'test'
+  ...
+# Subtest: Las categorías de Música y la preparación de Confirmación tienen vista previa correcta
+ok 12 - Las categorías de Música y la preparación de Confirmación tienen vista previa correcta
+  ---
+  duration_ms: 0.4714
+  type: 'test'
+  ...
+# Subtest: El ajuste editorial local conserva borradores y es idempotente
+ok 13 - El ajuste editorial local conserva borradores y es idempotente
+  ---
+  duration_ms: 632.7677
+  type: 'test'
+  ...
+1..13
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3348.0204

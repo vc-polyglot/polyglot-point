@@ -1,0 +1,87 @@
+{
+  "createdAt": "2026-10-28T06:46:44.040Z",
+  "localOnly": true,
+  "base": "http://127.0.0.1:3310",
+  "pages": 12,
+  "links": 31,
+  "assets": 66,
+  "errors": [],
+  "menu": [
+    "Vida litúrgica",
+    "Sacramentos",
+    "Pastoral",
+    "Comunidad",
+    "Nosotros",
+    "Agua de San Ignacio",
+    "El templo",
+    "Visítanos"
+  ],
+  "originalPhotosIntact": 37,
+  "institutionalDocumentsUnchanged": 57,
+  "backupVerified": true,
+  "animationMs": 3000,
+  "visualBrowserVerified": false,
+  "visualReview": "Pendiente por el usuario, quien indicó que la revisaría. La herramienta de navegador no pudo verificar la URL local y detuvo la automatización.",
+  "correctedPhotos": [
+    {
+      "file": "galeria-06.jpg",
+      "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-06.jpg",
+      "locations": [
+        {
+          "route": "/galeria",
+          "identifiers": [
+            "galeria-06"
+          ],
+          "context": "Miniatura y visor ampliado"
+        }
+      ],
+      "exif": 6,
+      "correction": "EXIF normalized before resizing; fresh bitmap without orientation metadata"
+    },
+    {
+      "file": "galeria-08.jpg",
+      "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-08.jpg",
+      "locations": [
+        {
+          "route": "/galeria",
+          "identifiers": [
+            "galeria-08"
+          ],
+          "context": "Miniatura y visor ampliado"
+        }
+      ],
+      "exif": 6,
+      "correction": "EXIF normalized before resizing; fresh bitmap without orientation metadata"
+    },
+    {
+      "file": "galeria-12.jpg",
+      "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-12.jpg",
+      "locations": [
+        {
+          "route": "/galeria",
+          "identifiers": [
+            "galeria-12"
+          ],
+          "context": "Miniatura y visor ampliado"
+        }
+      ],
+      "exif": 6,
+      "correction": "EXIF normalized before resizing; fresh bitmap without orientation metadata"
+    },
+    {
+      "file": "pastoral.jpeg",
+      "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\pastoral.jpeg",
+      "locations": [
+        {
+          "route": "/pastoral",
+          "identifiers": [
+            "pastoral-foto"
+          ],
+          "context": "Fotografía vertical completa, sin recorte"
+        }
+      ],
+      "exif": 6,
+      "correction": "EXIF normalized before resizing; fresh bitmap without orientation metadata"
+    }
+  ]
+}

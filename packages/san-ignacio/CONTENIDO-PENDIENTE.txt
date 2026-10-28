@@ -1,0 +1,27 @@
+PENDIENTES EDITORIALES Y DE VERIFICACIÓN
+
+1. Cotejar todos los contenidos con la base actual de Railway. Los 52 registros
+   de referencia local no constituyen una exportación de esa base.
+2. Validar vigencia de horarios, requisitos, importes, teléfonos, correo,
+   programas pastorales y nombres/cargos que ya estaban en el proyecto.
+3. Integrar textos aprobados del Instituto Patria, capilla y cronología de
+   rectores. Existen secciones para recibirlos; no se inventaron episodios.
+4. Integrar semblanzas y retratos autorizados. El directorio muestra los nombres
+   existentes; no presenta botones hacia biografías o retratos inexistentes.
+5. Recibir agenda, conciertos y publicaciones musicales aprobados. El sistema
+   permite editarlos; no hay eventos ficticios en la base de revisión.
+6. Completar títulos, descripciones y créditos de fotografías. Los originales
+   están conservados; las descripciones de referencia son deliberadamente
+   generales cuando no había información más específica.
+7. Recibir el aviso de privacidad aprobado antes de una puesta en producción
+   con el formulario público. El editor y su página están preparados.
+8. Recibir datos bancarios confirmados si se desea publicar Donativos. El sistema
+   impide publicar el registro incompleto. No se incorporaron pasarelas de pago.
+9. Terminar revisión visual de celular y escritorio, controles táctiles,
+   navegación con teclado, contraste, zoom y rendimiento real en navegador.
+10. Probar PostgreSQL, Redis y Cloudinary reales en un entorno autorizado de
+    ensayo sin gastos adicionales. La prueba realizada usa SQLite local.
+
+Estas limitaciones están separadas de los controles HTTP y de persistencia
+que sí se ejecutaron y aprobaron. No hay un despliegue listo para autorizar
+hasta resolver las comprobaciones que correspondan al entorno alojado.

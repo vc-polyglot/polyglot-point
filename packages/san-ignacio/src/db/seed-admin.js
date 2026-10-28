@@ -22,16 +22,10 @@ try {
   await db.query(`
     INSERT INTO users (name, email, password_hash, role, active)
     VALUES ($1, $2, $3, 'admin', TRUE)
-    ON CONFLICT (email)
-    DO UPDATE SET
-      name = EXCLUDED.name,
-      password_hash = EXCLUDED.password_hash,
-      role = 'admin',
-      active = TRUE,
-      updated_at = NOW()
+    ON CONFLICT (email) DO NOTHING
   `, [name, email, passwordHash]);
 
-  console.log(`Administrador listo: ${email}`);
+  console.log('Inicialización completada; las cuentas existentes no se modificaron.');
 } catch (error) {
   console.error("No se pudo crear/actualizar el administrador:", error);
   process.exitCode = 1;

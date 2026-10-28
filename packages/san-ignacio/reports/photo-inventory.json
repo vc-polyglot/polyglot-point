@@ -1,0 +1,1040 @@
+[
+  {
+    "originalSha256": "5B3D015262D6119EC89C69C857CFACF184F206385353012C5754200447CCABF7",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1024,
+    "derivatives": [
+      "/assets/images/tres-cruces-logo-640.jpg",
+      "/assets/images/tres-cruces-logo-1280.jpg",
+      "/assets/images/tres-cruces-logo-1920.jpg"
+    ],
+    "normalizedWidth": 1536,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\hero\\tres-cruces-logo.png",
+    "correction": "No orientation correction required",
+    "rawHeight": 1024,
+    "rawWidth": 1536,
+    "filename": "tres-cruces-logo.png",
+    "uses": [],
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "2FBCFA7607281D760F17031189FA5857615F75DBBF2B0E2AAF5BBD7437C2C07C",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1600,
+    "derivatives": [
+      "/assets/images/tres-cruces-reales-640.jpg",
+      "/assets/images/tres-cruces-reales-1280.jpg"
+    ],
+    "normalizedWidth": 1201,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\hero\\tres-cruces-reales.jpeg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1600,
+    "rawWidth": 1201,
+    "filename": "tres-cruces-reales.jpeg",
+    "uses": [],
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "8B3FB49E78154A92D135E9D56DD93FB45F01358B21612B05958058E27DB292C0",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1600,
+    "derivatives": [
+      "/assets/images/comunidad-juvenil-ignaciana-640.jpg",
+      "/assets/images/comunidad-juvenil-ignaciana-1280.jpg"
+    ],
+    "normalizedWidth": 1182,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\comunidad-juvenil-ignaciana.jpeg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1600,
+    "rawWidth": 1182,
+    "filename": "comunidad-juvenil-ignaciana.jpeg",
+    "uses": [],
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "EE16074811704410B7F2552C6C971385CE12A1A9A53210C8BEC0F00A87E6EF9C",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 794,
+    "derivatives": [
+      "/assets/images/espiritualidad-640.jpg",
+      "/assets/images/espiritualidad-1280.jpg"
+    ],
+    "normalizedWidth": 1024,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\espiritualidad.jpeg",
+    "correction": "No orientation correction required",
+    "rawHeight": 794,
+    "rawWidth": 1024,
+    "filename": "espiritualidad.jpeg",
+    "uses": [],
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "F63C90A2879E3BE5C69264EC8B2F3B3725255FC46AB6F9E6EFED0C6A0469B9E1",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1600,
+    "derivatives": [
+      "/assets/images/galeria-01-640.jpg",
+      "/assets/images/galeria-01-1280.jpg"
+    ],
+    "normalizedWidth": 1200,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-01.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1600,
+    "rawWidth": 1200,
+    "filename": "galeria-01.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-01"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "1/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "47DFD28BFDCAB4A0C3ACF124D88C40CB74485D52F8493D42081878739ED84116",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 2560,
+    "derivatives": [
+      "/assets/images/galeria-02-640.jpg",
+      "/assets/images/galeria-02-1280.jpg",
+      "/assets/images/galeria-02-1920.jpg"
+    ],
+    "normalizedWidth": 1806,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-02.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 2560,
+    "rawWidth": 1806,
+    "filename": "galeria-02.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-02"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "2/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "E16449BA3E2B833210C38C25B2B89BD63DC48C59CB2A2F3798D24B619304BBB3",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 2431,
+    "derivatives": [
+      "/assets/images/galeria-03-640.jpg",
+      "/assets/images/galeria-03-1280.jpg",
+      "/assets/images/galeria-03-1920.jpg"
+    ],
+    "normalizedWidth": 3024,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-03.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 2431,
+    "rawWidth": 3024,
+    "filename": "galeria-03.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-03"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "3/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "5EAF18E54AD0AF9F289F8FF58DEECDAFCA8246F657D1C5952D37AEE9E814D22A",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1024,
+    "derivatives": [
+      "/assets/images/galeria-04-640.jpg",
+      "/assets/images/galeria-04-1280.jpg"
+    ],
+    "normalizedWidth": 768,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-04.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1024,
+    "rawWidth": 768,
+    "filename": "galeria-04.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-04"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "4/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "C22A522C750F472ED0590B4342CB6478F20C180B7005F6C3360AD44F41262437",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1024,
+    "derivatives": [
+      "/assets/images/galeria-05-640.jpg",
+      "/assets/images/galeria-05-1280.jpg"
+    ],
+    "normalizedWidth": 768,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-05.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1024,
+    "rawWidth": 768,
+    "filename": "galeria-05.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-05"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "5/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "3EB1D128B753915CFCA94C58CE945940B5DED9F9AB7319149E4046C787E1FB09",
+    "corrected": true,
+    "exifOrientation": 6,
+    "normalizedHeight": 3264,
+    "derivatives": [
+      "/assets/images/galeria-06-640.jpg",
+      "/assets/images/galeria-06-1280.jpg",
+      "/assets/images/galeria-06-1920.jpg"
+    ],
+    "normalizedWidth": 2448,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-06.jpg",
+    "correction": "EXIF normalized before resizing; fresh bitmap without orientation metadata",
+    "rawHeight": 2448,
+    "rawWidth": 3264,
+    "filename": "galeria-06.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-06"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "6/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "EF90CBD5C3A8B5545C493C191A226C0A4F8E8BC66A1B768F970DCD67C2B22C71",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1024,
+    "derivatives": [
+      "/assets/images/galeria-07-640.jpg",
+      "/assets/images/galeria-07-1280.jpg"
+    ],
+    "normalizedWidth": 768,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-07.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1024,
+    "rawWidth": 768,
+    "filename": "galeria-07.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-07"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "7/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "88A196DCC8F0ECAB6129AD37011999DEF8DC955005EBF0CED28152A81B9B55E0",
+    "corrected": true,
+    "exifOrientation": 6,
+    "normalizedHeight": 4032,
+    "derivatives": [
+      "/assets/images/galeria-08-640.jpg",
+      "/assets/images/galeria-08-1280.jpg",
+      "/assets/images/galeria-08-1920.jpg"
+    ],
+    "normalizedWidth": 3024,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-08.jpg",
+    "correction": "EXIF normalized before resizing; fresh bitmap without orientation metadata",
+    "rawHeight": 3024,
+    "rawWidth": 4032,
+    "filename": "galeria-08.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-08"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "8/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "C161444E503E3F4B23A1ADE70864E37B4929CC97BD3669DB710226FC5D6AAE34",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1254,
+    "derivatives": [
+      "/assets/images/galeria-09-640.jpg",
+      "/assets/images/galeria-09-1280.jpg"
+    ],
+    "normalizedWidth": 928,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-09.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1254,
+    "rawWidth": 928,
+    "filename": "galeria-09.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-09"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "9/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "6B70720A690052B0F09F3584031343021A25E0779F60C773132D6FD2EED09682",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1024,
+    "derivatives": [
+      "/assets/images/galeria-10-640.jpg",
+      "/assets/images/galeria-10-1280.jpg"
+    ],
+    "normalizedWidth": 768,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-10.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1024,
+    "rawWidth": 768,
+    "filename": "galeria-10.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-10"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "10/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "71F2F044E37C8314DD5ED65E3E7D60F5418D951DF2BEA754CB8810EFBB859864",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1024,
+    "derivatives": [
+      "/assets/images/galeria-11-640.jpg",
+      "/assets/images/galeria-11-1280.jpg"
+    ],
+    "normalizedWidth": 768,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-11.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1024,
+    "rawWidth": 768,
+    "filename": "galeria-11.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-11"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "11/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "31CE52450C4581EB5C7B53DC12A3671EDB2BCB0CD77B785F9A08227363F79050",
+    "corrected": true,
+    "exifOrientation": 6,
+    "normalizedHeight": 3264,
+    "derivatives": [
+      "/assets/images/galeria-12-640.jpg",
+      "/assets/images/galeria-12-1280.jpg",
+      "/assets/images/galeria-12-1920.jpg"
+    ],
+    "normalizedWidth": 2448,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-12.jpg",
+    "correction": "EXIF normalized before resizing; fresh bitmap without orientation metadata",
+    "rawHeight": 2448,
+    "rawWidth": 3264,
+    "filename": "galeria-12.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-12"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "12/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "59A606A06EE4E168E9AAA1FCEC30D1C0DC6002804B991A3B592EF0C3F7FE7386",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1024,
+    "derivatives": [
+      "/assets/images/galeria-13-640.jpg",
+      "/assets/images/galeria-13-1280.jpg"
+    ],
+    "normalizedWidth": 768,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-13.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1024,
+    "rawWidth": 768,
+    "filename": "galeria-13.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-13"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "13/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "A251B4D0CC531C40D187FC26B681D174042FAF2742B30DB9CF9DC38E1FD3E496",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1024,
+    "derivatives": [
+      "/assets/images/galeria-14-640.jpg",
+      "/assets/images/galeria-14-1280.jpg"
+    ],
+    "normalizedWidth": 768,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-14.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1024,
+    "rawWidth": 768,
+    "filename": "galeria-14.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-14"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "14/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "FFD95159EC22E6860F9FA4DDB48F87D14FF0F85FA03F6A35BE2F6E80A40185D1",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1024,
+    "derivatives": [
+      "/assets/images/galeria-15-640.jpg",
+      "/assets/images/galeria-15-1280.jpg"
+    ],
+    "normalizedWidth": 768,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-15.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1024,
+    "rawWidth": 768,
+    "filename": "galeria-15.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-15"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "15/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "E379E4693F149571BEB53E002EE2201E2CC3DD3CB2D1E060D60B5BD499F71BAB",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1024,
+    "derivatives": [
+      "/assets/images/galeria-16-640.jpg",
+      "/assets/images/galeria-16-1280.jpg"
+    ],
+    "normalizedWidth": 768,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-16.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1024,
+    "rawWidth": 768,
+    "filename": "galeria-16.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-16"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "16/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "FDF5691EFE884EAAB22F61B5F7B20013459CB59CB8B70C91C2EB7C947A9EC36C",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1024,
+    "derivatives": [
+      "/assets/images/galeria-17-640.jpg",
+      "/assets/images/galeria-17-1280.jpg"
+    ],
+    "normalizedWidth": 768,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-17.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1024,
+    "rawWidth": 768,
+    "filename": "galeria-17.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-17"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "17/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "513861CE9A04F898D56B04BA48A8409CA6B41792C28D5AF916DCCF99DCCFDFC3",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1024,
+    "derivatives": [
+      "/assets/images/galeria-18-640.jpg",
+      "/assets/images/galeria-18-1280.jpg"
+    ],
+    "normalizedWidth": 737,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-18.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1024,
+    "rawWidth": 737,
+    "filename": "galeria-18.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-18"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "18/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "E8D5452DAF14DD95C8F30AE17170F53E51674D182EFB6B18FC8F6513201C57AC",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1280,
+    "derivatives": [
+      "/assets/images/galeria-19-640.jpg",
+      "/assets/images/galeria-19-1280.jpg"
+    ],
+    "normalizedWidth": 960,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-19.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1280,
+    "rawWidth": 960,
+    "filename": "galeria-19.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-19"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "19/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "DB78B5EE28B64D9FC2D32615FF85C74E1B276017773072A7CEADE88B5D0DB793",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1024,
+    "derivatives": [
+      "/assets/images/galeria-20-640.jpg",
+      "/assets/images/galeria-20-1280.jpg"
+    ],
+    "normalizedWidth": 768,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-20.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1024,
+    "rawWidth": 768,
+    "filename": "galeria-20.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-20"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "20/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "BEF0E706BB2B2E98C9B57EDC2ABF591740F1473563E4F0B1DBFE8EABFBF2EFED",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1279,
+    "derivatives": [
+      "/assets/images/galeria-21-640.jpg",
+      "/assets/images/galeria-21-1280.jpg"
+    ],
+    "normalizedWidth": 816,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-21.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1279,
+    "rawWidth": 816,
+    "filename": "galeria-21.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-21"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "21/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "5FCE082C7E72A264E7CE06AB24A6051ECE6FE60EE91FF19B9FDA9F14C3969956",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1280,
+    "derivatives": [
+      "/assets/images/galeria-22-640.jpg",
+      "/assets/images/galeria-22-1280.jpg"
+    ],
+    "normalizedWidth": 766,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-22.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1280,
+    "rawWidth": 766,
+    "filename": "galeria-22.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-22"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "22/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "ECEB3CD80B44644F5A59FE503612C6DB7D980580C1E9894AE6DD4D39AB3CD625",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 2973,
+    "derivatives": [
+      "/assets/images/galeria-23-640.jpg",
+      "/assets/images/galeria-23-1280.jpg",
+      "/assets/images/galeria-23-1920.jpg"
+    ],
+    "normalizedWidth": 2035,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\galeria-23.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 2973,
+    "rawWidth": 2035,
+    "filename": "galeria-23.jpg",
+    "uses": [
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "galeria-23"
+        ],
+        "context": "Miniatura y visor ampliado"
+      }
+    ],
+    "galleryPosition": "23/23",
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "E16449BA3E2B833210C38C25B2B89BD63DC48C59CB2A2F3798D24B619304BBB3",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 2431,
+    "derivatives": [
+      "/assets/images/hero-interior-03-640.jpg",
+      "/assets/images/hero-interior-03-1280.jpg",
+      "/assets/images/hero-interior-03-1920.jpg"
+    ],
+    "normalizedWidth": 3024,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\hero-interior-03.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 2431,
+    "rawWidth": 3024,
+    "filename": "hero-interior-03.jpg",
+    "uses": [
+      {
+        "route": "/",
+        "identifiers": [
+          "portada"
+        ],
+        "context": "Imagen interior o portada"
+      },
+      {
+        "route": "/vida-liturgica",
+        "identifiers": [
+          "portada"
+        ],
+        "context": "Imagen interior o portada"
+      },
+      {
+        "route": "/sacramentos",
+        "identifiers": [
+          "portada"
+        ],
+        "context": "Imagen interior o portada"
+      },
+      {
+        "route": "/pastoral",
+        "identifiers": [
+          "portada"
+        ],
+        "context": "Fotografía vertical completa, sin recorte"
+      },
+      {
+        "route": "/comunidad",
+        "identifiers": [
+          "portada"
+        ],
+        "context": "Imagen interior o portada"
+      },
+      {
+        "route": "/agenda",
+        "identifiers": [
+          "portada"
+        ],
+        "context": "Imagen interior o portada"
+      },
+      {
+        "route": "/musica",
+        "identifiers": [
+          "portada"
+        ],
+        "context": "Imagen interior o portada"
+      },
+      {
+        "route": "/nosotros",
+        "identifiers": [
+          "portada"
+        ],
+        "context": "Imagen interior o portada"
+      },
+      {
+        "route": "/agua-de-san-ignacio",
+        "identifiers": [
+          "portada"
+        ],
+        "context": "Imagen interior o portada"
+      },
+      {
+        "route": "/historia",
+        "identifiers": [
+          "portada"
+        ],
+        "context": "Imagen interior o portada"
+      },
+      {
+        "route": "/galeria",
+        "identifiers": [
+          "portada"
+        ],
+        "context": "Miniatura y visor ampliado"
+      },
+      {
+        "route": "/contacto",
+        "identifiers": [
+          "portada"
+        ],
+        "context": "Imagen interior o portada"
+      }
+    ],
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "DB78B5EE28B64D9FC2D32615FF85C74E1B276017773072A7CEADE88B5D0DB793",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 1024,
+    "derivatives": [
+      "/assets/images/hero-nueva-01-640.jpg",
+      "/assets/images/hero-nueva-01-1280.jpg"
+    ],
+    "normalizedWidth": 768,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\hero-nueva-01.jpeg",
+    "correction": "No orientation correction required",
+    "rawHeight": 1024,
+    "rawWidth": 768,
+    "filename": "hero-nueva-01.jpeg",
+    "uses": [],
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "E1824C0321ABAEEDF94BE90733EA511EFF03C2EE06C5DD0F33A748EEE3F8C3B0",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 685,
+    "derivatives": [
+      "/assets/images/hero-nueva-04-640.jpg",
+      "/assets/images/hero-nueva-04-1280.jpg"
+    ],
+    "normalizedWidth": 1000,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\hero-nueva-04.jpeg",
+    "correction": "No orientation correction required",
+    "rawHeight": 685,
+    "rawWidth": 1000,
+    "filename": "hero-nueva-04.jpeg",
+    "uses": [],
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "47DFD28BFDCAB4A0C3ACF124D88C40CB74485D52F8493D42081878739ED84116",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 2560,
+    "derivatives": [
+      "/assets/images/hero-vitrales-08-640.jpg",
+      "/assets/images/hero-vitrales-08-1280.jpg",
+      "/assets/images/hero-vitrales-08-1920.jpg"
+    ],
+    "normalizedWidth": 1806,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\hero-vitrales-08.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 2560,
+    "rawWidth": 1806,
+    "filename": "hero-vitrales-08.jpg",
+    "uses": [
+      {
+        "route": "/",
+        "identifiers": [
+          "img:hero-vitrales-08.jpg"
+        ],
+        "context": "Imagen interior o portada"
+      }
+    ],
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "E1824C0321ABAEEDF94BE90733EA511EFF03C2EE06C5DD0F33A748EEE3F8C3B0",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 685,
+    "derivatives": [
+      "/assets/images/historia-arquitectura-640.jpg",
+      "/assets/images/historia-arquitectura-1280.jpg"
+    ],
+    "normalizedWidth": 1000,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\historia-arquitectura.jpeg",
+    "correction": "No orientation correction required",
+    "rawHeight": 685,
+    "rawWidth": 1000,
+    "filename": "historia-arquitectura.jpeg",
+    "uses": [],
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "180878339B38824C6AD38A7581FB106B9D69DDAD14995B6165F3AAE8E5E1BDCD",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 905,
+    "derivatives": [
+      "/assets/images/historia-capilla-640.jpg",
+      "/assets/images/historia-capilla-1280.jpg"
+    ],
+    "normalizedWidth": 1024,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\historia-capilla.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 905,
+    "rawWidth": 1024,
+    "filename": "historia-capilla.jpg",
+    "uses": [],
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "ABB515E6E5535CA9DE41D0DE0CAAED0C6936952BCDC9EA4C05C19E6608FE4B69",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 881,
+    "derivatives": [
+      "/assets/images/inea-san-ignacio-640.jpg",
+      "/assets/images/inea-san-ignacio-1280.jpg"
+    ],
+    "normalizedWidth": 881,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\inea-san-ignacio.jpeg",
+    "correction": "No orientation correction required",
+    "rawHeight": 881,
+    "rawWidth": 881,
+    "filename": "inea-san-ignacio.jpeg",
+    "uses": [],
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "8A6F7BDC413766AAD425EE91B2BCEB2ADC98739EA29A0924688FD09DA977BB3F",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 4032,
+    "derivatives": [
+      "/assets/images/liturgia-640.jpg",
+      "/assets/images/liturgia-1280.jpg",
+      "/assets/images/liturgia-1920.jpg"
+    ],
+    "normalizedWidth": 3024,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\liturgia.jpg",
+    "correction": "No orientation correction required",
+    "rawHeight": 4032,
+    "rawWidth": 3024,
+    "filename": "liturgia.jpg",
+    "uses": [
+      {
+        "route": "/vida-liturgica",
+        "identifiers": [
+          "img:liturgia.jpg"
+        ],
+        "context": "Imagen interior o portada"
+      }
+    ],
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "1B0D73D421878D808EDB8B6A817356B953D570FBFF38CA1FA552FDEBE87D1AB9",
+    "corrected": false,
+    "exifOrientation": 1,
+    "normalizedHeight": 874,
+    "derivatives": [
+      "/assets/images/nosotros-640.jpg",
+      "/assets/images/nosotros-1280.jpg"
+    ],
+    "normalizedWidth": 1024,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\nosotros.jpeg",
+    "correction": "No orientation correction required",
+    "rawHeight": 874,
+    "rawWidth": 1024,
+    "filename": "nosotros.jpeg",
+    "uses": [
+      {
+        "route": "/nosotros",
+        "identifiers": [
+          "img:nosotros.jpeg"
+        ],
+        "context": "Imagen interior o portada"
+      }
+    ],
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  },
+  {
+    "originalSha256": "8A1C987EA69620E532D9704BAAA7E0F450A5AC17B57EB478D09534EBD869BF62",
+    "corrected": true,
+    "exifOrientation": 6,
+    "normalizedHeight": 3264,
+    "derivatives": [
+      "/assets/images/pastoral-640.jpg",
+      "/assets/images/pastoral-1280.jpg",
+      "/assets/images/pastoral-1920.jpg"
+    ],
+    "normalizedWidth": 2448,
+    "original": "C:\\Users\\Víctor\\Desktop\\San-Ignacio-local\\public\\img\\site-photos\\pastoral.jpeg",
+    "correction": "EXIF normalized before resizing; fresh bitmap without orientation metadata",
+    "rawHeight": 2448,
+    "rawWidth": 3264,
+    "filename": "pastoral.jpeg",
+    "uses": [
+      {
+        "route": "/pastoral",
+        "identifiers": [
+          "pastoral-foto"
+        ],
+        "context": "Fotografía vertical completa, sin recorte"
+      }
+    ],
+    "library": "Biblioteca de imágenes de la consola",
+    "originalUnchanged": true
+  }
+]

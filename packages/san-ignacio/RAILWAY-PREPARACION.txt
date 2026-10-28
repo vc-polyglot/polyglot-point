@@ -1,0 +1,53 @@
+RAILWAY — INFORMACIÓN IDENTIFICADA Y PASOS PENDIENTES
+
+Proyecto: independent-reflection
+projectId: e894907d-be65-40b7-93ef-4447380d2dfc
+Servicio: san-ignacio
+serviceId: 8ec418b5-7acb-4a8d-b2c6-1963bf96d1af
+environmentId: 73b09731-955f-4418-9742-72d64d11fe8d
+Entorno: production
+Dominio existente: san-ignacio-production.up.railway.app
+Puerto observado en los registros del usuario: 8080
+Repositorio mostrado: vc-polyglot/polyglot-point
+Rama con autodespliegue: feature/san-ignacio
+No se ha realizado push a esa rama ni modificado la configuración.
+
+El usuario aportó registros de arranque satisfactorio del 27 de octubre de 2026:
+db:seed-admin, db:migrate y start. Confirman arranque del contenedor; no
+demuestran por sí solos navegación, consola o integridad de datos.
+
+La inspección directa del panel está pendiente: no hay navegador controlable
+ni conexión Railway confirmada en esta sesión. El cliente de consola instalado
+tampoco pudo obtener el contexto del usuario en este entorno restringido.
+
+ANTES DE UN DESPLIEGUE EVENTUAL
+1. Obtener una exportación y respaldo completo de san_ignacio, más inventario
+   de medios remotos. Comprobar su restauración fuera de la base original.
+2. Revisar Dockerfile Path, Root Directory y Watch Paths del servicio actual
+   sin confundir el paquete aislado con la raíz del monorepositorio.
+3. Aplicar la migración aditiva src/db/review-migration.sql en un entorno
+   de ensayo. No borra ni cambia las tablas anteriores.
+4. Exportar los contenidos anteriores con scripts/export-legacy.mjs.
+   La conexión usa una transacción de sólo lectura. La URL se configura
+   en LEGACY_DATABASE_URL, nunca como argumento de consola.
+5. Importar en las tablas editoriales nuevas y vacías con import-legacy.mjs.
+   La herramienta rechaza un destino editorial que ya tiene registros.
+   Conservar la exportación original: contiene todos los campos históricos.
+6. Cotejar contenido y fotografías. Las excepciones editoriales y módulos
+   pendientes deben resolverse antes de usar la nueva versión en producción.
+7. Configurar NODE_ENV=production; LOCAL_REVIEW_MODE debe estar ausente o 0.
+   Definir DATABASE_URL, REDIS_URL, SESSION_SECRET de al menos 32 caracteres,
+   SITE_URL con el origen HTTPS definitivo y TRUST_PROXY según la topología.
+   Railway aporta PORT. El proceso alojado escucha 0.0.0.0.
+8. Confirmar las variables Cloudinary existentes para la subida remota.
+   Si faltan, la consola lo indica y rechaza la subida sin anunciar éxito.
+9. Revisar pre-deploy: db:seed-admin ahora sólo crea el administrador si no
+   existe; conserva la contraseña existente. La migración es explícita.
+10. Usar /health como comprobación de disponibilidad. Probar el circuito
+    real PostgreSQL + Redis + Cloudinary antes de aprobar el despliegue.
+11. Conservar versión, base y procedimiento de reversión. Un despliegue
+    requiere una decisión posterior al encargo local.
+
+RESTRICCIÓN DEL USUARIO
+No contratar servicios, ampliar recursos, añadir réplicas o generar gastos
+adicionales. Ninguno de esos pasos se ha ejecutado. La preparación es local.

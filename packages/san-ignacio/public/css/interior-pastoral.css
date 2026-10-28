@@ -1,0 +1,15 @@
+body.si-pas-page main{margin:0!important;padding:0!important;max-width:none!important;background:#f4efe6!important}
+body.si-pas-page main>section:not(.pas-page){display:none!important}
+.pas-page{display:block!important;visibility:visible!important;opacity:1!important;background:#f4efe6;color:#191919;min-height:calc(100svh - 132px)}
+.pas-head{width:min(1440px,calc(100% - 96px));margin:auto;padding:72px 0 42px;border-bottom:1px solid rgba(0,0,0,.17)}
+.pas-kicker{margin:0 0 14px;font-size:16px;font-weight:850;letter-spacing:.16em;text-transform:uppercase;color:#8e2d28}
+.pas-title{margin:0;font-size:clamp(58px,6.4vw,108px);line-height:.9;letter-spacing:-.055em;color:#181818}
+.pas-intro{max-width:820px;margin:24px 0 0;font-size:21px;line-height:1.55;color:#504b45}
+.pas-body{width:min(1440px,calc(100% - 96px));margin:auto;padding:48px 0 110px;display:grid;grid-template-columns:minmax(340px,.78fr) minmax(0,1.22fr);gap:72px;align-items:start}
+.pas-message,.pas-areas{background:transparent!important;color:#191919!important;border:0!important}
+.pas-message{padding:0!important}
+.pas-message h2,.pas-message h3,.pas-areas h2,.pas-areas h3{color:#181818!important}
+.pas-areas{border-top:2px solid #b68a2b!important;padding-top:26px!important}
+.pas-photo{grid-column:1/-1;margin:12px 0 0!important}
+.pas-photo img{display:block;width:100%;max-height:670px;object-fit:cover}
+@media(max-width:900px){.pas-head,.pas-body{width:calc(100% - 40px)}.pas-body{grid-template-columns:1fr;gap:42px}.pas-title{font-size:52px}}

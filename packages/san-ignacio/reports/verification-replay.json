@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-28T06:59:35.655Z",
+  "localOnly": true,
+  "changes": {
+    "animationMs": 4500,
+    "presentationMs": 1000,
+    "holdMs": 1500,
+    "crossfadeMs": 2000,
+    "replay": "Clic en las cruces, sin cambiar de página ni recargar",
+    "home": "Clic en el nombre San Ignacio",
+    "automatic": "Una vez por pestaña; sin repetición al recargar o regresar"
+  },
+  "pagesVerified": 10,
+  "testsPassed": 48,
+  "visualReview": "Por el usuario, según lo acordado previamente"
+}

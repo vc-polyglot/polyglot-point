@@ -1,6 +1,12 @@
 node_modules
-npm-debug.log
-.env
 .git
-.gitignore
-README.md
+.local
+.env*
+uploads
+public
+private
+tests
+_backup*
+**/*.backup*
+**/*.legacy.js
+npm-debug.log*

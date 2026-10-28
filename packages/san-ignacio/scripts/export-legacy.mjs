@@ -1,0 +1,7 @@
+// Read-only export of existing institutional content. Never logs credentials.
+import 'dotenv/config';import fs from 'node:fs';import pg from 'pg';
+const destination=process.argv[2];if(!destination)throw new Error('Indique el archivo de salida para la exportación.');if(fs.existsSync(destination))throw new Error('El archivo de salida ya existe.');
+const connectionString=process.env.LEGACY_DATABASE_URL||process.env.DATABASE_URL;if(!connectionString)throw new Error('Configure LEGACY_DATABASE_URL en el entorno; no lo pase como argumento.');
+const client=new pg.Client({connectionString,ssl:process.env.DATABASE_SSL==='true'?{rejectUnauthorized:true}:undefined});
+const tables=['schedules','pastoral_posts','notices','media','music_items','concerts','contact_messages','institutional_sections','institutional_cards','staff_members','editorial_events','gallery_items','site_image_slots','managed_content','pastoral_categories','history_rectors'];const exported={format:'san-ignacio-legacy-v1',createdAt:new Date().toISOString(),tables:{}};
+try{await client.connect();await client.query('BEGIN READ ONLY');for(const table of tables){const exists=await client.query('SELECT to_regclass($1) AS name',['san_ignacio.'+table]);if(exists.rows[0].name)exported.tables[table]=(await client.query(`SELECT * FROM san_ignacio.${table}`)).rows;}await client.query('COMMIT');fs.writeFileSync(destination,JSON.stringify(exported,null,2),{flag:'wx'});console.log('Exportación de contenido completada. Las cuentas permanecen en su base original.');}finally{await client.end();}
