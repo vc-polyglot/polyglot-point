@@ -1,5 +1,5 @@
 import fs from 'node:fs';import crypto from 'node:crypto';
-import {legacyTables,buildDeploymentPlan} from './deploy-plan.js';
+import {legacyTables,buildDeploymentPlan,planCollectionRecovery} from './deploy-plan.js';
 const canonical=value=>Array.isArray(value)?value.map(canonical):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(key=>[key,canonical(value[key])])):value;
 export const deploymentMigration='editorial-review-20261028-v1';
 // The caller supplies one dedicated PostgreSQL client. Existing schemas and rows
@@ -26,5 +26,29 @@ export async function migrateHostedContent(client,references){
   if(crypto.createHash('sha256').update(JSON.stringify(canonical(stored))).digest('hex')!==checksum)throw new Error('El respaldo previo no coincide; se cancela la migración.');
   await client.query('UPDATE san_ignacio.site_migration_backups SET imported_count=$2 WHERE id=$1',[deploymentMigration,imported]);
   await client.query('COMMIT');return {alreadyApplied:false,imported,legacyCounts:Object.fromEntries(Object.entries(tables).map(([key,value])=>[key,value.length])),checksum};
+ }catch(error){await client.query('ROLLBACK');throw error;}
+}
+
+export const collectionRecoveryMigration='collections-recovery-20261028-v1';
+export async function recoverHostedCollections(client,references){
+ await client.query('BEGIN');
+ try{
+  await client.query("SELECT pg_advisory_xact_lock(hashtext('san-ignacio-editorial-upgrade'))");
+  const previous=await client.query('SELECT id,checksum,imported_count FROM san_ignacio.site_migration_backups WHERE id=$1',[collectionRecoveryMigration]);
+  if(previous.rowCount){await client.query('COMMIT');return {alreadyApplied:true,changed:previous.rows[0].imported_count};}
+  await client.query('LOCK TABLE san_ignacio.site_documents IN SHARE ROW EXCLUSIVE MODE');
+  const rows=(await client.query('SELECT id,record,version FROM san_ignacio.site_documents ORDER BY id')).rows;
+  const existing=rows.map(row=>typeof row.record==='string'?JSON.parse(row.record):row.record),stamp=new Date().toISOString();
+  const plan=planCollectionRecovery(existing,references,stamp);
+  const snapshot={format:'san-ignacio-collections-recovery-v1',createdAt:stamp,editorialDocuments:rows};
+  const json=JSON.stringify(snapshot),checksum=crypto.createHash('sha256').update(JSON.stringify(canonical(JSON.parse(json)))).digest('hex');
+  await client.query('INSERT INTO san_ignacio.site_migration_backups(id,checksum,snapshot) VALUES($1,$2,$3::jsonb)',[collectionRecoveryMigration,checksum,json]);
+  const stored=(await client.query('SELECT snapshot FROM san_ignacio.site_migration_backups WHERE id=$1',[collectionRecoveryMigration])).rows[0].snapshot;
+  if(crypto.createHash('sha256').update(JSON.stringify(canonical(stored))).digest('hex')!==checksum)throw new Error('El respaldo no coincide; se cancela la recuperación.');
+  for(const record of plan.additions)await client.query('INSERT INTO san_ignacio.site_documents(id,record,version) VALUES($1,$2::jsonb,$3)',[record.id,JSON.stringify(record),record.version]);
+  for(const {record,expectedVersion}of plan.updates){const result=await client.query('UPDATE san_ignacio.site_documents SET record=$1::jsonb,version=$2 WHERE id=$3 AND version=$4 RETURNING id',[JSON.stringify(record),record.version,record.id,expectedVersion]);if(result.rowCount!==1)throw new Error('Cambió una ficha durante la recuperación; se cancela para conservar su edición.');}
+  const changed=plan.additions.length+plan.updates.length;
+  await client.query('UPDATE san_ignacio.site_migration_backups SET imported_count=$2 WHERE id=$1',[collectionRecoveryMigration,changed]);
+  await client.query('COMMIT');return {alreadyApplied:false,addedStaff:plan.additions.filter(d=>d.type==='staff').length,addedGallery:plan.additions.filter(d=>d.type==='gallery').length,orderCorrections:plan.updates.length,checksum};
  }catch(error){await client.query('ROLLBACK');throw error;}
 }

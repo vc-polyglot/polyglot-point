@@ -32,7 +32,7 @@ while ((Get-Date) -lt $deadline) {
     try {
         $health = Invoke-RestMethod -Uri "$site/health?deploy=$commit" -TimeoutSec 15
         $matchesCommit = -not $health.commit -or $health.commit -eq $commit
-        if ($health.release -eq 'editorial-20261028' -and $health.ok -eq $true -and $health.storage -eq 'postgresql' -and $health.redis -eq $true -and $matchesCommit) { $healthy = $true; break }
+        if ($health.release -eq 'collections-20261028' -and $health.ok -eq $true -and $health.storage -eq 'postgresql' -and $health.redis -eq $true -and $matchesCommit) { $healthy = $true; break }
     } catch { }
     if ($attempt % 5 -eq 0) { Write-Host 'Railway sigue construyendo o iniciando la version nueva...' }
     $attempt++
@@ -47,6 +47,21 @@ foreach ($route in @('/','/vida-liturgica','/sacramentos','/pastoral','/comunida
 }
 $css = Invoke-WebRequest -Uri "$site/assets/site.css?deploy=$commit" -UseBasicParsing -TimeoutSec 20
 if ($css.Content -notmatch 'si-intro-curtain 4500ms') { throw 'No se recibieron los estilos nuevos de la presentacion.' }
+$desktopAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130.0 Safari/537.36'
+$mobileAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1'
+$collectionCounts = @{}
+foreach ($route in @('/nosotros','/galeria')) {
+    $desktop = Invoke-WebRequest -Uri ($site + $route) -UserAgent $desktopAgent -UseBasicParsing -TimeoutSec 20
+    $mobile = Invoke-WebRequest -Uri ($site + $route) -UserAgent $mobileAgent -UseBasicParsing -TimeoutSec 20
+    $pattern = if ($route -eq '/nosotros') { '<article id="([^"]+)"' } else { 'data-photo-id="([^"]+)"' }
+    $desktopIds = @([regex]::Matches($desktop.Content,$pattern) | ForEach-Object { $_.Groups[1].Value })
+    $mobileIds = @([regex]::Matches($mobile.Content,$pattern) | ForEach-Object { $_.Groups[1].Value })
+    if (($desktopIds -join '|') -ne ($mobileIds -join '|')) { throw "Las colecciones difieren entre escritorio y celular: $route" }
+    $minimum = if ($route -eq '/nosotros') { 7 } else { 23 }
+    if ($desktopIds.Count -lt $minimum) { throw "La coleccion sigue incompleta: $route ($($desktopIds.Count) fichas)" }
+    $collectionCounts[$route] = $desktopIds.Count
+}
+Write-Host "Nosotros: $($collectionCounts['/nosotros']) personas; Galeria: $($collectionCounts['/galeria']) fotos. Mismos registros para escritorio y celular."
 Write-Host ''
 Write-Host "DESPLIEGUE COMPROBADO: $site"
 Write-Host 'PostgreSQL y Redis disponibles. Doce paginas y estilos nuevos comprobados.'

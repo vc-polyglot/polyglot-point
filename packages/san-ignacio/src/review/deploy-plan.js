@@ -33,5 +33,45 @@ export function buildDeploymentPlan(tables,references,stamp=new Date().toISOStri
  for(const r of tables.contact_messages||[])messages.push({id:'legacy-'+r.id,...data(r,{name:'name',email:'email',phone:'phone',subject:'subject',message:'message',status:'status'}),createdAt:date(r.created_at)||stamp});
  // Retain every uploaded medium in the authenticated library, even if unused.
  for(const r of tables.media||[]){const mediaImage=image(r.id);if(!mediaImage.image||r.media_type&&r.media_type!=='image')continue;add('media-legacy-'+r.id,'media',{...mediaImage,url:mediaImage.image,title:r.alt_text||'Imagen del archivo institucional'},false);}
+ // Live rows override matching records, not the entire approved collection.
+ const recovery=planCollectionRecovery([...docs.values()],references,stamp);
+ for(const record of [...recovery.additions,...recovery.updates.map(item=>item.record)])docs.set(record.id,record);
  return {documents:[...docs.values()],messages};
+}
+
+const migrationActor='Migración conservadora de la consola anterior';
+const recoveryActor='Recuperación de Nosotros y Galería';
+export function personIdentity(value){return normalize(value).replace(/^p(?:adre)?[.\s]+/,'').replace(/[, .]*s[.\s]*j[.\s]*$/,'').replace(/[^a-z0-9]/g,'');}
+export function photoIdentity(value){
+ const raw=String(value||'').trim();if(!raw)return '';
+ if(/^\/assets\/images\//.test(raw))return raw.replace(/-(640|1280|1920)\.jpg$/,'');
+ return raw.replace(/#.*$/,'');
+}
+function identities(record){const get=record.type==='staff'?data=>personIdentity(data?.title):data=>photoIdentity(data?.image);return [record,...(record.history||[])].flatMap(version=>[get(version.draft),get(version.published)]).filter(Boolean);}
+// Only recover missing approved records. Manual edits, archives and unpublished
+// records participate in identity matching, so recovery cannot resurrect them.
+export function planCollectionRecovery(existing,references,stamp=new Date().toISOString()){
+ const additions=[],updates=[],usedIds=new Set(existing.map(d=>d.id));
+ const known={staff:new Set(),gallery:new Set()};
+ for(const record of existing)if(known[record.type])for(const key of identities(record))known[record.type].add(key);
+ for(const ref of references){
+  if(!known[ref.type]||!ref.published||ref.archived)continue;
+  const keys=identities(ref);if(keys.some(key=>known[ref.type].has(key)))continue;
+  let id=ref.id,index=2;while(usedIds.has(id)){id='recuperado-'+ref.id+(index===2?'':'-'+index);index++;}
+  const record={id,type:ref.type,draft:structuredClone(ref.draft),published:structuredClone(ref.published),archived:false,version:1,history:[],createdAt:stamp,updatedAt:stamp,updatedBy:recoveryActor};
+  additions.push(record);usedIds.add(id);keys.forEach(key=>known[ref.type].add(key));
+ }
+ // Restore the institutional order only on untouched first-import records.
+ // Human edits (version > 1) and every other field remain intact.
+ const staffReferences=references.filter(d=>d.type==='staff');
+ for(const original of existing){
+  if(original.type!=='staff'||original.version!==1||original.updatedBy!==migrationActor)continue;
+  const keys=identities(original),ref=staffReferences.find(d=>identities(d).some(key=>keys.includes(key)));
+  let order=ref?.draft.order;if(order===undefined&&/sacrist/i.test(original.draft.role||''))order=Math.max(50,original.draft.order||0);
+  if(order===undefined||original.draft.order===order&&(!original.published||original.published.order===order))continue;
+  const record=structuredClone(original),{history,...previous}=original;record.draft.order=order;if(record.published)record.published.order=order;
+  record.history=[{...structuredClone(previous),at:stamp,action:'recuperar-orden',actor:recoveryActor},...(history||[])].slice(0,40);record.version++;record.updatedAt=stamp;record.updatedBy=recoveryActor;
+  updates.push({record,expectedVersion:original.version});
+ }
+ return {additions,updates};
 }
