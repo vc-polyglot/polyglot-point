@@ -75,3 +75,19 @@ export function planCollectionRecovery(existing,references,stamp=new Date().toIS
  }
  return {additions,updates};
 }
+
+// A one-time editorial request: move photo 1 to position 24, preserving the
+// relative order of every other visible image. Only ordering metadata changes.
+export function planGalleryOrder(existing,_references,stamp=new Date().toISOString()){
+ const visible=existing.filter(d=>d.type==='gallery'&&d.published&&!d.archived).sort((a,b)=>(a.published.order||0)-(b.published.order||0)||String(a.published.title||'').localeCompare(String(b.published.title||''),'es'));
+ if(visible.length<24)return {additions:[],updates:[]};
+ const first=visible.shift();visible.splice(23,0,first);
+ const actor='Orden de Galería solicitado por el responsable del sitio',updates=[];
+ visible.forEach((original,index)=>{
+  const order=index+1;if(original.draft.order===order&&original.published.order===order)return;
+  const record=structuredClone(original),{history,...previous}=original;record.draft.order=order;record.published.order=order;record.version++;
+  record.history=[{...structuredClone(previous),at:stamp,action:'ordenar-galeria',actor},...(history||[])].slice(0,40);record.updatedAt=stamp;record.updatedBy=actor;
+  updates.push({record,expectedVersion:original.version});
+ });
+ return {additions:[],updates};
+}

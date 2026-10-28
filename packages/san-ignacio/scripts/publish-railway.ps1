@@ -22,6 +22,15 @@ foreach ($file in $changedFiles) {
 Write-Host 'Comprobando que la rama de Railway no haya recibido cambios posteriores...'
 Invoke-RepoGit -GitArguments @('fetch','origin','feature/san-ignacio')
 Invoke-RepoGit -GitArguments @('merge-base','--is-ancestor','origin/feature/san-ignacio','HEAD')
+$expectedPhoto24 = $null
+try {
+    $beforeHealth = Invoke-RestMethod -Uri "$site/health" -TimeoutSec 15
+    if ($beforeHealth.release -ne 'gallery-order-20261028') {
+        $beforeGallery = Invoke-WebRequest -Uri "$site/galeria" -UseBasicParsing -TimeoutSec 20
+        $beforeIds = @([regex]::Matches($beforeGallery.Content,'data-photo-id="([^"]+)"') | ForEach-Object { $_.Groups[1].Value })
+        if ($beforeIds.Count -ge 24) { $expectedPhoto24 = $beforeIds[0] }
+    }
+} catch { }
 Write-Host 'Subiendo la version revisada y activando el despliegue de San Ignacio...'
 Invoke-RepoGit -GitArguments @('push','origin',"HEAD:refs/heads/$reviewBranch",'HEAD:refs/heads/feature/san-ignacio')
 Write-Host "Push aceptado: $commit. Esperando la nueva version de Railway..."
@@ -32,7 +41,7 @@ while ((Get-Date) -lt $deadline) {
     try {
         $health = Invoke-RestMethod -Uri "$site/health?deploy=$commit" -TimeoutSec 15
         $matchesCommit = -not $health.commit -or $health.commit -eq $commit
-        if ($health.release -eq 'collections-20261028' -and $health.ok -eq $true -and $health.storage -eq 'postgresql' -and $health.redis -eq $true -and $matchesCommit) { $healthy = $true; break }
+        if ($health.release -eq 'gallery-order-20261028' -and $health.ok -eq $true -and $health.storage -eq 'postgresql' -and $health.redis -eq $true -and $matchesCommit) { $healthy = $true; break }
     } catch { }
     if ($attempt % 5 -eq 0) { Write-Host 'Railway sigue construyendo o iniciando la version nueva...' }
     $attempt++
@@ -43,6 +52,7 @@ foreach ($route in @('/','/vida-liturgica','/sacramentos','/pastoral','/comunida
     $page = Invoke-WebRequest -Uri ($site + $route) -UseBasicParsing -TimeoutSec 20
     if ($page.StatusCode -ne 200) { throw "La pagina no responde correctamente: $route" }
     if ($route -eq '/' -and $page.Content -notmatch 'data-replay-intro') { throw 'La portada no contiene la presentacion repetible.' }
+    if ($route -eq '/' -and $page.Content -notmatch '<a href="/galeria"[^>]*data-primary-link[^>]*>Galería</a>') { throw 'El menu principal no muestra Galeria.' }
     if ($route -eq '/admin' -and $page.Content -notmatch 'login-form') { throw 'La consola no muestra su formulario de acceso.' }
 }
 $css = Invoke-WebRequest -Uri "$site/assets/site.css?deploy=$commit" -UseBasicParsing -TimeoutSec 20
@@ -59,6 +69,7 @@ foreach ($route in @('/nosotros','/galeria')) {
     if (($desktopIds -join '|') -ne ($mobileIds -join '|')) { throw "Las colecciones difieren entre escritorio y celular: $route" }
     $minimum = if ($route -eq '/nosotros') { 7 } else { 23 }
     if ($desktopIds.Count -lt $minimum) { throw "La coleccion sigue incompleta: $route ($($desktopIds.Count) fichas)" }
+    if ($route -eq '/galeria' -and $expectedPhoto24 -and ($desktopIds.Count -lt 24 -or $desktopIds[23] -ne $expectedPhoto24)) { throw 'La foto que era numero 1 no quedo en el lugar 24.' }
     $collectionCounts[$route] = $desktopIds.Count
 }
 Write-Host "Nosotros: $($collectionCounts['/nosotros']) personas; Galeria: $($collectionCounts['/galeria']) fotos. Mismos registros para escritorio y celular."

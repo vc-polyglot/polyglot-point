@@ -8,7 +8,8 @@ import {introBootstrap} from '../src/review/intro.js';
 import {initHeroReveal,introPhase,INTRO_TIMELINE} from '../assets/entrance.js';
 
 test('Orden institucional y jerarquía sin entradas raíz duplicadas',()=>{
- assert.deepEqual(navigationGroups.map(g=>g[0]),['Vida litúrgica','Sacramentos','Pastoral','Comunidad','Nosotros','Agua de San Ignacio','El templo','Visítanos']);
+ assert.deepEqual(navigationGroups.map(g=>g[0]),['Vida litúrgica','Sacramentos','Pastoral','Comunidad','Nosotros','Agua de San Ignacio','Galería','Visítanos']);
+ assert.deepEqual(navigationGroups[6],['Galería','/galeria',[['El templo','/historia']]]);
  const pastoral=navigationGroups[2];assert.deepEqual(pastoral[2].map(g=>g[0]),['Catecismo','Áreas pastorales','Música']);assert.deepEqual(pastoral[2][0][2].map(g=>g.slice(0,2)),[['Primera Comunión','/pastoral#catecismo-primera-comunion'],['Confirmación','/pastoral#catecismo-confirmacion']]);
  function audit(group){const [label,url,children=[]]=group;assert.ok(!children.some(g=>g[0]===label||g[1]===url));assert.equal(new Set(children.map(g=>g[1])).size,children.length);children.forEach(audit);}navigationGroups.forEach(audit);
  const html=navigation('/pastoral');assert.equal((html.match(/href="\/comunidad"/g)||[]).length,1);assert.match(html,/<a href="\/pastoral"[^>]*data-primary-link[^>]*>Pastoral<\/a><button/);assert.match(html,/data-depth="1"/);

@@ -6,7 +6,7 @@ export const navigationGroups=[
  ['Comunidad','/comunidad',[]],
  ['Nosotros','/nosotros',[]],
  ['Agua de San Ignacio','/agua-de-san-ignacio',[]],
- ['El templo','/historia',[['Galería','/galeria']]],
+ ['Galería','/galeria',[['El templo','/historia']]],
  ['Visítanos','/contacto',[]]
 ];
 function item([label,url,children=[]],path,key,depth=0){
