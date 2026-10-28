@@ -1,3 +1,9 @@
+﻿ACTUALIZACIÓN — 28 DE OCTUBRE DE 2026
+El usuario autorizó expresamente desplegar. La preparación de migración, respaldo
+transaccional y publicación está implementada en scripts/publish-railway.ps1.
+La ejecución externa está pendiente del acceso a GitHub desde PowerShell del usuario.
+El texto siguiente conserva el diagnóstico anterior como referencia histórica.
+
 RAILWAY — INFORMACIÓN IDENTIFICADA Y PASOS PENDIENTES
 
 Proyecto: independent-reflection

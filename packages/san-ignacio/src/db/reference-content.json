@@ -1,0 +1,1076 @@
+{
+  "source": "Versión local revisada por el usuario; conserva fuentes institucionales de cada ficha.",
+  "records": [
+    {
+      "id": "agua-san-ignacio",
+      "type": "content",
+      "draft": {
+        "order": 10,
+        "title": "Agua de San Ignacio",
+        "body": "El Agua de San Ignacio es agua natural bendecida por el rito y oraciones en honor a San Ignacio de Loyola, aprobadas por la Iglesia, para obtener por intercesión del fundador de la Compañía de Jesús algún favor particular.\n\nCon la aprobación papal, el Agua de San Ignacio es un sacramental que adquiere fuerza contra el mal espíritu y fomenta los sentimientos de fe, esperanza y caridad.\n\nNo hay que esperar que el Agua de San Ignacio haga milagros o realice magia. Es uno de los medios de los que Dios se sirve para otorgar favores o gracias especiales.\n\nEl Agua de San Ignacio no se vende.\n\nHay dos modos para obtenerla:\n1. Acudir de lunes a viernes de 10:00 a 14:00 y de 16:00 a 18:00 h con un recipiente vacío, máximo 2 litros, y solicitarla en la oficina.\n2. Acudir en horario de misa —lunes a viernes 7:30, 13:30 y 18:30 h— trayendo su propia agua, sin restricción, y pedir al sacerdote al final de la misa que la bendiga.",
+        "category": "water",
+        "source": "src/db/editorial-schema.js; vigencia pendiente de cotejo con Railway"
+      },
+      "published": {
+        "order": 10,
+        "title": "Agua de San Ignacio",
+        "body": "El Agua de San Ignacio es agua natural bendecida por el rito y oraciones en honor a San Ignacio de Loyola, aprobadas por la Iglesia, para obtener por intercesión del fundador de la Compañía de Jesús algún favor particular.\n\nCon la aprobación papal, el Agua de San Ignacio es un sacramental que adquiere fuerza contra el mal espíritu y fomenta los sentimientos de fe, esperanza y caridad.\n\nNo hay que esperar que el Agua de San Ignacio haga milagros o realice magia. Es uno de los medios de los que Dios se sirve para otorgar favores o gracias especiales.\n\nEl Agua de San Ignacio no se vende.\n\nHay dos modos para obtenerla:\n1. Acudir de lunes a viernes de 10:00 a 14:00 y de 16:00 a 18:00 h con un recipiente vacío, máximo 2 litros, y solicitarla en la oficina.\n2. Acudir en horario de misa —lunes a viernes 7:30, 13:30 y 18:30 h— trayendo su propia agua, sin restricción, y pedir al sacerdote al final de la misa que la bendiga.",
+        "category": "water",
+        "source": "src/db/editorial-schema.js; vigencia pendiente de cotejo con Railway"
+      },
+      "archived": false
+    },
+    {
+      "id": "catecismo",
+      "type": "program",
+      "draft": {
+        "order": 1,
+        "title": "Primera Comunión",
+        "label": "Preparación para la Primera Comunión",
+        "time": "Desde los 7 años · jueves 16:30–18:00 h",
+        "body": "El curso inicia en septiembre. Las inscripciones se realizan en agosto; para informes, contacte a la oficina.",
+        "source": "public/js/page-pastoral.js",
+        "category": "catecismo"
+      },
+      "published": {
+        "order": 1,
+        "title": "Primera Comunión",
+        "label": "Preparación para la Primera Comunión",
+        "time": "Desde los 7 años · jueves 16:30–18:00 h",
+        "body": "El curso inicia en septiembre. Las inscripciones se realizan en agosto; para informes, contacte a la oficina.",
+        "source": "public/js/page-pastoral.js",
+        "category": "catecismo"
+      },
+      "archived": false
+    },
+    {
+      "id": "catecismo-confirmacion",
+      "type": "program",
+      "draft": {
+        "title": "Confirmación",
+        "category": "catecismo",
+        "label": "Preparación para la Confirmación",
+        "body": "Este sacramento se imparte cada año en la fiesta de San Ignacio de Loyola, el 31 de julio.\nSe recomienda llamar a la oficina durante junio para obtener información sobre inscripciones, requisitos y fechas del curso de preparación.\nLa edad mínima para recibir el sacramento es de 14 años.",
+        "detail": "Consulta con la oficina las fechas y el horario del curso de preparación.",
+        "order": 2,
+        "source": "src/db/editorial-schema.js: sacrament-confirmacion. Se documenta preparación; no se confirma un horario periódico de Catecismo."
+      },
+      "published": {
+        "title": "Confirmación",
+        "category": "catecismo",
+        "label": "Preparación para la Confirmación",
+        "body": "Este sacramento se imparte cada año en la fiesta de San Ignacio de Loyola, el 31 de julio.\nSe recomienda llamar a la oficina durante junio para obtener información sobre inscripciones, requisitos y fechas del curso de preparación.\nLa edad mínima para recibir el sacramento es de 14 años.",
+        "detail": "Consulta con la oficina las fechas y el horario del curso de preparación.",
+        "order": 2,
+        "source": "src/db/editorial-schema.js: sacrament-confirmacion. Se documenta preparación; no se confirma un horario periódico de Catecismo."
+      },
+      "archived": false
+    },
+    {
+      "id": "comunidad-juvenil",
+      "type": "program",
+      "draft": {
+        "order": 3,
+        "title": "Comunidad Juvenil Ignaciana",
+        "label": "Jóvenes",
+        "time": "Amar y servir",
+        "body": "Espacio de encuentro, formación y servicio para jóvenes de la comunidad.",
+        "source": "public/js/page-pastoral.js"
+      },
+      "published": {
+        "order": 3,
+        "title": "Comunidad Juvenil Ignaciana",
+        "label": "Jóvenes",
+        "time": "Amar y servir",
+        "body": "Espacio de encuentro, formación y servicio para jóvenes de la comunidad.",
+        "source": "public/js/page-pastoral.js"
+      },
+      "archived": false
+    },
+    {
+      "id": "confesiones",
+      "type": "content",
+      "draft": {
+        "order": 30,
+        "title": "Confesiones",
+        "body": "Al final de las misas de lunes a sábado, solicite al sacerdote celebrante la confesión.",
+        "category": "liturgy",
+        "source": "Archivos de referencia del proyecto existente"
+      },
+      "published": {
+        "order": 30,
+        "title": "Confesiones",
+        "body": "Al final de las misas de lunes a sábado, solicite al sacerdote celebrante la confesión.",
+        "category": "liturgy",
+        "source": "Archivos de referencia del proyecto existente"
+      },
+      "archived": false
+    },
+    {
+      "id": "contacto",
+      "type": "settings",
+      "draft": {
+        "order": 10,
+        "title": "Contacto",
+        "address": "Avenida Horacio esquina Avenida Molière, Polanco, Ciudad de México.",
+        "email": "amdg1@prodigy.net.mx",
+        "phone": "55 5280 6586",
+        "facebook": "https://www.facebook.com/IglesiaSanIgnacioPolanco/",
+        "source": "public/js/page-contacto.js; datos existentes por validar antes de despliegue"
+      },
+      "published": {
+        "order": 10,
+        "title": "Contacto",
+        "address": "Avenida Horacio esquina Avenida Molière, Polanco, Ciudad de México.",
+        "email": "amdg1@prodigy.net.mx",
+        "phone": "55 5280 6586",
+        "facebook": "https://www.facebook.com/IglesiaSanIgnacioPolanco/",
+        "source": "public/js/page-contacto.js; datos existentes por validar antes de despliegue"
+      },
+      "archived": false
+    },
+    {
+      "id": "donativos",
+      "type": "settings",
+      "draft": {
+        "order": 10,
+        "title": "Donativos",
+        "body": "",
+        "holder": "",
+        "bank": "",
+        "account": "",
+        "clabe": "",
+        "source": "Preparado para información bancaria confirmada; no se publica"
+      },
+      "published": null,
+      "archived": false
+    },
+    {
+      "id": "estudio-biblia",
+      "type": "program",
+      "draft": {
+        "order": 2,
+        "title": "Estudio de la Biblia",
+        "label": "Lectura y formación",
+        "time": "Miércoles 12:00–13:30",
+        "body": "Traiga su Biblia y material para tomar notas.",
+        "source": "public/js/page-pastoral.js"
+      },
+      "published": {
+        "order": 2,
+        "title": "Estudio de la Biblia",
+        "label": "Lectura y formación",
+        "time": "Miércoles 12:00–13:30",
+        "body": "Traiga su Biblia y material para tomar notas.",
+        "source": "public/js/page-pastoral.js"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-01",
+      "type": "gallery",
+      "draft": {
+        "order": 1,
+        "title": "San Ignacio de Loyola · 01",
+        "image": "/assets/images/galeria-01-1280.jpg",
+        "alt": "Fotografía 1 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 1,
+        "title": "San Ignacio de Loyola · 01",
+        "image": "/assets/images/galeria-01-1280.jpg",
+        "alt": "Fotografía 1 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-02",
+      "type": "gallery",
+      "draft": {
+        "order": 2,
+        "title": "San Ignacio de Loyola · 02",
+        "image": "/assets/images/galeria-02-1280.jpg",
+        "alt": "Fotografía 2 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 2,
+        "title": "San Ignacio de Loyola · 02",
+        "image": "/assets/images/galeria-02-1280.jpg",
+        "alt": "Fotografía 2 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-03",
+      "type": "gallery",
+      "draft": {
+        "order": 3,
+        "title": "San Ignacio de Loyola · 03",
+        "image": "/assets/images/galeria-03-1280.jpg",
+        "alt": "Fotografía 3 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 3,
+        "title": "San Ignacio de Loyola · 03",
+        "image": "/assets/images/galeria-03-1280.jpg",
+        "alt": "Fotografía 3 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-04",
+      "type": "gallery",
+      "draft": {
+        "order": 4,
+        "title": "San Ignacio de Loyola · 04",
+        "image": "/assets/images/galeria-04-1280.jpg",
+        "alt": "Fotografía 4 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 4,
+        "title": "San Ignacio de Loyola · 04",
+        "image": "/assets/images/galeria-04-1280.jpg",
+        "alt": "Fotografía 4 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-05",
+      "type": "gallery",
+      "draft": {
+        "order": 5,
+        "title": "San Ignacio de Loyola · 05",
+        "image": "/assets/images/galeria-05-1280.jpg",
+        "alt": "Fotografía 5 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 5,
+        "title": "San Ignacio de Loyola · 05",
+        "image": "/assets/images/galeria-05-1280.jpg",
+        "alt": "Fotografía 5 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-06",
+      "type": "gallery",
+      "draft": {
+        "order": 6,
+        "title": "San Ignacio de Loyola · 06",
+        "image": "/assets/images/galeria-06-1280.jpg",
+        "alt": "Fotografía 6 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 6,
+        "title": "San Ignacio de Loyola · 06",
+        "image": "/assets/images/galeria-06-1280.jpg",
+        "alt": "Fotografía 6 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-07",
+      "type": "gallery",
+      "draft": {
+        "order": 7,
+        "title": "San Ignacio de Loyola · 07",
+        "image": "/assets/images/galeria-07-1280.jpg",
+        "alt": "Fotografía 7 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 7,
+        "title": "San Ignacio de Loyola · 07",
+        "image": "/assets/images/galeria-07-1280.jpg",
+        "alt": "Fotografía 7 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-08",
+      "type": "gallery",
+      "draft": {
+        "order": 8,
+        "title": "San Ignacio de Loyola · 08",
+        "image": "/assets/images/galeria-08-1280.jpg",
+        "alt": "Fotografía 8 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 8,
+        "title": "San Ignacio de Loyola · 08",
+        "image": "/assets/images/galeria-08-1280.jpg",
+        "alt": "Fotografía 8 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-09",
+      "type": "gallery",
+      "draft": {
+        "order": 9,
+        "title": "San Ignacio de Loyola · 09",
+        "image": "/assets/images/galeria-09-1280.jpg",
+        "alt": "Fotografía 9 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 9,
+        "title": "San Ignacio de Loyola · 09",
+        "image": "/assets/images/galeria-09-1280.jpg",
+        "alt": "Fotografía 9 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-10",
+      "type": "gallery",
+      "draft": {
+        "order": 10,
+        "title": "San Ignacio de Loyola · 10",
+        "image": "/assets/images/galeria-10-1280.jpg",
+        "alt": "Fotografía 10 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 10,
+        "title": "San Ignacio de Loyola · 10",
+        "image": "/assets/images/galeria-10-1280.jpg",
+        "alt": "Fotografía 10 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-11",
+      "type": "gallery",
+      "draft": {
+        "order": 11,
+        "title": "San Ignacio de Loyola · 11",
+        "image": "/assets/images/galeria-11-1280.jpg",
+        "alt": "Fotografía 11 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 11,
+        "title": "San Ignacio de Loyola · 11",
+        "image": "/assets/images/galeria-11-1280.jpg",
+        "alt": "Fotografía 11 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-12",
+      "type": "gallery",
+      "draft": {
+        "order": 12,
+        "title": "San Ignacio de Loyola · 12",
+        "image": "/assets/images/galeria-12-1280.jpg",
+        "alt": "Fotografía 12 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 12,
+        "title": "San Ignacio de Loyola · 12",
+        "image": "/assets/images/galeria-12-1280.jpg",
+        "alt": "Fotografía 12 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-13",
+      "type": "gallery",
+      "draft": {
+        "order": 13,
+        "title": "San Ignacio de Loyola · 13",
+        "image": "/assets/images/galeria-13-1280.jpg",
+        "alt": "Fotografía 13 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 13,
+        "title": "San Ignacio de Loyola · 13",
+        "image": "/assets/images/galeria-13-1280.jpg",
+        "alt": "Fotografía 13 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-14",
+      "type": "gallery",
+      "draft": {
+        "order": 14,
+        "title": "San Ignacio de Loyola · 14",
+        "image": "/assets/images/galeria-14-1280.jpg",
+        "alt": "Fotografía 14 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 14,
+        "title": "San Ignacio de Loyola · 14",
+        "image": "/assets/images/galeria-14-1280.jpg",
+        "alt": "Fotografía 14 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-15",
+      "type": "gallery",
+      "draft": {
+        "order": 15,
+        "title": "San Ignacio de Loyola · 15",
+        "image": "/assets/images/galeria-15-1280.jpg",
+        "alt": "Fotografía 15 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 15,
+        "title": "San Ignacio de Loyola · 15",
+        "image": "/assets/images/galeria-15-1280.jpg",
+        "alt": "Fotografía 15 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-16",
+      "type": "gallery",
+      "draft": {
+        "order": 16,
+        "title": "San Ignacio de Loyola · 16",
+        "image": "/assets/images/galeria-16-1280.jpg",
+        "alt": "Fotografía 16 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 16,
+        "title": "San Ignacio de Loyola · 16",
+        "image": "/assets/images/galeria-16-1280.jpg",
+        "alt": "Fotografía 16 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-17",
+      "type": "gallery",
+      "draft": {
+        "order": 17,
+        "title": "San Ignacio de Loyola · 17",
+        "image": "/assets/images/galeria-17-1280.jpg",
+        "alt": "Fotografía 17 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 17,
+        "title": "San Ignacio de Loyola · 17",
+        "image": "/assets/images/galeria-17-1280.jpg",
+        "alt": "Fotografía 17 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-18",
+      "type": "gallery",
+      "draft": {
+        "order": 18,
+        "title": "San Ignacio de Loyola · 18",
+        "image": "/assets/images/galeria-18-1280.jpg",
+        "alt": "Fotografía 18 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 18,
+        "title": "San Ignacio de Loyola · 18",
+        "image": "/assets/images/galeria-18-1280.jpg",
+        "alt": "Fotografía 18 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-19",
+      "type": "gallery",
+      "draft": {
+        "order": 19,
+        "title": "San Ignacio de Loyola · 19",
+        "image": "/assets/images/galeria-19-1280.jpg",
+        "alt": "Fotografía 19 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 19,
+        "title": "San Ignacio de Loyola · 19",
+        "image": "/assets/images/galeria-19-1280.jpg",
+        "alt": "Fotografía 19 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-20",
+      "type": "gallery",
+      "draft": {
+        "order": 20,
+        "title": "San Ignacio de Loyola · 20",
+        "image": "/assets/images/galeria-20-1280.jpg",
+        "alt": "Fotografía 20 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 20,
+        "title": "San Ignacio de Loyola · 20",
+        "image": "/assets/images/galeria-20-1280.jpg",
+        "alt": "Fotografía 20 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-21",
+      "type": "gallery",
+      "draft": {
+        "order": 21,
+        "title": "San Ignacio de Loyola · 21",
+        "image": "/assets/images/galeria-21-1280.jpg",
+        "alt": "Fotografía 21 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 21,
+        "title": "San Ignacio de Loyola · 21",
+        "image": "/assets/images/galeria-21-1280.jpg",
+        "alt": "Fotografía 21 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-22",
+      "type": "gallery",
+      "draft": {
+        "order": 22,
+        "title": "San Ignacio de Loyola · 22",
+        "image": "/assets/images/galeria-22-1280.jpg",
+        "alt": "Fotografía 22 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 22,
+        "title": "San Ignacio de Loyola · 22",
+        "image": "/assets/images/galeria-22-1280.jpg",
+        "alt": "Fotografía 22 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "galeria-23",
+      "type": "gallery",
+      "draft": {
+        "order": 23,
+        "title": "San Ignacio de Loyola · 23",
+        "image": "/assets/images/galeria-23-1280.jpg",
+        "alt": "Fotografía 23 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "published": {
+        "order": 23,
+        "title": "San Ignacio de Loyola · 23",
+        "image": "/assets/images/galeria-23-1280.jpg",
+        "alt": "Fotografía 23 del archivo de San Ignacio de Loyola",
+        "source": "public/img/site-photos; archivo fotográfico original conservado"
+      },
+      "archived": false
+    },
+    {
+      "id": "history-arquitectura",
+      "type": "content",
+      "draft": {
+        "order": 30,
+        "title": "Arquitectura",
+        "body": "El templo de San Ignacio de Loyola, en Polanco, fue proyectado por Juan Sordo Madaleno en 1961 y está catalogado por el Instituto Nacional de Bellas Artes.",
+        "category": "history",
+        "source": "src/db/editorial-schema.js; vigencia pendiente de cotejo con Railway"
+      },
+      "published": {
+        "order": 30,
+        "title": "Arquitectura",
+        "body": "El templo de San Ignacio de Loyola, en Polanco, fue proyectado por Juan Sordo Madaleno en 1961 y está catalogado por el Instituto Nacional de Bellas Artes.",
+        "category": "history",
+        "source": "src/db/editorial-schema.js; vigencia pendiente de cotejo con Railway"
+      },
+      "archived": false
+    },
+    {
+      "id": "history-capilla",
+      "type": "content",
+      "draft": {
+        "order": 20,
+        "title": "Capilla",
+        "body": "",
+        "category": "history",
+        "source": "src/db/editorial-schema.js; vigencia pendiente de cotejo con Railway"
+      },
+      "published": null,
+      "archived": false
+    },
+    {
+      "id": "history-patria",
+      "type": "content",
+      "draft": {
+        "order": 10,
+        "title": "Instituto Patria",
+        "body": "",
+        "category": "history",
+        "source": "src/db/editorial-schema.js; vigencia pendiente de cotejo con Railway"
+      },
+      "published": null,
+      "archived": false
+    },
+    {
+      "id": "hora-santa",
+      "type": "content",
+      "draft": {
+        "order": 20,
+        "title": "Hora Santa",
+        "body": "Todos los jueves, de 17:30 a 18:30 h.",
+        "category": "liturgy",
+        "source": "Archivos de referencia del proyecto existente"
+      },
+      "published": {
+        "order": 20,
+        "title": "Hora Santa",
+        "body": "Todos los jueves, de 17:30 a 18:30 h.",
+        "category": "liturgy",
+        "source": "Archivos de referencia del proyecto existente"
+      },
+      "archived": false
+    },
+    {
+      "id": "horario-1",
+      "type": "schedule",
+      "draft": {
+        "order": 1,
+        "title": "Lunes a viernes",
+        "day": "Lunes a viernes",
+        "time": "7:30 · 13:30 · 18:30 h",
+        "detail": "",
+        "source": "Archivos de referencia del proyecto existente"
+      },
+      "published": {
+        "order": 1,
+        "title": "Lunes a viernes",
+        "day": "Lunes a viernes",
+        "time": "7:30 · 13:30 · 18:30 h",
+        "detail": "",
+        "source": "Archivos de referencia del proyecto existente"
+      },
+      "archived": false
+    },
+    {
+      "id": "horario-2",
+      "type": "schedule",
+      "draft": {
+        "order": 2,
+        "title": "Sábado",
+        "day": "Sábado",
+        "time": "7:30 · 18:30 h",
+        "detail": "",
+        "source": "Archivos de referencia del proyecto existente"
+      },
+      "published": {
+        "order": 2,
+        "title": "Sábado",
+        "day": "Sábado",
+        "time": "7:30 · 18:30 h",
+        "detail": "",
+        "source": "Archivos de referencia del proyecto existente"
+      },
+      "archived": false
+    },
+    {
+      "id": "horario-3",
+      "type": "schedule",
+      "draft": {
+        "order": 3,
+        "title": "Domingo",
+        "day": "Domingo",
+        "time": "9:00 · 10:30 · 12:00 · 13:30 · 18:30 h",
+        "detail": "10:30 h: misa de niños",
+        "source": "Archivos de referencia del proyecto existente"
+      },
+      "published": {
+        "order": 3,
+        "title": "Domingo",
+        "day": "Domingo",
+        "time": "9:00 · 10:30 · 12:00 · 13:30 · 18:30 h",
+        "detail": "10:30 h: misa de niños",
+        "source": "Archivos de referencia del proyecto existente"
+      },
+      "archived": false
+    },
+    {
+      "id": "inea",
+      "type": "program",
+      "draft": {
+        "order": 4,
+        "title": "INEA",
+        "label": "Educación para adultos",
+        "time": "Alfabetización · Primaria · Secundaria",
+        "body": "La Iglesia de San Ignacio es sede de un grupo del Instituto Nacional para la Educación de los Adultos, con alfabetización y apoyo para terminar primaria o secundaria.",
+        "source": "public/js/page-pastoral.js"
+      },
+      "published": {
+        "order": 4,
+        "title": "INEA",
+        "label": "Educación para adultos",
+        "time": "Alfabetización · Primaria · Secundaria",
+        "body": "La Iglesia de San Ignacio es sede de un grupo del Instituto Nacional para la Educación de los Adultos, con alfabetización y apoyo para terminar primaria o secundaria.",
+        "source": "public/js/page-pastoral.js"
+      },
+      "archived": false
+    },
+    {
+      "id": "mass-intentions",
+      "type": "content",
+      "draft": {
+        "order": 10,
+        "title": "Intenciones de misa",
+        "body": "Para solicitar una intención de misa, consulte disponibilidad y registro en la oficina de la iglesia.",
+        "category": "liturgy",
+        "source": "src/db/editorial-schema.js; vigencia pendiente de cotejo con Railway"
+      },
+      "published": {
+        "order": 10,
+        "title": "Intenciones de misa",
+        "body": "Para solicitar una intención de misa, consulte disponibilidad y registro en la oficina de la iglesia.",
+        "category": "liturgy",
+        "source": "src/db/editorial-schema.js; vigencia pendiente de cotejo con Railway"
+      },
+      "archived": false
+    },
+    {
+      "id": "musica-celebraciones",
+      "type": "music",
+      "draft": {
+        "title": "Música para celebraciones",
+        "category": "servicios",
+        "body": "",
+        "order": 10,
+        "source": "Apartado preparado; contenido institucional pendiente. No publicado."
+      },
+      "published": null,
+      "archived": false
+    },
+    {
+      "id": "musica-liturgica",
+      "type": "music",
+      "draft": {
+        "title": "Música litúrgica",
+        "category": "liturgia",
+        "body": "",
+        "order": 10,
+        "source": "Apartado preparado; contenido institucional pendiente. No publicado."
+      },
+      "published": null,
+      "archived": false
+    },
+    {
+      "id": "organo-del-templo",
+      "type": "music",
+      "draft": {
+        "title": "El órgano",
+        "category": "organo",
+        "body": "",
+        "order": 10,
+        "source": "Apartado preparado; contenido institucional pendiente. No publicado."
+      },
+      "published": null,
+      "archived": false
+    },
+    {
+      "id": "persona-1",
+      "type": "staff",
+      "draft": {
+        "order": 10,
+        "title": "P. Luis González-Cosío Elcoro, S.J.",
+        "role": "Rector",
+        "body": "",
+        "source": "public/js/page-nosotros.js; fotografías y semblanzas pendientes"
+      },
+      "published": {
+        "order": 10,
+        "title": "P. Luis González-Cosío Elcoro, S.J.",
+        "role": "Rector",
+        "body": "",
+        "source": "public/js/page-nosotros.js; fotografías y semblanzas pendientes"
+      },
+      "archived": false
+    },
+    {
+      "id": "persona-2",
+      "type": "staff",
+      "draft": {
+        "order": 20,
+        "title": "P. José de Jesús Rojas García, S.J.",
+        "role": "Vicario",
+        "body": "",
+        "source": "public/js/page-nosotros.js; fotografías y semblanzas pendientes"
+      },
+      "published": {
+        "order": 20,
+        "title": "P. José de Jesús Rojas García, S.J.",
+        "role": "Vicario",
+        "body": "",
+        "source": "public/js/page-nosotros.js; fotografías y semblanzas pendientes"
+      },
+      "archived": false
+    },
+    {
+      "id": "persona-3",
+      "type": "staff",
+      "draft": {
+        "order": 30,
+        "title": "Arturo Vallín López",
+        "role": "Administración",
+        "body": "",
+        "source": "public/js/page-nosotros.js; fotografías y semblanzas pendientes"
+      },
+      "published": {
+        "order": 30,
+        "title": "Arturo Vallín López",
+        "role": "Administración",
+        "body": "",
+        "source": "public/js/page-nosotros.js; fotografías y semblanzas pendientes"
+      },
+      "archived": false
+    },
+    {
+      "id": "persona-4",
+      "type": "staff",
+      "draft": {
+        "order": 40,
+        "title": "Adriana Arriaga Morales",
+        "role": "Administración",
+        "body": "",
+        "source": "public/js/page-nosotros.js; fotografías y semblanzas pendientes"
+      },
+      "published": {
+        "order": 40,
+        "title": "Adriana Arriaga Morales",
+        "role": "Administración",
+        "body": "",
+        "source": "public/js/page-nosotros.js; fotografías y semblanzas pendientes"
+      },
+      "archived": false
+    },
+    {
+      "id": "persona-5",
+      "type": "staff",
+      "draft": {
+        "order": 50,
+        "title": "Ignacio Ortíz Perea",
+        "role": "Sacristán",
+        "body": "",
+        "source": "public/js/page-nosotros.js; fotografías y semblanzas pendientes"
+      },
+      "published": {
+        "order": 50,
+        "title": "Ignacio Ortíz Perea",
+        "role": "Sacristán",
+        "body": "",
+        "source": "public/js/page-nosotros.js; fotografías y semblanzas pendientes"
+      },
+      "archived": false
+    },
+    {
+      "id": "persona-6",
+      "type": "staff",
+      "draft": {
+        "order": 60,
+        "title": "Rogelio Solís Colín",
+        "role": "Sacristán",
+        "body": "",
+        "source": "public/js/page-nosotros.js; fotografías y semblanzas pendientes"
+      },
+      "published": {
+        "order": 60,
+        "title": "Rogelio Solís Colín",
+        "role": "Sacristán",
+        "body": "",
+        "source": "public/js/page-nosotros.js; fotografías y semblanzas pendientes"
+      },
+      "archived": false
+    },
+    {
+      "id": "portada",
+      "type": "settings",
+      "draft": {
+        "order": 10,
+        "title": "San Ignacio de Loyola",
+        "summary": "Encontrar a Dios en todas las cosas.",
+        "body": "Polanco · Ciudad de México",
+        "image": "/assets/images/hero-interior-03-1280.jpg",
+        "alt": "Crucifijo y vitrales en el interior de San Ignacio de Loyola",
+        "source": "Archivos de referencia del proyecto existente"
+      },
+      "published": {
+        "order": 10,
+        "title": "San Ignacio de Loyola",
+        "summary": "Encontrar a Dios en todas las cosas.",
+        "body": "Polanco · Ciudad de México",
+        "image": "/assets/images/hero-interior-03-1280.jpg",
+        "alt": "Crucifijo y vitrales en el interior de San Ignacio de Loyola",
+        "source": "Archivos de referencia del proyecto existente"
+      },
+      "archived": false
+    },
+    {
+      "id": "privacidad",
+      "type": "settings",
+      "draft": {
+        "order": 10,
+        "title": "Aviso de privacidad",
+        "body": "",
+        "source": "Contenido institucional pendiente de entrega y aprobación"
+      },
+      "published": null,
+      "archived": false
+    },
+    {
+      "id": "sacrament-bautismo",
+      "type": "content",
+      "draft": {
+        "order": 10,
+        "title": "Bautismo",
+        "body": "Para niños menores de 7 años.\nSon individuales.\nHorarios: sábado, dependiendo de la disponibilidad en la agenda de la iglesia, a las 9:00, 10:00, 11:00 o 12:00 h.\nNo se hacen reservaciones por teléfono.\n\nTrámites parroquiales para obtener la fe de bautismo:\nFormato que se entrega al reservar la ceremonia, con los datos solicitados.\nActa de nacimiento del bautizado: original y copia fotostática. Para niños mayores de 3 años, presentar la primera acta de nacimiento y otra con fecha reciente.\n\nExtranjeros:\nOriginal y copia del acta de nacimiento apostillada. En caso de doble nacionalidad, también original y copia del acta de nacimiento mexicana. Copia del pasaporte del bautizado y de los papás.\n\nPadrinos:\nPuede haber un solo padrino o madrina, o una pareja formada por hombre y mujer. Deben ser mayores de 16 años. Si son esposos, presentar copia del acta de matrimonio religioso. Si son solteros, copia reciente de la fe de bautismo y copia por ambos lados del INE.\n\nPláticas prebautismales:\nEntregar constancia de participación de los papás y padrinos. Pueden tomarlas en cualquier parroquia.\n\nPago de derechos por anotación en el libro de bautismo y expedición de la fe de bautismo: $300.",
+        "category": "sacrament",
+        "source": "src/db/editorial-schema.js; vigencia pendiente de cotejo con Railway"
+      },
+      "published": {
+        "order": 10,
+        "title": "Bautismo",
+        "body": "Para niños menores de 7 años.\nSon individuales.\nHorarios: sábado, dependiendo de la disponibilidad en la agenda de la iglesia, a las 9:00, 10:00, 11:00 o 12:00 h.\nNo se hacen reservaciones por teléfono.\n\nTrámites parroquiales para obtener la fe de bautismo:\nFormato que se entrega al reservar la ceremonia, con los datos solicitados.\nActa de nacimiento del bautizado: original y copia fotostática. Para niños mayores de 3 años, presentar la primera acta de nacimiento y otra con fecha reciente.\n\nExtranjeros:\nOriginal y copia del acta de nacimiento apostillada. En caso de doble nacionalidad, también original y copia del acta de nacimiento mexicana. Copia del pasaporte del bautizado y de los papás.\n\nPadrinos:\nPuede haber un solo padrino o madrina, o una pareja formada por hombre y mujer. Deben ser mayores de 16 años. Si son esposos, presentar copia del acta de matrimonio religioso. Si son solteros, copia reciente de la fe de bautismo y copia por ambos lados del INE.\n\nPláticas prebautismales:\nEntregar constancia de participación de los papás y padrinos. Pueden tomarlas en cualquier parroquia.\n\nPago de derechos por anotación en el libro de bautismo y expedición de la fe de bautismo: $300.",
+        "category": "sacrament",
+        "source": "src/db/editorial-schema.js; vigencia pendiente de cotejo con Railway"
+      },
+      "archived": false
+    },
+    {
+      "id": "sacrament-confesiones",
+      "type": "content",
+      "draft": {
+        "order": 50,
+        "title": "Confesiones",
+        "body": "Al final de las misas de lunes a sábado, pedir al sacerdote celebrante la confesión.",
+        "category": "sacrament",
+        "source": "src/db/editorial-schema.js; vigencia pendiente de cotejo con Railway"
+      },
+      "published": {
+        "order": 50,
+        "title": "Confesiones",
+        "body": "Al final de las misas de lunes a sábado, pedir al sacerdote celebrante la confesión.",
+        "category": "sacrament",
+        "source": "src/db/editorial-schema.js; vigencia pendiente de cotejo con Railway"
+      },
+      "archived": false
+    },
+    {
+      "id": "sacrament-confirmacion",
+      "type": "content",
+      "draft": {
+        "order": 30,
+        "title": "Confirmación",
+        "body": "Este sacramento se imparte cada año en la fiesta de San Ignacio de Loyola, el 31 de julio.\nSe recomienda llamar a la oficina durante junio para obtener información sobre inscripciones, requisitos y fechas del curso de preparación.\nLa edad mínima para recibir el sacramento es de 14 años.",
+        "category": "sacrament",
+        "source": "src/db/editorial-schema.js; vigencia pendiente de cotejo con Railway"
+      },
+      "published": {
+        "order": 30,
+        "title": "Confirmación",
+        "body": "Este sacramento se imparte cada año en la fiesta de San Ignacio de Loyola, el 31 de julio.\nSe recomienda llamar a la oficina durante junio para obtener información sobre inscripciones, requisitos y fechas del curso de preparación.\nLa edad mínima para recibir el sacramento es de 14 años.",
+        "category": "sacrament",
+        "source": "src/db/editorial-schema.js; vigencia pendiente de cotejo con Railway"
+      },
+      "archived": false
+    },
+    {
+      "id": "sacrament-matrimonio",
+      "type": "content",
+      "draft": {
+        "order": 40,
+        "title": "Matrimonio",
+        "body": "El sacramento del matrimonio se ofrece en sábado a las 13:00, 17:00 y 20:00 h.\n\nRequisito indispensable:\nPresentar, en cuanto la obtengan, la licencia matrimonial: el permiso para la celebración canónica del matrimonio que los novios tramitan por lo menos 3 meses antes de la ceremonia en la parroquia cercana al domicilio de la novia.\n\nEl estipendio incluye:\nUso de las instalaciones y servicios para la celebración.\nSacerdote celebrante.\nPersonal de sacristía.\nInstalación de reclinatorios y bancos para los novios.\n\nNo incluye adorno floral.",
+        "category": "sacrament",
+        "source": "src/db/editorial-schema.js; vigencia pendiente de cotejo con Railway"
+      },
+      "published": {
+        "order": 40,
+        "title": "Matrimonio",
+        "body": "El sacramento del matrimonio se ofrece en sábado a las 13:00, 17:00 y 20:00 h.\n\nRequisito indispensable:\nPresentar, en cuanto la obtengan, la licencia matrimonial: el permiso para la celebración canónica del matrimonio que los novios tramitan por lo menos 3 meses antes de la ceremonia en la parroquia cercana al domicilio de la novia.\n\nEl estipendio incluye:\nUso de las instalaciones y servicios para la celebración.\nSacerdote celebrante.\nPersonal de sacristía.\nInstalación de reclinatorios y bancos para los novios.\n\nNo incluye adorno floral.",
+        "category": "sacrament",
+        "source": "src/db/editorial-schema.js; vigencia pendiente de cotejo con Railway"
+      },
+      "archived": false
+    },
+    {
+      "id": "sacrament-primera-comunion",
+      "type": "content",
+      "draft": {
+        "order": 20,
+        "title": "Primera Comunión",
+        "body": "La edad mínima para recibir el sacramento es de 9 años.\nSon individuales.\nHorarios: sábado, dependiendo de la disponibilidad en la agenda de la iglesia, a las 9:00, 10:00, 11:00 o 12:00 h.\nNo se hacen reservaciones por teléfono.\n\nDocumentos:\nComprobante del curso de catecismo concluido.\nActa de bautismo, original y copia.\nActa de nacimiento, original y copia.\nLos padrinos deben ser católicos y presentar copia de sus identificaciones.",
+        "category": "sacrament",
+        "source": "src/db/editorial-schema.js; vigencia pendiente de cotejo con Railway"
+      },
+      "published": {
+        "order": 20,
+        "title": "Primera Comunión",
+        "body": "La edad mínima para recibir el sacramento es de 9 años.\nSon individuales.\nHorarios: sábado, dependiendo de la disponibilidad en la agenda de la iglesia, a las 9:00, 10:00, 11:00 o 12:00 h.\nNo se hacen reservaciones por teléfono.\n\nDocumentos:\nComprobante del curso de catecismo concluido.\nActa de bautismo, original y copia.\nActa de nacimiento, original y copia.\nLos padrinos deben ser católicos y presentar copia de sus identificaciones.",
+        "category": "sacrament",
+        "source": "src/db/editorial-schema.js; vigencia pendiente de cotejo con Railway"
+      },
+      "archived": false
+    },
+    {
+      "id": "victor-contreras-organista",
+      "type": "staff",
+      "draft": {
+        "title": "Víctor Contreras",
+        "role": "Organista",
+        "body": "",
+        "order": 45,
+        "source": "Nombre y cargo proporcionados expresamente por el usuario en la continuación del rediseño."
+      },
+      "published": {
+        "title": "Víctor Contreras",
+        "role": "Organista",
+        "body": "",
+        "order": 45,
+        "source": "Nombre y cargo proporcionados expresamente por el usuario en la continuación del rediseño."
+      },
+      "archived": false
+    }
+  ]
+}

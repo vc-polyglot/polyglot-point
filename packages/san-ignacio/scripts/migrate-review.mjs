@@ -1,5 +1,6 @@
-import fs from 'node:fs';
-import { local,root } from '../src/review/config.js';
-if(local) throw new Error('La revisión local se prepara con npm run local:init.');
-const {db}=await import('../src/lib/db.js');
-try{await db.query(fs.readFileSync(root+'/src/db/review-migration.sql','utf8'));console.log('Migración aditiva completada. No se modificaron las tablas anteriores.');}finally{await db.end();}
+import 'dotenv/config';import fs from 'node:fs';import pg from 'pg';
+import {migrateHostedContent} from '../src/review/deploy-migration.js';
+if(process.env.LOCAL_REVIEW_MODE==='1')throw new Error('Esta migración es para PostgreSQL. La revisión local se prepara con npm run local:init.');
+if(!process.env.DATABASE_URL)throw new Error('Falta DATABASE_URL.');
+const client=new pg.Client({connectionString:process.env.DATABASE_URL,ssl:process.env.DATABASE_SSL==='true'?{rejectUnauthorized:true}:undefined,connectionTimeoutMillis:15000});
+try{await client.connect();const references=JSON.parse(fs.readFileSync(new URL('../src/db/reference-content.json',import.meta.url),'utf8')).records;const result=await migrateHostedContent(client,references);console.log('Preparación editorial:',JSON.stringify(result));console.log('Tablas y cuentas anteriores conservadas.');}finally{await client.end();}

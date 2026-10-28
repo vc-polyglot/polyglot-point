@@ -1,8 +1,9 @@
 # San Ignacio de Loyola, Polanco — revisión local
 
 Sitio institucional con páginas renderizadas en servidor y consola editorial.
-Esta carpeta está separada del monorepositorio original. No contiene una
-conexión activa a Railway ni tiene un remoto Git que dispare despliegues.
+La copia de revisión local conserva sus datos en `.local`, fuera de Git.
+Los cambios se versionan en `review/san-ignacio-local-20261028`; la rama
+`feature/san-ignacio` activa el despliegue del servicio existente en Railway.
 
 ## Inicio
 
@@ -116,3 +117,27 @@ Completar la revisión visual de móvil y escritorio, cotejar los datos reales,
 validar la integración alojada y recibir el contenido institucional pendiente.
 Donativos y privacidad permanecen en borrador hasta disponer de información
 confirmada. No se han realizado pushes ni despliegues.
+
+
+## Despliegue autorizado en Railway — 28 de octubre de 2026
+
+El servicio existente despliega la rama `feature/san-ignacio` mediante
+`Dockerfile.san-ignacio` en la raíz del monorepositorio. La imagen usa Node 24.
+El comando de arranque conserva `npm run db:migrate && npm start`.
+
+La migración prepara las tablas editoriales nuevas y copia el contenido anterior
+sin actualizar ni eliminar las tablas originales. Antes guarda y verifica una
+instantánea con SHA-256 en `san_ignacio.site_migration_backups`. Todo ocurre en
+una transacción. Una marca evita repetir la importación; una consola ya poblada
+se conserva. Las filas de la base alojada tienen prioridad sobre los contenidos
+institucionales de referencia. Los usuarios existentes no cambian de contraseña.
+
+El script `scripts/publish-railway.ps1` sube sin forzar la rama, activa el
+servicio existente y espera su comprobación HTTP, PostgreSQL y Redis. No cambia
+la configuración comercial de Railway. La migración cuenta con pruebas de
+planificación, transacción, integridad, idempotencia y reversión con un cliente
+SQL simulado; su ejecución real se confirma en los registros de Railway.
+
+Una reversión de código puede volver al commit anterior `cecb8f2`; las tablas
+anteriores permanecen intactas. No se deben borrar las nuevas tablas ni sus
+respaldos como parte de una reversión. Conservar también la historia Git.
