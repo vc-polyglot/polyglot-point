@@ -42,6 +42,10 @@ El servicio asume un proxy de entrada de Railway (`trust proxy: 1`). Revisar ese
 
 ## Despliegue pendiente de autorización
 
+### Push de esta rama sin modificar el hook compartido
+
+El hook existente en el Git común compila Polyglot Point para cualquier push. El hook versionado en `tools/git-hooks/pre-push` examina el diff de las referencias que se van a subir. Si solo cambia Víctor, ejecuta sus pruebas y la comprobación de páginas. Si cambia otra app o un archivo compartido, conserva el build general anterior. Rechaza un árbol sucio o un commit distinto al checkout que se va a probar. Se selecciona para una única invocación con `git -c core.hooksPath=packages/victor-contreras/tools/git-hooks push ...`; no desactiva validaciones ni cambia la configuración persistente o los hooks de otras copias. Las ramas nuevas se comparan con su ancestro común con la referencia local de producción (o `origin/main` como respaldo). Si falta la referencia remota necesaria, primero debe ejecutarse `git fetch origin`.
+
 La rama local es `feature/victor-catalogo-vivo`; la configuración suministrada de Railway conecta `release/auth-stripe-db`. No asumir que esta copia está publicada. Identificar el commit real de Railway antes de integrar cambios.
 
 El archivo específico es `/Dockerfile.victor-contreras`; el Dockerfile general corresponde a otra app. El específico usa Node 24, `npm ci --omit=dev`, el puerto `PORT` o 3003 y `/healthz`. Copia únicamente los archivos servidos y sus derivados, sin las fotos originales ni archivos `.backup`. No se ha construido ni desplegado la imagen Docker durante esta tarea.

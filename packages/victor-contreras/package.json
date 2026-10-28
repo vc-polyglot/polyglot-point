@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node backend/index.js",
     "dev": "nodemon backend/index.js",
-    "test": "node --test tests/site.test.js",
+    "test": "node --test tests/site.test.js tests/push-gate.test.js",
     "build:content": "python -B tools/build-page.py"
   },
   "dependencies": {
