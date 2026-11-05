@@ -1,0 +1,20 @@
+{
+  "people": [
+    {
+      "name": "P. Luis González-Cosío Elcoro, S.J.",
+      "fields": {
+        "image": "/assets/images/padre-luis-gonzalez-cosio.jpg",
+        "alt": "P. Luis González-Cosío Elcoro, S.J., rector de San Ignacio de Loyola"
+      },
+      "sha256": "e084bcb7bcbe314d946fa39833bcf325f30b3ab61e8e59e67410427369ca4d21"
+    },
+    {
+      "name": "P. José de Jesús Rojas García, S.J.",
+      "fields": {
+        "image": "/assets/images/jose-de-jesus-rojas-garcia-actual.png",
+        "alt": "P. José de Jesús Rojas García, S.J., vicario de San Ignacio de Loyola"
+      },
+      "sha256": "6b11486088fe1e611d842d11749e8d9949283f9eb9572d59e0a5b5c402811730"
+    }
+  ]
+}

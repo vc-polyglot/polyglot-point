@@ -6,19 +6,19 @@ import {recoverHostedCollections} from './deploy-migration.js';
 export const peoplePublicationMigration='staff-portraits-order-20261104-v1';
 export const approvedPeople=JSON.parse(fs.readFileSync(new URL('./data/approved-people.json',import.meta.url),'utf8')).people;
 
-export function validatePeopleAssets(){
- for(const person of approvedPeople){
+export function validatePeopleAssets(people=approvedPeople){
+ for(const person of people){
   if(!person.fields.image)continue;
-  if(!/^\/assets\/images\/[a-z0-9-]+\.png$/.test(person.fields.image))throw new Error('Ruta de retrato no válida.');
+  if(!/^\/assets\/images\/[a-z0-9-]+\.(png|jpg)$/.test(person.fields.image))throw new Error('Ruta de retrato no válida.');
   const file=new URL('../../'+person.fields.image.slice(1),import.meta.url);
   const hash=crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
   if(hash!==person.sha256)throw new Error('La fotografía aprobada no coincide: '+person.name);
  }
 }
 
-export function planPeoplePublication(existing,_references,stamp=new Date().toISOString()){
+export function planPeoplePublication(existing,_references,stamp=new Date().toISOString(),people=approvedPeople){
  const updates=[];
- for(const person of approvedPeople){
+ for(const person of people){
   const identity=personIdentity(person.name);
   const matches=existing.filter(record=>record.type==='staff'&&[record.draft,record.published].some(data=>data&&personIdentity(data.title)===identity));
   if(matches.length!==1)throw new Error('No se identificó una ficha única para '+person.name+'. No se asignará la fotografía a otra persona.');
