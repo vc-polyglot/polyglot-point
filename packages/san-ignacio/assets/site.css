@@ -79,3 +79,23 @@
 /* Sacrament titles share the directory's hover and keyboard feedback. */
 .accordions>details>summary{transition:color 180ms ease}.accordions>details>summary:hover,.accordions>details>summary:focus-visible,.accordions>details[open]>summary{color:var(--accent)}
 @media(prefers-reduced-motion:reduce){.accordions>details>summary{transition:none}}
+
+/* Group albums keep each collection together and preserve portrait photographs. */
+.information-list>article>.program-gallery{grid-column:2;min-width:0;margin-top:14px}.program-gallery>.eyebrow{margin-bottom:16px;font-size:10px;color:var(--muted)}
+.program-photo-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.program-photo-grid>.photo-button,.program-photo-grid>.photo-button:nth-child(5n+1){width:100%;aspect-ratio:4/3;min-height:44px;border:0;padding:0;background:#e8e7dd}
+.program-photo-grid .photo-frame{padding:0}.program-photo-grid img{object-fit:contain;image-orientation:from-image}.program-photo-grid .photo-button>span:last-child{font-size:11px}
+@media(max-width:720px){.information-list>article>.program-gallery{grid-column:auto;margin-top:22px}.program-photo-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
+
+/* Life in the community: a visible cover, with the rest opening gently. */
+.information-list>article.community-feature{grid-template-columns:minmax(0,.78fr) minmax(0,1.35fr);gap:28px 64px;padding-block:55px;align-items:start}
+.community-feature>span[id]{display:block;height:0;grid-column:1/-1;scroll-margin-top:120px}.community-feature>.community-copy{grid-column:1;min-width:0}.community-copy>.program-title{font:clamp(32px,3.2vw,45px)/1.18 var(--serif);letter-spacing:-.025em;margin-bottom:24px}.community-copy>.eyebrow{color:var(--accent);margin-bottom:16px}.community-copy p:not(.eyebrow){margin-top:18px}.community-copy .lead{font-size:19px}
+.information-list>article.community-feature>.program-gallery{grid-column:2;min-width:0;margin:0}
+.program-gallery>.program-photo-featured,.program-gallery>.program-photo-featured:nth-child(5n+1){display:block;width:100%;height:auto;aspect-ratio:auto;padding:0;border:0;background:#e8e7dd;overflow:hidden}
+.program-photo-featured>.photo-frame{position:relative;inset:auto;display:block;height:auto;width:100%;padding:0;background:transparent}.program-gallery .program-photo-featured .photo-frame>img{height:auto;width:100%;max-height:580px;object-fit:contain;image-orientation:from-image}
+.program-photo-featured>.program-photo-label{left:16px;right:auto;bottom:16px;background:rgba(32,45,38,.88);color:var(--paper);padding:8px 13px;font-size:12px}
+.program-more-photos{margin-top:10px;border-bottom:1px solid var(--line)}.program-more-photos>summary{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:56px;list-style:none;cursor:pointer;padding:14px 0;font-size:14px;transition:color 180ms ease}
+.program-more-photos>summary::-webkit-details-marker{display:none}.program-more-photos>summary:hover,.program-more-photos>summary:focus-visible,.program-more-photos[open]>summary{color:var(--accent)}.program-more-photos small{font-size:12px;color:var(--muted);margin-left:7px}.program-more-photos .program-photo-grid{padding-bottom:18px}
+@media(max-width:1000px){.information-list>article.community-feature{gap:25px 35px}}
+@media(max-width:720px){.information-list>article.community-feature{display:block;padding-block:35px}.community-copy>.program-title{font-size:34px}.information-list>article.community-feature>.program-gallery{margin-top:25px}.program-gallery .program-photo-featured .photo-frame>img{max-height:none}}
+@media(prefers-reduced-motion:reduce){.program-more-photos>summary{transition:none}}
+.community-feature{position:relative}.community-feature>span[id]{position:absolute;top:0;left:0}

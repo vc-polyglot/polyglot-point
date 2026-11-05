@@ -1,0 +1,46 @@
+{
+  "groups": [
+    {
+      "id": "comunidad-juvenil",
+      "title": "Comunidad Juvenil Ignaciana",
+      "photos": [
+        {
+          "image": "/assets/images/comunidad-juvenil-01.jpg",
+          "alt": "Integrantes de la Comunidad Juvenil Ignaciana reunidos en un salón"
+        },
+        {
+          "image": "/assets/images/comunidad-juvenil-02.jpg",
+          "alt": "Reunión de la Comunidad Juvenil Ignaciana alrededor de una mesa"
+        },
+        {
+          "image": "/assets/images/comunidad-juvenil-03.jpg",
+          "alt": "Integrantes de la Comunidad Juvenil Ignaciana reunidos al aire libre"
+        },
+        {
+          "image": "/assets/images/comunidad-juvenil-04.jpg",
+          "alt": "La Comunidad Juvenil Ignaciana frente al altar del templo"
+        }
+      ],
+      "cover": "/assets/images/comunidad-juvenil-01.jpg"
+    },
+    {
+      "id": "adultos-mayores",
+      "title": "Grupo de Adultos Mayores",
+      "photos": [
+        {
+          "image": "/assets/images/adultos-mayores-01.jpg",
+          "alt": "Encuentro del Grupo de Adultos Mayores alrededor de una mesa"
+        },
+        {
+          "image": "/assets/images/adultos-mayores-02.jpg",
+          "alt": "Participantes del Grupo de Adultos Mayores en el templo"
+        },
+        {
+          "image": "/assets/images/adultos-mayores-03.jpg",
+          "alt": "Encuentro del Grupo de Adultos Mayores en un salón"
+        }
+      ],
+      "cover": "/assets/images/adultos-mayores-03.jpg"
+    }
+  ]
+}

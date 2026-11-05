@@ -443,5 +443,40 @@
     "bytes": 1942642,
     "width": 1110,
     "height": 1600
+  },
+  "adultos-mayores-01.jpg": {
+    "width": 1280,
+    "bytes": 154534,
+    "height": 960
+  },
+  "adultos-mayores-02.jpg": {
+    "width": 1200,
+    "bytes": 266630,
+    "height": 1600
+  },
+  "adultos-mayores-03.jpg": {
+    "width": 1600,
+    "bytes": 156766,
+    "height": 720
+  },
+  "comunidad-juvenil-01.jpg": {
+    "width": 1600,
+    "bytes": 237242,
+    "height": 900
+  },
+  "comunidad-juvenil-02.jpg": {
+    "width": 3264,
+    "bytes": 256981,
+    "height": 1472
+  },
+  "comunidad-juvenil-03.jpg": {
+    "width": 1200,
+    "bytes": 328052,
+    "height": 1600
+  },
+  "comunidad-juvenil-04.jpg": {
+    "width": 1280,
+    "bytes": 122710,
+    "height": 720
   }
 }
