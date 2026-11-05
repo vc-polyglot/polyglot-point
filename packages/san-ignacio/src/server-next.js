@@ -49,6 +49,7 @@ app.get('/admin/preview/:id',auth,async(req,res)=>{const doc=await store.getDocu
 app.get('/robots.txt',(_req,res)=>res.type('text/plain').send(production?'User-agent: *\nDisallow: /admin\nDisallow: /api/\n':'User-agent: *\nDisallow: /\n'));
 app.use('/assets',express.static(path.join(root,'assets'),{index:false,maxAge:production?'1d':0}));
 if(local)app.use('/uploads',express.static(path.join(dataPath,'uploads'),{index:false,maxAge:0}));
+app.get('/comunidad',(_req,res)=>res.redirect(302,'/pastoral'));
 app.get('/espiritualidad',(_req,res)=>res.redirect(301,'/pastoral'));app.get('/index.html',(_req,res)=>res.redirect(301,'/'));
 app.get('/{*path}',async(req,res)=>{if(req.path.startsWith('/api/')||req.path.startsWith('/admin/'))return res.status(404).json({error:'Ruta no encontrada.'});const docs=await publicDocuments();const html=renderPage(req.path.replace(/\/$/,'')||'/',docs,{nonce:res.locals.cspNonce,origin:process.env.SITE_URL||`${req.protocol}://${req.get('host')}`});res.set('Cache-Control','no-cache');if(html)return res.send(html);res.status(404).send(notFound(docs));});
 app.use((_req,res)=>res.status(404).json({error:'Ruta no encontrada.'}));

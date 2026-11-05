@@ -1,9 +1,11 @@
 import {setupNavigation} from './navigation-motion.js';
 import {initCursor} from './cursor.js';
 import {initHeroReveal} from './entrance.js';
+import {setupPeopleMotion} from './people-motion.js';
 setupNavigation();
 initCursor();
 initHeroReveal();
+setupPeopleMotion();
 const main=document.querySelector('#contenido');
 window.addEventListener('pageshow',event=>{if(event.persisted)main?.classList.add('skip-page-entry');});
 function openAnchor(){if(!location.hash)return;let id;try{id=decodeURIComponent(location.hash.slice(1));}catch{return;}const el=document.getElementById(id);const details=el?.matches('details')?el:el?.closest('details');if(details)details.open=true;}

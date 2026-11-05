@@ -7,17 +7,31 @@ import {renderPage} from '../src/review/pages.js';
 import {introBootstrap} from '../src/review/intro.js';
 import {initHeroReveal,introPhase,INTRO_TIMELINE} from '../assets/entrance.js';
 
-test('Orden institucional y jerarquía sin entradas raíz duplicadas',()=>{
- assert.deepEqual(navigationGroups.map(g=>g[0]),['Vida litúrgica','Sacramentos','Pastoral','Comunidad','Nosotros','Agua de San Ignacio','Galería','Visítanos']);
- assert.deepEqual(navigationGroups[6],['Galería','/galeria',[['El templo','/historia']]]);
- const pastoral=navigationGroups[2];assert.deepEqual(pastoral[2].map(g=>g[0]),['Catecismo','Áreas pastorales','Música']);assert.deepEqual(pastoral[2][0][2].map(g=>g.slice(0,2)),[['Primera Comunión','/pastoral#catecismo-primera-comunion'],['Confirmación','/pastoral#catecismo-confirmacion']]);
- function audit(group){const [label,url,children=[]]=group;assert.ok(!children.some(g=>g[0]===label||g[1]===url));assert.equal(new Set(children.map(g=>g[1])).size,children.length);children.forEach(audit);}navigationGroups.forEach(audit);
- const html=navigation('/pastoral');assert.equal((html.match(/href="\/comunidad"/g)||[]).length,1);assert.match(html,/<a href="\/pastoral"[^>]*data-primary-link[^>]*>Pastoral<\/a><button/);assert.match(html,/data-depth="1"/);
+test('Historia y Galería son enlaces independientes y Pastoral reúne la comunidad',()=>{
+ assert.deepEqual(navigationGroups.map(g=>g[0]),['Vida litúrgica','Sacramentos','Pastoral','Nosotros','Agua de San Ignacio','Historia','Galería','Visítanos']);
+ assert.deepEqual(navigationGroups.find(g=>g[0]==='Historia'),['Historia','/historia',[]]);
+ assert.deepEqual(navigationGroups.find(g=>g[0]==='Galería'),['Galería','/galeria',[]]);
+ const html=navigation('/pastoral');
+ assert.doesNotMatch(html,/href="\/comunidad"|El templo|Ver tod[ao]s?/);
+ assert.match(html,/<a href="\/historia"[^>]*data-primary-link[^>]*>Historia<\/a>/);
+ assert.match(html,/<a href="\/galeria"[^>]*data-primary-link[^>]*>Galería<\/a>/);
+ assert.match(html,/<button[^>]*data-nav-toggle[^>]*><span>Pastoral<\/span>/);
+ for(const [label,url,children]of navigationGroups.filter(g=>g[2].length)){
+  const submenu=html.slice(html.indexOf('id="nav-submenu-'+navigationGroups.findIndex(g=>g[0]===label)+'"'));
+  assert.ok(submenu.indexOf('href="'+url+'"')<submenu.indexOf('href="'+children[0][1]+'"'));
+ }
 });
-test('Comunidad presenta sus grupos y conserva enlaces específicos a información compartida',()=>{
- const html=renderPage('/comunidad',[{id:'inea',type:'program',title:'INEA',body:'Información institucional del programa'},{id:'grupo-juvenil',type:'program',title:'Grupo juvenil',body:'Información del grupo'},{id:'catecismo',type:'program',category:'catecismo',title:'Primera Comunión'}]);
- const content=html.match(/<main[^>]*>([\s\S]*?)<\/main>/)[1];assert.match(content,/<h2>INEA<\/h2>/);assert.match(content,/<h2>Grupo juvenil<\/h2>/);assert.match(content,/href="\/pastoral#inea"/);assert.doesNotMatch(content,/<h2>(Pastoral|Nosotros|Primera Comunión)<\/h2>|community-links/);
+
+test('Los grupos comunitarios aparecen una sola vez dentro de Pastoral y conservan sus anclas',()=>{
+ const docs=[{id:'inea',type:'program',title:'INEA',body:'Información institucional del programa'},{id:'grupo-juvenil',type:'program',title:'Grupo juvenil',body:'Información del grupo'},{id:'catecismo',type:'program',category:'catecismo',title:'Primera Comunión'}];
+ const html=renderPage('/pastoral',docs),content=html.match(/<main[^>]*>([\s\S]*?)<\/main>/)[1];
+ assert.equal((content.match(/id="inea"/g)||[]).length,1);assert.equal((content.match(/id="grupo-juvenil"/g)||[]).length,1);
+ assert.equal((content.match(/Información institucional del programa/g)||[]).length,1);
+ assert.match(content,/id="grupos-comunidad"/);assert.match(content,/id="comunidad-inea"/);
+ assert.match(content,/<a class="section-return" href="\/pastoral">Pastoral/);
+ assert.equal(renderPage('/comunidad',docs),html);
 });
+
 test('Portada sin rótulo de archivo, con presentación de viewport y excepciones de movimiento',()=>{
  const html=renderPage('/',[{id:'portada',type:'content',image:'/assets/images/templo-1280.jpg',title:'San Ignacio'}],{nonce:'test-nonce'});
  assert.match(html,/<script nonce="test-nonce">/);assert.match(html,/id="site-intro" hidden/);assert.doesNotMatch(html,/01 \/ El templo|hero-reveal-logo/);

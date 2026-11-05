@@ -1,0 +1,43 @@
+{
+  "people": [
+    {
+      "name": "P. José de Jesús Rojas García, S.J.",
+      "fields": {
+        "image": "/assets/images/jose-de-jesus-rojas-garcia.png",
+        "alt": "P. José de Jesús Rojas García, S.J., vicario"
+      },
+      "sha256": "d02437144bf1d51598729016ac2688afae9593d11ec2193dff3c85209b61a52a"
+    },
+    {
+      "name": "Arturo Vallín López",
+      "fields": {
+        "image": "/assets/images/arturo-vallin-lopez.png",
+        "alt": "Arturo Vallín López, Administración de San Ignacio de Loyola",
+        "order": 40
+      },
+      "sha256": "ea8a6ba9676e41da106b3985c4a6f9e83135af2dea496de37ffcb74f8b999984"
+    },
+    {
+      "name": "Adriana Arriaga Morales",
+      "fields": {
+        "order": 30
+      }
+    },
+    {
+      "name": "Ignacio Ortíz Perea",
+      "fields": {
+        "image": "/assets/images/ignacio-ortiz-perea.png",
+        "alt": "Ignacio Ortíz Perea, sacristán"
+      },
+      "sha256": "adb7f0e82dbc1e20ccf431f97d317ab16a728c8a99ffa369192145111f70f56a"
+    },
+    {
+      "name": "Víctor Contreras",
+      "fields": {
+        "image": "/assets/images/victor-contreras-organo.png",
+        "alt": "Víctor Contreras frente a un órgano de tubos"
+      },
+      "sha256": "8fd4e742de7f2d8731bc728f58e4dbd6df373ff9bc866939186fd2d00672ab80"
+    }
+  ]
+}

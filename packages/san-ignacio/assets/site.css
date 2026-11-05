@@ -52,3 +52,30 @@
 .brand-lockup{display:flex;align-items:center;gap:15px;min-width:0}.brand-replay{display:grid;place-items:center;flex-shrink:0;padding:0;border:0;background:transparent;border-radius:3px;min-width:44px;min-height:44px;touch-action:manipulation}.brand-replay:disabled{opacity:1;cursor:default}.brand-replay:hover{background:rgba(53,70,61,.035)}
 @media(max-width:720px){.brand-lockup{flex:1;gap:10px;min-width:0}.brand-replay{width:60px}.brand-lockup .brand{min-width:0}}
 
+
+/* Section headings are disclosure buttons; the first submenu item opens the page. */
+.nav-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;border:0;background:transparent;color:inherit;padding:0;font:inherit;text-align:left;cursor:pointer;min-height:44px;touch-action:manipulation}
+.nav-trigger.is-current{color:var(--accent)}.nav-trigger-arrow{display:block;font-size:16px;transition:transform 330ms ease}.nav-trigger[aria-expanded=true]>.nav-trigger-arrow{transform:rotate(180deg)}
+.nav-trigger:hover,.nav-trigger:focus-visible,#primary-nav>a.nav-heading:hover,#primary-nav>a.nav-heading:focus-visible{color:var(--accent)}.nav-submenu>.nav-child-link:first-child{font-weight:600;border-bottom:1px solid var(--line);margin-bottom:6px}.nav-nested>.nav-entry>.nav-trigger{min-height:44px;font-size:13px}
+.section-return{display:inline-flex;align-items:center;gap:18px;font-size:12px;min-height:44px;margin-bottom:15px;text-decoration:none;border-bottom:1px solid var(--line);color:var(--accent)}
+.information-list>article>.section-return{grid-column:1;justify-self:start}.information-list>article>.section-return~.eyebrow{margin-bottom:0}.contact-strip{flex-wrap:wrap}.contact-strip .text-link+.text-link{margin-left:22px}
+@media(max-width:1279px){.nav-entry>.nav-trigger{font-size:17px;min-height:54px;border-bottom:1px solid var(--line);padding-right:14px}.nav-nested>.nav-entry>.nav-trigger{font-size:14px;min-height:48px}.nav-submenu>.nav-child-link:first-child{padding-block:12px}}
+@media(prefers-reduced-motion:reduce){.nav-trigger-arrow{transition:none}}
+
+/* People use native disclosures, including entries awaiting their portrait. */
+.people-list .person-profile>summary{display:grid;grid-template-columns:minmax(0,1fr) 28px;gap:20px;align-items:center;min-height:52px;padding:5px 0 15px;cursor:pointer;list-style:none;text-decoration:none}
+.people-list .person-profile>summary::-webkit-details-marker{display:none}.people-list .person-profile>summary h2{margin:0;font-size:31px;line-height:1.25;overflow-wrap:break-word}
+.people-list .person-profile>summary:hover,.people-list .person-profile>summary:focus-visible,.people-list .person-profile[open]>summary{color:var(--accent)}
+.person-expand{font-size:25px;font-weight:300;line-height:1.2;justify-self:end;transition:transform 200ms ease}.person-profile[open]>summary>.person-expand{transform:rotate(45deg)}
+.person-profile-reading{padding:15px 0 10px}.people-list .person-profile-reading .photo-frame{max-width:100%;width:fit-content}.people-list .person-profile-reading img{width:auto;height:auto;max-width:100%;max-height:600px;object-fit:contain}
+.person-photo-pending{font-size:14px;color:var(--muted);padding:15px 0 22px}.person-biography{margin-top:24px;max-width:62ch}
+@media(max-width:720px){.people-list .person-profile>summary{gap:15px;min-height:52px}.people-list .person-profile>summary h2{font-size:28px}.people-list .person-profile-reading img{max-height:580px}}
+@media(prefers-reduced-motion:reduce){.person-expand{transition:none}}
+
+/* Let the list make room gradually instead of jumping when a portrait opens. */
+.person-profile{overflow-anchor:none}.people-list .person-profile>summary{transition:color 180ms ease}.person-expand{transition:transform 420ms cubic-bezier(.22,.61,.36,1)}.person-profile.is-closing>summary>.person-expand{transform:rotate(0deg)}
+@media(prefers-reduced-motion:reduce){.people-list .person-profile>summary,.person-expand{transition:none}}
+
+/* Sacrament titles share the directory's hover and keyboard feedback. */
+.accordions>details>summary{transition:color 180ms ease}.accordions>details>summary:hover,.accordions>details>summary:focus-visible,.accordions>details[open]>summary{color:var(--accent)}
+@media(prefers-reduced-motion:reduce){.accordions>details>summary{transition:none}}

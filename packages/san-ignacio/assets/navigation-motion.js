@@ -8,11 +8,11 @@ export function setupNavigation(doc=document,win=window){
  const descendants=group=>groups.filter(other=>other!==group&&group.contains(other));
  const depth=group=>ancestors(group).length;
  doc.documentElement.classList.add('menu-enhanced');
- for(const group of groups){group.open=false;states.set(group,{phase:'closed',intent:0,animation:null,generation:0});panel(group).inert=true;}
+ for(const group of groups){group.open=false;states.set(group,{phase:'closed',intent:0,animation:null,generation:0,mousePinned:false});panel(group).inert=true;}
  function clearIntent(state){if(state.intent)win.clearTimeout(state.intent);state.intent=0;}
  function finishClose(group,state){
   descendants(group).forEach(child=>close(child,{immediate:true}));const target=panel(group);target.hidden=true;target.inert=true;target.setAttribute('aria-hidden','true');
-  state.phase='closed';group.open=false;group.classList.remove('is-visible','is-closing');control(group).setAttribute('aria-expanded','false');
+  state.phase='closed';state.mousePinned=false;group.open=false;group.classList.remove('is-visible','is-closing');control(group).setAttribute('aria-expanded','false');
  }
  function frame(target,state){if(state.phase==='closed')return {opacity:0,transform:'translateY(-8px)'};const value=win.getComputedStyle(target);return {opacity:value.opacity,transform:value.transform==='none'?'translateY(0)':value.transform};}
  function close(group,{immediate=false}={}){
@@ -37,7 +37,7 @@ export function setupNavigation(doc=document,win=window){
  menu.addEventListener('click',()=>{const next=menu.getAttribute('aria-expanded')!=='true';nav.classList.toggle('is-open',next);menu.setAttribute('aria-expanded',String(next));if(!next)closeMenu();});
  nav.addEventListener('click',event=>{if(event.target.closest('a[href]'))closeMenu();});
  for(const group of groups){
-  const button=control(group);button.addEventListener('click',event=>{event.preventDefault();if(hover.matches&&lastPointerType==='mouse'&&event.detail>0){open(group);return;}if(group.open&&states.get(group).phase!=='closing')close(group);else open(group);});
+  const button=control(group);button.addEventListener('click',event=>{event.preventDefault();if(hover.matches&&lastPointerType==='mouse'&&event.detail>0){const state=states.get(group);if(group.open&&state.mousePinned){state.mousePinned=false;close(group);}else{open(group);state.mousePinned=true;}return;}if(group.open&&states.get(group).phase!=='closing')close(group);else open(group);});
   group.addEventListener('pointerenter',event=>{if(event.pointerType==='mouse'&&hover.matches)open(group);});
   group.addEventListener('pointerleave',event=>{if(event.pointerType!=='mouse'||!hover.matches)return;const state=states.get(group);clearIntent(state);state.intent=win.setTimeout(()=>{state.intent=0;if(!(keyboard&&group.contains(doc.activeElement)))close(group);},180);});
   group.addEventListener('focusin',()=>{clearIntent(states.get(group));if(states.get(group).phase==='closing')open(group);});

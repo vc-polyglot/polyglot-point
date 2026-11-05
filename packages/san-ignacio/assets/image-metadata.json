@@ -423,5 +423,25 @@
     "bytes": 234442,
     "width": 1200,
     "height": 1600
+  },
+  "jose-de-jesus-rojas-garcia.png": {
+    "bytes": 1226494,
+    "width": 848,
+    "height": 1598
+  },
+  "ignacio-ortiz-perea.png": {
+    "bytes": 1323897,
+    "width": 844,
+    "height": 1117
+  },
+  "victor-contreras-organo.png": {
+    "bytes": 18238678,
+    "width": 4608,
+    "height": 3456
+  },
+  "arturo-vallin-lopez.png": {
+    "bytes": 1942642,
+    "width": 1110,
+    "height": 1600
   }
 }

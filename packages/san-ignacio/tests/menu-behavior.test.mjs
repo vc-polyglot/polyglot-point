@@ -35,3 +35,20 @@ test('Escape cierra el nivel más profundo y devuelve el foco sin cerrar su padr
 test('Flechas abren y enfocan opciones; el foco de teclado impide cierres por puntero',()=>{const e=environment(),group=e.roots[1];group.button.focus();let prevented=false;e.document.emit('keydown',{key:'ArrowDown',preventDefault(){prevented=true;}});assert.equal(prevented,true);assert.equal(e.document.activeElement,group.link);group.emit('pointerleave',{pointerType:'mouse'});e.flush();assert.equal(group.open,true);e.controller.open(e.nested);e.nested.link.focus();e.document.emit('keydown',{key:'ArrowLeft',preventDefault(){}});assert.equal(e.nested.open,false);assert.equal(group.open,true);assert.equal(e.document.activeElement,e.nested.button);});
 test('Movimiento reducido no anima y el clic exterior cierra todos los niveles',()=>{const e=environment({reduced:true});e.controller.open(e.nested);assert.equal(e.nested.panel.animation,undefined);e.document.emit('click',{target:{closest:()=>null}});for(const group of e.groups){assert.equal(group.open,false);assert.equal(group.panel.hidden,true);}});
 test('Seleccionar un enlace o ancla despeja el menú móvil sin cancelar la navegación nativa',()=>{const e=environment({coarse:true});e.menu.emit('click');e.controller.open(e.nested);e.nav.emit('click',{target:{closest:()=>e.nested.link}});assert.equal(e.menu.getAttribute('aria-expanded'),'false');assert.equal(e.nav.classes.has('is-open'),false);assert.equal(e.nested.open,false);});
+
+test('El primer clic después del hover conserva el menú y el siguiente permite cerrarlo',async()=>{
+ const e=environment(),group=e.roots[0];
+ group.emit('pointerenter',{pointerType:'mouse'});group.panel.animation.finish();await settle();
+ click(group.button);assert.equal(group.open,true);assert.equal(group.panel.hidden,false);
+ assert.equal(group.button.getAttribute('aria-expanded'),'true');
+ click(group.button);group.panel.animation.finish();await settle();
+ assert.equal(group.open,false);assert.equal(group.button.getAttribute('aria-expanded'),'false');
+});
+
+test('La activación del título por teclado abre y cierra sin utilizar hover',async()=>{
+ const e=environment(),group=e.roots[0];group.button.focus();
+ group.button.emit('click',{detail:0,preventDefault(){}});group.panel.animation.finish();await settle();
+ assert.equal(group.open,true);assert.equal(group.panel.inert,false);
+ group.button.emit('click',{detail:0,preventDefault(){}});group.panel.animation.finish();await settle();
+ assert.equal(group.open,false);assert.equal(group.panel.inert,true);
+});
