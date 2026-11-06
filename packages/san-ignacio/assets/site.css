@@ -99,3 +99,11 @@
 @media(max-width:720px){.information-list>article.community-feature{display:block;padding-block:35px}.community-copy>.program-title{font-size:34px}.information-list>article.community-feature>.program-gallery{margin-top:25px}.program-gallery .program-photo-featured .photo-frame>img{max-height:none}}
 @media(prefers-reduced-motion:reduce){.program-more-photos>summary{transition:none}}
 .community-feature{position:relative}.community-feature>span[id]{position:absolute;top:0;left:0}
+
+/* Retratos ampliables del directorio: conservar su tamaño natural y el encuadre completo. */
+.people-list .person-photo,.people-list .person-photo:nth-child(5n+1){display:block;width:fit-content;max-width:100%;height:auto;aspect-ratio:auto;padding:0;background:transparent;cursor:zoom-in}
+.people-list .person-photo>.photo-frame{position:relative;inset:auto;display:block;width:fit-content;height:auto;padding:0;background:transparent;color:inherit;font-size:inherit}
+.people-list .person-photo:hover .photo-frame>img,.people-list .person-photo:focus-visible .photo-frame>img{transform:none}
+.lightbox[open][data-close-on-image-click="true"]{grid-template-columns:minmax(0,1fr)}
+.lightbox[data-close-on-image-click="true"] .lightbox-prev,.lightbox[data-close-on-image-click="true"] .lightbox-next{display:none}
+.lightbox[data-close-on-image-click="true"] figure img{cursor:zoom-out}

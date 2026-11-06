@@ -1,0 +1,193 @@
+{
+  "archive": "drive-download-20261106T074628Z-1-001.zip",
+  "sha256": "0efc593eb2d5e22d35d0b88c8b724cac20b9bb27f49600cc469b5ada78df41f4",
+  "sources": [
+    {
+      "file": "1.pdf",
+      "sha256": "c14dd15348b71bca35a7ee55537924aebac8dfc50ba2bba5eacd2a932e62fa9b"
+    },
+    {
+      "file": "2.pdf",
+      "sha256": "bcff0da94bcc7628ac7ba73d503938f4a17697483053f01bb6613ac8e83673c7"
+    },
+    {
+      "file": "3.pdf",
+      "sha256": "444daa2af699aa307ebfe2bf4238c6c42eef43ad1f9c2857ab3d2acb1b9c6a9c"
+    },
+    {
+      "file": "4.pdf",
+      "sha256": "af18533c42b00f7b819d5d8892a4ff68d935832efd1ed02da6a557c0610a77a7"
+    },
+    {
+      "file": "5.pdf",
+      "sha256": "7bc100df2a4cd9257ad97f8572cf53f1b65de82b0941f1983ec4519a44855be8"
+    },
+    {
+      "file": "6.pdf",
+      "sha256": "a9e16c65ec49ae07e3b7e55df435cc8f9c29c9636a3650f75891e733fd524f15"
+    },
+    {
+      "file": "7.pdf",
+      "sha256": "6a9b9dde34b0f1a147ea9bec06f3d580d97b5a44f665872c2b37c2ac7ae6f776"
+    },
+    {
+      "file": "8.pdf",
+      "sha256": "51c47ef435befe417b18f9d3eaabc1fe5531199904529cd9930863a017962737"
+    },
+    {
+      "file": "9.pdf",
+      "sha256": "27d762f27294b65b5cc92a6838b6f2db3e9f09da02e9de6cc9c4190f78164250"
+    },
+    {
+      "file": "10.pdf",
+      "sha256": "e22708618138896f0987b667d6a3962e978b85f7f341413edd2970e32ebf3e45"
+    },
+    {
+      "file": "11.pdf",
+      "sha256": "ec7a8d914077b0074a7d39141861d9093b29f4751244a8fbf7698237aa94c8f6"
+    },
+    {
+      "file": "12.pdf",
+      "sha256": "be19ad1933b99daf8debc1684703f5224325ee630709d5532a095aaf1666c76f"
+    },
+    {
+      "file": "13.pdf",
+      "sha256": "e70bd04421f5a3945f3a86bf6849ec294c7ca3f70492689a55040ec9c09f028c"
+    },
+    {
+      "file": "14.pdf",
+      "sha256": "e71deecfc7239bacf954853eb0551b46fcdf15dbe4280f622f1d7e362654bcc5"
+    },
+    {
+      "file": "15.pdf",
+      "sha256": "9dc5f2c5d3afe539c9774a9af52f717d6c71dd893a86c681de0ca5529bca791d"
+    },
+    {
+      "file": "16.pdf",
+      "sha256": "e42bea49495d4cdc8281487c261d29816a6069f398d3f7b15683fd4896c6f90c"
+    },
+    {
+      "file": "17.pdf",
+      "sha256": "d0bc25df50e24543d497947df418ab7b8d65e8aa50e5c1ac184b023f9ffe5558"
+    },
+    {
+      "file": "18.pdf",
+      "sha256": "83abfd3c3ee0433555da2a16633511dadcdeac700c098cf8b47bfa1b690cfa7d"
+    },
+    {
+      "file": "19.pdf",
+      "sha256": "7d0ce5cf3fe602889936b3515eeeea707ff96375ad56be2239f0cde4d9e78c19"
+    },
+    {
+      "file": "20.pdf",
+      "sha256": "0cd4dae925f51120968a794e2427a5d3dd9fbd3c627467dc7270f936c4a7ab1e"
+    }
+  ],
+  "publicDerivatives": [
+    {
+      "file": "pagina-01.jpg",
+      "sha256": "a1e848a8322ad67d66af0a333df6d7f9e6d146e52d22c3457ebe86012d694828",
+      "bytes": 1103052
+    },
+    {
+      "file": "pagina-02.jpg",
+      "sha256": "fcc000cec1525e1f20d4b8c5408d6387bfdb7971078bca6a024eebef8493d3cb",
+      "bytes": 605480
+    },
+    {
+      "file": "pagina-03.jpg",
+      "sha256": "20cee4af5eeb0de6b158aac9b4d7c81b502aa95a92d0f6e750f3d1c57dcc77cf",
+      "bytes": 747907
+    },
+    {
+      "file": "pagina-04.jpg",
+      "sha256": "5ebea7c38535e98cddd2fc0be3f5c65d4aadd3ea18a15b3ffac89b8a7d7f27bd",
+      "bytes": 762229
+    },
+    {
+      "file": "pagina-05.jpg",
+      "sha256": "0acb9513badcba4240f455455433f7f4ab1bf1d14ff618be19e406cf8d22d117",
+      "bytes": 804014
+    },
+    {
+      "file": "pagina-06.jpg",
+      "sha256": "b346fd3187fc104fe838055d10e9f365fa8314cada3c3baf46747da4456343de",
+      "bytes": 718322
+    },
+    {
+      "file": "pagina-07.jpg",
+      "sha256": "9479b20d437e253f659dab17c1420f179af1dcc379e6e0a5f46f1ebd219d3992",
+      "bytes": 789921
+    },
+    {
+      "file": "pagina-08.jpg",
+      "sha256": "97c63c87360f93be4aa9e7c607843ef28877fa8b051f0a766d5b3f140fd9aa1b",
+      "bytes": 758735
+    },
+    {
+      "file": "pagina-09.jpg",
+      "sha256": "ddb4e9776956dfb222e532f7838f24d5a7250edff7ba162e232b32ce9539eec1",
+      "bytes": 719158
+    },
+    {
+      "file": "pagina-10.jpg",
+      "sha256": "1e348029499861579acc1b5e85dec679fd2006821ff92be85d3fe3e474fed5a9",
+      "bytes": 822559
+    },
+    {
+      "file": "pagina-11.jpg",
+      "sha256": "246c59aa12a90957a27b58a7a777f52e7965fca156ccdda9cbc042b3e5c5c959",
+      "bytes": 799512
+    },
+    {
+      "file": "pagina-12.jpg",
+      "sha256": "b8654f1947be842e082a85a900d490ada460daef479b78d769fc7044dd30a321",
+      "bytes": 816913
+    },
+    {
+      "file": "pagina-13.jpg",
+      "sha256": "2b17c34efabd95ba4286d129cff3bde53f92ebd0deae2521ca232523ba54b3d2",
+      "bytes": 795935
+    },
+    {
+      "file": "pagina-14.jpg",
+      "sha256": "a476d49ed9ec602eed9dd0209711e1677f407123385186f9f7c21baf7ab0bea1",
+      "bytes": 797676
+    },
+    {
+      "file": "pagina-15.jpg",
+      "sha256": "27c6619f322619e813fe026871faf197ac70d9f39b8a4d63660b744e1bbc39f9",
+      "bytes": 780046
+    },
+    {
+      "file": "pagina-16.jpg",
+      "sha256": "54fe08fbdff1764f078b0463b4756e69ee25cf3cdf26445464a825a3c4518688",
+      "bytes": 791851
+    },
+    {
+      "file": "pagina-17.jpg",
+      "sha256": "d37aa71ee3e727e4a1b6ea74ec85832b33ed4033719636b8dac00a663df21327",
+      "bytes": 819273
+    },
+    {
+      "file": "pagina-18.jpg",
+      "sha256": "bc8645ee9d952521659f151ac983d0664e640771d8f2d07b64164b42deb5889f",
+      "bytes": 804112
+    },
+    {
+      "file": "pagina-19.jpg",
+      "sha256": "86b1dd20bff903e2983a6e2253599b9ebc373986a4ef59e9b1280651d805a8b8",
+      "bytes": 821953
+    },
+    {
+      "file": "pagina-20.jpg",
+      "sha256": "0e80109d44b72fca8be1f2e1502dadc192fa95f3b8c5d5eb2a8a9f75f8b36b0a",
+      "bytes": 991846
+    },
+    {
+      "file": "portada.jpg",
+      "sha256": "572c12d53a9797907ac8019dcc664c2f8872a5dae692f8e130319fe91406aa7a",
+      "bytes": 69751
+    }
+  ]
+}

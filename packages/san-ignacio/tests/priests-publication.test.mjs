@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {approvedPriestPortraits,planPriestPortraits,publishHostedPriestPortraits} from '../src/review/priests-publication.js';
+import {approvedPriestPortraits,planPriestPortraits,publishHostedPriestPortraits,approvedRectorPortrait,planRectorPortrait,publishHostedRectorPortrait} from '../src/review/priests-publication.js';
 import {validatePeopleAssets} from '../src/review/people-publication.js';
 const references=JSON.parse(fs.readFileSync('src/db/reference-content.json','utf8')).records;
 
@@ -23,18 +23,40 @@ test('Sólo cambian las dos fotografías y se conservan las fichas y sus revisio
  assert.equal(planPriestPortraits(applied,[]).updates.length,0);
 });
 
-test('La publicación se ejecuta una sola vez y verifica el respaldo antes de modificar',async()=>{
+test('El nuevo retrato modifica sólo al rector y conserva el retrato vigente del vicario',()=>{
+ assert.doesNotThrow(()=>validatePeopleAssets(approvedRectorPortrait));
+ const initial=planPriestPortraits(references,[]);
+ const existing=references.map(p=>initial.updates.find(u=>u.record.id===p.id)?.record||p);
+ const original=JSON.stringify(existing),plan=planRectorPortrait(existing,[]);
+ assert.equal(JSON.stringify(existing),original);
+ assert.equal(plan.additions.length,0);assert.equal(plan.updates.length,1);
+ const {record,expectedVersion}=plan.updates[0],previous=existing.find(p=>p.id===record.id);
+ assert.equal(record.id,'persona-1');assert.equal(record.version,expectedVersion+1);
+ for(const key of ['draft','published']){
+  assert.equal(record[key].image,'/assets/images/padre-luis-gonzalez-cosio-actual.png');
+  assert.deepEqual({...record[key],image:previous[key].image,alt:previous[key].alt},previous[key]);
+ }
+ assert.deepEqual(record.history[0].published,previous.published);
+ const applied=existing.map(p=>p.id===record.id?record:p);
+ assert.equal(planRectorPortrait(applied,[]).updates.length,0);
+ assert.deepEqual(applied.find(p=>p.id==='persona-2'),existing.find(p=>p.id==='persona-2'));
+});
+
+for(const [publish,count,migrationId]of [
+ [publishHostedPriestPortraits,2,'rector-vicar-portraits-20261104-v1'],
+ [publishHostedRectorPortrait,1,'rector-portrait-20261106-v1']
+])test(`${migrationId}: ejecución única con respaldo verificado`,async()=>{
  const calls=[];let snapshot,applied=false;
  const client={async query(sql,values=[]){calls.push(sql);
-  if(sql.startsWith('SELECT id,checksum'))return {rowCount:applied?1:0,rows:applied?[{imported_count:2}]:[]};
+  if(sql.startsWith('SELECT id,checksum')){assert.equal(values[0],migrationId);return {rowCount:applied?1:0,rows:applied?[{imported_count:count}]:[]};}
   if(sql.startsWith('SELECT id,record,version'))return {rows:references.map(record=>({id:record.id,record,version:record.version}))};
   if(sql.startsWith('INSERT INTO san_ignacio.site_migration_backups'))snapshot=JSON.parse(values[2]);
   if(sql.startsWith('SELECT snapshot'))return {rows:[{snapshot}]};
   if(sql.startsWith('UPDATE san_ignacio.site_documents'))assert.ok(snapshot);
   return {rowCount:1,rows:[]};
  }};
- const result=await publishHostedPriestPortraits(client);assert.equal(result.orderCorrections,2);assert.equal(calls.at(-1),'COMMIT');
+ const result=await publish(client);assert.equal(result.orderCorrections,count);assert.equal(calls.at(-1),'COMMIT');
  const changes=calls.filter(sql=>sql.startsWith('UPDATE san_ignacio.site_documents')).length;
- applied=true;assert.equal((await publishHostedPriestPortraits(client)).alreadyApplied,true);
+ applied=true;assert.equal((await publish(client)).alreadyApplied,true);
  assert.equal(calls.filter(sql=>sql.startsWith('UPDATE san_ignacio.site_documents')).length,changes);
 });

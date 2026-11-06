@@ -24,6 +24,11 @@ test('Cada foto se incluye exclusivamente dentro del desplegable de su persona',
  assert.match(vicar,/jose-de-jesus-rojas-garcia\.png/);assert.doesNotMatch(vicar,/victor-contreras\.png/);
  assert.doesNotMatch(rector,/<img\b/);assert.match(rector,/Fotografía pendiente/);
  assert.match(victor,/loading="lazy"/);assert.match(vicar,/alt="José de Jesús"/);
+ assert.match(victor,/<button class="photo-button person-photo" type="button"/);
+ assert.match(victor,/data-close-on-image-click="true"/);
+ assert.match(victor,/aria-label="Ampliar fotografía de Víctor Contreras"/);
+ assert.match(victor,/aria-haspopup="dialog" aria-controls="lightbox"/);
+ assert.doesNotMatch(rector,/<button/);
 });
 
 test('El orden respeta las fichas del CMS sin modificar la colección recibida',()=>{

@@ -13,7 +13,8 @@ test('El texto del fundador se conserva completo y con la fotografía histórica
  assert.equal(decoded,poem);
  assert.match(main,/src="\/assets\/images\/historia-arquitectura-1280.jpg"/);
  assert.match(main,/alt="Obreros sobre las estructuras de acero/);
- assert.equal((main.match(/<img /g)||[]).length,1);
+ const opening=main.match(/<section class="history-opening"[\s\S]*?<\/section>/)[0];
+ assert.equal((opening.match(/<img /g)||[]).length,1);
 });
 
 test('La narración tiene capítulos únicos y todos sus enlaces llevan al mismo contenido',()=>{
@@ -40,7 +41,7 @@ test('La historia integra los datos centrales sin repetir patronato, financiamie
 });
 
 test('Los bloques circunstanciales, las presentaciones y los apuntes internos no se publican',()=>{
- const visible=main.replace(/<[^>]*>/g,'');
+ const visible=main.replace(/<dialog\b[\s\S]*?<\/dialog>/g,'').replace(/<[^>]*>/g,'');
  assert.doesNotMatch(visible,/Testimonios de nuestra historia|Una memoria|revistas conmemorativas|Vida de la comunidad|Grupo Nuestra Señora de Guadalupe|El presente sembrado|Música y órgano|Víctor Urbán|Memorias, personas y legado|Prefacio|Otros Padres colaboradores|Otros textos del templo|HIST-\d|nota editorial|título editorial|por verificar|lectura dudosa/i);
  assert.doesNotMatch(main,/vida-del-templo|memoria-compartida|hist-017|hist-023|hist-026|hist-027/);
  assert.ok(historyArchive.documents.some(doc=>doc.id==='HIST-023'));
@@ -49,7 +50,7 @@ test('Los bloques circunstanciales, las presentaciones y los apuntes internos no
 
 test('Historia conserva su acceso completo al entrar en un capítulo',()=>{
  assert.match(main,/<a class="section-return" href="\/historia">Historia/);
- assert.match(html,/\/assets\/history\.css\?v=3/);
+ assert.match(html,/\/assets\/history\.css\?v=4/);
  assert.match(renderPage('/galeria',[]),/id="lightbox"/);
  assert.doesNotMatch(renderPage('/galeria',[]),/\/assets\/history\.css/);
 });

@@ -50,6 +50,7 @@ function viewer({motion=false,reduced=false}={}){
  for(const [group,count]of [['young',4],['older',3],['',2]])for(let i=0;i<count;i++){
   const button=new Node();button.dataset={photoCollection:group,image:group+i+'.jpg',caption:group};button.querySelector=()=>({alt:group+' '+i});buttons.push(button);
  }
+ const portrait=new Node();portrait.dataset={photoCollection:'persona-1',image:'rector.png',caption:'Rector',closeOnImageClick:'true'};portrait.querySelector=()=>({alt:'Retrato del rector'});buttons.push(portrait);
  const dialog=new Node(),image=new Node(),caption={},close=new Node(),next=new Node(),prev=new Node();
  dialog.querySelector=selector=>({'img':image,'figcaption':caption,'.lightbox-close':close,'.lightbox-next':next,'.lightbox-prev':prev}[selector]);
  dialog.showModal=()=>dialog.open=true;dialog.close=()=>{dialog.open=false;dialog.listeners.close();};
@@ -72,6 +73,29 @@ test('Las flechas del teclado recorren la colección y la galería general manti
 
 test('Las páginas sin imágenes ampliables no requieren visor',()=>{
  assert.doesNotThrow(()=>setupPhotoViewer({querySelectorAll:()=>[],querySelector:()=>null}));
+});
+
+test('Un clic amplía el retrato y otro en la imagen lo cierra y devuelve el foco',()=>{
+ const e=viewer();e.buttons[9].listeners.click();
+ assert.equal(e.dialog.open,true);assert.equal(e.image.src,'rector.png');
+ assert.equal(e.image.alt,'Retrato del rector');assert.equal(e.caption.textContent,'Rector');
+ assert.equal(e.prev.hidden,true);assert.equal(e.next.hidden,true);
+ e.dialog.listeners.keydown({key:'ArrowRight',preventDefault(){}});
+ assert.equal(e.image.src,'rector.png');
+ e.image.listeners.click();assert.equal(e.dialog.open,false);assert.equal(e.buttons[9].focused,true);
+ e.buttons[0].listeners.click();assert.equal(e.prev.hidden,false);assert.equal(e.next.hidden,false);
+ e.image.listeners.click();assert.equal(e.dialog.open,true);
+});
+
+test('El retrato cierra con Escape y respeta el fundido ante clics repetidos',async()=>{
+ const e=viewer({motion:true});e.buttons[9].listeners.click();
+ e.image.listeners.click();e.image.listeners.click();
+ assert.equal(e.dialog.animations.length,2);
+ e.dialog.animations.at(-1).finish();await settle();
+ assert.equal(e.dialog.open,false);assert.equal(e.buttons[9].focused,true);
+ const instant=viewer({reduced:true});instant.buttons[9].listeners.click();let prevented=false;
+ instant.dialog.listeners.cancel({preventDefault(){prevented=true;}});
+ assert.equal(prevented,true);assert.equal(instant.dialog.open,false);
 });
 
 const settle=async()=>{for(let i=0;i<4;i++)await Promise.resolve();};

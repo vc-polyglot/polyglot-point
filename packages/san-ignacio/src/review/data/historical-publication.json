@@ -1,0 +1,129 @@
+{
+  "id": "memorias-construccion",
+  "title": "Memorias de la Iglesia de San Ignacio de Loyola",
+  "subtitle": "Construcción",
+  "textDate": "1966-10-30",
+  "cover": "/assets/publications/memorias-construccion/portada.jpg",
+  "pages": [
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-01.jpg",
+      "width": 1537,
+      "height": 2020,
+      "label": "Portada"
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-02.jpg",
+      "width": 1525,
+      "height": 2025,
+      "label": "Portadilla"
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-03.jpg",
+      "width": 1549,
+      "height": 2029,
+      "label": "Prefacio y origen del proyecto"
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-04.jpg",
+      "width": 1525,
+      "height": 2001,
+      "label": "El terreno y el patronato"
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-05.jpg",
+      "width": 1549,
+      "height": 2020,
+      "label": "Organización del patronato"
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-06.jpg",
+      "width": 1537,
+      "height": 2040,
+      "label": "Fomento Cultural, A.C."
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-07.jpg",
+      "width": 1549,
+      "height": 2020,
+      "label": "Autorizaciones eclesiásticas"
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-08.jpg",
+      "width": 1537,
+      "height": 2029,
+      "label": "Dedicación del templo y permisos"
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-09.jpg",
+      "width": 1549,
+      "height": 2040,
+      "label": "Autorizaciones y financiamiento"
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-10.jpg",
+      "width": 1521,
+      "height": 2044,
+      "label": "Donativos y trabajo compartido"
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-11.jpg",
+      "width": 1549,
+      "height": 2040,
+      "label": "Primera piedra y excavaciones"
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-12.jpg",
+      "width": 1517,
+      "height": 2036,
+      "label": "Construcción y acabados"
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-13.jpg",
+      "width": 1569,
+      "height": 2032,
+      "label": "Casa del capellán e inauguración"
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-14.jpg",
+      "width": 1513,
+      "height": 2025,
+      "label": "Apertura al culto y arquitectura"
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-15.jpg",
+      "width": 1545,
+      "height": 2025,
+      "label": "El proyecto arquitectónico"
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-16.jpg",
+      "width": 1529,
+      "height": 2068,
+      "label": "Las cruces del atrio y el Cristo"
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-17.jpg",
+      "width": 1557,
+      "height": 2025,
+      "label": "El Cristo de Pablo Serrano"
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-18.jpg",
+      "width": 1533,
+      "height": 2017,
+      "label": "El patrimonio ignaciano"
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-19.jpg",
+      "width": 1565,
+      "height": 2032,
+      "label": "Placa conmemorativa y Está hecha de amor"
+    },
+    {
+      "image": "/assets/publications/memorias-construccion/pagina-20.jpg",
+      "width": 1549,
+      "height": 2029,
+      "label": "Contraportada"
+    }
+  ]
+}

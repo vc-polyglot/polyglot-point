@@ -1,4 +1,4 @@
-import {setupPhotoViewer} from './photo-viewer.js';
+import {setupPhotoViewer} from './photo-viewer.js?v=2';
 import {setupNavigation} from './navigation-motion.js';
 import {initCursor} from './cursor.js';
 import {initHeroReveal} from './entrance.js';

@@ -1,3 +1,4 @@
+import {setupPublicationReader} from './publication-reader.js?v=1';
 export function setupHistoryChapters(doc,win){
  const timeline=doc.querySelector('[data-history-chapters]');
  if(!timeline)return;
@@ -10,4 +11,4 @@ export function setupHistoryChapters(doc,win){
  }
  openChapter();win.addEventListener('hashchange',openChapter);
 }
-if(typeof document!=='undefined'&&typeof window!=='undefined')setupHistoryChapters(document,window);
+if(typeof document!=='undefined'&&typeof window!=='undefined'){setupHistoryChapters(document,window);setupPublicationReader(document,window);}
