@@ -1,8 +1,9 @@
+import {updateImageGrid} from './image-grid-motion.js?v=1';
 const esc=value=>String(value??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
 const collectionName=value=>value==='material'?'Carteles y materiales':'Fotografías';
 export class ImageArchive {
- constructor({api,status,onChoose,onGallery,onShowGallery,onRefresh}){
-  Object.assign(this,{api,status,onChoose,onGallery,onShowGallery,onRefresh,items:[],collection:'photograph',mode:'archive',selected:new Map(),busy:false});
+ constructor({api,status,onChoose,onGallery,onShowGallery,onRefresh,onReturn=onRefresh}){
+  Object.assign(this,{api,status,onChoose,onGallery,onShowGallery,onRefresh,onReturn,items:[],collection:'photograph',mode:'archive',selected:new Map(),busy:false});
   this.dialog=document.querySelector('#image-library');
   this.dialog.addEventListener('cancel',event=>{if(this.busy)event.preventDefault();});
   this.dialog.querySelector('[data-close-library]').addEventListener('click',()=>{if(!this.busy)this.dialog.close();});
@@ -23,13 +24,13 @@ export class ImageArchive {
   work.querySelector('#archive-search').addEventListener('input',()=>this.renderArchive());this.renderArchive();
  }
  publishedFor(url){return this.records?.find(doc=>doc.type==='gallery'&&!doc.archived&&doc.published?.image===url);}
- renderArchive(){const host=document.querySelector('#archive-grid');if(!host)return;const query=document.querySelector('#archive-search').value.toLocaleLowerCase('es');const items=this.items.filter(item=>item.collection===this.collection&&(item.title+' '+item.alt).toLocaleLowerCase('es').includes(query));document.querySelector('#archive-count').textContent=items.length+' imágenes guardadas';host.innerHTML=items.map(item=>{const publication=this.publishedFor(item.url);return `<article class="archive-card"><img src="${esc(item.thumb||item.url)}" alt="${esc(item.alt)}" loading="lazy"><div><h2>${esc(item.title||item.alt)}</h2><p>${publication?'En la galería publicada':'Guardada en el archivo'}</p><div class="archive-card-actions">${item.collection==='photograph'?`<button type="button" data-gallery-image="${esc(item.url)}">${publication?'Revisar publicación':'Agregar a la galería'}</button>`:''}<button type="button" data-move-image="${esc(item.url)}">Mover a ${item.collection==='photograph'?'Carteles y materiales':'Fotografías'}</button><a href="${esc(item.url)}" target="_blank" rel="noopener">Ver imagen completa ↗</a></div></div></article>`;}).join('')||'<p class="empty">Este archivo todavía no tiene imágenes que coincidan con tu búsqueda.</p>';}
+ renderArchive(){const host=document.querySelector('#archive-grid');if(!host)return;const query=document.querySelector('#archive-search').value.toLocaleLowerCase('es');const items=this.items.filter(item=>item.collection===this.collection&&(item.title+' '+item.alt).toLocaleLowerCase('es').includes(query));document.querySelector('#archive-count').textContent=items.length+' imágenes guardadas';host.innerHTML=items.map(item=>{const publication=this.publishedFor(item.url);return `<article class="archive-card" data-image-card="${esc(item.url)}"><img src="${esc(item.thumb||item.url)}" alt="${esc(item.alt)}" loading="lazy"><div><h2>${esc(item.title||item.alt)}</h2><p>${publication?'En la galería publicada':'Guardada en el archivo'}</p><div class="archive-card-actions">${item.collection==='photograph'?`<button type="button" data-gallery-image="${esc(item.url)}">${publication?'Revisar publicación':'Agregar a la galería'}</button>`:''}<button type="button" data-move-image="${esc(item.url)}">Mover a ${item.collection==='photograph'?'Carteles y materiales':'Fotografías'}</button><a href="${esc(item.url)}" target="_blank" rel="noopener">Ver imagen completa ↗</a></div></div></article>`;}).join('')||'<p class="empty">Este archivo todavía no tiene imágenes que coincidan con tu búsqueda.</p>';}
  async panelClick(event){
   const host=document.querySelector('#admin-workspace'),tab=event.target.closest('[data-collection]');
   if(tab&&host.contains(tab)){this.collection=tab.dataset.collection;this.drawPanel(host);return;}
   if(event.target.closest('[data-archive-upload]')){await this.open({mode:'archive'});return;}
   if(event.target.closest('[data-published-gallery]')){this.onShowGallery();return;}
-  if(event.target.closest('[data-return-archive]')){this.onRefresh();return;}
+  if(event.target.closest('[data-return-archive]')){this.onReturn();return;}
   const gallery=event.target.closest('[data-gallery-image]');if(gallery){const image=this.items.find(item=>item.url===gallery.dataset.galleryImage);const existing=this.publishedFor(image.url)||this.records.find(doc=>doc.type==='gallery'&&doc.draft?.image===image.url);this.onGallery(image,existing);return;}
   const move=event.target.closest('[data-move-image]');if(move){const item=this.items.find(image=>image.url===move.dataset.moveImage);if(item)await this.moveImages([item.url],item.collection==='photograph'?'material':'photograph');}
  }
@@ -38,16 +39,15 @@ export class ImageArchive {
   this.busy=true;
   const controls=picker?[...this.dialog.querySelectorAll('input,select,button')]:[...document.querySelectorAll('[data-move-image]')];
   const states=controls.map(control=>control.disabled);controls.forEach(control=>control.disabled=true);
-  let moved=0;const failures=[];
+  let moved=0;const failures=[],movedUrls=[];
   try{
    for(const url of urls){const item=this.items.find(image=>image.url===url);if(!item||item.collection===collection)continue;
-    try{const {image}=await this.api('/api/admin/images',{method:'PATCH',body:JSON.stringify({url:item.url,version:item.version,collection})});this.items=this.items.map(entry=>entry.url===image.url?image:entry);moved++;if(this.photosOnly&&collection!=='photograph')this.selected.delete(item.url);}
+    try{const {image}=await this.api('/api/admin/images',{method:'PATCH',body:JSON.stringify({url:item.url,version:item.version,collection})});this.items=this.items.map(entry=>entry.url===image.url?image:entry);moved++;movedUrls.push(item.url);if(this.photosOnly&&collection!=='photograph')this.selected.delete(item.url);}
     catch(error){failures.push((item.title||item.alt)+': '+error.message);}
    }
   }finally{
-   this.busy=false;controls.forEach((control,index)=>{if(control.isConnected!==false)control.disabled=states[index];});
-   if(moved)this.collection=this.photosOnly?'photograph':collection;
-   if(picker)this.renderPicker();else this.renderArchive();
+   try{await updateImageGrid(picker?this.dialog.querySelector('#library-grid'):document.querySelector('#archive-grid'),movedUrls,()=>{if(picker)this.renderPicker();else this.renderArchive();});}
+   finally{this.busy=false;controls.forEach((control,index)=>{if(control.isConnected!==false)control.disabled=states[index];});}
    const message=(moved?moved+(moved===1?' imagen movida a ':' imágenes movidas a ')+collectionName(collection)+'. ':'')+(failures.length?failures.join(' '):!moved?'Las imágenes ya están en ese archivo.':'');
    if(picker){const feedback=this.dialog.querySelector('#library-feedback');feedback.textContent=message;feedback.classList.toggle('error',!!failures.length);}else this.status(message,!!failures.length);
   }
@@ -64,7 +64,7 @@ export class ImageArchive {
   this.dialog.querySelector('[name=collection]').value=this.collection;this.dialog.querySelector('[name=collection]').disabled=this.photosOnly;
   const query=this.dialog.querySelector('#image-search').value.toLocaleLowerCase('es'),items=this.items.filter(item=>item.collection===this.collection&&(item.alt+' '+item.title).toLocaleLowerCase('es').includes(query));
   this.dialog.querySelector('#library-count').textContent=items.length+' imágenes disponibles'+(this.multiple||this.mode==='archive'?' · '+this.selected.size+' seleccionadas':'');
-  this.dialog.querySelector('#library-grid').innerHTML=items.map(item=>`<article class="library-item"><button type="button" class="library-select" data-pick="${esc(item.url)}" aria-pressed="${this.selected.has(item.url)}"><img src="${esc(item.thumb||item.url)}" alt="" loading="lazy"><span>${this.selected.has(item.url)?'✓ ':''}${esc(item.title||item.alt)}</span></button><button type="button" class="library-move" data-move-image="${esc(item.url)}">Mover a ${item.collection==='photograph'?'Carteles y materiales':'Fotografías'}</button></article>`).join('')||'<p class="empty">No hay imágenes aquí. Puedes subirlas desde tu computadora.</p>';
+  this.dialog.querySelector('#library-grid').innerHTML=items.map(item=>`<article class="library-item" data-image-card="${esc(item.url)}"><button type="button" class="library-select" data-pick="${esc(item.url)}" aria-pressed="${this.selected.has(item.url)}"><img src="${esc(item.thumb||item.url)}" alt="" loading="lazy"><span>${this.selected.has(item.url)?'✓ ':''}${esc(item.title||item.alt)}</span></button><button type="button" class="library-move" data-move-image="${esc(item.url)}">Mover a ${item.collection==='photograph'?'Carteles y materiales':'Fotografías'}</button></article>`).join('')||'<p class="empty">No hay imágenes aquí. Puedes subirlas desde tu computadora.</p>';
   this.dialog.querySelector('#move-selection').hidden=this.mode==='single';this.dialog.querySelector('#move-selected').disabled=!this.selected.size;this.dialog.querySelector('#move-selected').textContent='Mover '+this.selected.size+(this.selected.size===1?' imagen':' imágenes');this.dialog.querySelector('#move-target').value=this.collection==='photograph'?'material':'photograph';
   const use=this.dialog.querySelector('#use-images');use.hidden=!this.multiple;use.disabled=!this.selected.size;use.textContent='Usar '+this.selected.size+(this.selected.size===1?' imagen':' imágenes');
  }

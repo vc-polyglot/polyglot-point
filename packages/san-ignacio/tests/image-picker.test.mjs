@@ -35,9 +35,9 @@ test('El selector mueve imágenes entre ambos archivos sin perder la selección 
   await picker.open({mode:imagePickerMode('program'),initial:[{image:'/uploads/foto.jpg',alt:'Templo'}]});
   assert.match(node('#library-grid').innerHTML,/data-move-image="\/uploads\/foto.jpg"/);assert.match(node('#library-grid').innerHTML,/Mover a Carteles y materiales/);assert.equal(node('#move-selected').disabled,false);
   await picker.moveImages(['/uploads/foto.jpg'],'material',{picker:true});
-  assert.equal(calls.length,1);assert.equal(calls[0].version,1);assert.equal(saved.get('/uploads/foto.jpg').collection,'material');assert.equal(picker.collection,'material');assert.equal(picker.selected.get('/uploads/foto.jpg').image,'/uploads/foto.jpg');assert.match(node('#library-feedback').textContent,/1 imagen movida/);assert.match(node('#library-grid').innerHTML,/Mover a Fotografías/);
+  assert.equal(calls.length,1);assert.equal(calls[0].version,1);assert.equal(saved.get('/uploads/foto.jpg').collection,'material');assert.equal(picker.collection,'photograph');assert.equal(picker.selected.get('/uploads/foto.jpg').image,'/uploads/foto.jpg');assert.match(node('#library-feedback').textContent,/1 imagen movida/);assert.doesNotMatch(node('#library-grid').innerHTML,/data-image-card="\/uploads\/foto.jpg"/);picker.collection='material';picker.renderPicker();assert.match(node('#library-grid').innerHTML,/Mover a Fotografías/);
   await picker.moveImages(['/uploads/foto.jpg','/uploads/cartel.jpg'],'photograph',{picker:true});
-  assert.equal(saved.get('/uploads/foto.jpg').collection,'photograph');assert.equal(saved.get('/uploads/cartel.jpg').collection,'photograph');assert.equal(calls[1].version,2);assert.equal(picker.selected.size,1);assert.match(node('#library-feedback').textContent,/2 imágenes movidas/);assert.equal(picker.busy,false);
+  assert.equal(saved.get('/uploads/foto.jpg').collection,'photograph');assert.equal(saved.get('/uploads/cartel.jpg').collection,'photograph');assert.equal(calls[1].version,2);assert.equal(picker.collection,'material');assert.equal(picker.selected.size,1);assert.match(node('#library-feedback').textContent,/2 imágenes movidas/);assert.equal(picker.busy,false);
  }finally{if(previousDocument===undefined)delete globalThis.document;else globalThis.document=previousDocument;}
 });
 

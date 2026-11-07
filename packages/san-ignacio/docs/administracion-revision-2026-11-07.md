@@ -42,8 +42,8 @@ El cierre de esta entrega se versiona en feature/san-ignacio por solicitud del u
 
 ## Verificación
 
-- Sintaxis de los 38 archivos activos.
-- Suite de 118 pruebas aprobadas, sin fallos. Se excluye expresamente la prueba antigua del logotipo que requiere un archivo externo en Downloads.
+- Sintaxis de los 41 archivos activos.
+- Suite de 125 pruebas aprobadas, sin fallos. Se excluye expresamente la prueba antigua del logotipo que requiere un archivo externo en Downloads.
 - La suite HTTP comprueba el menú de siete entradas, los permisos con la cuenta habitual, la conservación del contenido permanente, eventos, avisos programados y vencidos, fotografías, retirada y recuperación, horarios y contacto, conflictos concurrentes, CSRF, consultas y persistencia tras reiniciar.
 - Las pruebas usan bases separadas bajo .local/qa-*. No prueban una integración real con los servicios de producción.
 - El control del navegador había permanecido indisponible; la comprobación visual no se sustituye por la suite HTTP.
@@ -79,3 +79,13 @@ Corrección posterior: se eliminó la limitación errónea que ocultaba Carteles
 El control Mover a ya estaba en la sección Imágenes, pero no en la ventana que abre Elegir imágenes desde Pastoral. Se añadió un botón por miniatura y el movimiento de la selección a cualquiera de los dos archivos. Los mensajes aparecen dentro del selector y las selecciones se conservan al mover. El destino de una subida se llama Guardar nuevas imágenes en para distinguirlo de reclasificar imágenes ya guardadas. El formulario de subida se abre plegado al elegir imágenes existentes, y desplegado cuando se solicita subir archivos.
 
 La reclasificación mantiene las mismas direcciones, originales y asignaciones a publicaciones. Si una imagen todavía pertenece a la galería pública, el servidor conserva la condición de retirarla de esa galería antes de pasarla a Carteles y materiales; cualquier rechazo se explica en la misma ventana. Se probaron los movimientos en ambos sentidos y la conservación de una imagen cuando el servidor rechaza el cambio.
+
+## Permanencia en Admin y acceso directo
+
+Mover imágenes conserva ahora la colección abierta y la búsqueda. Sólo las tarjetas movidas correctamente se desvanecen; después las tarjetas restantes se reacomodan. La animación se omite cuando se prefiere movimiento reducido. El archivo de destino se visita únicamente si la persona pulsa su pestaña.
+
+Los controles Volver y el Atrás normal del navegador usan un historial interno de Admin. Atrás cierra primero el selector; después regresa de la ficha al listado. Al llegar al inicio permanece en la administración. Se conserva la advertencia por cambios sin guardar. El acceso y las vistas previas tienen también un regreso dentro de Admin. Los enlaces que permiten consultar el sitio público abren otra pestaña. Al restaurar una página privada desde la caché de navegación se solicita una recarga que revalida la sesión en el servidor.
+
+Se retiró el enlace Administración del pie de todas las páginas públicas. La ruta /admin se conserva como acceso directo al formulario de la secretaria. No se configuró ni compró un dominio nuevo. Ocultar el enlace no es el mecanismo de autorización: el servidor sigue exigiendo sesión para los datos y las operaciones privadas.
+
+La revisión local comprueba rechazo de lecturas y escrituras anónimas de documentos, imágenes y mensajes, rechazo de cookies inventadas, redirección de vistas previas al acceso, invalidación de la sesión anterior al login, controles de origen y CSRF y cierre de sesión. Estos resultados no constituyen una auditoría exhaustiva ni una verificación remota de la infraestructura de producción.

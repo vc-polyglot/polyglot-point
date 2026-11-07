@@ -8,14 +8,14 @@ import {spawn,spawnSync} from 'node:child_process';
 import {sections,publicationState} from '../assets/admin-sections.js';
 const root=process.cwd(),data=path.join(root,'.local','qa-'+Date.now()),port=3318,base=`http://127.0.0.1:${port}`;
 const env={...process.env,LOCAL_REVIEW_MODE:'1',NODE_ENV:'test',LOCAL_DATA_PATH:data,PORT:String(port),SESSION_SECRET:crypto.randomBytes(40).toString('hex'),SITE_URL:base};
-let server,cookie='',csrf='',serverLog='';
+let server,cookie='',csrf='',serverLog='',preLoginCookie='';
 async function request(route,{method='GET',body,authorized=false,token=true,origin,headers={},redirect='manual'}={}){
  const response=await fetch(base+route,{method,body:body===undefined?undefined:body instanceof FormData?body:JSON.stringify(body),headers:{...(body!==undefined&&!(body instanceof FormData)?{'Content-Type':'application/json'}:{}),...(authorized&&cookie?{cookie}:{}),...(authorized&&token?{'X-CSRF-Token':csrf}:{}),...(origin?{origin}:{}),...headers},redirect,signal:AbortSignal.timeout(10000)});
  const set=response.headers.get('set-cookie');if(authorized&&set)cookie=set.split(';')[0];const text=await response.text();let json;try{json=JSON.parse(text);}catch{}return {response,status:response.status,text,json};
 }
 async function start(){server=spawn(process.execPath,['src/server.js'],{cwd:root,env,windowsHide:true,stdio:['ignore','pipe','pipe']});server.stdout.on('data',chunk=>serverLog+=chunk);server.stderr.on('data',chunk=>serverLog+=chunk);for(let i=0;i<60;i++){try{if((await request('/health')).status===200)return;}catch{}await new Promise(resolve=>setTimeout(resolve,100));}throw Error(serverLog);}
 async function stop(){if(server&&!server.killed){server.kill();await new Promise(resolve=>{server.once('exit',resolve);setTimeout(resolve,1000);});}}
-async function auth(){csrf=(await request('/api/admin/session',{authorized:true})).json.csrf;const credentials=fs.readFileSync(data+'/ACCESO-LOCAL.txt','utf8');const r=await request('/api/admin/login',{method:'POST',authorized:true,body:{email:credentials.match(/Correo: (.+)/)[1].trim(),password:credentials.match(/Contraseña: (.+)/)[1].trim()}});assert.equal(r.status,200);csrf=r.json.csrf;}
+async function auth(){csrf=(await request('/api/admin/session',{authorized:true})).json.csrf;const credentials=fs.readFileSync(data+'/ACCESO-LOCAL.txt','utf8');preLoginCookie=cookie;const r=await request('/api/admin/login',{method:'POST',authorized:true,body:{email:credentials.match(/Correo: (.+)/)[1].trim(),password:credentials.match(/Contraseña: (.+)/)[1].trim()}});assert.equal(r.status,200);csrf=r.json.csrf;}
 async function save(doc,action='draft'){const r=await request('/api/admin/documents',{authorized:true,method:'POST',body:{...doc,action}});assert.equal(r.status,200,r.text);return r.json.document;}
 async function documents(){return (await request('/api/admin/documents',{authorized:true})).json.documents;}
 function stored(){const db=new DatabaseSync(path.join(data,'site.sqlite'),{readOnly:true});try{return db.prepare('SELECT record FROM documents').all().map(row=>JSON.parse(row.record));}finally{db.close();}}
@@ -27,10 +27,19 @@ test('Un único panel de secretaría, con permisos y publicación aislados',asyn
   assert.deepEqual(sections.map(s=>s.id),['overview','event','program','notice','images','messages','practical']);
   for(const route of ['/','/vida-liturgica','/sacramentos','/pastoral','/agenda','/nosotros','/agua-de-san-ignacio','/historia','/galeria','/contacto']){const r=await request(route);assert.equal(r.status,200,route);assert.match(r.text,/<h1/);assert.match(r.text,/<link rel="canonical"/);}
   const login=await request('/admin');assert.match(login.text,/id="toggle-password"/);assert.match(login.text,/type="button" class="password-toggle"/);assert.equal(login.response.headers.get('cache-control'),'no-store');
-  assert.equal((await request('/api/admin/documents')).status,401);assert.equal((await request('/admin/preview/contacto')).status,302);
+  for(const route of ['/api/admin/documents','/api/admin/images','/api/admin/messages','/api/admin/export']){assert.equal((await request(route)).status,401);assert.equal((await request(route,{headers:{cookie:'sanIgnacio.sid=inventada','X-User-Role':'admin'}})).status,401);}
+  for(const [route,method] of [['/api/admin/documents','POST'],['/api/admin/images','POST'],['/api/admin/images','PATCH'],['/api/admin/messages/inventado','PATCH'],['/api/admin/logout','POST']])assert.equal((await request(route,{method,body:{}})).status,401,method+' '+route);
+  for(const route of ['/admin/preview/contacto','/admin/preview/inea']){const result=await request(route);assert.equal(result.status,302);assert.equal(result.response.headers.get('location'),'/admin');}
+  for(const route of ['/','/pastoral','/galeria','/historia','/contacto','/no-existe'])assert.doesNotMatch((await request(route)).text,/<a[^>]+href="\/admin(?:["\/])/);
+  assert.doesNotMatch(login.text,/<a href="\/">[^<]*Volver/);
+
   for(const route of ['/.env','/.local/site.sqlite','/private/admin-dashboard.html'])assert.equal((await request(route)).status,404);
  });
  await auth();
+ await t.test('La sesión previa al acceso no permite entrar después de iniciar sesión',async()=>{
+  assert.equal((await request('/api/admin/documents',{headers:{cookie:preLoginCookie}})).status,401);
+  assert.equal((await request('/api/admin/documents',{authorized:true})).status,200);
+ });
  await t.test('La sesión habitual sólo ve lo que puede administrar; se conservan los datos internos',async()=>{
   const all=stored(),visible=await documents();assert.ok(all.some(d=>d.type==='program'));assert.ok(visible.some(d=>d.type==='schedule'));assert.ok(visible.some(d=>d.id==='contacto'));
   assert.ok(visible.every(d=>['event','notice','gallery','program','schedule'].includes(d.type)||d.type==='settings'&&d.id==='contacto'));
