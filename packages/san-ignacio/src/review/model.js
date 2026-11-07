@@ -1,25 +1,47 @@
 import crypto from 'node:crypto';
 import * as store from './store.js';
+import {withEditorialDefaults, chapterDefaults, isInstitutionalChapter, withAlbumDefaults} from './editorial-defaults.js';
 
 export const types = ['schedule','content','program','staff','event','gallery','music','notice','settings'];
 const short = (value, max=240) => String(value??'').trim().slice(0,max);
 const safeId = value => /^[a-z0-9][a-z0-9-]{0,100}$/.test(value);
 export function validateData(type, data) {
   if (!types.includes(type) || !data || typeof data !== 'object' || Array.isArray(data)) bad('Contenido no válido.');
-  const allowed = ['title','body','summary','label','day','time','detail','role','period','startsAt','endsAt','location','image','alt','url','email','phone','address','office','facebook','category','bank','account','clabe','holder','source'];
+  const allowed = ['title','body','summary','label','day','time','detail','role','period','startsAt','endsAt','location','image','alt','url','email','phone','address','office','facebook','category','bank','account','clabe','holder','source','cover'];
   const result = { order: Math.max(0,Math.min(9999,Number(data.order)||0)) };
   for (const key of allowed) if (data[key] !== undefined) result[key]=short(data[key],key==='body'?30000:key==='summary'?1200:800);
   if (!result.title || result.title.length>240) bad('Escriba un título de hasta 240 caracteres.');
   if (type==='schedule' && (!result.day || !result.time)) bad('El horario requiere día y hora.');
   if(type==='gallery'&&!result.image) bad('Selecciona una imagen para la galería.');
   if(type==='staff'&&!result.role) bad('Escribe el cargo de esta persona.');
-  if(type==='content'&&!['liturgy','sacrament','pastoral','spirituality','history','rector','water'].includes(result.category)) bad('Selecciona una sección de contenido válida.');
+  if(type==='content'&&!['liturgy','sacrament','pastoral','spirituality','history','rector','water','history-chapter'].includes(result.category)) bad('Selecciona una sección de contenido válida.');
+  if (data.photos !== undefined) {
+    const limit = type === 'program' ? 40 : 20;
+    if (!['program','event','notice'].includes(type) || !Array.isArray(data.photos) || data.photos.length > limit) bad('La publicación admite hasta '+limit+' imágenes.');
+    result.photos = data.photos.map(photo => {
+      if (!photo || typeof photo !== 'object' || Array.isArray(photo)) bad('Fotografía no válida.');
+      const checked = validateData('gallery', {title: 'Fotografía', image: photo.image, alt: photo.alt});
+      return {image: checked.image, alt: checked.alt};
+    });
+    if (new Set(result.photos.map(photo => photo.image)).size !== result.photos.length) bad('Hay fotografías repetidas en el álbum.');
+    if (type === 'program') {
+      if (result.photos.length && !result.photos.some(photo => photo.image === result.cover)) bad('Elige una fotografía del álbum como portada.');
+      if (!result.photos.length) result.cover = '';
+      const main=result.photos.find(photo=>photo.image===result.cover);result.image=main?.image||'';result.alt=main?.alt||'';
+    } else {
+      result.image = result.photos[0]?.image || '';
+      result.alt = result.photos[0]?.alt || '';
+    }
+  } else if (result.cover) bad('La portada requiere un álbum de fotografías.');
   if (type==='event') {
     if (!result.startsAt || !Number.isFinite(Date.parse(result.startsAt))) bad('El evento requiere una fecha de inicio válida.');
     if (!/(Z|[+-]\d\d:\d\d)$/.test(result.startsAt)) bad('La fecha debe incluir su zona horaria.');
     if (result.endsAt && (!Number.isFinite(Date.parse(result.endsAt)) || Date.parse(result.endsAt)<Date.parse(result.startsAt))) bad('La fecha final debe ser posterior al inicio.');
   }
-  if(type==='notice') for(const field of ['startsAt','endsAt']) if(result[field]&&!Number.isFinite(Date.parse(result[field]))) bad('La vigencia del aviso no es válida.');
+  if(type==='notice') {
+    for(const field of ['startsAt','endsAt']) if(result[field]&&!Number.isFinite(Date.parse(result[field]))) bad('La vigencia del aviso no es válida.');
+    if(result.startsAt && result.endsAt && Date.parse(result.endsAt)<Date.parse(result.startsAt)) bad('La fecha de retiro debe ser posterior al inicio del aviso.');
+  }
   if (result.image && !(/^\/assets\/images\/[a-zA-Z0-9._/-]+$/.test(result.image) || /^\/uploads\/[a-z0-9.-]+$/.test(result.image) || /^https:\/\//.test(result.image))) bad('Seleccione una imagen de la biblioteca o una dirección HTTPS.');
   if (result.image && !result.alt) bad('Describa la imagen para quienes no pueden verla.');
   for (const key of ['url','facebook']) if (result[key] && !/^https:\/\//.test(result[key])) bad('Use una dirección HTTPS.');
@@ -30,11 +52,15 @@ function bad(message) { const error=new Error(message); error.status=400; throw 
 export async function changeDocument(input,user) {
   const id = input.id || `${input.type}-${crypto.randomBytes(6).toString('hex')}`;
   if(!safeId(id)) bad('Identificador no válido.');
-  const previous=await store.getDocument(id);
+  const previous=await store.getDocument(id) || chapterDefaults().find(doc => doc.id === id);
   const expected=Number(input.version)||0;
   if(previous && previous.version!==expected) { const error=new Error('Hay cambios más recientes. Recargue antes de guardar.');error.status=409;throw error; }
   if(previous && previous.type!==input.type) bad('No se puede cambiar el tipo de un registro.');
   const action=input.action || 'draft';
+  if (isInstitutionalChapter(previous)) {
+    if (['archive','unpublish'].includes(action)) bad('Los capítulos institucionales se conservan; puedes editarlos y recuperar versiones.');
+    if (input.data && input.data.category !== 'history-chapter') bad('El capítulo debe conservar su sección de Historia.');
+  } else if (input.data?.category === 'history-chapter') bad('Edita uno de los capítulos institucionales existentes.');
   if(!['draft','publish','unpublish','archive','restore','revision'].includes(action)) bad('Acción no válida.');
   if(!previous && !['draft','publish'].includes(action)) bad('El registro no existe.');
   const now=new Date().toISOString();
@@ -59,6 +85,6 @@ export async function changeDocument(input,user) {
   return store.saveDocument(doc,expected);
 }
 export async function publicDocuments() {
-  const all=await store.allDocuments();
+  const all=withEditorialDefaults(await store.allDocuments()).map(withAlbumDefaults);
   return all.filter(d=>!d.archived && d.published && (d.type!=='notice'||((!d.published.startsAt||Date.parse(d.published.startsAt)<=Date.now())&&(!d.published.endsAt||Date.parse(d.published.endsAt)>=Date.now())))).map(d=>({id:d.id,type:d.type,publishedAt:d.publishedAt||d.updatedAt,...d.published})).sort((a,b)=>(a.order||0)-(b.order||0)||a.title.localeCompare(b.title,'es'));
 }

@@ -3,8 +3,8 @@ import {esc,photo} from './html.js';
 
 export const programAlbums=JSON.parse(fs.readFileSync(new URL('./data/program-albums.json',import.meta.url),'utf8')).groups;
 
-export function programGallery(id){
- const album=programAlbums.find(group=>group.id===id);
+export function programGallery(id, program={}){
+ const album=Array.isArray(program.photos)?{id,title:program.title,cover:program.cover,photos:program.photos}:program.image?{id,title:program.title,cover:program.image,photos:[{image:program.image,alt:program.alt||program.title}]}:programAlbums.find(group=>group.id===id);
  if(!album?.photos.length)return '';
  const cover=album.photos.find(item=>item.image===album.cover)||album.photos[0];
  const rest=album.photos.filter(item=>item!==cover);
