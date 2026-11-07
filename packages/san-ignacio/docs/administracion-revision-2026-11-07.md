@@ -43,7 +43,7 @@ El cierre de esta entrega se versiona en feature/san-ignacio por solicitud del u
 ## Verificación
 
 - Sintaxis de los 38 archivos activos.
-- Suite de 116 pruebas aprobadas, sin fallos. Se excluye expresamente la prueba antigua del logotipo que requiere un archivo externo en Downloads.
+- Suite de 118 pruebas aprobadas, sin fallos. Se excluye expresamente la prueba antigua del logotipo que requiere un archivo externo en Downloads.
 - La suite HTTP comprueba el menú de siete entradas, los permisos con la cuenta habitual, la conservación del contenido permanente, eventos, avisos programados y vencidos, fotografías, retirada y recuperación, horarios y contacto, conflictos concurrentes, CSRF, consultas y persistencia tras reiniciar.
 - Las pruebas usan bases separadas bajo .local/qa-*. No prueban una integración real con los servicios de producción.
 - El control del navegador había permanecido indisponible; la comprobación visual no se sustituye por la suite HTTP.
@@ -73,3 +73,9 @@ Pastoral permite seleccionar y guardar imágenes de las dos colecciones: Fotogra
 El caso INEA se verificó en una base aislada: fotografía procedente de la galería, borrador separado de la publicación, vista previa, cambio de principal, conservación del orden institucional y retirada sin eliminar la imagen. También se comprobaron fichas nuevas con fotografías en los tres apartados y la conservación de los álbumes existentes. No se asignó una fotografía a INEA en la vista de revisión por inferencia; la secretaria puede elegir la correcta.
 
 Corrección posterior: se eliminó la limitación errónea que ocultaba Carteles y materiales al abrir el selector desde Pastoral. La regresión comprueba las dos pestañas y la selección de un cartel en el propio controlador del selector, además de su guardado, vista previa y publicación en INEA sin cambiar de colección.
+
+## Reclasificación desde el selector
+
+El control Mover a ya estaba en la sección Imágenes, pero no en la ventana que abre Elegir imágenes desde Pastoral. Se añadió un botón por miniatura y el movimiento de la selección a cualquiera de los dos archivos. Los mensajes aparecen dentro del selector y las selecciones se conservan al mover. El destino de una subida se llama Guardar nuevas imágenes en para distinguirlo de reclasificar imágenes ya guardadas. El formulario de subida se abre plegado al elegir imágenes existentes, y desplegado cuando se solicita subir archivos.
+
+La reclasificación mantiene las mismas direcciones, originales y asignaciones a publicaciones. Si una imagen todavía pertenece a la galería pública, el servidor conserva la condición de retirarla de esa galería antes de pasarla a Carteles y materiales; cualquier rechazo se explica en la misma ventana. Se probaron los movimientos en ambos sentidos y la conservación de una imagen cuando el servidor rechaza el cambio.

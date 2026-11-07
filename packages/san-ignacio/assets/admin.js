@@ -1,5 +1,5 @@
 import {pastoralArea,communityRank} from './content-groups.js';
-import {ImageArchive} from './image-archive.js?v=3';
+import {ImageArchive} from './image-archive.js?v=4';
 import {publicationPhotos,imagePickerMode} from './publication-photos.js?v=2';
 import {setupPasswordToggle} from './password-toggle.js?v=1';
 import {sections,recordData,publicationState} from './admin-sections.js?v=7';

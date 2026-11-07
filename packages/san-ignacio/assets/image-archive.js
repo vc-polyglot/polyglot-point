@@ -9,8 +9,9 @@ export class ImageArchive {
   this.dialog.addEventListener('close',()=>{this.returnFocus?.focus();if(this.mode==='archive')this.onRefresh();});
   this.dialog.querySelector('#image-search').addEventListener('input',()=>this.renderPicker());
   this.dialog.querySelector('#library-tabs').addEventListener('click',event=>{const button=event.target.closest('[data-collection]');if(button){this.collection=button.dataset.collection;this.renderPicker();}});
-  this.dialog.querySelector('#library-grid').addEventListener('click',event=>{const button=event.target.closest('[data-pick]');if(!button)return;const image=this.items.find(item=>item.url===button.dataset.pick);if(this.mode==='single'){this.onChoose([{image:image.url,alt:image.alt}]);this.dialog.close();return;}if(this.selected.has(image.url))this.selected.delete(image.url);else{if(this.selected.size>=20){this.dialog.querySelector('#library-count').textContent='Puedes elegir hasta 20 imágenes por publicación.';return;}this.selected.set(image.url,{image:image.url,alt:image.alt});}this.renderPicker();});
+  this.dialog.querySelector('#library-grid').addEventListener('click',async event=>{const move=event.target.closest('[data-move-image]');if(move){const item=this.items.find(image=>image.url===move.dataset.moveImage);if(item)await this.moveImages([item.url],item.collection==='photograph'?'material':'photograph',{picker:true});return;}const button=event.target.closest('[data-pick]');if(!button)return;const image=this.items.find(item=>item.url===button.dataset.pick);if(this.mode==='single'){this.onChoose([{image:image.url,alt:image.alt}]);this.dialog.close();return;}if(this.selected.has(image.url))this.selected.delete(image.url);else{if(this.selected.size>=20){this.dialog.querySelector('#library-count').textContent='Selecciona hasta 20 imágenes a la vez.';return;}this.selected.set(image.url,{image:image.url,alt:image.alt});}this.renderPicker();});
   this.dialog.querySelector('#use-images').addEventListener('click',()=>{if(this.selected.size){this.onChoose([...this.selected.values()]);this.dialog.close();}});
+  this.dialog.querySelector('#move-selected').addEventListener('click',()=>this.moveImages([...this.selected.keys()],this.dialog.querySelector('#move-target').value,{picker:true}));
   this.dialog.querySelector('#image-upload-form').addEventListener('submit',event=>this.upload(event));
   document.querySelector('#admin-workspace').addEventListener('click',event=>this.panelClick(event));
  }
@@ -30,11 +31,30 @@ export class ImageArchive {
   if(event.target.closest('[data-published-gallery]')){this.onShowGallery();return;}
   if(event.target.closest('[data-return-archive]')){this.onRefresh();return;}
   const gallery=event.target.closest('[data-gallery-image]');if(gallery){const image=this.items.find(item=>item.url===gallery.dataset.galleryImage);const existing=this.publishedFor(image.url)||this.records.find(doc=>doc.type==='gallery'&&doc.draft?.image===image.url);this.onGallery(image,existing);return;}
-  const move=event.target.closest('[data-move-image]');if(move){const item=this.items.find(item=>item.url===move.dataset.moveImage);move.disabled=true;try{const {image}=await this.api('/api/admin/images',{method:'PATCH',body:JSON.stringify({url:item.url,version:item.version,collection:item.collection==='photograph'?'material':'photograph'})});this.items=this.items.map(entry=>entry.url===image.url?image:entry);this.renderArchive();this.status('Imagen movida a '+collectionName(image.collection)+'.');}catch(error){this.status(error.message,true);move.disabled=false;}}
+  const move=event.target.closest('[data-move-image]');if(move){const item=this.items.find(image=>image.url===move.dataset.moveImage);if(item)await this.moveImages([item.url],item.collection==='photograph'?'material':'photograph');}
+ }
+ async moveImages(urls,collection,{picker=false}={}){
+  if(this.busy||!urls.length)return;
+  this.busy=true;
+  const controls=picker?[...this.dialog.querySelectorAll('input,select,button')]:[...document.querySelectorAll('[data-move-image]')];
+  const states=controls.map(control=>control.disabled);controls.forEach(control=>control.disabled=true);
+  let moved=0;const failures=[];
+  try{
+   for(const url of urls){const item=this.items.find(image=>image.url===url);if(!item||item.collection===collection)continue;
+    try{const {image}=await this.api('/api/admin/images',{method:'PATCH',body:JSON.stringify({url:item.url,version:item.version,collection})});this.items=this.items.map(entry=>entry.url===image.url?image:entry);moved++;if(this.photosOnly&&collection!=='photograph')this.selected.delete(item.url);}
+    catch(error){failures.push((item.title||item.alt)+': '+error.message);}
+   }
+  }finally{
+   this.busy=false;controls.forEach((control,index)=>{if(control.isConnected!==false)control.disabled=states[index];});
+   if(moved)this.collection=this.photosOnly?'photograph':collection;
+   if(picker)this.renderPicker();else this.renderArchive();
+   const message=(moved?moved+(moved===1?' imagen movida a ':' imágenes movidas a ')+collectionName(collection)+'. ':'')+(failures.length?failures.join(' '):!moved?'Las imágenes ya están en ese archivo.':'');
+   if(picker){const feedback=this.dialog.querySelector('#library-feedback');feedback.textContent=message;feedback.classList.toggle('error',!!failures.length);}else this.status(message,!!failures.length);
+  }
  }
  async open({mode='multiple',initial=[],collection}={}){
   this.returnFocus=document.activeElement;this.mode=mode;this.multiple=['multiple','photographs'].includes(mode);this.photosOnly=mode==='single';this.selected=new Map(initial.map(photo=>[photo.image,photo]));if(collection)this.collection=collection;if(this.photosOnly)this.collection='photograph';
-  this.dialog.querySelector('[name=image]').multiple=mode!=='single';this.dialog.querySelector('#library-title').textContent=mode==='archive'?'Guardar imágenes en el archivo':'Elegir imágenes';this.dialog.querySelector('#image-search').value='';this.dialog.querySelector('#upload-status').textContent='';this.dialog.showModal();
+  this.dialog.querySelector('.upload-disclosure').open=mode==='archive';this.dialog.querySelector('[name=image]').multiple=mode!=='single';this.dialog.querySelector('#library-title').textContent=mode==='archive'?'Guardar imágenes en el archivo':'Elegir imágenes';this.dialog.querySelector('#image-search').value='';this.dialog.querySelector('#upload-status').textContent='';this.dialog.querySelector('#library-feedback').textContent='';this.dialog.showModal();
   this.dialog.querySelector('#library-grid').innerHTML='<p class="empty">Cargando imágenes…</p>';
   try{await this.load();this.renderPicker();}catch(error){this.dialog.querySelector('#library-count').textContent=error.message;}
   this.dialog.querySelector('#image-search').focus();
@@ -43,8 +63,9 @@ export class ImageArchive {
   this.dialog.querySelector('#library-tabs').innerHTML=this.tabs(this.photosOnly);
   this.dialog.querySelector('[name=collection]').value=this.collection;this.dialog.querySelector('[name=collection]').disabled=this.photosOnly;
   const query=this.dialog.querySelector('#image-search').value.toLocaleLowerCase('es'),items=this.items.filter(item=>item.collection===this.collection&&(item.alt+' '+item.title).toLocaleLowerCase('es').includes(query));
-  this.dialog.querySelector('#library-count').textContent=items.length+' imágenes disponibles'+(this.multiple?' · '+this.selected.size+' seleccionadas':'');
-  this.dialog.querySelector('#library-grid').innerHTML=items.map(item=>`<button type="button" ${this.mode==='archive'?'disabled':''} data-pick="${esc(item.url)}" aria-pressed="${this.selected.has(item.url)}"><img src="${esc(item.thumb||item.url)}" alt="" loading="lazy"><span>${this.selected.has(item.url)?'✓ ':''}${esc(item.title||item.alt)}</span></button>`).join('')||'<p class="empty">No hay imágenes aquí. Puedes subirlas desde tu computadora.</p>';
+  this.dialog.querySelector('#library-count').textContent=items.length+' imágenes disponibles'+(this.multiple||this.mode==='archive'?' · '+this.selected.size+' seleccionadas':'');
+  this.dialog.querySelector('#library-grid').innerHTML=items.map(item=>`<article class="library-item"><button type="button" class="library-select" data-pick="${esc(item.url)}" aria-pressed="${this.selected.has(item.url)}"><img src="${esc(item.thumb||item.url)}" alt="" loading="lazy"><span>${this.selected.has(item.url)?'✓ ':''}${esc(item.title||item.alt)}</span></button><button type="button" class="library-move" data-move-image="${esc(item.url)}">Mover a ${item.collection==='photograph'?'Carteles y materiales':'Fotografías'}</button></article>`).join('')||'<p class="empty">No hay imágenes aquí. Puedes subirlas desde tu computadora.</p>';
+  this.dialog.querySelector('#move-selection').hidden=this.mode==='single';this.dialog.querySelector('#move-selected').disabled=!this.selected.size;this.dialog.querySelector('#move-selected').textContent='Mover '+this.selected.size+(this.selected.size===1?' imagen':' imágenes');this.dialog.querySelector('#move-target').value=this.collection==='photograph'?'material':'photograph';
   const use=this.dialog.querySelector('#use-images');use.hidden=!this.multiple;use.disabled=!this.selected.size;use.textContent='Usar '+this.selected.size+(this.selected.size===1?' imagen':' imágenes');
  }
  async upload(event){
