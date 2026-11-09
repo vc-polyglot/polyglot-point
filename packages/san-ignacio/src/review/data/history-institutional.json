@@ -1,4 +1,10 @@
 {
+  "additionalSources": {
+    "CONSERVACION-001": {
+      "file": "CONSERVACION Y MEJORA.docx",
+      "sha256": "fcda0514016e7468c57baa2e1cad3ec8d8dd667fc756d79ce3aeec8b0e437fc2"
+    }
+  },
   "chapters": [
     {
       "id": "origenes",
@@ -190,6 +196,26 @@
         "La idea de construir criptas bajo el atrio estuvo presente desde la edificación del templo. La devaluación de 1994 impidió llevar adelante el proyecto en ese momento. Más tarde se decidió construirlas a un lado del atrio, con un diseño y una iluminación acordes con la arquitectura de la iglesia.",
         "Las obras comenzaron en agosto de 1999 y concluyeron en julio de 2000, bajo la dirección del arquitecto José Manuel Bernús. El conjunto contó con 1,922 nichos fabricados en madera de encino americano, concebidos para crear un ambiente de serenidad y espiritualidad.",
         "El 31 de julio de 2000, durante la fiesta de San Ignacio de Loyola, el provincial Mario López Barrio, S.J., bendijo solemnemente las criptas."
+      ]
+    },
+    {
+      "id": "conservacion-y-mejora",
+      "period": "Desde 2009",
+      "title": "Conservación y mejora",
+      "sources": [
+        "CONSERVACION-001"
+      ],
+      "paragraphs": [
+        "La conservación y mejora de la Iglesia de San Ignacio de Loyola fue un proceso que comenzó con el deseo de devolverle su sobria belleza original.",
+        "Desde el año 2009, todavía con el P. Fernando Suárez, S.J., como rector, se había considerado atender las múltiples goteras y el evidente deterioro del templo. Pero no fue sino hasta la llegada del P. Joaquín Gallo, S.J., que esta posibilidad fue tomando forma. Sin embargo, cuando fue destinado a colaborar en la Basílica de Guadalupe, el P. Carlos Vigil, S.J., tomó las riendas de este proyecto en el año 2016.",
+        "El P. Vigil, con el convencimiento de que hubiese sido irresponsable permitir que se siguiera deteriorando este bien cultural tan bello, se dio a la tarea de conformar un equipo de especialistas para llevar adelante las diversas tareas administrativas y operativas del proyecto.",
+        "Transcurrieron dos años desde las primeras reuniones de planeación hasta el inicio formal de trabajos en el templo. En este tiempo se trabajó arduamente en el rubro administrativo para realizar estudios e investigaciones, obtener planos y documentos referentes a la Iglesia de San Ignacio y definir un proyecto de intervención minuciosamente planeado.",
+        "Se obtuvieron todos los permisos y registros ante el SAT, el INBAL, la SEDUVI, el IMSS, la alcaldía Miguel Hidalgo y el sindicato de trabajadores de la construcción, así como los seguros de responsabilidad civil. El departamento jurídico de la Provincia Mexicana de la Compañía de Jesús negoció y revisó los contratos con los diversos proveedores involucrados.",
+        "Se consolidó un convenio con la Fundación San Ignacio de Loyola, A.C., para expedir recibos deducibles a los donantes y se inició la campaña de procuración de fondos llevada adelante por el propio P. Vigil.",
+        "Dentro de las tareas operativas se debieron también diseñar e implementar instalaciones provisionales para facilitar todas las tareas programadas y lograr que todos trabajaran con total seguridad. Se adquirieron herramientas y equipos, algunos hechos a la medida, para responder a las necesidades específicas de este proyecto.",
+        "Se repararon artesanalmente los profundos daños encontrados en los muros y vigas de acero debido a la humedad. Se realizó la impermeabilización total de las cubiertas; se restauraron los 277 m² de vitrales; se sustituyeron una por una las 260,000 piezas de cerámica en la cubierta exterior, fabricadas con el diseño y tamaño original.",
+        "Se rebarnizaron puertas y lambrines, las 84 bancas y 27 reclinatorios. Se pulió por completo el piso de mármol de Santo Tomás, se sustituyó la vieja alfombra del presbiterio con este mismo material y se renovó el piso del coro. Se instaló un nuevo sistema de sonido e iluminación de última generación.",
+        "Transcurrió una pandemia, hecho que alargó e hizo más cara la restauración, y día a día se fue transformando este templo, que fue recuperando su belleza original, según el deseo del P. Carlos Vigil Ávalos, S.J., quien falleció en julio de 2021. La generosidad de cientos de bienhechores hizo posible la restauración de este templo dedicado a San Ignacio de Loyola."
       ]
     }
   ]

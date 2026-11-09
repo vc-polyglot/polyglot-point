@@ -22,20 +22,22 @@ test('La narración tiene capítulos únicos y todos sus enlaces llevan al mismo
  assert.equal(new Set(ids).size,ids.length);
  for(const match of html.matchAll(/href="#([^"]+)"/g))assert.ok(ids.includes(match[1]),'Sin destino: '+match[1]);
  const chapters=institutionalHistory.chapters;
- assert.equal(chapters.length,9);
+ assert.equal(chapters.length,10);
  for(const chapter of chapters){
   assert.equal((main.match(new RegExp('id="'+chapter.id+'"','g'))||[]).length,1);
-  assert.ok(chapter.sources.every(id=>historyArchive.documents.some(doc=>doc.id===id)));
+  assert.ok(chapter.sources.every(id=>historyArchive.documents.some(doc=>doc.id===id)||institutionalHistory.additionalSources?.[id]));
   for(const paragraph of chapter.paragraphs)assert.equal(chapters.flatMap(c=>c.paragraphs).filter(p=>p===paragraph).length,1);
  }
- assert.equal((main.match(/class="history-milestone"/g)||[]).length,9);
+ assert.equal((main.match(/class="history-milestone"/g)||[]).length,10);
+ assert.equal(chapters.at(-1).id,'conservacion-y-mejora');
+ assert.match(main,/<a href="#conservacion-y-mejora">Conservación y mejora<\/a>/);
  assert.doesNotMatch(main,/data-history-documents|history-inline-document|archivo-documental/);
 });
 
 test('La historia integra los datos centrales sin repetir patronato, financiamiento o construcción',()=>{
  assert.equal((main.match(/El patronato y el financiamiento/g)||[]).length,1);
  assert.equal((main.match(/La construcción y la apertura al culto/g)||[]).length,1);
- for(const text of ['1,526.74','843.85','18 de junio de 1952','18 de marzo de 1956','25 de noviembre','24 de septiembre de 1957','28 de julio de 1961','1965','Miguel Cabrera','treinta pinturas','Tepotzotlán','1991','1,922','31 de julio de 2000'])assert.ok(main.includes(text),text);
+ for(const text of ['1,526.74','843.85','18 de junio de 1952','18 de marzo de 1956','25 de noviembre','24 de septiembre de 1957','28 de julio de 1961','1965','Miguel Cabrera','treinta pinturas','Tepotzotlán','1991','1,922','31 de julio de 2000','Desde 2009','Joaquín Gallo','2016','277 m²','260,000','84 bancas','27 reclinatorios','julio de 2021','cientos de bienhechores'])assert.ok(main.includes(text),text);
  assert.equal((main.match(/cédulas hipotecarias/g)||[]).length,1);
  assert.equal((main.match(/colección de treinta pinturas/g)||[]).length,1);
 });
