@@ -38,7 +38,7 @@ test('El orden institucional es jóvenes, adultos mayores e INEA al final',()=>{
  assert.equal((html.match(/class="community-feature"/g)||[]).length,2);
 });
 
-function viewer({motion=false,reduced=false}={}){
+function viewer({motion=false,reduced=false,buttonSelector='.photo-button'}={}){
  class Node{
   constructor(){this.listeners={};this.dataset={};this.animations=[];
    if(motion)this.animate=(frames,options)=>{let resolve,reject;const animation={frames,options,finished:new Promise((yes,no)=>{resolve=yes;reject=no;}),finish:()=>resolve(),cancel:()=>{animation.cancelled=true;reject(new Error('cancelled'));}};this.animations.push(animation);return animation;};
@@ -54,7 +54,7 @@ function viewer({motion=false,reduced=false}={}){
  const dialog=new Node(),image=new Node(),caption={},close=new Node(),next=new Node(),prev=new Node();
  dialog.querySelector=selector=>({'img':image,'figcaption':caption,'.lightbox-close':close,'.lightbox-next':next,'.lightbox-prev':prev}[selector]);
  dialog.showModal=()=>dialog.open=true;dialog.close=()=>{dialog.open=false;dialog.listeners.close();};
- setupPhotoViewer({querySelectorAll:()=>buttons,querySelector:()=>dialog},{matchMedia:()=>({matches:reduced,addEventListener(){}}),getComputedStyle:()=>({opacity:'1'})});
+ setupPhotoViewer({querySelectorAll:selector=>selector.split(',').includes(buttonSelector)?buttons:[],querySelector:()=>dialog},{matchMedia:()=>({matches:reduced,addEventListener(){}}),getComputedStyle:()=>({opacity:'1'})});
  return {buttons,dialog,image,caption,close,next,prev};
 }
 
@@ -73,6 +73,14 @@ test('Las flechas del teclado recorren la colección y la galería general manti
 
 test('Las páginas sin imágenes ampliables no requieren visor',()=>{
  assert.doesNotThrow(()=>setupPhotoViewer({querySelectorAll:()=>[],querySelector:()=>null}));
+});
+
+test('Un clic amplía las imágenes de eventos y de la Agenda de portada',()=>{
+ for(const buttonSelector of ['.publication-image','.agenda-visual[data-image]']){
+  const e=viewer({buttonSelector});e.buttons[0].listeners.click();
+  assert.equal(e.dialog.open,true);assert.equal(e.image.src,'young0.jpg');
+  e.close.listeners.click();assert.equal(e.buttons[0].focused,true);
+ }
 });
 
 test('Un clic amplía el retrato y otro en la imagen lo cierra y devuelve el foco',()=>{

@@ -31,6 +31,9 @@ test('La portada muestra cinco próximos por fecha y usa la imagen principal de 
  assert.deepEqual(upcomingEvents(events,now,5).map(e=>e.id),['e0','e1','e2','e3','e4']);
  assert.equal((html.match(/data-agenda-slide /g)||[]).length,5);
  assert.match(html,/src="\/assets\/images\/liturgia-1280.jpg"/);
+ assert.match(html,/<h2 id="home-agenda-title">Agenda<\/h2>/);
+ assert.match(html,/<button type="button" class="agenda-visual" data-image="\/assets\/images\/liturgia-1280.jpg"/);
+ assert.match(html,/data-close-on-image-click="true"/);
  assert.doesNotMatch(html,/nosotros-1280.jpg|data-event-id="pasado"|data-event-id="e5"/);
  assert.match(html,/data-agenda-controls hidden/);
  assert.match(html,/aria-label="1. Actividad e0"/);
@@ -66,4 +69,12 @@ test('Las actividades anteriores y las grabaciones conservan un solo destino',()
  assert.equal((agenda.match(/href="\/agenda\/pasado"/g)||[]).length,1);
  assert.doesNotMatch(agenda,/Grabaciones y publicaciones|Grabación única|data-agenda-carousel/);
  assert.match(renderPage('/musica',docs),/Grabación única/);
+});
+
+test('La fotografía de la actividad se amplía sin un rótulo sobre la imagen',()=>{
+ const event=activity('cartel','2099-11-12T18:00:00-06:00',{photos:[{image:'/assets/images/liturgia-1280.jpg',alt:'Cartel de la actividad'}]});
+ const html=renderPage('/agenda/cartel',[event]);
+ assert.match(html,/<button type="button" class="publication-image publication-image-main"[^>]*data-image="\/assets\/images\/liturgia-1280.jpg"/);
+ assert.doesNotMatch(html,/Ver imagen completa/);
+ assert.match(html,/id="lightbox"/);
 });

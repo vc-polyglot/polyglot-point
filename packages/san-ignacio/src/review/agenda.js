@@ -6,12 +6,12 @@ export function agendaPreview(docs, now = Date.now()) {
   const events = upcomingEvents(docs, now, 5);
   if (!events.length) return '';
   return `<section class="wrap agenda-preview" aria-labelledby="home-agenda-title" data-agenda-carousel ${events.length > 1 ? 'aria-roledescription="carrusel"' : ''}>
-    <div class="section-heading"><div><p class="eyebrow">La comunidad se encuentra</p><h2 id="home-agenda-title">En agenda</h2></div><a class="text-link" href="/agenda">Ver toda la agenda ${arrow}</a></div>
+    <div class="section-heading"><div><p class="eyebrow">La comunidad se encuentra</p><h2 id="home-agenda-title">Agenda</h2></div><a class="text-link" href="/agenda">Ver toda la agenda ${arrow}</a></div>
     <div class="agenda-slides">${events.map((event, index) => {
       const image = publicationPhotos(event)[0];
       const href = '/agenda/' + esc(event.id);
       return `<article class="agenda-card${image ? '' : ' agenda-card-text'}" data-agenda-slide data-event-id="${esc(event.id)}" ${index ? 'hidden' : ''} ${events.length > 1 ? `role="group" aria-roledescription="actividad" aria-label="${index + 1} de ${events.length}"` : ''}>
-        ${image ? `<a class="agenda-visual" href="${href}" aria-label="Ver actividad: ${esc(event.title)}">${photo(image.image, image.alt || event.title, {sizes: '(max-width: 720px) calc(100vw - 40px), 55vw'})}</a>` : ''}
+        ${image ? `<button type="button" class="agenda-visual" data-image="${esc(image.image)}" data-caption="${esc(event.title)}" data-photo-collection="agenda-${esc(event.id)}" data-close-on-image-click="true" aria-haspopup="dialog" aria-controls="lightbox" aria-label="Ampliar imagen de ${esc(event.title)}">${photo(image.image, image.alt || event.title, {sizes: '(max-width: 720px) calc(100vw - 40px), 55vw'})}</button>` : ''}
         <div class="agenda-copy"><p class="eyebrow">${esc(event.category || 'Próximo encuentro')}</p><time datetime="${esc(event.startsAt)}">${esc(formatDate(event.startsAt))}</time><h3><a href="${href}">${esc(event.title)}</a></h3>${event.location ? `<p class="agenda-location">${esc(event.location)}</p>` : ''}${event.summary ? `<p class="agenda-summary">${esc(event.summary)}</p>` : ''}<a class="text-link" href="${href}">Ver actividad ${arrow}</a></div>
       </article>`;
     }).join('')}</div>

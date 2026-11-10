@@ -1,5 +1,5 @@
 export function setupPhotoViewer(doc=document,win=globalThis.window){
- const gallery=[...doc.querySelectorAll('.photo-button')],dialog=doc.querySelector('#lightbox');
+ const gallery=[...doc.querySelectorAll('.photo-button,.publication-image,.agenda-visual[data-image]')],dialog=doc.querySelector('#lightbox');
  if(!dialog||!gallery.length)return;
  const reduced=win?.matchMedia?.('(prefers-reduced-motion: reduce)');
  const image=dialog.querySelector('img');
