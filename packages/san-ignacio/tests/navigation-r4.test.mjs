@@ -8,7 +8,7 @@ import {introBootstrap} from '../src/review/intro.js';
 import {initHeroReveal,introPhase,INTRO_TIMELINE} from '../assets/entrance.js';
 
 test('Historia y Galería son enlaces independientes y Pastoral reúne la comunidad',()=>{
- assert.deepEqual(navigationGroups.map(g=>g[0]),['Vida litúrgica','Sacramentos','Pastoral','Nosotros','Agua de San Ignacio','Historia','Galería','Visítanos']);
+ assert.deepEqual(navigationGroups.map(g=>g[0]),['Vida litúrgica','Sacramentos','Pastoral','Nosotros','Agua de San Ignacio','Agenda','Historia','Galería','Visítanos']);
  assert.deepEqual(navigationGroups.find(g=>g[0]==='Historia'),['Historia','/historia',[]]);
  assert.deepEqual(navigationGroups.find(g=>g[0]==='Galería'),['Galería','/galeria',[]]);
  const html=navigation('/pastoral');

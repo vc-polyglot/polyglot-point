@@ -25,6 +25,7 @@ test('Un único panel de secretaría, con permisos y publicación aislados',asyn
  try{await start();
  await t.test('El sitio conserva sus páginas y sólo existe el menú cotidiano acordado',async()=>{
   assert.deepEqual(sections.map(s=>s.id),['overview','event','program','notice','images','messages','practical']);
+  assert.equal(sections.find(s=>s.id==='event').label,'Agenda');
   for(const route of ['/','/vida-liturgica','/sacramentos','/pastoral','/agenda','/nosotros','/agua-de-san-ignacio','/historia','/galeria','/contacto']){const r=await request(route);assert.equal(r.status,200,route);assert.match(r.text,/<h1/);assert.match(r.text,/<link rel="canonical"/);}
   const login=await request('/admin');assert.match(login.text,/id="toggle-password"/);assert.match(login.text,/type="button" class="password-toggle"/);assert.equal(login.response.headers.get('cache-control'),'no-store');
   for(const route of ['/api/admin/documents','/api/admin/images','/api/admin/messages','/api/admin/export']){assert.equal((await request(route)).status,401);assert.equal((await request(route,{headers:{cookie:'sanIgnacio.sid=inventada','X-User-Role':'admin'}})).status,401);}
@@ -65,6 +66,7 @@ test('Un único panel de secretaría, con permisos y publicación aislados',asyn
   assert.doesNotMatch((await request('/agenda')).text,/Retiro QA/);
   const preview=await request('/admin/preview/'+event.id,{authorized:true});assert.equal(preview.status,200);assert.match(preview.text,/Retiro QA/);assert.match(preview.text,/&lt;script&gt;/);assert.doesNotMatch(preview.text,/<script>alert/);
   event=await save({id:event.id,type:'event',version:event.version,data:event.draft},'publish');assert.match((await request('/agenda')).text,/Retiro QA/);
+  const home=(await request('/')).text;assert.match(home,/data-agenda-carousel/);assert.equal((home.match(new RegExp('data-event-id="'+event.id+'"','g'))||[]).length,1);
   const detail=await request('/agenda/'+event.id);assert.match(detail.text,/18:00/);assert.match(detail.text,/Salón/);
  });
  await t.test('Guardar cambios conserva la publicación y los conflictos no sobrescriben',async()=>{
@@ -79,6 +81,7 @@ test('Un único panel de secretaría, con permisos y publicación aislados',asyn
  });
  await t.test('Retirar y recuperar conserva fotografías y versiones, sin republicar automáticamente',async()=>{
   event=await save({id:event.id,type:'event',version:event.version},'archive');assert.equal(event.archived,true);assert.doesNotMatch((await request('/agenda')).text,/Retiro QA/);
+  assert.doesNotMatch((await request('/')).text,/Retiro QA/);
   event=await save({id:event.id,type:'event',version:event.version},'restore');assert.equal(event.archived,false);assert.equal(event.published,null);
   assert.ok(stored().find(d=>d.id===event.id).history.length>=4);
   assert.equal((await request('/api/admin/documents',{method:'POST',authorized:true,body:{id:event.id,type:'event',version:event.version,action:'revision',revision:0}})).status,403);

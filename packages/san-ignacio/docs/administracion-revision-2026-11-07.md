@@ -89,3 +89,11 @@ Los controles Volver y el Atrás normal del navegador usan un historial interno 
 Se retiró el enlace Administración del pie de todas las páginas públicas. La ruta /admin se conserva como acceso directo al formulario de la secretaria. No se configuró ni compró un dominio nuevo. Ocultar el enlace no es el mecanismo de autorización: el servidor sigue exigiendo sesión para los datos y las operaciones privadas.
 
 La revisión local comprueba rechazo de lecturas y escrituras anónimas de documentos, imágenes y mensajes, rechazo de cookies inventadas, redirección de vistas previas al acceso, invalidación de la sesión anterior al login, controles de origen y CSRF y cierre de sesión. Estos resultados no constituyen una auditoría exhaustiva ni una verificación remota de la infraestructura de producción.
+
+## Agenda y portada — 10 de noviembre de 2026
+
+El apartado Eventos ahora se llama Agenda y conserva los mismos registros, permisos y formularios. Publicar una actividad alimenta su ficha, la agenda completa y el carrusel de la portada, situado inmediatamente debajo de los horarios de misa. La imagen principal elegida en el formulario es también la del carrusel; las demás permanecen en la ficha. No se crea otro contenido ni otra subida.
+
+La portada muestra las cinco actividades próximas por fecha. Si hay una sola, aparece fija; sin actividades, el bloque no aparece. El cambio automático funciona cada ocho segundos en escritorio, con pausa, indicadores, flechas y teclado. En móvil y con movimiento reducido el avance es manual. Interactuar detiene el cambio automático; pasar el puntero, ocultar la pestaña o sacar el bloque de la pantalla lo pausa.
+
+Admin, Agenda y portada comparten el criterio de vigencia: fecha final si existe; si no, final del día de inicio en Ciudad de México. Al finalizar se conserva la actividad entre los encuentros anteriores. La sección de grabaciones se consulta en Música y ya no se repite en Agenda.

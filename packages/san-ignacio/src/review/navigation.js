@@ -5,6 +5,7 @@ export const navigationGroups=[
  ['Pastoral','/pastoral',[['Catecismo','/pastoral#catecismo',[['Primera Comunión','/pastoral#catecismo-primera-comunion'],['Confirmación','/pastoral#catecismo-confirmacion']]],['Áreas pastorales','/pastoral#areas-pastorales'],['Grupos y comunidad','/pastoral#grupos-comunidad'],['Música','/musica']]],
  ['Nosotros','/nosotros',[]],
  ['Agua de San Ignacio','/agua-de-san-ignacio',[]],
+ ['Agenda','/agenda',[]],
  ['Historia','/historia',[]],
  ['Galería','/galeria',[]],
  ['Visítanos','/contacto',[]]
