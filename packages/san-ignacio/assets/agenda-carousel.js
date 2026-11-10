@@ -45,7 +45,12 @@ export function setupAgendaCarousel(doc = document, win = window) {
   root.querySelector('[data-agenda-prev]').addEventListener('click', () => show(index - 1, true));
   root.querySelector('[data-agenda-next]').addEventListener('click', () => show(index + 1, true));
   dots.forEach((dot, i) => dot.addEventListener('click', () => show(i, true)));
-  play.addEventListener('click', () => {paused = !paused; sync();});
+  play.addEventListener('click', () => {
+    paused = !paused;
+    // An explicit play request resumes even while the pointer is on this button.
+    if (!paused) hovered = false;
+    sync();
+  });
   root.addEventListener('mouseenter', () => {hovered = true; sync();});
   root.addEventListener('mouseleave', () => {hovered = false; sync();});
   root.addEventListener('focusin', event => {if (event.target !== play) {paused = true; sync();}});

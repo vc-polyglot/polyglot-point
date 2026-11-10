@@ -3,7 +3,7 @@ import {setupNavigation} from './navigation-motion.js';
 import {initCursor} from './cursor.js';
 import {initHeroReveal} from './entrance.js';
 import {setupPeopleMotion} from './people-motion.js';
-import {setupAgendaCarousel} from './agenda-carousel.js?v=1';
+import {setupAgendaCarousel} from './agenda-carousel.js?v=2';
 setupNavigation();
 initCursor();
 initHeroReveal();

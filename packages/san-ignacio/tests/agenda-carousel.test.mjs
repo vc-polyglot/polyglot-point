@@ -31,6 +31,18 @@ test('El puntero, el foco, la pestaña oculta y la salida de la página detienen
  e.win.emit('pagehide');assert.equal(e.timers.size,0);e.win.emit('pageshow');assert.equal(e.timers.size,1);
 });
 
+test('Reproducir reanuda aunque el ratón permanezca sobre el botón',()=>{
+ const e=environment();
+ e.root.emit('mouseenter');e.root.emit('focusin',{target:e.next});e.next.emit('click');
+ assert.equal(e.timers.size,0);assert.equal(e.play.textContent,'Reproducir');
+ e.root.emit('focusin',{target:e.play});e.play.emit('click');
+ assert.equal(e.timers.size,1);assert.equal(e.play.textContent,'Pausar');
+ e.tick();assert.equal(e.slides[2].hidden,false);
+ e.root.emit('mouseleave');e.root.emit('mouseenter');assert.equal(e.timers.size,0);
+ e.root.emit('mouseleave');assert.equal(e.timers.size,1);
+ e.play.emit('click');assert.equal(e.timers.size,0);assert.equal(e.play.textContent,'Reproducir');
+});
+
 test('Móvil y movimiento reducido conservan controles manuales sin temporizador',()=>{
  for(const options of [{mobile:true},{reduced:true}]){
   const e=environment(options);assert.equal(e.timers.size,0);assert.equal(e.play.hidden,true);
