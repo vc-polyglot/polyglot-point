@@ -62,13 +62,13 @@ test('Agenda ocupa el lugar aprobado y tiene una sola vista previa antes de los 
  assert.equal(sections.find(s=>s.id==='event').label,'Agenda');
 });
 
-test('Las actividades anteriores y las grabaciones conservan un solo destino',()=>{
+test('Las actividades anteriores siguen en Agenda y se retira el archivo musical',()=>{
  const docs=[activity('pasado','2000-01-01T18:00:00-06:00'),{id:'grabacion',type:'music',title:'Grabación única',body:'Archivo musical'}];
  const agenda=renderPage('/agenda',docs).match(/<main id="contenido">([\s\S]*?)<\/main>/)[1];
  assert.match(agenda,/Encuentros anteriores/);
  assert.equal((agenda.match(/href="\/agenda\/pasado"/g)||[]).length,1);
  assert.doesNotMatch(agenda,/Grabaciones y publicaciones|Grabación única|data-agenda-carousel/);
- assert.match(renderPage('/musica',docs),/Grabación única/);
+ assert.doesNotMatch(renderPage('/musica',docs),/Grabación única|Archivo musical|Grabaciones y publicaciones|href="#grabaciones"/);
 });
 
 test('La fotografía de la actividad se amplía sin un rótulo sobre la imagen',()=>{

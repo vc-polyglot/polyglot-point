@@ -13,7 +13,7 @@ export const routes = {
  '/vida-liturgica':['Vida litúrgica','Horarios de misa, intenciones, Hora Santa y confesiones en San Ignacio de Loyola.'],
  '/sacramentos':['Sacramentos','Información y requisitos para preparar cada celebración.'],
  '/pastoral':['Pastoral','Formación, acompañamiento y servicio en la comunidad.'],
- '/musica':['Música','Música litúrgica, órgano, conciertos y publicaciones de San Ignacio de Loyola.'],
+ '/musica':['Música','Música para celebraciones y conciertos de San Ignacio de Loyola.'],
  '/agenda':['Agenda','Actividades, conciertos y música de San Ignacio de Loyola.'],
  '/nosotros':['Nosotros','Personas al servicio de San Ignacio de Loyola, Polanco.'],
  '/agua-de-san-ignacio':['Agua de San Ignacio','Información sobre el Agua de San Ignacio y cómo obtenerla.'],
