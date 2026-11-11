@@ -78,3 +78,17 @@ test('La fotografía de la actividad se amplía sin un rótulo sobre la imagen',
  assert.doesNotMatch(html,/Ver imagen completa/);
  assert.match(html,/id="lightbox"/);
 });
+
+test('Música muestra las imágenes de cada concierto y conserva las fichas con foto única o sin fotos',()=>{
+ const photos=[{image:'/uploads/concierto-cartel.jpg',alt:'Cartel del concierto'},{image:'/uploads/concierto-foto.jpg',alt:'Intérpretes del concierto'}];
+ const concert=activity('musical','2099-11-12T18:00:00-06:00',{title:'Concierto <especial>',photos});
+ const service={id:'celebracion',type:'music',category:'servicios',title:'Música en celebraciones',image:'/uploads/celebracion.jpg',alt:'Celebración musical'};
+ const other=activity('retiro','2099-11-13T18:00:00-06:00',{photos:[{image:'/uploads/retiro.jpg',alt:'Retiro'}]});
+ const html=renderPage('/musica',[concert,service,other,activity('recital','2099-11-14T18:00:00-06:00',{title:'Recital sin fotografía'})]);
+ for(const {image,alt}of [...photos,service]){assert.ok(html.includes(`data-image="${image}"`));assert.ok(html.includes(`alt="${alt}"`));}
+ assert.equal((html.match(/data-photo-collection="publication-event-musical"/g)||[]).length,2);
+ assert.match(html,/class="publication-thumbnails"/);assert.match(html,/data-photo-collection="publication-music-celebracion"/);
+ assert.match(html,/aria-controls="lightbox"/);assert.match(html,/Concierto &lt;especial&gt;/);
+ assert.match(html,/href="\/agenda\/musical"/);assert.match(html,/Recital sin fotografía/);
+ assert.doesNotMatch(html,/\/uploads\/retiro.jpg|src="undefined"/);
+});

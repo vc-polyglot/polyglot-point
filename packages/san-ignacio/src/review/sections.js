@@ -1,4 +1,5 @@
 import {programGallery} from './program-gallery.js';
+import {publicationImages} from './publication-images.js';
 import {pastoralArea,communityRank} from '../../assets/content-groups.js';
 import {esc,paragraphs,photo,arrow,formatDate} from './html.js';
 const link=(href,text)=>`<a class="text-link" href="${esc(href)}">${esc(text)} ${arrow}</a>`;
@@ -20,8 +21,8 @@ export function pastoralPage(docs){
 export function musicPage(docs){
  const services=docs.filter(d=>d.type==='music'&&d.category==='servicios');
  const concerts=docs.filter(d=>d.type==='event'&&/concierto|m[uú]sica|[óo]rgano|recital/i.test((d.category||'')+' '+d.title)).sort((a,b)=>Date.parse(a.startsAt)-Date.parse(b.startsAt));
- const item=d=>`<section class="music-item"><h3>${esc(d.title)}</h3>${d.image?photo(d.image,d.alt):''}${paragraphs(d.body||d.summary)}${d.url?link(d.url,'Escuchar o leer'):''}</section>`;
- return heading('Celebraciones · Conciertos','Música')+`<nav class="wrap chapter-nav" aria-label="Música"><a href="#servicios">Celebraciones</a><a href="#conciertos">Conciertos</a></nav><section class="wrap information-list"><article id="servicios"><p class="eyebrow">Música</p><h2>Música para celebraciones</h2>${services.map(item).join('')||empty('Consulta con la oficina la información disponible sobre música para celebraciones.')}</article><article id="conciertos"><p class="eyebrow">Agenda musical</p><h2>Conciertos</h2>${concerts.map(d=>`<section><p>${esc(formatDate(d.startsAt))} · Ciudad de México</p><h3>${esc(d.title)}</h3>${link('/agenda/'+d.id,'Ver información')}</section>`).join('')||empty('No hay conciertos publicados por el momento.')}</article></section>`;
+ const item=d=>`<section class="music-item"><h3>${esc(d.title)}</h3>${publicationImages(d)}${paragraphs(d.body||d.summary)}${d.url?link(d.url,'Escuchar o leer'):''}</section>`;
+ return heading('Celebraciones · Conciertos','Música')+`<nav class="wrap chapter-nav" aria-label="Música"><a href="#servicios">Celebraciones</a><a href="#conciertos">Conciertos</a></nav><section class="wrap information-list"><article id="servicios"><p class="eyebrow">Música</p><h2>Música para celebraciones</h2>${services.map(item).join('')||empty('Consulta con la oficina la información disponible sobre música para celebraciones.')}</article><article id="conciertos"><p class="eyebrow">Agenda musical</p><h2>Conciertos</h2>${concerts.map(d=>`<section><p>${esc(formatDate(d.startsAt))} · Ciudad de México</p><h3>${esc(d.title)}</h3>${publicationImages(d)}${link('/agenda/'+d.id,'Ver información')}</section>`).join('')||empty('No hay conciertos publicados por el momento.')}</article></section>`;
 }
 export function waterPage(docs){
  const water=docs.find(d=>d.id==='agua-san-ignacio');

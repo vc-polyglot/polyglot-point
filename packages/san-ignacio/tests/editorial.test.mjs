@@ -142,9 +142,14 @@ test('Un único panel de secretaría, con permisos y publicación aislados',asyn
   assert.equal((await request('/api/admin/documents',{method:'POST',authorized:true,body:{id:post.id,type:post.type,version:post.version,data:{url:'javascript:alert(1)'},action:'publish'}})).status,400);
   post=await save({id:post.id,type:post.type,version:post.version,data:{...post.draft,photos:[],url:''}},'publish');assert.equal(post.published.image,'');assert.equal(post.published.photos.length,0);home=(await request('/')).text;assert.doesNotMatch(home,new RegExp('data-photo-collection="publication-notice-'+post.id+'"'));
   await save({id:post.id,type:post.type,version:post.version},'archive');for(const photo of photos)assert.equal((await request(photo.image)).status,200);
-  let concert=await save({type:'event',data:{title:'Transmisión QA',startsAt:'2031-01-01T12:00:00-06:00',photos,url:'https://example.invalid/transmision'}},'publish');
+  let concert=await save({type:'event',data:{title:'Concierto QA con fotografías',startsAt:'2031-01-01T12:00:00-06:00',photos,url:'https://example.invalid/transmision'}});
+  const collection=new RegExp('data-photo-collection="publication-event-'+concert.id+'"','g');
+  assert.doesNotMatch((await request('/musica')).text,collection);
+  concert=await save({id:concert.id,type:concert.type,version:concert.version,data:concert.draft},'publish');
   const page=(await request('/agenda/'+concert.id)).text;assert.match(page,/Participar o ver la transmisión/);assert.equal((page.match(/data-photo-collection=/g)||[]).length,2);
+  const music=(await request('/musica')).text;assert.equal((music.match(collection)||[]).length,2);assert.match(music,/alt="Foto QA principal"/);assert.match(music,/alt="Foto QA secundaria"/);
   await save({id:concert.id,type:concert.type,version:concert.version},'archive');
+  assert.doesNotMatch((await request('/musica')).text,collection);
  });
  await t.test('INEA toma fotos de la galería sin código, con borrador, portada, orden y retirada',async()=>{
   const available=await documents();let inea=available.find(doc=>doc.id==='inea');assert.ok(inea);const gallery=available.filter(doc=>doc.type==='gallery'&&doc.published&&!doc.archived);assert.ok(gallery.length>=2);
