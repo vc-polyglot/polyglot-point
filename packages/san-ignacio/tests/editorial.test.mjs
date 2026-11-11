@@ -37,7 +37,7 @@ test('Un único panel de secretaría, con permisos y publicación aislados',asyn
 
   for(const route of ['/.env','/.local/site.sqlite','/private/admin-dashboard.html'])assert.equal((await request(route)).status,404);
  });
- await t.test('Las tres pistas públicas se sirven como MP3 con rangos para el reproductor',async()=>{
+ await t.test('Las cuatro pistas públicas se sirven como MP3 con rangos para el reproductor',async()=>{
   for(const track of musicTracks){const result=await request(track.src,{headers:{Range:'bytes=0-31'}});assert.equal(result.status,206);assert.match(result.response.headers.get('content-type'),/audio\/mpeg/);assert.match(result.response.headers.get('content-range'),/^bytes 0-31\//);}
  });
  await auth();
