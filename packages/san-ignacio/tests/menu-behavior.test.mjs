@@ -30,6 +30,34 @@ test('Hover abre suavemente, tolera el recorrido y termina de cerrar sin interce
 });
 test('Volver durante el fundido revierte el cierre sin ocultar el panel',async()=>{const e=environment(),group=e.roots[0];e.controller.open(group);group.panel.animation.finish();await settle();e.controller.close(group);const closing=group.panel.animation;e.controller.open(group);closing.finish();await settle();assert.equal(group.open,true);assert.equal(group.panel.hidden,false);assert.equal(e.controller.states.get(group).phase,'opening');group.panel.animation.finish();await settle();assert.equal(e.controller.states.get(group).phase,'open');});
 test('Abrir Catecismo mantiene Pastoral abierto; cambiar de menú cierra ambos',()=>{const e=environment();e.controller.open(e.nested);assert.equal(e.roots[1].open,true);assert.equal(e.nested.open,true);e.controller.open(e.roots[0]);assert.equal(e.roots[1].open,false);assert.equal(e.nested.open,false);assert.equal(e.nested.panel.hidden,true);assert.equal(e.roots[0].open,true);click(e.roots[0].button);assert.equal(e.roots[0].open,true);});
+
+test('Salir de Catecismo hacia Música no contrae la capa ni desplaza los enlaces de Pastoral',async()=>{
+ const e=environment(),pastoral=e.roots[1],catecismo=e.nested;
+ pastoral.emit('pointerenter',{pointerType:'mouse'});
+ catecismo.emit('pointerenter',{pointerType:'mouse'});
+ pastoral.panel.animation.finish();catecismo.panel.animation.finish();await settle();
+ const musica=new catecismo.link.constructor(pastoral.panel);
+ catecismo.emit('pointerleave',{pointerType:'mouse',relatedTarget:musica});e.flush();
+ assert.equal(pastoral.open,true);assert.equal(catecismo.open,true);
+ assert.equal(catecismo.panel.hidden,false);assert.equal(catecismo.button.getAttribute('aria-expanded'),'true');
+ assert.equal(e.controller.states.get(catecismo).phase,'open');
+ e.nav.emit('click',{target:{closest:()=>musica}});
+ assert.equal(pastoral.open,false);assert.equal(catecismo.open,false);
+});
+
+test('Las capas cierran juntas al salir de Pastoral y reentrar cancela ese cierre',async()=>{
+ const e=environment(),pastoral=e.roots[1],catecismo=e.nested;
+ catecismo.emit('pointerenter',{pointerType:'mouse'});
+ catecismo.emit('pointerleave',{pointerType:'mouse',relatedTarget:null});
+ pastoral.emit('pointerleave',{pointerType:'mouse',relatedTarget:null});
+ assert.equal(e.timers.size,1);
+ pastoral.emit('pointerenter',{pointerType:'mouse'});e.flush();
+ assert.equal(pastoral.open,true);assert.equal(catecismo.open,true);
+ pastoral.emit('pointerleave',{pointerType:'mouse',relatedTarget:null});e.flush();
+ pastoral.panel.animation.finish();await settle();
+ assert.equal(pastoral.open,false);assert.equal(catecismo.open,false);
+ assert.equal(pastoral.panel.hidden,true);assert.equal(catecismo.panel.hidden,true);
+});
 test('El toque abre y cierra con botones separados sin depender de hover',async()=>{const e=environment({coarse:true}),group=e.roots[1];group.emit('pointerenter',{pointerType:'touch'});assert.equal(group.open,false);e.menu.emit('click');assert.equal(e.menu.getAttribute('aria-expanded'),'true');e.document.emit('pointerdown',{pointerType:'touch'});click(group.button);group.panel.animation.finish();await settle();click(e.nested.button);assert.equal(group.open,true);assert.equal(e.nested.open,true);group.emit('pointerleave',{pointerType:'touch'});e.flush();assert.equal(group.open,true);click(group.button);group.panel.animation.finish();await settle();assert.equal(group.open,false);assert.equal(e.nested.open,false);});
 test('Escape cierra el nivel más profundo y devuelve el foco sin cerrar su padre',()=>{const e=environment();e.controller.open(e.nested);e.nested.link.focus();e.document.emit('keydown',{key:'Escape'});assert.equal(e.nested.open,false);assert.equal(e.roots[1].open,true);assert.equal(e.document.activeElement,e.nested.button);e.document.emit('keydown',{key:'Escape'});assert.equal(e.roots[1].open,false);assert.equal(e.document.activeElement,e.roots[1].button);e.menu.emit('click');e.document.emit('keydown',{key:'Escape'});assert.equal(e.menu.getAttribute('aria-expanded'),'false');assert.equal(e.document.activeElement,e.menu);});
 test('Flechas abren y enfocan opciones; el foco de teclado impide cierres por puntero',()=>{const e=environment(),group=e.roots[1];group.button.focus();let prevented=false;e.document.emit('keydown',{key:'ArrowDown',preventDefault(){prevented=true;}});assert.equal(prevented,true);assert.equal(e.document.activeElement,group.link);group.emit('pointerleave',{pointerType:'mouse'});e.flush();assert.equal(group.open,true);e.controller.open(e.nested);e.nested.link.focus();e.document.emit('keydown',{key:'ArrowLeft',preventDefault(){}});assert.equal(e.nested.open,false);assert.equal(group.open,true);assert.equal(e.document.activeElement,e.nested.button);});

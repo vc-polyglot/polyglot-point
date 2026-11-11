@@ -39,7 +39,9 @@ export function setupNavigation(doc=document,win=window){
  for(const group of groups){
   const button=control(group);button.addEventListener('click',event=>{event.preventDefault();if(hover.matches&&lastPointerType==='mouse'&&event.detail>0){const state=states.get(group);if(group.open&&state.mousePinned){state.mousePinned=false;close(group);}else{open(group);state.mousePinned=true;}return;}if(group.open&&states.get(group).phase!=='closing')close(group);else open(group);});
   group.addEventListener('pointerenter',event=>{if(event.pointerType==='mouse'&&hover.matches)open(group);});
-  group.addEventListener('pointerleave',event=>{if(event.pointerType!=='mouse'||!hover.matches)return;const state=states.get(group);clearIntent(state);state.intent=win.setTimeout(()=>{state.intent=0;if(!(keyboard&&group.contains(doc.activeElement)))close(group);},180);});
+  // Los niveles anidados ocupan espacio en el panel: cerrarlos al salir
+  // desplaza los enlaces hermanos que el puntero intenta alcanzar.
+  group.addEventListener('pointerleave',event=>{if(event.pointerType!=='mouse'||!hover.matches||depth(group)>0)return;const state=states.get(group);clearIntent(state);state.intent=win.setTimeout(()=>{state.intent=0;if(!(keyboard&&group.contains(doc.activeElement)))close(group);},180);});
   group.addEventListener('focusin',()=>{clearIntent(states.get(group));if(states.get(group).phase==='closing')open(group);});
   group.addEventListener('focusout',event=>{if(!group.contains(event.relatedTarget))close(group);});
  }

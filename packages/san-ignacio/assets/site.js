@@ -1,5 +1,5 @@
 import {setupPhotoViewer} from './photo-viewer.js?v=3';
-import {setupNavigation} from './navigation-motion.js';
+import {setupNavigation} from './navigation-motion.js?v=2';
 import {initCursor} from './cursor.js';
 import {initHeroReveal} from './entrance.js';
 import {setupPeopleMotion} from './people-motion.js';
