@@ -6,6 +6,7 @@ import crypto from 'node:crypto';
 import {DatabaseSync} from 'node:sqlite';
 import {spawn,spawnSync} from 'node:child_process';
 import {sections,publicationState} from '../assets/admin-sections.js';
+import {musicTracks} from '../assets/music-tracks.js';
 const root=process.cwd(),data=path.join(root,'.local','qa-'+Date.now()),port=3318,base=`http://127.0.0.1:${port}`;
 const env={...process.env,LOCAL_REVIEW_MODE:'1',NODE_ENV:'test',LOCAL_DATA_PATH:data,PORT:String(port),SESSION_SECRET:crypto.randomBytes(40).toString('hex'),SITE_URL:base};
 let server,cookie='',csrf='',serverLog='',preLoginCookie='';
@@ -35,6 +36,9 @@ test('Un único panel de secretaría, con permisos y publicación aislados',asyn
   assert.doesNotMatch(login.text,/<a href="\/">[^<]*Volver/);
 
   for(const route of ['/.env','/.local/site.sqlite','/private/admin-dashboard.html'])assert.equal((await request(route)).status,404);
+ });
+ await t.test('Las tres pistas públicas se sirven como MP3 con rangos para el reproductor',async()=>{
+  for(const track of musicTracks){const result=await request(track.src,{headers:{Range:'bytes=0-31'}});assert.equal(result.status,206);assert.match(result.response.headers.get('content-type'),/audio\/mpeg/);assert.match(result.response.headers.get('content-range'),/^bytes 0-31\//);}
  });
  await auth();
  await t.test('La sesión previa al acceso no permite entrar después de iniciar sesión',async()=>{
