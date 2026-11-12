@@ -35,3 +35,10 @@ test('Atender un mensaje conserva su estado ante fallos y actualiza la informaci
  await admin.updateStatus(select);assert.equal(select.value,'new');assert.equal(select.dataset.savedStatus,'new');assert.equal(admin.messages[0].status,'new');assert.equal(feedback.at(-1).error,true);
  admin.api=async()=>({message:message('first','read')});select.value='read';await admin.updateStatus(select);assert.equal(select.dataset.savedStatus,'read');assert.equal(admin.messages[0].status,'read');
 });
+
+test('El panel comunica el total al cargar y avisa de una baja sólo si se confirmó su borrado',async()=>{
+ const counts=[],deletions=[];let fail=false;
+ const {admin,host}=fixture({api:async(_url,options)=>{if(options?.method==='DELETE'){if(fail)throw Error('No se pudo borrar');return {};}return {messages:[message('a'),message('b','read'),message('c','archived')]};}});
+ admin.onCount=count=>counts.push(count);admin.onDeleted=()=>deletions.push(true);await admin.showPanel(host);assert.deepEqual(counts,[3]);
+ fail=true;await admin.deleteMessage('a');assert.equal(deletions.length,0);fail=false;await admin.deleteMessage('a');assert.equal(deletions.length,1);assert.deepEqual(admin.messages.map(item=>item.id),['b','c']);
+});

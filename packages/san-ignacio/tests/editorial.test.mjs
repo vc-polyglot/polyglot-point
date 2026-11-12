@@ -30,7 +30,7 @@ test('Un único panel de secretaría, con permisos y publicación aislados',asyn
   assert.equal(sections.find(s=>s.id==='event').label,'Agenda');
   for(const route of ['/','/vida-liturgica','/sacramentos','/pastoral','/agenda','/nosotros','/agua-de-san-ignacio','/historia','/galeria','/contacto']){const r=await request(route);assert.equal(r.status,200,route);assert.match(r.text,/<h1/);assert.match(r.text,/<link rel="canonical"/);}
   const login=await request('/admin');assert.match(login.text,/id="toggle-password"/);assert.match(login.text,/type="button" class="password-toggle"/);assert.equal(login.response.headers.get('cache-control'),'no-store');
-  for(const route of ['/api/admin/documents','/api/admin/images','/api/admin/messages','/api/admin/export','/api/admin/music']){assert.equal((await request(route)).status,401);assert.equal((await request(route,{headers:{cookie:'sanIgnacio.sid=inventada','X-User-Role':'admin'}})).status,401);}
+  for(const route of ['/api/admin/documents','/api/admin/images','/api/admin/messages','/api/admin/messages/count','/api/admin/export','/api/admin/music']){assert.equal((await request(route)).status,401);assert.equal((await request(route,{headers:{cookie:'sanIgnacio.sid=inventada','X-User-Role':'admin'}})).status,401);}
   for(const [route,method] of [['/api/admin/documents','POST'],['/api/admin/images','POST'],['/api/admin/images','PATCH'],['/api/admin/messages/inventado','PATCH'],['/api/admin/logout','POST']])assert.equal((await request(route,{method,body:{}})).status,401,method+' '+route);
   for(const route of ['/admin/preview/contacto','/admin/preview/inea']){const result=await request(route);assert.equal(result.status,302);assert.equal(result.response.headers.get('location'),'/admin');}
   for(const route of ['/','/pastoral','/galeria','/historia','/contacto','/no-existe'])assert.doesNotMatch((await request(route)).text,/<a[^>]+href="\/admin(?:["\/])/);
@@ -232,20 +232,21 @@ test('Un único panel de secretaría, con permisos y publicación aislados',asyn
   const page=(await request('/galeria')).text;assert.match(page,/No hay fotografías publicadas/);assert.doesNotMatch(page,/class="photo-button"/);
  });
  await t.test('La oficina recibe consultas y puede marcarlas como atendidas',async()=>{
+  const empty=await request('/api/admin/messages/count',{authorized:true});assert.equal(empty.status,200);assert.deepEqual(empty.json,{count:0});assert.equal(empty.response.headers.get('cache-control'),'no-store');
   assert.equal((await request('/api/contact',{method:'POST',body:{name:'QA',email:'qa@example.invalid',subject:'Consulta QA',message:'Consulta aislada'}})).status,201);
-  const message=(await request('/api/admin/messages',{authorized:true})).json.messages[0];assert.equal((await request('/api/admin/messages/'+message.id,{method:'PATCH',authorized:true,body:{status:'read'}})).status,200);
+  const message=(await request('/api/admin/messages',{authorized:true})).json.messages[0];assert.equal((await request('/api/admin/messages/count',{authorized:true})).json.count,1);assert.equal((await request('/api/admin/messages/'+message.id,{method:'PATCH',authorized:true,body:{status:'read'}})).status,200);assert.equal((await request('/api/admin/messages/count',{authorized:true})).json.count,1);
  });
  await t.test('Borrar consultas requiere autorización, sólo elimina la elegida y persiste al reiniciar',async()=>{
   const retained=(await request('/api/admin/messages',{authorized:true})).json.messages;
   for(const subject of ['Mensaje QA para borrar','Mensaje QA archivado para borrar'])assert.equal((await request('/api/contact',{method:'POST',body:{name:'Prueba de borrado',email:'qa@example.invalid',subject,message:'Sólo datos de prueba'}})).status,201);
-  let inbox=(await request('/api/admin/messages',{authorized:true})).json.messages;const target=inbox.find(message=>message.subject==='Mensaje QA para borrar'),archived=inbox.find(message=>message.subject==='Mensaje QA archivado para borrar');assert.ok(target);assert.ok(archived);
+  let inbox=(await request('/api/admin/messages',{authorized:true})).json.messages;const target=inbox.find(message=>message.subject==='Mensaje QA para borrar'),archived=inbox.find(message=>message.subject==='Mensaje QA archivado para borrar');assert.ok(target);assert.ok(archived);assert.equal((await request('/api/admin/messages/count',{authorized:true})).json.count,inbox.length);
   const route='/api/admin/messages/'+target.id;
   for(const options of [{},{authorized:true,token:false},{authorized:true,origin:'https://external.invalid'}])assert.ok([401,403].includes((await request(route,{method:'DELETE',...options})).status));
   assert.equal((await request(route,{method:'DELETE',authorized:true})).status,204);assert.equal((await request(route,{method:'DELETE',authorized:true})).status,404);
   assert.equal((await request(route,{method:'PATCH',authorized:true,body:{status:'read'}})).status,404);
   inbox=(await request('/api/admin/messages',{authorized:true})).json.messages;assert.ok(!inbox.some(message=>message.id===target.id));assert.ok(inbox.some(message=>message.id===archived.id));for(const message of retained)assert.ok(inbox.some(item=>item.id===message.id));
   assert.equal((await request('/api/admin/messages/'+encodeURIComponent("' OR 1=1 --"),{method:'DELETE',authorized:true})).status,404);
-  assert.equal((await request('/api/admin/messages/'+archived.id,{method:'PATCH',authorized:true,body:{status:'archived'}})).status,200);assert.equal((await request('/api/admin/messages/'+archived.id,{method:'DELETE',authorized:true})).status,204);
+  assert.equal((await request('/api/admin/messages/count',{authorized:true})).json.count,inbox.length);assert.equal((await request('/api/admin/messages/'+archived.id,{method:'PATCH',authorized:true,body:{status:'archived'}})).status,200);assert.equal((await request('/api/admin/messages/count',{authorized:true})).json.count,inbox.length);assert.equal((await request('/api/admin/messages/'+archived.id,{method:'DELETE',authorized:true})).status,204);assert.equal((await request('/api/admin/messages/count',{authorized:true})).json.count,retained.length);
   await stop();cookie='';csrf='';await start();await auth();inbox=(await request('/api/admin/messages',{authorized:true})).json.messages;assert.deepEqual(inbox.map(item=>item.id).sort(),retained.map(item=>item.id).sort());
  });
  await t.test('Una actualización de estado concurrente no puede recrear un mensaje borrado',async()=>{

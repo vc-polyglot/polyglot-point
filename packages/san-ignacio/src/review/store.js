@@ -65,6 +65,10 @@ export async function messages() {
   const rows = local ? sqlite.prepare('SELECT record FROM messages ORDER BY id DESC').all() : (await pool.query('SELECT record FROM san_ignacio.site_messages ORDER BY id DESC')).rows;
   return rows.map(r => typeof r.record === 'string' ? JSON.parse(r.record) : r.record);
 }
+export async function messageCount() {
+  const row=local?sqlite.prepare('SELECT COUNT(*) AS count FROM messages').get():(await pool.query('SELECT COUNT(*) AS count FROM san_ignacio.site_messages')).rows[0];
+  return Number(row.count);
+}
 export async function saveMessage(record) {
   if(local&&!transactionContext.getStore())return documentTransaction(()=>saveMessage(record));
   if (local) sqlite.prepare('INSERT INTO messages(id,record) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET record=excluded.record').run(record.id,JSON.stringify(record));
