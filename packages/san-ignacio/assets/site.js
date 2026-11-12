@@ -1,4 +1,4 @@
-import {setupHomeCarousel} from './home-carousel.js?v=1';
+import {setupHomeCarousel} from './home-carousel.js?v=2';
 import {setupContactForm} from './contact-form.js?v=1';
 import {setupPhotoViewer} from './photo-viewer.js?v=4';
 import {setupNavigation} from './navigation-motion.js?v=2';

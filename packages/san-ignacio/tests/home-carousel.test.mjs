@@ -9,7 +9,7 @@ import {renderPage} from '../src/review/pages.js';
 
 test('La portada sólo usa su lista exclusiva, conserva el Cristo primero y no incorpora otras publicaciones',()=>{
  const others=[{id:'event',type:'event',photos:[{image:'/uploads/event.jpg',alt:'Evento'}]},{id:'person',type:'staff',image:'/uploads/person.jpg'},{id:'gallery',type:'gallery',image:'/uploads/gallery.jpg'}];
- const html=homeCarousel(others),sources=[...html.matchAll(/data-home-slide data-image="([^"]+)"/g)].map(match=>match[1]);assert.equal(sources.length,3);assert.equal(sources[0],mainHomePhoto.image);assert.doesNotMatch(html,/\/uploads\//);assert.equal((html.match(/fetchpriority="high"/g)||[]).length,1);
+ const html=homeCarousel(others),sources=[...html.matchAll(/data-home-slide data-image="([^"]+)"/g)].map(match=>match[1]);assert.equal(sources.length,3);assert.equal(sources[0],mainHomePhoto.image);assert.doesNotMatch(html,/\/uploads\//);assert.doesNotMatch(html,/<button|data-home-(?:controls|prev|next|play|counter)|title=/);assert.match(html,/tabindex="0"/);assert.equal((html.match(/fetchpriority="high"/g)||[]).length,1);
  const configured={id:homeSlidesId,type:'home-slideshow',photos:[mainHomePhoto]};assert.doesNotMatch(homeCarousel([...others,configured]),/data-home-controls|hero-nueva/);
  const fr=renderPage('/',others,{language:'fr'});assert.match(fr,/aria-label="Photographies de l’église"/);assert.match(fr,/aria-roledescription="Carrousel"/);
 });
@@ -23,20 +23,34 @@ test('La selección exige versión vigente, imágenes explícitas sin duplicados
 
 function environment({reduced=false}={}){
  const element=()=>({listeners:{},attrs:{},dataset:{},hidden:false,disabled:false,isConnected:true,addEventListener(type,fn){this.listeners[type]=fn;},emit(type,event={}){this.listeners[type]?.(event);},setAttribute(key,value){this.attrs[key]=value;},removeAttribute(key){delete this.attrs[key];}});
- const root=element(),doc=element(),win=element(),base=element(),incoming=element(),layer=element(),controls=element(),play=element(),prev=element(),next=element(),counter=element(),media=element();const slides=[0,1,2].map(index=>({dataset:{image:'/qa/'+index+'.jpg',alt:'Foto '+index}}));
+ const root=element(),doc=element(),win=element(),base=element(),incoming=element(),layer=element(),media=element();const slides=[0,1,2].map(index=>({dataset:{image:'/qa/'+index+'.jpg',alt:'Foto '+index}}));
  base.src=slides[0].dataset.image;incoming.decode=async()=>{};layer.animate=(_frames,options)=>{layer.options=options;return {finished:Promise.resolve(),cancel(){}};};root.querySelectorAll=()=>slides;
- root.querySelector=selector=>({'.photo-frame img':base,'[data-home-incoming]':incoming,'.home-incoming':layer,'[data-home-controls]':controls,'[data-home-play]':play,'[data-home-prev]':prev,'[data-home-next]':next,'[data-home-counter]':counter}[selector]);doc.querySelector=()=>root;doc.documentElement={lang:'es'};win.matchMedia=()=>media;media.matches=reduced;
+ root.querySelector=selector=>({'.photo-frame img':base,'[data-home-incoming]':incoming,'.home-incoming':layer}[selector]);root.focus=()=>{doc.activeElement=root;};doc.querySelector=()=>root;doc.documentElement={lang:'es'};win.matchMedia=()=>media;media.matches=reduced;
  const timers=new Map();let serial=0;win.setTimeout=(fn,ms)=>{timers.set(++serial,{fn,ms});return serial;};win.clearTimeout=id=>timers.delete(id);
- const controller=setupHomeCarousel(doc,win);return {root,doc,win,base,incoming,layer,play,prev,next,counter,media,timers,controller,async tick(){const [id,timer]=timers.entries().next().value;timers.delete(id);timer.fn();await new Promise(resolve=>setImmediate(resolve));}};
+ const controller=setupHomeCarousel(doc,win);return {root,doc,win,base,incoming,layer,media,timers,controller,async tick(){const [id,timer]=timers.entries().next().value;timers.delete(id);timer.fn();await new Promise(resolve=>setImmediate(resolve));}};
 }
 
-test('El carrusel cambia cada ocho segundos, funde entre fotos y permite pausa y navegación manual',async()=>{
- const e=environment();assert.equal(e.base.src,'/qa/0.jpg');assert.equal([...e.timers.values()][0].ms,8000);await e.tick();assert.equal(e.base.src,'/qa/1.jpg');assert.equal(e.layer.options.duration,1200);assert.equal(e.counter.textContent,'2 / 3');
- e.play.emit('click');assert.equal(e.timers.size,0);e.play.emit('click');assert.equal(e.timers.size,1);await e.controller.show(2,true);assert.equal(e.base.src,'/qa/2.jpg');assert.equal(e.timers.size,0);await e.controller.show(0,true);assert.equal(e.base.src,'/qa/0.jpg');e.controller.destroy();assert.equal(e.timers.size,0);
+const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('El carrusel cambia cada ocho segundos y completa el ciclo sin controles visibles',async()=>{
+ const e=environment();assert.equal(e.base.src,'/qa/0.jpg');assert.equal([...e.timers.values()][0].ms,8000);await e.tick();assert.equal(e.base.src,'/qa/1.jpg');assert.equal(e.layer.options.duration,1200);
+ await e.tick();assert.equal(e.base.src,'/qa/2.jpg');await e.tick();assert.equal(e.base.src,'/qa/0.jpg');assert.equal(e.controller.pause,undefined);e.controller.destroy();assert.equal(e.timers.size,0);
+});
+
+test('Un clic cambia la foto y reinicia el avance automático sin pausarlo',async()=>{
+ const e=environment();const originalTimer=[...e.timers.keys()][0];e.root.emit('click',{button:0});await flush();assert.equal(e.doc.activeElement,e.root);assert.equal(e.base.src,'/qa/1.jpg');assert.equal(e.timers.size,1);assert.equal(e.timers.has(originalTimer),false);assert.equal([...e.timers.values()][0].ms,8000);
+ e.root.emit('focusin',{target:e.root});e.root.emit('mouseenter');assert.equal(e.timers.size,1);await e.tick();assert.equal(e.base.src,'/qa/2.jpg');e.controller.destroy();
+});
+
+test('Las flechas sólo actúan sobre la imagen enfocada y el carrusel sigue después',async()=>{
+ const e=environment();let prevented=0;
+ e.root.emit('keydown',{target:{},key:'ArrowRight',preventDefault(){prevented++;}});await flush();assert.equal(e.base.src,'/qa/0.jpg');assert.equal(prevented,0);
+ e.root.focus();e.root.emit('keydown',{target:e.root,key:'ArrowLeft',preventDefault(){prevented++;}});await flush();assert.equal(e.base.src,'/qa/2.jpg');assert.equal(prevented,1);assert.equal(e.timers.size,1);
+ e.root.emit('keydown',{target:e.root,key:'ArrowRight',ctrlKey:true,preventDefault(){prevented++;}});await flush();assert.equal(e.base.src,'/qa/2.jpg');assert.equal(prevented,1);
+ e.root.emit('keydown',{target:e.root,key:'ArrowRight',preventDefault(){prevented++;}});await flush();assert.equal(e.base.src,'/qa/0.jpg');assert.equal(e.timers.size,1);await e.tick();assert.equal(e.base.src,'/qa/1.jpg');e.controller.destroy();
 });
 
 test('Movimiento reducido, pestaña oculta y salida de sección detienen el avance sin modificar el audio',async()=>{
- const e=environment({reduced:true});assert.equal(e.timers.size,0);assert.equal(e.play.hidden,true);await e.controller.show(1,true);assert.equal(e.base.src,'/qa/1.jpg');assert.equal(e.layer.options,undefined);
+ const e=environment({reduced:true});assert.equal(e.timers.size,0);await e.controller.show(1);assert.equal(e.base.src,'/qa/1.jpg');assert.equal(e.layer.options,undefined);
  const f=environment();f.doc.hidden=true;f.doc.emit('visibilitychange');assert.equal(f.timers.size,0);f.doc.hidden=false;f.doc.emit('visibilitychange');assert.equal(f.timers.size,1);
  let release;f.incoming.decode=()=>new Promise(resolve=>{release=resolve;});const pending=f.controller.show(1);f.controller.destroy();release();await pending;assert.equal(f.base.src,'/qa/0.jpg');assert.equal(f.timers.size,0);
 });

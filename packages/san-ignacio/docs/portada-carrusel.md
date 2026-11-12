@@ -14,14 +14,14 @@ El servidor comprueba la primera imagen, los límites de cantidad, las descripci
 
 ## Presentación pública
 
-Los controles discretos dentro de la fotografía permiten retroceder, pausar o reanudar y avanzar. El contador indica la posición actual. La intervención manual pausa el avance automático. La preferencia de movimiento reducido desactiva la rotación automática y la transición animada, conservando las flechas manuales.
+La fotografía se muestra sin botones, contador ni instrucciones visibles. Un clic o toque avanza a la siguiente imagen y sitúa el foco en la fotografía. Las flechas izquierda y derecha del teclado permiten cambiarla cuando tiene el foco. El cambio manual reinicia el intervalo de ocho segundos y el avance automático continúa; no hay una acción de pausa. La preferencia de movimiento reducido del sistema desactiva la rotación automática y la transición animada, conservando el clic y las flechas del teclado.
 
 El avance se detiene mientras la pestaña está oculta o la fotografía queda fuera de la vista. Al salir de la sección se limpian los temporizadores y se cancela una transición pendiente. Si una imagen adicional no carga, se conserva la actual y se omite la fallida en los siguientes avances. Sólo la primera foto tiene prioridad de carga; las adicionales se solicitan al necesitarlas.
 
-La primera imagen vuelve a ser el Cristo al montar de nuevo la portada. La música conserva su reproductor global y su estado durante la navegación; el carrusel no modifica el audio ni inicia música automáticamente. Los controles públicos y las descripciones institucionales iniciales tienen traducciones ES, EN y FR. El admin permanece en español.
+La primera imagen vuelve a ser el Cristo al montar de nuevo la portada. La música conserva su reproductor global y su estado durante la navegación; el carrusel no modifica el audio ni inicia música automáticamente. Las etiquetas accesibles y las descripciones institucionales iniciales tienen traducciones ES, EN y FR. El admin permanece en español.
 
 ## Validación
 
-Las pruebas automatizadas cubren la selección independiente, primera imagen fija, una sola foto, permisos, CSRF, conflicto de versiones, persistencia, imágenes en uso, transición, pausa, navegación manual, movimiento reducido, errores de carga y salida de sección. La integración conserva las pruebas de música continua e idiomas. Las pruebas utilizan datos locales aislados.
+Las pruebas automatizadas cubren la selección independiente, primera imagen fija, una sola foto, permisos, CSRF, conflicto de versiones, persistencia, imágenes en uso, transición, ausencia de controles visibles, clic, navegación por teclado sin detener el avance automático, movimiento reducido, errores de carga y salida de sección. La integración conserva las pruebas de música continua e idiomas. Las pruebas utilizan datos locales aislados.
 
 La revisión visual mediante el navegador no pudo completarse: la herramienta detuvo el control al no poder confirmar la URL de la ventana. No se modificó el contenido en producción durante esta implementación.
