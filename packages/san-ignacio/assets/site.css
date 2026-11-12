@@ -114,4 +114,5 @@
 .catechism-layout article>.program-gallery{margin-top:24px;margin-bottom:28px}
 
 /* Keep all nine primary sections readable on compact desktop screens. */
+.public-navigation-status[hidden]{display:none}.public-navigation-status{position:fixed;z-index:1500;top:110px;left:50%;transform:translateX(-50%);width:min(580px,calc(100% - 32px));padding:15px 18px;border:1px solid var(--line);border-radius:6px;background:var(--white);box-shadow:0 8px 30px #202d2620;font-size:13px}.public-navigation-status button{margin-top:8px;min-height:44px;padding:8px 14px;border:1px solid var(--green);background:var(--green);color:white}
 @media(min-width:1280px) and (max-width:1450px){.header-inner{gap:20px;padding-inline:32px}#primary-nav{gap:14px;font-size:12px}.brand{font-size:20px}.brand-lockup{gap:10px}}

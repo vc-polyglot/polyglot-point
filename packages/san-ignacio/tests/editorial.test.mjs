@@ -7,6 +7,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {spawn,spawnSync} from 'node:child_process';
 import {sections,publicationState} from '../assets/admin-sections.js';
 import {musicTracks} from '../assets/music-tracks.js';
+import {waveFixture} from './audio-fixture.mjs';
 const root=process.cwd(),data=path.join(root,'.local','qa-'+Date.now()),port=3318,base=`http://127.0.0.1:${port}`;
 const env={...process.env,LOCAL_REVIEW_MODE:'1',NODE_ENV:'test',LOCAL_DATA_PATH:data,PORT:String(port),SESSION_SECRET:crypto.randomBytes(40).toString('hex'),SITE_URL:base};
 let server,cookie='',csrf='',serverLog='',preLoginCookie='';
@@ -25,11 +26,11 @@ test('Un único panel de secretaría, con permisos y publicación aislados',asyn
  const init=spawnSync(process.execPath,['scripts/init-local.mjs'],{cwd:root,env,encoding:'utf8',windowsHide:true});assert.equal(init.status,0,init.stderr);
  try{await start();
  await t.test('El sitio conserva sus páginas y sólo existe el menú cotidiano acordado',async()=>{
-  assert.deepEqual(sections.map(s=>s.id),['overview','event','program','notice','images','messages','practical']);
+  assert.deepEqual(sections.map(s=>s.id),['overview','event','program','music','notice','images','messages','practical']);
   assert.equal(sections.find(s=>s.id==='event').label,'Agenda');
   for(const route of ['/','/vida-liturgica','/sacramentos','/pastoral','/agenda','/nosotros','/agua-de-san-ignacio','/historia','/galeria','/contacto']){const r=await request(route);assert.equal(r.status,200,route);assert.match(r.text,/<h1/);assert.match(r.text,/<link rel="canonical"/);}
   const login=await request('/admin');assert.match(login.text,/id="toggle-password"/);assert.match(login.text,/type="button" class="password-toggle"/);assert.equal(login.response.headers.get('cache-control'),'no-store');
-  for(const route of ['/api/admin/documents','/api/admin/images','/api/admin/messages','/api/admin/export']){assert.equal((await request(route)).status,401);assert.equal((await request(route,{headers:{cookie:'sanIgnacio.sid=inventada','X-User-Role':'admin'}})).status,401);}
+  for(const route of ['/api/admin/documents','/api/admin/images','/api/admin/messages','/api/admin/export','/api/admin/music']){assert.equal((await request(route)).status,401);assert.equal((await request(route,{headers:{cookie:'sanIgnacio.sid=inventada','X-User-Role':'admin'}})).status,401);}
   for(const [route,method] of [['/api/admin/documents','POST'],['/api/admin/images','POST'],['/api/admin/images','PATCH'],['/api/admin/messages/inventado','PATCH'],['/api/admin/logout','POST']])assert.equal((await request(route,{method,body:{}})).status,401,method+' '+route);
   for(const route of ['/admin/preview/contacto','/admin/preview/inea']){const result=await request(route);assert.equal(result.status,302);assert.equal(result.response.headers.get('location'),'/admin');}
   for(const route of ['/','/pastoral','/galeria','/historia','/contacto','/no-existe'])assert.doesNotMatch((await request(route)).text,/<a[^>]+href="\/admin(?:["\/])/);
@@ -183,6 +184,28 @@ test('Un único panel de secretaría, con permisos y publicación aislados',asyn
    group=await save({id:group.id,type:'program',version:group.version},'restore');assert.equal(group.published,null);assert.equal(group.draft.photos.length,1);
   }
   const older=(await documents()).find(doc=>doc.id==='adultos-mayores');if(older){assert.equal(older.draft.photos.length,3);assert.match(older.draft.cover,/adultos-mayores-03/);}
+ });
+ await t.test('Música permite subir, guardar títulos y orden, retirar y recuperar sin resucitar pistas',async()=>{
+  const before=stored(),initial=(await request('/api/admin/music',{authorized:true})).json;
+  assert.equal(initial.version,0);assert.equal(initial.tracks.length,4);assert.equal(initial.tracks[1].title,'Meditación III');assert.deepEqual(stored(),before);
+  for(const options of [{},{authorized:true,token:false},{authorized:true,origin:'https://external.invalid'}])assert.ok([401,403].includes((await request('/api/admin/music',{method:'PUT',body:initial,...options})).status));
+  const bad=new FormData();bad.set('audio',new Blob(['<html>No es audio</html>'],{type:'audio/mpeg'}),'falso.mp3');assert.equal((await request('/api/admin/music/audio',{method:'POST',authorized:true,body:bad})).status,400);
+  const form=()=>{const data=new FormData();data.set('audio',new Blob([waveFixture()],{type:'audio/wav'}),'Meditación QA.wav');return data;};
+  assert.equal((await request('/api/admin/music/audio',{method:'POST',body:form()})).status,401);
+  assert.equal((await request('/api/admin/music/audio',{method:'POST',authorized:true,token:false,body:form()})).status,403);
+  const uploaded=await request('/api/admin/music/audio',{method:'POST',authorized:true,body:form()});assert.equal(uploaded.status,201,uploaded.text);const track=uploaded.json.track;assert.equal(track.title,'Meditación QA');assert.match(track.src,/^\/uploads\/audio-[a-f0-9]+\.mp3$/);assert.ok(uploaded.json.duration>=2&&uploaded.json.duration<3);
+  assert.ok(!(await request('/')).text.includes(track.src));const audio=await request(track.src,{headers:{Range:'bytes=0-31'}});assert.equal(audio.status,206);assert.match(audio.response.headers.get('content-type'),/audio\/mpeg/);
+  const tracks=[{...track,title:'Nueva <pista> "QA"',detail:'Intérprete & lugar'},...initial.tracks.slice().reverse()];tracks[2].enabled=false;
+  assert.equal((await request('/api/admin/music',{method:'PUT',authorized:true,body:{version:0,tracks:[{...track,src:'https://example.invalid/no.mp3'}]}})).status,400);
+  assert.equal((await request('/api/admin/music',{method:'PUT',authorized:true,body:{version:0,tracks:[track,track]}})).status,400);
+  assert.equal((await request('/api/admin/music',{method:'PUT',authorized:true,body:{version:0,tracks:[{...track,title:''}]}})).status,400);
+  let saved=await request('/api/admin/music',{method:'PUT',authorized:true,body:{version:0,tracks}});assert.equal(saved.status,200,saved.text);assert.equal(saved.json.version,1);assert.deepEqual(saved.json.tracks,tracks);
+  const page=(await request('/')).text;assert.ok(page.includes('data-title="Nueva &lt;pista&gt; &quot;QA&quot;"'));assert.ok(page.includes('data-detail="Intérprete &amp; lugar"'));assert.ok(page.indexOf('data-src="'+track.src+'"')<page.indexOf('data-src="'+tracks[1].src+'"'));assert.ok(!page.includes('data-src="'+tracks[2].src+'"'));assert.doesNotMatch(page,/\bautoplay\b/);
+  assert.equal((await request('/api/admin/music',{method:'PUT',authorized:true,body:{version:0,tracks:initial.tracks}})).status,409);
+  saved=await request('/api/admin/music',{method:'PUT',authorized:true,body:{version:1,tracks:tracks.map(track=>({...track,enabled:false}))}});assert.equal(saved.status,200);assert.doesNotMatch((await request('/')).text,/data-music-player/);assert.equal((await request('/api/admin/music',{authorized:true})).json.tracks.length,5);
+  saved=await request('/api/admin/music',{method:'PUT',authorized:true,body:{version:2,tracks:[]}});assert.equal(saved.status,200);assert.doesNotMatch((await request('/')).text,/data-music-player/);
+  saved=await request('/api/admin/music',{method:'PUT',authorized:true,body:{version:3,tracks:initial.tracks}});assert.equal(saved.status,200);assert.match((await request('/')).text,/data-music-player/);assert.equal((await request(track.src)).status,200);
+  await stop();cookie='';csrf='';await start();await auth();const persisted=(await request('/api/admin/music',{authorized:true})).json;assert.equal(persisted.version,4);assert.deepEqual(persisted.tracks,initial.tracks);
  });
  await t.test('Un archivo de fotografías vacío no reaparece desde referencias',async()=>{
   for(const photo of (await documents()).filter(d=>d.type==='gallery'&&d.published&&!d.archived))await save({id:photo.id,type:photo.type,version:photo.version},'archive');

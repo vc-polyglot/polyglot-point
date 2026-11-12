@@ -5,14 +5,14 @@ import {setupMusicPlayer} from '../assets/music-player.js';
 import {musicTracks} from '../assets/music-tracks.js';
 import {renderPage,notFound} from '../src/review/pages.js';
 
-function environment(){
+function environment(tracks=musicTracks){
  const node=()=>({listeners:{},attrs:{},dataset:{},hidden:true,textContent:'',addEventListener(type,fn){(this.listeners[type]??=[]).push(fn);},emit(type,event={}){for(const fn of this.listeners[type]||[])fn(event);},setAttribute(key,value){this.attrs[key]=String(value);},getAttribute(key){return this.attrs[key]??null;},removeAttribute(key){delete this.attrs[key];}});
  const root=node(),audio=node(),toggle=node(),title=node(),state=node(),status=node(),prev=node(),next=node(),win=node();
  Object.assign(audio,{paused:true,ended:false,plays:0,loads:0,play(){this.plays++;if(this.rejection)return Promise.reject(this.rejection);this.paused=false;this.ended=false;this.emit('play');return this.pending||Promise.resolve();},pause(){if(!this.paused){this.paused=true;this.emit('pause');}},load(){this.loads++;this.paused=true;this.ended=false;}});
  Object.defineProperty(audio,'src',{set(value){audio.setAttribute('src',value);}});
  const controls={'[data-music-audio]':audio,'[data-music-toggle]':toggle,'[data-music-title]':title,'[data-music-state]':state,'[data-music-status]':status,'[data-music-prev]':prev,'[data-music-next]':next};
  const timers=new Map();let serial=0;win.setTimeout=(fn,ms)=>{const id=++serial;timers.set(id,{fn,ms});return id;};win.clearTimeout=id=>timers.delete(id);
- root.contains=target=>Object.values(controls).includes(target);root.querySelector=key=>controls[key];const controller=setupMusicPlayer({querySelector:()=>root},win);
+ root.querySelectorAll=()=>tracks.map(track=>({dataset:track}));root.contains=target=>Object.values(controls).includes(target);root.querySelector=key=>controls[key];const controller=setupMusicPlayer({querySelector:()=>root},win);
  return {root,audio,toggle,title,state,status,prev,next,win,controller,timers,expire(){const pending=[...timers.values()];timers.clear();for(const {fn}of pending)fn();}};
 }
 const settle=async()=>{await Promise.resolve();await Promise.resolve();};
@@ -68,4 +68,14 @@ test('El ratón y el foco de teclado mantienen el título visible hasta abandona
 test('El toque vuelve a contraerse y salir de la página cancela el temporizador',()=>{
  const e=environment();e.root.emit('pointerenter',{pointerType:'touch'});e.root.emit('pointerdown');e.root.emit('focusin',{target:{matches:()=>false}});assert.equal(e.timers.size,1);e.expire();assert.equal(e.root.dataset.collapsed,'true');
  e.next.emit('click');e.win.emit('pagehide');assert.equal(e.timers.size,0);e.win.emit('pageshow');assert.equal(e.root.dataset.collapsed,'false');assert.equal(e.timers.size,1);assert.equal(e.audio.plays,0);
+});
+
+test('El reproductor usa las pistas publicadas en el HTML, con sus títulos y orden actuales',async()=>{
+ const tracks=[{src:'/uploads/nueva.mp3',title:'Nueva grabación',detail:'Intérprete'},{src:'/uploads/otra.mp3',title:'Otra grabación',detail:''}],e=environment(tracks);
+ assert.equal(e.title.textContent,'Nueva grabación');e.toggle.emit('click');await settle();assert.equal(e.audio.getAttribute('src'),tracks[0].src);e.next.emit('click');await settle();assert.equal(e.audio.getAttribute('src'),tracks[1].src);assert.equal(e.title.textContent,'Otra grabación');
+});
+
+test('Volver a preparar el sitio no duplica controles ni reinicia el reproductor persistente',async()=>{
+ const e=environment();e.toggle.emit('click');await settle();e.audio.currentTime=47;e.audio.volume=0.6;
+ const again=setupMusicPlayer({querySelector:()=>e.root},e.win);assert.equal(again,e.controller);assert.equal(e.audio.currentTime,47);assert.equal(e.audio.volume,0.6);assert.equal(e.audio.paused,false);assert.equal(e.toggle.listeners.click.length,1);
 });

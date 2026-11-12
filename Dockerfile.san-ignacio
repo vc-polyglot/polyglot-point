@@ -2,6 +2,8 @@
 
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg && rm -rf /var/lib/apt/lists/*
+
 COPY packages/san-ignacio/package*.json ./
 
 RUN npm ci --omit=dev

@@ -1,7 +1,8 @@
-import {musicTracks} from './music-tracks.js?v=2';
-
+const players=new WeakMap();
 export function setupMusicPlayer(doc=document,win=window){
  const root=doc.querySelector('[data-music-player]');if(!root)return;
+ if(players.has(root))return players.get(root);
+ const musicTracks=[...root.querySelectorAll('[data-music-track]')].map(node=>({src:node.dataset.src,title:node.dataset.title,detail:node.dataset.detail}));if(!musicTracks.length)return;
  const audio=root.querySelector('[data-music-audio]'),toggle=root.querySelector('[data-music-toggle]'),title=root.querySelector('[data-music-title]'),state=root.querySelector('[data-music-state]'),status=root.querySelector('[data-music-status]');
  let index=0,wantsPlay=false,generation=0,collapseTimer=0,pointerWithin=false,keyboardFocus=false;
  function clearCollapse(){if(collapseTimer)win.clearTimeout(collapseTimer);collapseTimer=0;}
@@ -33,6 +34,6 @@ export function setupMusicPlayer(doc=document,win=window){
  audio.addEventListener('ended',()=>{if(wantsPlay)select(1);else reflect();});
  audio.addEventListener('error',()=>{if(!audio.getAttribute('src'))return;stop();state.textContent='· no disponible';status.textContent='No se pudo cargar esta pista. Puedes pasar a la siguiente.';});
  win.addEventListener('pagehide',()=>{clearCollapse();stop();});win.addEventListener('pageshow',reveal);
- return {audio,select,stop};
+ const controller={audio,select,stop};players.set(root,controller);return controller;
 }
 if(typeof document!=='undefined')setupMusicPlayer();

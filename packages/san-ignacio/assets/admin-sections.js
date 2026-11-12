@@ -4,6 +4,7 @@ export const sections = [
  ['overview','Inicio','Hoy','Publica las actividades y los avisos de la comunidad.','/'],
  ['event','Agenda','Publicar','Publica una actividad una sola vez: aparecerá en Agenda y entre las próximas actividades de la portada.','/agenda'],
  ['program','Pastoral','Publicar','Grupos, catecismo y actividades: información, horarios y fotografías.','/pastoral'],
+ ['music','Música','Publicar','Administra las grabaciones y el orden del reproductor del sitio.','/'],
  ['notice','Avisos y noticias','Publicar','Comunicados y cambios especiales que aparecen en la portada.','/'],
  ['images','Imágenes','Publicar','Fotografías y carteles guardados para tus publicaciones.','/galeria'],
  ['messages','Mensajes','Oficina','Consultas que llegan desde la página. Marca las que ya atendiste.',null],
