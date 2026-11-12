@@ -1747,5 +1747,17 @@ export const catalog = {
   "Saint Antoine des XV-XX · París": {
     "en": "Saint Antoine des XV-XX · Paris",
     "fr": "Saint Antoine des XV-XX · Paris"
+  },
+  "Fotografías del templo": {
+    "en": "Photographs of the church",
+    "fr": "Photographies de l’église"
+  },
+  "Carrusel": {
+    "en": "Carousel",
+    "fr": "Carrousel"
+  },
+  "Fachada y vitrales de San Ignacio de Loyola bajo el cielo azul": {
+    "en": "Façade and stained glass of San Ignacio de Loyola beneath a blue sky",
+    "fr": "Façade et vitraux de San Ignacio de Loyola sous un ciel bleu"
   }
 };

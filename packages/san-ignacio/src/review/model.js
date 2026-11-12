@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import {deletedAssetURLs,withoutDeletedAssets} from './asset-state.js';
+import {withHomeSlides} from './home-slides.js';
 import * as store from './store.js';
 import {withEditorialDefaults, chapterDefaults, isInstitutionalChapter, withAlbumDefaults} from './editorial-defaults.js';
 
@@ -86,6 +87,6 @@ export async function changeDocument(input,user) {
   return store.saveDocument(doc,expected);
 }
 export async function publicDocuments() {
-  const all=withEditorialDefaults(await store.allDocuments()).map(withAlbumDefaults),deleted=deletedAssetURLs(all);
+  const all=withHomeSlides(withEditorialDefaults(await store.allDocuments()).map(withAlbumDefaults)),deleted=deletedAssetURLs(all);
   return all.filter(d=>!d.archived && d.published && (d.type!=='notice'||((!d.published.startsAt||Date.parse(d.published.startsAt)<=Date.now())&&(!d.published.endsAt||Date.parse(d.published.endsAt)>=Date.now())))).map(d=>({id:d.id,type:d.type,publishedAt:d.publishedAt||d.updatedAt,...withoutDeletedAssets(d.published,deleted)})).filter(d=>d.type!=='gallery'||d.image).sort((a,b)=>(a.order||0)-(b.order||0)||a.title.localeCompare(b.title,'es'));
 }

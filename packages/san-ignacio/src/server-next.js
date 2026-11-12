@@ -20,6 +20,7 @@ import {readPlaylist,playlistRecord} from './review/music-playlist.js';
 import {saveAudioUpload} from './review/audio-upload.js';
 import {deleteImage,deleteTrack,resumeAssetDeletions} from './review/asset-deletion.js';
 import {assetDeletionId} from './review/asset-state.js';
+import {readHomeSlides,homeSlidesRecord} from './review/home-slides.js';
 await store.openStore();
 let redis,sessionStore;
 if(!local){const {createClient}=await import('redis');const {RedisStore}=await import('connect-redis');redis=createClient({url:process.env.REDIS_URL});redis.on('error',()=>console.error('Redis: conexión no disponible.'));await redis.connect();sessionStore=new RedisStore({client:redis,prefix:'san-ignacio:sess:'});}
@@ -52,6 +53,8 @@ app.patch('/api/admin/messages/:id',auth,sameOrigin,csrf,async(req,res)=>{if(!['
 app.delete('/api/admin/messages/:id',auth,sameOrigin,csrf,async(req,res)=>{if(!await store.deleteMessage(req.params.id))return res.status(404).json({error:'El mensaje ya no está en la bandeja. Actualiza la sección.'});res.status(204).end();});
 app.get('/api/admin/export',auth,(_req,res)=>res.status(403).json({error:'Los respaldos se administran fuera de la consola.'}));
 app.get('/api/admin/images',auth,async(_req,res)=>res.json({images:imageCatalog(root,withEditorialDefaults(await store.allDocuments()).map(withAlbumDefaults))}));
+app.get('/api/admin/home-slides',auth,async(_req,res)=>res.json(readHomeSlides(await store.allDocuments())));
+app.put('/api/admin/home-slides',auth,sameOrigin,csrf,async(req,res)=>{const documents=await store.allDocuments(),record=homeSlidesRecord(req.body,documents,req.session.user,root);await store.saveDocument(record,req.body.version);res.json(readHomeSlides([record]));});
 app.delete('/api/admin/images',auth,sameOrigin,csrf,async(req,res)=>{const result=await deleteImage(req.body,req.session.user,{root,dataPath});res.status(result.pending?202:200).json(result);});
 app.patch('/api/admin/images',auth,sameOrigin,csrf,async(req,res)=>{
  const documents=await store.allDocuments(),image=imageCatalog(root,documents).find(image=>image.url===req.body.url);
@@ -60,6 +63,7 @@ app.patch('/api/admin/images',auth,sameOrigin,csrf,async(req,res)=>{
  if(Number(req.body.version)!==image.version)return res.status(409).json({error:'Esta imagen cambió. Actualiza el archivo e intenta de nuevo.'});
 
  if(req.body.collection==='material'&&documents.some(doc=>doc.type==='gallery'&&!doc.archived&&doc.published?.image===image.url))return res.status(400).json({error:'Primero retira esta imagen de la galería publicada; después podrás moverla a Carteles y materiales.'});
+ if(req.body.collection==='material'&&readHomeSlides(documents).photos.some(photo=>photo.image===image.url))return res.status(400).json({error:'Esta fotografía pertenece a Imágenes de portada. Quita primero las fotos adicionales de esa selección; el Cristo principal debe permanecer en Fotografías.'});
  const previous=documents.find(doc=>doc.id===image.recordId),now=new Date().toISOString();
  const draft={url:image.url,image:image.url,title:image.title,alt:image.alt,collection:req.body.collection};
  const record={id:image.recordId,type:'media',draft,published:null,version:image.version+1,history:previous?[{draft:previous.draft,version:previous.version,updatedAt:previous.updatedAt},...(previous.history||[])].slice(0,40):[],createdAt:previous?.createdAt||now,updatedAt:now,updatedBy:req.session.user.name};

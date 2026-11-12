@@ -1,4 +1,4 @@
-import {catalog} from './i18n-catalog.js?v=1';
+import {catalog} from './i18n-catalog.js?v=2';
 export const languages=['es','en','fr'];
 export const normalizeLanguage=value=>languages.includes(value)?value:'es';
 export const languageOf=(doc=globalThis.document)=>normalizeLanguage(doc?.documentElement?.lang);

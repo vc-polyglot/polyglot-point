@@ -1,3 +1,4 @@
+import {setupHomeCarousel} from './home-carousel.js?v=1';
 import {setupContactForm} from './contact-form.js?v=1';
 import {setupPhotoViewer} from './photo-viewer.js?v=4';
 import {setupNavigation} from './navigation-motion.js?v=2';
@@ -13,10 +14,10 @@ import {setupPublicNavigation} from './public-navigation.js?v=2';
 
 const navigation=setupNavigation(),cursor=initCursor(),intro=initHeroReveal();
 setupMusicPlayer();
-let page;
+let page,homeCarousel;
 function openAnchor(){if(!location.hash)return;let id;try{id=decodeURIComponent(location.hash.slice(1));}catch{return;}const el=document.getElementById(id);const details=el?.matches('details')?el:el?.closest('details');if(details)details.open=true;}
 function mountPage(){
- page=createPageScope();
+ page=createPageScope();homeCarousel=setupHomeCarousel(page.doc,page.win);
  setupPeopleMotion(page.doc,page.win);setupAgendaCarousel(page.doc,page.win);setupPhotoViewer(page.doc,page.win);
  setupHistoryChapters(page.doc,page.win);setupPublicationReader(page.doc,page.win);openAnchor();
  setupContactForm(page.doc,page.win);
@@ -26,7 +27,7 @@ function unmountPage(){
  const layer=document.querySelector('.cursor-layer');if(layer)document.body.append(layer);
  for(const dialog of document.querySelectorAll('dialog[open]'))dialog.close();
  if(document.fullscreenElement)document.exitFullscreen?.().catch(()=>{});
- page?.destroy();
+ homeCarousel?.destroy();page?.destroy();
  for(const node of document.querySelectorAll('#contenido,body > dialog'))for(const animation of node.getAnimations?.({subtree:true})||[]){animation.finished?.catch(()=>{});animation.cancel();}
 }
 mountPage();

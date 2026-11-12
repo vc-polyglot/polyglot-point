@@ -2,8 +2,8 @@ import {updateImageGrid} from './image-grid-motion.js?v=1';
 const esc=value=>String(value??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
 const collectionName=value=>value==='material'?'Carteles y materiales':'Fotografías';
 export class ImageArchive {
- constructor({api,status,onChoose,onGallery,onShowGallery,onRefresh,onReturn=onRefresh,onBusy=()=>{},onDelete=()=>{},confirmDelete=message=>globalThis.confirm(message)}){
-  Object.assign(this,{api,status,onChoose,onGallery,onShowGallery,onRefresh,onReturn,onBusy,onDelete,confirmDelete,items:[],collection:'photograph',mode:'archive',selected:new Map(),busy:false});
+ constructor({api,status,onChoose,onGallery,onShowGallery,onHomeSlides,onRefresh,onReturn=onRefresh,onBusy=()=>{},onDelete=()=>{},confirmDelete=message=>globalThis.confirm(message)}){
+  Object.assign(this,{api,status,onChoose,onGallery,onShowGallery,onHomeSlides,onRefresh,onReturn,onBusy,onDelete,confirmDelete,items:[],collection:'photograph',mode:'archive',selected:new Map(),busy:false});
   this.dialog=document.querySelector('#image-library');
   this.dialog.addEventListener('cancel',event=>{if(this.busy)event.preventDefault();});
   this.dialog.querySelector('[data-close-library]').addEventListener('click',()=>{if(!this.busy)this.dialog.close();});
@@ -20,7 +20,7 @@ export class ImageArchive {
  tabs(single=false){const values=single?['photograph']:['photograph','material'];return values.map(value=>`<button type="button" data-collection="${value}" aria-pressed="${this.collection===value}">${collectionName(value)}</button>`).join('');}
  async showPanel(work,records,isCurrent=()=>true){this.records=records;await this.load();if(isCurrent())this.drawPanel(work);}
  drawPanel(work){
-  work.innerHTML=`<p class="section-note">Subir una imagen la guarda en el archivo. Sólo aparece en la página cuando la usas en una publicación o la agregas a la galería.</p><div class="archive-heading"><div class="collection-tabs" aria-label="Archivos de imágenes">${this.tabs()}</div><div class="photo-actions"><button type="button" data-archive-upload class="primary">+ Subir imágenes</button><button type="button" data-published-gallery>Galería publicada</button></div></div><label class="library-search">Buscar en ${collectionName(this.collection)}<input id="archive-search" type="search" placeholder="Nombre o descripción"></label><p id="archive-count" class="help" role="status"></p><div id="archive-grid" class="archive-grid"></div>`;
+  work.innerHTML=`<p class="section-note">Subir una imagen la guarda en el archivo. Sólo aparece en la página cuando la usas en una publicación o la agregas a la galería.</p><div class="archive-heading"><div class="collection-tabs" aria-label="Archivos de imágenes">${this.tabs()}</div><div class="photo-actions"><button type="button" data-archive-upload class="primary">+ Subir imágenes</button><button type="button" data-home-slides>Imágenes de portada</button><button type="button" data-published-gallery>Galería publicada</button></div></div><label class="library-search">Buscar en ${collectionName(this.collection)}<input id="archive-search" type="search" placeholder="Nombre o descripción"></label><p id="archive-count" class="help" role="status"></p><div id="archive-grid" class="archive-grid"></div>`;
   work.querySelector('#archive-search').addEventListener('input',()=>this.renderArchive());this.renderArchive();
  }
  publishedFor(url){return this.records?.find(doc=>doc.type==='gallery'&&!doc.archived&&doc.published?.image===url);}
@@ -31,6 +31,7 @@ export class ImageArchive {
   const host=document.querySelector('#admin-workspace'),tab=event.target.closest('[data-collection]');
   if(tab&&host.contains(tab)){this.collection=tab.dataset.collection;this.drawPanel(host);return;}
   if(event.target.closest('[data-archive-upload]')){await this.open({mode:'archive'});return;}
+  if(event.target.closest('[data-home-slides]')){this.onHomeSlides();return;}
   if(event.target.closest('[data-published-gallery]')){this.onShowGallery();return;}
   if(event.target.closest('[data-return-archive]')){this.onReturn();return;}
   const gallery=event.target.closest('[data-gallery-image]');if(gallery){const image=this.items.find(item=>item.url===gallery.dataset.galleryImage);const existing=this.publishedFor(image.url)||this.records.find(doc=>doc.type==='gallery'&&doc.draft?.image===image.url);this.onGallery(image,existing);return;}

@@ -1,16 +1,17 @@
+import {HomeSlidesAdmin} from './admin-home-slides.js?v=1';
 import {AdminNavigation} from './admin-navigation.js?v=1';
 import {MessagesAdmin} from './admin-messages.js?v=2';
 import {MessageCounter} from './message-counter.js?v=1';
 import {MusicAdmin} from './admin-music.js?v=2';
 import {pastoralArea,communityRank} from './content-groups.js';
-import {ImageArchive} from './image-archive.js?v=6';
+import {ImageArchive} from './image-archive.js?v=7';
 import {publicationPhotos,imagePickerMode} from './publication-photos.js?v=2';
 import {setupPasswordToggle} from './password-toggle.js?v=1';
 import {sections,recordData,publicationState} from './admin-sections.js?v=9';
 import {eventHasEnded} from './agenda-events.js';
 const $=selector=>document.querySelector(selector);
 const esc=value=>String(value??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
-let csrf='',records=[],activePanel='overview',editing=null,dirty=false,saving=false,panelRequest=0,imageArchive,selectedPhotos=[],adminNavigation,musicAdmin,messagesAdmin,messageCounter;
+let csrf='',records=[],activePanel='overview',editing=null,dirty=false,saving=false,panelRequest=0,imageArchive,selectedPhotos=[],adminNavigation,musicAdmin,messagesAdmin,messageCounter,homeSlidesAdmin;
 const creative=type=>['event','notice','gallery','program'].includes(type);
 const date=value=>new Intl.DateTimeFormat('es-MX',{dateStyle:'medium',timeStyle:'short',timeZone:'America/Mexico_City'}).format(new Date(value));
 async function api(url,options={}){
@@ -91,14 +92,20 @@ async function runAction(action){if(saving)return;if(dirty&&!confirm('Hay cambio
 window.addEventListener('beforeunload',event=>{if(dirty){event.preventDefault();event.returnValue='';}});
 window.addEventListener('pagehide',()=>{messageCounter?.stop();if(document.body.dataset.authenticated==='true')$('.admin-shell').hidden=true;});
 window.addEventListener('pageshow',event=>{if(event.persisted)location.reload();});
+async function showHomeSlides({force=false}={}){
+ if(!force&&!canLeave())return;const request=++panelRequest;activePanel='images';editing=null;dirty=false;adminNavigation?.visit({kind:'home-slides'});navigation();$('#panel-title').textContent='Imágenes de portada';$('#panel-group').textContent='Imágenes';$('#panel-description').textContent='Selección exclusiva para el carrusel de la portada.';const work=$('#admin-workspace');work.innerHTML='<p class="empty">Cargando…</p>';status();
+ try{await homeSlidesAdmin.showPanel(work,()=>request===panelRequest);}catch(error){if(request===panelRequest){work.innerHTML='<button type="button" data-return-archive>← Volver al archivo de imágenes</button>';status(error.message,true);}}
+}
 async function restoreAdminView(view){
- if(view.kind==='editor'){await loadRecords();editRecord(view.id,{type:view.type,force:true});}
+ if(view.kind==='home-slides'){await showHomeSlides({force:true});}
+ else if(view.kind==='editor'){await loadRecords();editRecord(view.id,{type:view.type,force:true});}
  else if(view.kind==='gallery'){await showPanel('images',{force:true});showGallery({force:true});}
  else await showPanel(view.panel||'overview',{force:true});
 }
 async function init(){setupPasswordToggle();adminNavigation=new AdminNavigation({canLeave,onNavigate:view=>document.body.dataset.authenticated==='true'?restoreAdminView(view):undefined,onBack:()=>{if(!imageArchive?.dialog.open)return false;if(!imageArchive.busy)imageArchive.dialog.close();return true;},onError:error=>status(error.message,true)});adminNavigation.start();try{const session=await api('/api/admin/session');csrf=session.csrf;if(document.body.dataset.authenticated!=='true'){const form=$('#login-form');form.addEventListener('submit',async event=>{event.preventDefault();const button=form.querySelector('button[type=submit]');button.disabled=true;$('#login-status').textContent='Iniciando sesión…';try{await api('/api/admin/login',{method:'POST',body:JSON.stringify(Object.fromEntries(new FormData(form)))});location.replace('/admin');}catch(error){$('#login-status').textContent=error.message;}finally{button.disabled=false;}});return;}
  $('#current-user').textContent=session.user.name;$('.admin-brand').addEventListener('click',event=>{event.preventDefault();showPanel('overview');});$('#admin-nav').addEventListener('click',event=>{const button=event.target.closest('[data-panel]');if(button)showPanel(button.dataset.panel);});$('#admin-workspace').addEventListener('click',event=>{const edit=event.target.closest('[data-edit]'),create=event.target.closest('[data-create]');if(edit)editRecord(edit.dataset.edit);if(create){if(!canLeave())return;dirty=false;activePanel=create.dataset.create==='gallery'?'images':create.dataset.create;navigation();editRecord(null,{type:create.dataset.create});}});$('#admin-menu').addEventListener('click',()=>{const open=$('#admin-menu').getAttribute('aria-expanded')!=='true';$('#admin-menu').setAttribute('aria-expanded',String(open));$('#admin-nav').classList.toggle('is-open',open);});$('#logout-button').addEventListener('click',async()=>{if(!canLeave())return;try{await api('/api/admin/logout',{method:'POST'});messageCounter?.stop();dirty=false;location.replace('/admin');}catch(error){status(error.message,true);}});
- imageArchive=new ImageArchive({api,status,onBusy:value=>{saving=value;},onDelete:url=>{if(!$('#editor-form'))return;if(editing?.type==='gallery'){const form=$('#editor-form');if(form.elements.image.value===url)choosePhoto({url:'',alt:''});}else if(selectedPhotos.some(photo=>photo.image===url)){selectedPhotos=selectedPhotos.filter(photo=>photo.image!==url);renderSelectedImages();markDirty();}},onChoose:photos=>{if(editing.type==='gallery')choosePhoto({url:photos[0].image,alt:photos[0].alt});else{selectedPhotos=structuredClone(photos);renderSelectedImages();markDirty();}},onGallery:(image,existing)=>editRecord(existing?.id,{type:'gallery',image}),onShowGallery:showGallery,onReturn:()=>adminNavigation.goBack(),onRefresh:()=>showPanel('images')});
+ imageArchive=new ImageArchive({api,status,onBusy:value=>{saving=value;},onDelete:url=>{if(!$('#editor-form'))return;if(editing?.type==='gallery'){const form=$('#editor-form');if(form.elements.image.value===url)choosePhoto({url:'',alt:''});}else if(selectedPhotos.some(photo=>photo.image===url)){selectedPhotos=selectedPhotos.filter(photo=>photo.image!==url);renderSelectedImages();markDirty();}},onChoose:photos=>{if(editing.type==='gallery')choosePhoto({url:photos[0].image,alt:photos[0].alt});else{selectedPhotos=structuredClone(photos);renderSelectedImages();markDirty();}},onGallery:(image,existing)=>editRecord(existing?.id,{type:'gallery',image}),onShowGallery:showGallery,onHomeSlides:()=>showHomeSlides(),onReturn:()=>adminNavigation.goBack(),onRefresh:()=>showPanel('images')});
+ homeSlidesAdmin=new HomeSlidesAdmin({api,status,onDirty:value=>{dirty=value;},onBusy:value=>{saving=value;}});
  messageCounter=new MessageCounter({api});
  messagesAdmin=new MessagesAdmin({api,status,onBusy:value=>{saving=value;},onCount:count=>messageCounter.set(count),onDeleted:()=>messageCounter.removed()});
  musicAdmin=new MusicAdmin({api,status,onDirty:value=>{dirty=value;},onBusy:value=>{saving=value;}});
