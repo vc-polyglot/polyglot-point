@@ -1,5 +1,13 @@
 // Public-site translations. Spanish source text remains the base.
 export const catalog = {
+  "Abrir controles de música": {
+    "en": "Open music controls",
+    "fr": "Ouvrir les commandes de musique"
+  },
+  "Ocultar controles de música": {
+    "en": "Hide music controls",
+    "fr": "Masquer les commandes de musique"
+  },
   "Inicio · San Ignacio de Loyola · Polanco": {
     "en": "Home · San Ignacio de Loyola · Polanco",
     "fr": "Accueil · San Ignacio de Loyola · Polanco"

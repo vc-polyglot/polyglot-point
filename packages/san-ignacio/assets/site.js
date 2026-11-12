@@ -8,7 +8,7 @@ import {setupPeopleMotion} from './people-motion.js';
 import {setupAgendaCarousel} from './agenda-carousel.js?v=3';
 import {setupHistoryChapters} from './history.js?v=4';
 import {setupPublicationReader} from './publication-reader.js?v=2';
-import {setupMusicPlayer} from './music-player.js?v=5';
+import {setupMusicPlayer} from './music-player.js?v=6';
 import {createPageScope} from './page-scope.js?v=1';
 import {setupPublicNavigation} from './public-navigation.js?v=2';
 
