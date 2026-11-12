@@ -5,15 +5,15 @@ import {setupMusicPlayer} from '../assets/music-player.js';
 import {musicTracks} from '../assets/music-tracks.js';
 import {renderPage,notFound} from '../src/review/pages.js';
 
-function environment(tracks=musicTracks){
+function environment(tracks=musicTracks,language='es'){
  const node=()=>({listeners:{},attrs:{},dataset:{},hidden:true,textContent:'',addEventListener(type,fn){(this.listeners[type]??=[]).push(fn);},emit(type,event={}){for(const fn of this.listeners[type]||[])fn(event);},setAttribute(key,value){this.attrs[key]=String(value);},getAttribute(key){return this.attrs[key]??null;},removeAttribute(key){delete this.attrs[key];}});
  const root=node(),audio=node(),toggle=node(),title=node(),state=node(),status=node(),prev=node(),next=node(),win=node();
  Object.assign(audio,{paused:true,ended:false,plays:0,loads:0,play(){this.plays++;if(this.rejection)return Promise.reject(this.rejection);this.paused=false;this.ended=false;this.emit('play');return this.pending||Promise.resolve();},pause(){if(!this.paused){this.paused=true;this.emit('pause');}},load(){this.loads++;this.paused=true;this.ended=false;}});
  Object.defineProperty(audio,'src',{set(value){audio.setAttribute('src',value);}});
  const controls={'[data-music-audio]':audio,'[data-music-toggle]':toggle,'[data-music-title]':title,'[data-music-state]':state,'[data-music-status]':status,'[data-music-prev]':prev,'[data-music-next]':next};
  const timers=new Map();let serial=0;win.setTimeout=(fn,ms)=>{const id=++serial;timers.set(id,{fn,ms});return id;};win.clearTimeout=id=>timers.delete(id);
- root.querySelectorAll=()=>tracks.map(track=>({dataset:track}));root.contains=target=>Object.values(controls).includes(target);root.querySelector=key=>controls[key];const controller=setupMusicPlayer({querySelector:()=>root},win);
- return {root,audio,toggle,title,state,status,prev,next,win,controller,timers,expire(){const pending=[...timers.values()];timers.clear();for(const {fn}of pending)fn();}};
+ root.querySelectorAll=()=>tracks.map(track=>({dataset:track}));root.contains=target=>Object.values(controls).includes(target);root.querySelector=key=>controls[key];const doc={querySelector:()=>root,documentElement:{lang:language}},controller=setupMusicPlayer(doc,win);
+ return {doc,root,audio,toggle,title,state,status,prev,next,win,controller,timers,expire(){const pending=[...timers.values()];timers.clear();for(const {fn}of pending)fn();}};
 }
 const settle=async()=>{await Promise.resolve();await Promise.resolve();};
 
@@ -78,4 +78,9 @@ test('El reproductor usa las pistas publicadas en el HTML, con sus títulos y or
 test('Volver a preparar el sitio no duplica controles ni reinicia el reproductor persistente',async()=>{
  const e=environment();e.toggle.emit('click');await settle();e.audio.currentTime=47;e.audio.volume=0.6;
  const again=setupMusicPlayer({querySelector:()=>e.root},e.win);assert.equal(again,e.controller);assert.equal(e.audio.currentTime,47);assert.equal(e.audio.volume,0.6);assert.equal(e.audio.paused,false);assert.equal(e.toggle.listeners.click.length,1);
+});
+
+test('ES, EN y FR cambian los controles del mismo audio sin pausar, cargar ni perder su posición',async()=>{
+ const e=environment();e.toggle.emit('click');await settle();e.audio.currentTime=91;e.audio.volume=0.5;const plays=e.audio.plays,loads=e.audio.loads;
+ for(const [language,label]of [['en','Pause music'],['fr','Mettre la musique en pause'],['es','Pausar música']]){e.doc.documentElement.lang=language;e.win.emit('site-languagechange');assert.equal(e.toggle.getAttribute('aria-label'),label);assert.equal(e.audio.currentTime,91);assert.equal(e.audio.paused,false);assert.equal(e.audio.volume,0.5);assert.equal(e.audio.plays,plays);assert.equal(e.audio.loads,loads);}
 });

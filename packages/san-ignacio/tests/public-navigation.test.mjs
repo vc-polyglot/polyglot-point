@@ -34,6 +34,12 @@ test('Un fallo de red conserva contenido y dirección, y permite reintentar sin 
  assert.equal(await router.navigate('/pastoral'),false);assert.equal(win.location.pathname,'/');assert.equal(renders,0);fail=false;await retry();assert.equal(renders,1);assert.equal(win.location.pathname,'/pastoral');
 });
 
+test('Reintentar un cambio de idioma vuelve a solicitar la misma sección con su idioma y conserva el desplazamiento',async()=>{
+ const win=browser();let retry,fail=true,loads=0,language;win.scrollY=320;
+ const router=createNavigationController({win,load:async(url,_signal,options)=>{loads++;language=options.language;if(fail)throw Error('Sin conexión');return {url:url.href};},render(){},onError:again=>{retry=again;}});
+ assert.equal(await router.navigate('/',{force:true,language:'fr',replace:true,preserveScroll:true}),false);fail=false;await retry();assert.equal(loads,2);assert.equal(language,'fr');assert.equal(win.scrollY,320);
+});
+
 test('Las respuestas lentas no sustituyen una sección elegida después',async()=>{
  const win=browser(),pending=[],renders=[];
  const router=createNavigationController({win,load:(url,signal)=>new Promise(resolve=>pending.push({url,signal,resolve})),render:page=>renders.push(page.url)});
@@ -52,11 +58,15 @@ test('La sustitución real de contenido deja intacto el nodo del reproductor y n
   setAttribute(key,value){this.attrs[key]=value;}hasAttribute(key){return key in this.attrs;}append(...nodes){this.children.push(...nodes);}querySelectorAll(){return [];}querySelector(){return null;}addEventListener(){}focus(){}remove(){}before(){}
   replaceWith(node){this.doc[this.slot]=node;node.doc=this.doc;node.slot=this.slot;}
  }
- function documentFor(title){const doc={title,addEventListener(){}};doc.body=new Node(doc);doc.body.setAttribute('data-public-site','');doc.head=new Node(doc);doc.main=new Node(doc,'main');doc.footer=new Node(doc,'footer');doc.header=new Node(doc);doc.createElement=()=>new Node(doc);doc.querySelectorAll=()=>[];doc.querySelector=selector=>({'#contenido':doc.main,'.site-footer':doc.footer,'.site-header':doc.header,'[data-music-player]':doc.player}[selector]||null);doc.importNode=node=>new Node(doc,node.slot);doc.getElementById=()=>null;return doc;}
+ function documentFor(title){const doc={title,documentElement:{lang:'es'},listeners:{},addEventListener(type,listener){this.listeners[type]=listener;}};doc.body=new Node(doc);doc.body.setAttribute('data-public-site','');doc.head=new Node(doc);doc.main=new Node(doc,'main');doc.footer=new Node(doc,'footer');doc.header=new Node(doc);doc.createElement=()=>new Node(doc);doc.querySelectorAll=()=>[];doc.querySelector=selector=>({'#contenido':doc.main,'.site-footer':doc.footer,'.site-header':doc.header,'[data-music-player]':doc.player}[selector]||null);doc.importNode=node=>new Node(doc,node.slot);doc.getElementById=()=>null;return doc;}
  const doc=documentFor('Inicio'),next=documentFor('Pastoral'),audio={currentTime:123,paused:false,play(){throw Error('No debe reiniciarse');},pause(){throw Error('No debe detenerse');}};doc.player={audio};const player=doc.player,main=doc.main,win=browser();
- win.fetch=async url=>({ok:true,url,headers:{get:()=> 'text/html'},text:async()=>renderPage('/pastoral',[])});win.DOMParser=class{parseFromString(){return next;}};
+ const requests=[];win.fetch=async(url,options)=>{requests.push(options.headers['X-Site-Language']);next.documentElement.lang=options.headers['X-Site-Language'];return {ok:true,url,headers:{get:()=> 'text/html'},text:async()=>renderPage('/pastoral',[])};};win.DOMParser=class{parseFromString(){return next;}};
  let mounts=0;const router=setupPublicNavigation({doc,win,afterSwap(){mounts++;}});assert.equal(await router.navigate('/pastoral'),true);
  assert.notEqual(doc.main,main);assert.equal(doc.player,player);assert.equal(doc.player.audio,audio);assert.equal(audio.currentTime,123);assert.equal(audio.paused,false);assert.equal(doc.title,'Pastoral');assert.equal(mounts,1);
+ for(const language of ['en','fr','es']){win.scrollY=400;await router.navigate(win.location.href,{language,force:true,replace:true,preserveScroll:true});assert.equal(doc.documentElement.lang,language);assert.equal(win.scrollY,400);await router.navigate(language==='fr'?'/agua-de-san-ignacio':'/musica');assert.equal(requests.at(-1),language);assert.equal(doc.player,player);assert.equal(audio.currentTime,123);assert.equal(audio.paused,false);}
+ const choose=language=>doc.listeners.click({preventDefault(){},target:{closest:selector=>selector==='[data-site-language]'?{dataset:{siteLanguage:language}}:null}});
+ choose('fr');choose('es');await new Promise(resolve=>setImmediate(resolve));assert.equal(doc.documentElement.lang,'es');assert.equal(requests.at(-1),'es');
+ choose('fr');doc.listeners.click({button:0,preventDefault(){},target:{closest:selector=>selector==='a[href]'?{href:'https://example.test/pastoral',target:'',hasAttribute:()=>false}:null}});await new Promise(resolve=>setImmediate(resolve));assert.equal(requests.at(-1),'fr');assert.equal(doc.documentElement.lang,'fr');assert.equal(audio.currentTime,123);assert.equal(audio.paused,false);
 });
 
 test('Las páginas públicas se identifican para navegación persistente y Admin/vista previa quedan fuera',()=>{

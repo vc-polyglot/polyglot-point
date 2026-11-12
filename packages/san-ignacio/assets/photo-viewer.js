@@ -1,3 +1,4 @@
+import {ui} from './i18n.js?v=1';
 export function setupPhotoViewer(doc=document,win=globalThis.window){
  const gallery=[...doc.querySelectorAll('.photo-button,.publication-image,.agenda-visual[data-image]')],dialog=doc.querySelector('#lightbox');
  if(!dialog||!gallery.length)return;
@@ -43,7 +44,7 @@ export function setupPhotoViewer(doc=document,win=globalThis.window){
   sequence++;closing=false;dialogEffect?.cancel();imageEffect?.cancel();
   closeOnImageClick=button.dataset.closeOnImageClick==='true';
   dialog.dataset.closeOnImageClick=String(closeOnImageClick);
-  image.title=closeOnImageClick?'Cerrar fotografía':'';
+  image.title=closeOnImageClick?ui('Cerrar fotografía',doc):'';
   dialog.querySelector('.lightbox-prev').hidden=closeOnImageClick;
   dialog.querySelector('.lightbox-next').hidden=closeOnImageClick;
   collection=closeOnImageClick?[button]:gallery.filter(item=>(item.dataset.photoCollection||'')===(button.dataset.photoCollection||''));

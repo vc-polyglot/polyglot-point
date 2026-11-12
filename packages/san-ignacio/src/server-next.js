@@ -1,3 +1,4 @@
+import {normalizeLanguage} from '../assets/i18n.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -72,7 +73,7 @@ app.use('/assets',express.static(path.join(root,'assets'),{index:false,maxAge:pr
 if(local)app.use('/uploads',express.static(path.join(dataPath,'uploads'),{index:false,maxAge:0}));
 app.get('/comunidad',(_req,res)=>res.redirect(302,'/pastoral'));
 app.get('/espiritualidad',(_req,res)=>res.redirect(301,'/pastoral'));app.get('/index.html',(_req,res)=>res.redirect(301,'/'));
-app.get('/{*path}',async(req,res)=>{if(req.path.startsWith('/api/')||req.path.startsWith('/admin/'))return res.status(404).json({error:'Ruta no encontrada.'});const docs=await publicDocuments();const html=renderPage(req.path.replace(/\/$/,'')||'/',docs,{nonce:res.locals.cspNonce,origin:process.env.SITE_URL||`${req.protocol}://${req.get('host')}`});res.set('Cache-Control','no-cache');if(html)return res.send(html);res.status(404).send(notFound(docs));});
+app.get('/{*path}',async(req,res)=>{if(req.path.startsWith('/api/')||req.path.startsWith('/admin/'))return res.status(404).json({error:'Ruta no encontrada.'});const docs=await publicDocuments();const language=normalizeLanguage(req.get('X-Site-Language'));res.vary('X-Site-Language');res.set('Content-Language',language);const html=renderPage(req.path.replace(/\/$/,'')||'/',docs,{language,nonce:res.locals.cspNonce,origin:process.env.SITE_URL||`${req.protocol}://${req.get('host')}`});res.set('Cache-Control','no-cache');if(html)return res.send(html);res.status(404).send(notFound(docs,{language}));});
 app.use((_req,res)=>res.status(404).json({error:'Ruta no encontrada.'}));
 app.use((error,req,res,_next)=>{const status=error instanceof multer.MulterError?413:error.status||500;if(status>=500)console.error('Solicitud fallida:',error.name,error.message);if(req.path.startsWith('/api/'))return res.status(status).json({error:status===413?'El archivo o mensaje supera el tamaño permitido.':status>=500?'No fue posible completar la solicitud. Intenta de nuevo.':error.message});res.status(status).type('text/plain').send('No fue posible mostrar esta página. Intenta de nuevo.');});
 const server=app.listen(port,host,()=>{console.log(`San Ignacio: http://${host}:${port}`);console.log(local?'Revisión local: SQLite persistente; sesiones temporales. Sin conexión a Railway.':'PostgreSQL y Redis configurados.');});

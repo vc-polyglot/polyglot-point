@@ -1,3 +1,4 @@
+import {ui} from './i18n.js?v=1';
 export function setupAgendaCarousel(doc = document, win = window) {
   const root = doc.querySelector('[data-agenda-carousel]');
   if (!root) return;
@@ -18,8 +19,8 @@ export function setupAgendaCarousel(doc = document, win = window) {
     timer = null;
     const automatic = !mobile.matches && !reduced.matches;
     play.hidden = !automatic;
-    play.textContent = paused ? 'Reproducir' : 'Pausar';
-    play.setAttribute('aria-label', paused ? 'Reanudar cambio automático' : 'Pausar cambio automático');
+    play.textContent = ui(paused ? 'Reproducir' : 'Pausar',doc);
+    play.setAttribute('aria-label', ui(paused ? 'Reanudar cambio automático' : 'Pausar cambio automático',doc));
     play.setAttribute('aria-pressed', String(paused));
     const running = automatic && !paused && !hovered && visible && !doc.hidden && !ended;
     root.classList.toggle('is-playing', running);
@@ -36,7 +37,7 @@ export function setupAgendaCarousel(doc = document, win = window) {
       else dot.removeAttribute('aria-current');
     });
     counter.textContent = `${String(index + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
-    if (manual) status.textContent = `Actividad ${index + 1} de ${slides.length}: ${dots[index].getAttribute('aria-label').replace(/^\d+\. /, '')}`;
+    if (manual) status.textContent = ui(`Actividad ${index + 1} de ${slides.length}: ${dots[index].getAttribute('aria-label').replace(/^\d+\. /, '')}`,doc);
     if (previous !== index && !reduced.matches) slides[index].animate?.([{opacity: 0}, {opacity: 1}], {duration: 450, easing: 'ease-out'});
     if (moveFocus) slides[index].querySelector('h3 a')?.focus({preventScroll: true});
     sync();

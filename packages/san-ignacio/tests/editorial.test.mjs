@@ -42,6 +42,11 @@ test('Un único panel de secretaría, con permisos y publicación aislados',asyn
   for(const track of musicTracks){const result=await request(track.src,{headers:{Range:'bytes=0-31'}});assert.equal(result.status,206);assert.match(result.response.headers.get('content-type'),/audio\/mpeg/);assert.match(result.response.headers.get('content-range'),/^bytes 0-31\//);}
  });
  await auth();
+ await t.test('El idioma explícito sólo afecta al sitio público y no se conserva en una nueva carga',async()=>{
+  for(const language of ['en','fr'])for(const route of ['/','/pastoral','/agua-de-san-ignacio','/historia','/contacto']){const page=await request(route,{headers:{'X-Site-Language':language}});assert.equal(page.status,200);assert.equal(page.response.headers.get('content-language'),language);assert.match(page.response.headers.get('vary'),/X-Site-Language/i);assert.ok(page.text.includes('<html lang="'+language+'">'));}
+  const fresh=await request('/',{headers:{'Accept-Language':'fr,en;q=0.9','Cookie':cookie}});assert.match(fresh.text,/<html lang="es">/);assert.equal(fresh.response.headers.get('content-language'),'es');
+  const admin=await request('/admin',{authorized:true,headers:{'X-Site-Language':'fr'}});assert.match(admin.text,/<html lang="es">/);assert.doesNotMatch(admin.text,/data-site-language/);assert.match((await request('/admin/preview/inea',{authorized:true,headers:{'X-Site-Language':'en'}})).text,/<html lang="es">/);
+ });
  await t.test('La sesión previa al acceso no permite entrar después de iniciar sesión',async()=>{
   assert.equal((await request('/api/admin/documents',{headers:{cookie:preLoginCookie}})).status,401);
   assert.equal((await request('/api/admin/documents',{authorized:true})).status,200);

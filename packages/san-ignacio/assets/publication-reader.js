@@ -1,3 +1,4 @@
+import {ui} from './i18n.js?v=1';
 export function setupPublicationReader(doc=document,win=window){
  const dialog=doc.querySelector('#publication-reader'),opener=doc.querySelector('[data-publication-open]');
  if(!dialog||!opener)return;
@@ -23,19 +24,19 @@ export function setupPublicationReader(doc=document,win=window){
   select.value=String(active);
   const page=pages[active].dataset;
   previous.disabled=active===0;next.disabled=active===pages.length-1;
-  image.hidden=true;loading=true;status.textContent=`Cargando ${page.label.toLowerCase()}…`;
-  image.alt=page.label+' · Memorias de la Iglesia de San Ignacio de Loyola';
+  image.hidden=true;loading=true;status.textContent=ui(`Cargando ${page.label.toLowerCase()}…`,doc);
+  image.alt=page.label+' · '+ui('Memorias de la Iglesia de San Ignacio de Loyola',doc);
   image.width=Number(page.width);image.height=Number(page.height);image.src=page.src;
   setZoom(1);stage.scrollTop=0;stage.scrollLeft=0;
  }
  image.addEventListener('load',()=>{
   if(!dialog.open)return;
   loading=false;image.hidden=false;resize();
-  status.textContent=`${pages[active].dataset.label} · ${active+1} de ${pages.length}`;
+  status.textContent=pages[active].dataset.label+' · '+ui(`${active+1} de ${pages.length}`,doc);
  });
  image.addEventListener('error',()=>{
   if(!dialog.open)return;
-  loading=false;image.hidden=true;status.textContent='No se pudo cargar esta página. Usa las flechas para cambiar de página y volver a intentarlo.';
+  loading=false;image.hidden=true;status.textContent=ui('No se pudo cargar esta página. Usa las flechas para cambiar de página y volver a intentarlo.',doc);
  });
  opener.addEventListener('click',()=>{dialog.showModal();show(active);close.focus();});
  close.addEventListener('click',()=>dialog.close());
@@ -55,11 +56,11 @@ export function setupPublicationReader(doc=document,win=window){
  full.hidden=typeof layout.requestFullscreen!=='function';
  full.addEventListener('click',async()=>{
   try{if(doc.fullscreenElement===layout)await doc.exitFullscreen();else await layout.requestFullscreen();}
-  catch{status.textContent='La lectura ya ocupa toda la ventana. Puedes seguir consultando aquí.';}
+  catch{status.textContent=ui('La lectura ya ocupa toda la ventana. Puedes seguir consultando aquí.',doc);}
  });
  doc.addEventListener('fullscreenchange',()=>{
   const expanded=doc.fullscreenElement===layout;
-  full.setAttribute('aria-pressed',String(expanded));full.textContent=expanded?'Salir de pantalla completa':'Pantalla completa';resize();
+  full.setAttribute('aria-pressed',String(expanded));full.textContent=ui(expanded?'Salir de pantalla completa':'Pantalla completa',doc);resize();
  });
  if(typeof win.ResizeObserver==='function')new win.ResizeObserver(()=>{if(dialog.open&&!loading)resize();}).observe(stage);
  else win.addEventListener('resize',()=>{if(dialog.open)resize();});

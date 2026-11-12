@@ -1,14 +1,15 @@
-import {setupPhotoViewer} from './photo-viewer.js?v=3';
+import {setupContactForm} from './contact-form.js?v=1';
+import {setupPhotoViewer} from './photo-viewer.js?v=4';
 import {setupNavigation} from './navigation-motion.js?v=2';
 import {initCursor} from './cursor.js';
-import {initHeroReveal} from './entrance.js';
+import {initHeroReveal} from './entrance.js?v=2';
 import {setupPeopleMotion} from './people-motion.js';
-import {setupAgendaCarousel} from './agenda-carousel.js?v=2';
+import {setupAgendaCarousel} from './agenda-carousel.js?v=3';
 import {setupHistoryChapters} from './history.js?v=4';
-import {setupPublicationReader} from './publication-reader.js?v=1';
-import {setupMusicPlayer} from './music-player.js?v=4';
+import {setupPublicationReader} from './publication-reader.js?v=2';
+import {setupMusicPlayer} from './music-player.js?v=5';
 import {createPageScope} from './page-scope.js?v=1';
-import {setupPublicNavigation} from './public-navigation.js?v=1';
+import {setupPublicNavigation} from './public-navigation.js?v=2';
 
 const navigation=setupNavigation(),cursor=initCursor(),intro=initHeroReveal();
 setupMusicPlayer();
@@ -18,7 +19,7 @@ function mountPage(){
  page=createPageScope();
  setupPeopleMotion(page.doc,page.win);setupAgendaCarousel(page.doc,page.win);setupPhotoViewer(page.doc,page.win);
  setupHistoryChapters(page.doc,page.win);setupPublicationReader(page.doc,page.win);openAnchor();
- const form=document.querySelector('#contact-form');form?.addEventListener('submit',async event=>{event.preventDefault();const button=form.querySelector('button[type=submit]'),status=form.querySelector('.form-status');button.disabled=true;status.textContent='Enviando mensaje…';try{const response=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(form)))});const result=await response.json();if(!response.ok)throw new Error(result.error||'No se pudo enviar el mensaje.');form.reset();status.textContent='Tu mensaje fue recibido. Gracias por escribirnos.';}catch(error){status.textContent=error.message;}finally{button.disabled=false;}});
+ setupContactForm(page.doc,page.win);
 }
 function unmountPage(){
  navigation?.closeMenu();intro?.finish();cursor?.hide();

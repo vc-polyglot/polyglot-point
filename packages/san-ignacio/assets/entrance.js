@@ -1,3 +1,4 @@
+import {ui} from './i18n.js?v=1';
 export const INTRO_TIMELINE={presentationEnd:1000,presenceEnd:2500,end:4500,watchdog:6000};
 export function introPhase(time){return time<INTRO_TIMELINE.presentationEnd?'presentation':time<INTRO_TIMELINE.presenceEnd?'presence':time<INTRO_TIMELINE.end?'crossfade':'complete';}
 export function shouldRevealHero({path,hash,seen,reduced,saveData=false,preview=false}){return path==='/'&&!hash&&!seen&&!reduced&&!saveData&&!preview;}
@@ -26,7 +27,8 @@ export function initHeroReveal(doc=document,win=window){
   animation.finished.then(()=>finish(token)).catch(()=>finish(token));observe();
   if(manual)overlay.querySelector('[data-skip-intro]')?.focus({preventScroll:true});
  }
- function updateControls(){for(const button of buttons){button.disabled=reduced.matches;button.title=reduced.matches?'Presentación desactivada por tu preferencia de movimiento reducido':'Volver a ver la presentación de las tres cruces';}}
+ function updateControls(){for(const button of buttons){button.disabled=reduced.matches;button.title=ui(reduced.matches?'Presentación desactivada por tu preferencia de movimiento reducido':'Volver a ver la presentación de las tres cruces',doc);}}
+ win.addEventListener('site-languagechange',updateControls);
  for(const button of buttons)button.addEventListener('click',()=>start({manual:true}));
  overlay.querySelector('[data-skip-intro]')?.addEventListener('click',()=>finish());
  doc.addEventListener('keydown',event=>{if(event.key==='Escape'||event.key==='Tab')finish();});
