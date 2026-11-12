@@ -235,6 +235,25 @@ test('Un único panel de secretaría, con permisos y publicación aislados',asyn
   assert.equal((await request('/api/contact',{method:'POST',body:{name:'QA',email:'qa@example.invalid',subject:'Consulta QA',message:'Consulta aislada'}})).status,201);
   const message=(await request('/api/admin/messages',{authorized:true})).json.messages[0];assert.equal((await request('/api/admin/messages/'+message.id,{method:'PATCH',authorized:true,body:{status:'read'}})).status,200);
  });
+ await t.test('Borrar consultas requiere autorización, sólo elimina la elegida y persiste al reiniciar',async()=>{
+  const retained=(await request('/api/admin/messages',{authorized:true})).json.messages;
+  for(const subject of ['Mensaje QA para borrar','Mensaje QA archivado para borrar'])assert.equal((await request('/api/contact',{method:'POST',body:{name:'Prueba de borrado',email:'qa@example.invalid',subject,message:'Sólo datos de prueba'}})).status,201);
+  let inbox=(await request('/api/admin/messages',{authorized:true})).json.messages;const target=inbox.find(message=>message.subject==='Mensaje QA para borrar'),archived=inbox.find(message=>message.subject==='Mensaje QA archivado para borrar');assert.ok(target);assert.ok(archived);
+  const route='/api/admin/messages/'+target.id;
+  for(const options of [{},{authorized:true,token:false},{authorized:true,origin:'https://external.invalid'}])assert.ok([401,403].includes((await request(route,{method:'DELETE',...options})).status));
+  assert.equal((await request(route,{method:'DELETE',authorized:true})).status,204);assert.equal((await request(route,{method:'DELETE',authorized:true})).status,404);
+  assert.equal((await request(route,{method:'PATCH',authorized:true,body:{status:'read'}})).status,404);
+  inbox=(await request('/api/admin/messages',{authorized:true})).json.messages;assert.ok(!inbox.some(message=>message.id===target.id));assert.ok(inbox.some(message=>message.id===archived.id));for(const message of retained)assert.ok(inbox.some(item=>item.id===message.id));
+  assert.equal((await request('/api/admin/messages/'+encodeURIComponent("' OR 1=1 --"),{method:'DELETE',authorized:true})).status,404);
+  assert.equal((await request('/api/admin/messages/'+archived.id,{method:'PATCH',authorized:true,body:{status:'archived'}})).status,200);assert.equal((await request('/api/admin/messages/'+archived.id,{method:'DELETE',authorized:true})).status,204);
+  await stop();cookie='';csrf='';await start();await auth();inbox=(await request('/api/admin/messages',{authorized:true})).json.messages;assert.deepEqual(inbox.map(item=>item.id).sort(),retained.map(item=>item.id).sort());
+ });
+ await t.test('Una actualización de estado concurrente no puede recrear un mensaje borrado',async()=>{
+  assert.equal((await request('/api/contact',{method:'POST',body:{name:'Prueba concurrente',email:'qa@example.invalid',subject:'Mensaje QA concurrente',message:'Sólo datos de prueba'}})).status,201);
+  const message=(await request('/api/admin/messages',{authorized:true})).json.messages.find(item=>item.subject==='Mensaje QA concurrente'),route='/api/admin/messages/'+message.id;
+  const [update,deletion]=await Promise.all([request(route,{method:'PATCH',authorized:true,body:{status:'read'}}),request(route,{method:'DELETE',authorized:true})]);assert.ok([200,404].includes(update.status));assert.equal(deletion.status,204);
+  assert.equal((await request(route,{method:'PATCH',authorized:true,body:{status:'archived'}})).status,404);assert.ok(!(await request('/api/admin/messages',{authorized:true})).json.messages.some(item=>item.id===message.id));
+ });
  await t.test('Cerrar sesión revoca el acceso y los cambios persisten al reiniciar',async()=>{
   assert.equal((await request('/api/admin/logout',{method:'POST',authorized:true})).status,204);assert.equal((await request('/api/admin/documents',{authorized:true})).status,401);
   await stop();cookie='';csrf='';await start();await auth();assert.ok((await documents()).find(d=>d.id===event.id));assert.equal((await request('/api/admin/messages',{authorized:true})).json.messages[0].status,'read');

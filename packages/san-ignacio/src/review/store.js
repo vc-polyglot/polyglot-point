@@ -71,6 +71,17 @@ export async function saveMessage(record) {
   else await pool.query('INSERT INTO san_ignacio.site_messages(id,record) VALUES($1,$2::jsonb) ON CONFLICT(id) DO UPDATE SET record=EXCLUDED.record',[record.id,JSON.stringify(record)]);
   return record;
 }
+export async function updateMessageStatus(id,status) {
+  if(local&&!transactionContext.getStore())return documentTransaction(()=>updateMessageStatus(id,status));
+  const now=new Date().toISOString();
+  const row=local?sqlite.prepare("UPDATE messages SET record=json_set(record,'$.status',?,'$.updatedAt',?) WHERE id=? RETURNING record").get(status,now,id):(await pool.query("UPDATE san_ignacio.site_messages SET record=jsonb_set(jsonb_set(record,'{status}',to_jsonb($1::text)),'{updatedAt}',to_jsonb($2::text)) WHERE id=$3 RETURNING record",[status,now,id])).rows[0];
+  return row?(typeof row.record==='string'?JSON.parse(row.record):row.record):null;
+}
+export async function deleteMessage(id) {
+  if(local&&!transactionContext.getStore())return documentTransaction(()=>deleteMessage(id));
+  if(local)return sqlite.prepare('DELETE FROM messages WHERE id=?').run(id).changes===1;
+  return (await pool.query('DELETE FROM san_ignacio.site_messages WHERE id=$1',[id])).rowCount===1;
+}
 export async function findUser(email) {
   if (local) return sqlite.prepare('SELECT * FROM local_users WHERE email=?').get(email);
   return (await pool.query('SELECT name,email,password_hash,role FROM users WHERE lower(email)=$1 AND active=TRUE',[email])).rows[0];
