@@ -1,8 +1,19 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { local, dataPath } from './config.js';
+import {AsyncLocalStorage} from 'node:async_hooks';
+import {assertNoDeletedReferences} from './asset-state.js';
 
 let sqlite, pool;
+const transactionContext=new AsyncLocalStorage();let localQueue=Promise.resolve();
+const connection=()=>transactionContext.getStore()?.client||pool;
+export async function documentTransaction(callback){
+ if(transactionContext.getStore())return callback();
+ if(local){let unlock;const previous=localQueue;localQueue=new Promise(resolve=>{unlock=resolve;});await previous;
+  try{sqlite.exec('BEGIN IMMEDIATE');try{const result=await transactionContext.run({local:true},callback);sqlite.exec('COMMIT');return result;}catch(error){sqlite.exec('ROLLBACK');throw error;}}finally{unlock();}
+ }
+ const client=await pool.connect();try{await client.query('BEGIN');await client.query('LOCK TABLE san_ignacio.site_documents IN SHARE ROW EXCLUSIVE MODE');const result=await transactionContext.run({client},callback);await client.query('COMMIT');return result;}catch(error){await client.query('ROLLBACK');throw error;}finally{client.release();}
+}
 export async function openStore() {
   if (local) {
     const { DatabaseSync } = await import('node:sqlite');
@@ -22,14 +33,16 @@ export async function openStore() {
   }
 }
 export async function allDocuments() {
-  const rows = local ? sqlite.prepare('SELECT record FROM documents').all() : (await pool.query('SELECT record FROM san_ignacio.site_documents')).rows;
+  const rows = local ? sqlite.prepare('SELECT record FROM documents').all() : (await connection().query('SELECT record FROM san_ignacio.site_documents')).rows;
   return rows.map(r => typeof r.record === 'string' ? JSON.parse(r.record) : r.record);
 }
 export async function getDocument(id) {
-  const row = local ? sqlite.prepare('SELECT record FROM documents WHERE id=?').get(id) : (await pool.query('SELECT record FROM san_ignacio.site_documents WHERE id=$1', [id])).rows[0];
+  const row = local ? sqlite.prepare('SELECT record FROM documents WHERE id=?').get(id) : (await connection().query('SELECT record FROM san_ignacio.site_documents WHERE id=$1', [id])).rows[0];
   return row ? (typeof row.record === 'string' ? JSON.parse(row.record) : row.record) : null;
 }
 export async function saveDocument(record, expected = 0) {
+  if(!transactionContext.getStore())return documentTransaction(()=>saveDocument(record,expected));
+  assertNoDeletedReferences(record,await allDocuments());
   const json = JSON.stringify(record);
   if (local) {
     if (!expected) {
@@ -38,10 +51,10 @@ export async function saveDocument(record, expected = 0) {
     } else if (sqlite.prepare('UPDATE documents SET record=?,version=? WHERE id=? AND version=?').run(json,record.version,record.id,expected).changes !== 1) conflict();
   } else {
     if (!expected) {
-      const result = await pool.query('INSERT INTO san_ignacio.site_documents(id,record,version) VALUES($1,$2::jsonb,$3) ON CONFLICT DO NOTHING RETURNING id',[record.id,json,record.version]);
+      const result = await connection().query('INSERT INTO san_ignacio.site_documents(id,record,version) VALUES($1,$2::jsonb,$3) ON CONFLICT DO NOTHING RETURNING id',[record.id,json,record.version]);
       if (!result.rowCount) conflict();
     } else {
-      const result = await pool.query('UPDATE san_ignacio.site_documents SET record=$1::jsonb,version=$2 WHERE id=$3 AND version=$4',[json,record.version,record.id,expected]);
+      const result = await connection().query('UPDATE san_ignacio.site_documents SET record=$1::jsonb,version=$2 WHERE id=$3 AND version=$4',[json,record.version,record.id,expected]);
       if (!result.rowCount) conflict();
     }
   }
@@ -53,6 +66,7 @@ export async function messages() {
   return rows.map(r => typeof r.record === 'string' ? JSON.parse(r.record) : r.record);
 }
 export async function saveMessage(record) {
+  if(local&&!transactionContext.getStore())return documentTransaction(()=>saveMessage(record));
   if (local) sqlite.prepare('INSERT INTO messages(id,record) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET record=excluded.record').run(record.id,JSON.stringify(record));
   else await pool.query('INSERT INTO san_ignacio.site_messages(id,record) VALUES($1,$2::jsonb) ON CONFLICT(id) DO UPDATE SET record=EXCLUDED.record',[record.id,JSON.stringify(record)]);
   return record;

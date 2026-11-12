@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import {deletedAssetURLs,canonicalAssetURL} from './asset-state.js';
 
 export const imageCollections=['photograph','material'];
 export const assetId=url=>'asset-'+crypto.createHash('sha256').update(url).digest('hex').slice(0,32);
@@ -14,5 +15,6 @@ export function imageCatalog(root,documents){
  for(const doc of documents.filter(doc=>doc.type==='media'&&!doc.archived)){
   const image=doc.draft;if(!image?.url)continue;items.set(image.url,{...items.get(image.url),...image,collection:imageCollections.includes(image.collection)?image.collection:'photograph',recordId:doc.id,version:doc.version});
  }
- return [...items.values()].filter(image=>typeof image.url==='string'&&(/^(?:\/assets\/images\/|\/uploads\/)/.test(image.url)||/^https:\/\//.test(image.url))).map(image=>({...image,alt:image.alt||image.title}));
+ const deleted=deletedAssetURLs(documents);
+ return [...items.values()].filter(image=>!deleted.has(canonicalAssetURL(image.url))&&typeof image.url==='string'&&(/^(?:\/assets\/images\/|\/uploads\/)/.test(image.url)||/^https:\/\//.test(image.url))).map(image=>({...image,alt:image.alt||image.title}));
 }

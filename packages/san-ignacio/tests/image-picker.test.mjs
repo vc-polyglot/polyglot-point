@@ -50,3 +50,14 @@ test('Un rechazo al mover se explica dentro del selector y conserva la imagen en
   assert.equal(picker.items.find(image=>image.url==='/uploads/foto.jpg').collection,'photograph');assert.equal(picker.items.find(image=>image.url==='/uploads/foto.jpg').version,1);assert.match(node('#library-feedback').textContent,/Primero retira/);assert.equal(picker.busy,false);
  }finally{if(previousDocument===undefined)delete globalThis.document;else globalThis.document=previousDocument;}
 });
+
+test('Borrar una imagen permite cancelar, conserva las demás selecciones y explica un rechazo',async()=>{
+ const previousDocument=globalThis.document;globalThis.document={activeElement:{}};
+ try{
+  const {picker,node}=fixture();await picker.open({mode:'photographs',initial:[{image:'/uploads/foto.jpg',alt:'QA'},{image:'/uploads/cartel.jpg',alt:'QA'}]});
+  assert.match(node('#library-grid').innerHTML,/data-delete-image="\/uploads\/foto.jpg"/);let calls=0;picker.onBusy=()=>{};picker.onDelete=()=>{};picker.confirmDelete=()=>false;picker.api=async()=>{calls++;return {deleted:true};};
+  await picker.deleteImage('/uploads/foto.jpg',{picker:true});assert.equal(calls,0);assert.equal(picker.items.length,2);
+  picker.confirmDelete=()=>true;await picker.deleteImage('/uploads/foto.jpg',{picker:true});assert.equal(calls,1);assert.equal(picker.items.length,1);assert.equal(picker.selected.has('/uploads/foto.jpg'),false);assert.equal(picker.selected.has('/uploads/cartel.jpg'),true);assert.match(node('#library-feedback').textContent,/Imagen borrada/);
+  picker.api=async()=>{throw Error('Esta imagen se usa en: INEA.');};await picker.deleteImage('/uploads/cartel.jpg',{picker:true});assert.equal(picker.items.length,1);assert.equal(picker.selected.size,1);assert.match(node('#library-feedback').textContent,/INEA/);assert.equal(picker.busy,false);
+ }finally{if(previousDocument===undefined)delete globalThis.document;else globalThis.document=previousDocument;}
+});

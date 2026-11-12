@@ -29,3 +29,14 @@ test('La subida remota convierte WAV a MP3 y almacena el audio usando Cloudinary
  assert.equal(options.resource_type,'video');assert.equal(options.folder,'san-ignacio/audio');assert.ok(Buffer.concat(bytes).length>1000);assert.match(result.track.src,/^https:\/\/res\.cloudinary\.com\//);assert.equal(result.track.title,'Meditación QA');assert.equal(record.published,null);assert.equal(record.type,'audio');
  const playlist=playlistRecord({version:0,tracks:[result.track]},[record],{name:'QA'});assert.equal(playlist.published.tracks[0].src,result.track.src);
 });
+
+test('Borrar una canción es inmediato, conserva otras ediciones pendientes y permite cancelar',async()=>{
+ const notes={},flags=[],messages=[],requests=[];let confirmation=false;
+ const host={querySelector:selector=>notes[selector]??={textContent:'',focus(){}},querySelectorAll:()=>[]};
+ const original=initialTracks();const canonical={version:4,tracks:original.filter((_,index)=>index!==1)};
+ const admin=new MusicAdmin({api:async(url,options)=>{requests.push({url,method:options.method,body:JSON.parse(options.body)});return {playlist:canonical};},status:text=>messages.push(text),onDirty:value=>flags.push(value),confirmDelete:()=>confirmation});
+ Object.assign(admin,{host,playlist:{version:3,tracks:structuredClone(original)}});admin.render();assert.match(notes['#music-track-list'].innerHTML,/Borrar canción/);
+ await admin.deleteTrack(1);assert.equal(requests.length,0);confirmation=true;admin.playlist.tracks[0].title='Edición pendiente';
+ await admin.action('delete',1);assert.equal(requests.length,1);assert.deepEqual(requests[0],{url:'/api/admin/music/audio',method:'DELETE',body:{id:original[1].id,version:3}});assert.equal(admin.playlist.version,4);assert.equal(admin.playlist.tracks[0].title,'Edición pendiente');assert.equal(admin.playlist.tracks.length,3);assert.equal(flags.at(-1),true);assert.match(notes['#dirty-note'].textContent,/otros cambios sin guardar/);
+ const before=structuredClone(admin.playlist);admin.api=async()=>{throw Error('La lista cambió');};await admin.deleteTrack(0);assert.deepEqual(admin.playlist,before);assert.match(messages.at(-1),/La lista cambió/);assert.equal(admin.busy,false);
+});

@@ -18,6 +18,8 @@ import {imageCatalog,imageCollections} from './review/image-library.js';
 import {canManage,secretaryDocument,prepareSecretaryChange} from './review/secretary-access.js';
 import {readPlaylist,playlistRecord} from './review/music-playlist.js';
 import {saveAudioUpload} from './review/audio-upload.js';
+import {deleteImage,deleteTrack,resumeAssetDeletions} from './review/asset-deletion.js';
+import {assetDeletionId} from './review/asset-state.js';
 await store.openStore();
 let redis,sessionStore;
 if(!local){const {createClient}=await import('redis');const {RedisStore}=await import('connect-redis');redis=createClient({url:process.env.REDIS_URL});redis.on('error',()=>console.error('Redis: conexión no disponible.'));await redis.connect();sessionStore=new RedisStore({client:redis,prefix:'san-ignacio:sess:'});}
@@ -41,12 +43,14 @@ app.get('/api/admin/documents',auth,async(_req,res)=>res.json({documents:(await 
 app.post('/api/admin/documents',auth,sameOrigin,csrf,async(req,res)=>{const documents=await store.allDocuments();const previous=documents.find(doc=>doc.id===req.body.id);const change=prepareSecretaryChange(req.body,previous,documents);if(change.type==='gallery'&&['draft','publish'].includes(change.action)){const image=imageCatalog(root,documents).find(image=>image.url===change.data.image);if(!image||image.collection!=='photograph')return res.status(400).json({error:'Elige una imagen del archivo Fotografías para la galería.'});}if(change.type==='program'&&['draft','publish'].includes(change.action)){const catalog=imageCatalog(root,documents);const photos=change.data.photos??(change.data.image?[{image:change.data.image}]:[]);if(!Array.isArray(photos))return res.status(400).json({error:'Elige fotografías para esta ficha.'});if(photos.some(photo=>!catalog.some(image=>image.url===photo?.image)))return res.status(400).json({error:'Elige las imágenes de Pastoral desde Fotografías o Carteles y materiales.'});}res.json({document:secretaryDocument(withAlbumDefaults(await changeDocument(change,req.session.user)))});});
 app.get('/api/admin/messages',auth,async(_req,res)=>res.json({messages:await store.messages()}));
 app.get('/api/admin/music',auth,async(_req,res)=>res.json(readPlaylist(await store.allDocuments())));
+app.delete('/api/admin/music/audio',auth,sameOrigin,csrf,async(req,res)=>{const result=await deleteTrack(req.body,req.session.user,{dataPath});res.status(result.pending?202:200).json(result);});
 app.put('/api/admin/music',auth,sameOrigin,csrf,async(req,res)=>{const documents=await store.allDocuments(),record=playlistRecord(req.body,documents,req.session.user);await store.saveDocument(record,req.body.version);res.json(readPlaylist([record]));});
 const audioUpload=multer({storage:multer.memoryStorage(),limits:{files:1,fileSize:100*1024*1024,fields:0}});
 app.post('/api/admin/music/audio',auth,sameOrigin,csrf,async(req,_res,next)=>{await rateLimit(req,'audio-upload',12,900);next();},audioUpload.single('audio'),async(req,res)=>res.status(201).json(await saveAudioUpload(req.file,{local,dataPath,user:req.session.user,saveDocument:store.saveDocument})));
 app.patch('/api/admin/messages/:id',auth,sameOrigin,csrf,async(req,res)=>{const message=(await store.messages()).find(m=>m.id===req.params.id);if(!message)return res.status(404).json({error:'Mensaje no encontrado.'});if(!['new','read','archived'].includes(req.body.status))return res.status(400).json({error:'Estado no válido.'});message.status=req.body.status;message.updatedAt=new Date().toISOString();res.json({message:await store.saveMessage(message)});});
 app.get('/api/admin/export',auth,(_req,res)=>res.status(403).json({error:'Los respaldos se administran fuera de la consola.'}));
 app.get('/api/admin/images',auth,async(_req,res)=>res.json({images:imageCatalog(root,withEditorialDefaults(await store.allDocuments()).map(withAlbumDefaults))}));
+app.delete('/api/admin/images',auth,sameOrigin,csrf,async(req,res)=>{const result=await deleteImage(req.body,req.session.user,{root,dataPath});res.status(result.pending?202:200).json(result);});
 app.patch('/api/admin/images',auth,sameOrigin,csrf,async(req,res)=>{
  const documents=await store.allDocuments(),image=imageCatalog(root,documents).find(image=>image.url===req.body.url);
  if(!image)return res.status(404).json({error:'La imagen ya no está en el archivo.'});
@@ -69,6 +73,7 @@ app.post('/api/contact',sameOrigin,async(req,res)=>{await rateLimit(req,'contact
 app.get(['/admin','/admin/dashboard'],(req,res)=>res.send(adminPage({loggedIn:req.session.user?.role==='admin',local})));
 app.get('/admin/preview/:id',auth,async(req,res)=>{const doc=await store.getDocument(req.params.id)||chapterDefaults().find(doc=>doc.id===req.params.id);if(!doc)return res.status(404).send('Contenido no encontrado.');if(!canManage(doc))return res.status(403).send('Este contenido se mantiene fuera de la secretaría.');const docs=(await publicDocuments()).filter(d=>d.id!==doc.id);docs.push({id:doc.id,type:doc.type,...doc.draft});const html=renderPage(routeFor(doc),docs,{nonce:res.locals.cspNonce,origin:process.env.SITE_URL||`${req.protocol}://${req.get('host')}`,preview:true});res.send(html||notFound(docs,{preview:true}));});
 app.get('/robots.txt',(_req,res)=>res.type('text/plain').send(production?'User-agent: *\nDisallow: /admin\nDisallow: /api/\n':'User-agent: *\nDisallow: /\n'));
+app.use(['/assets','/uploads'],async(req,res,next)=>{let url;try{url=path.posix.normalize(decodeURIComponent(new URL(req.originalUrl,'http://localhost').pathname));}catch{return res.status(400).end();}if(!/^\/(?:assets\/(?:images|audio)\/|uploads\/)/.test(url))return next();const record=await store.getDocument(assetDeletionId(url));if(record?.type==='asset-deletion'&&record.deletedAt)return res.status(404).set('Cache-Control','no-store').end();next();});
 app.use('/assets',express.static(path.join(root,'assets'),{index:false,maxAge:production?'1d':0}));
 if(local)app.use('/uploads',express.static(path.join(dataPath,'uploads'),{index:false,maxAge:0}));
 app.get('/comunidad',(_req,res)=>res.redirect(302,'/pastoral'));
@@ -77,5 +82,7 @@ app.get('/{*path}',async(req,res)=>{if(req.path.startsWith('/api/')||req.path.st
 app.use((_req,res)=>res.status(404).json({error:'Ruta no encontrada.'}));
 app.use((error,req,res,_next)=>{const status=error instanceof multer.MulterError?413:error.status||500;if(status>=500)console.error('Solicitud fallida:',error.name,error.message);if(req.path.startsWith('/api/'))return res.status(status).json({error:status===413?'El archivo o mensaje supera el tamaño permitido.':status>=500?'No fue posible completar la solicitud. Intenta de nuevo.':error.message});res.status(status).type('text/plain').send('No fue posible mostrar esta página. Intenta de nuevo.');});
 const server=app.listen(port,host,()=>{console.log(`San Ignacio: http://${host}:${port}`);console.log(local?'Revisión local: SQLite persistente; sesiones temporales. Sin conexión a Railway.':'PostgreSQL y Redis configurados.');});
-async function shutdown(){server.close(async()=>{await store.closeStore();if(redis)await redis.quit();process.exit(0);});}
+let purgeWork;function retryDeletions(){if(purgeWork)return;purgeWork=resumeAssetDeletions({dataPath}).catch(()=>console.error('No fue posible completar la limpieza de archivos.')).finally(()=>{purgeWork=null;});}
+const purgeTimer=setInterval(retryDeletions,60000);purgeTimer.unref();retryDeletions();
+async function shutdown(){clearInterval(purgeTimer);server.close(async()=>{await purgeWork;await store.closeStore();if(redis)await redis.quit();process.exit(0);});}
 process.on('SIGINT',shutdown);process.on('SIGTERM',shutdown);
