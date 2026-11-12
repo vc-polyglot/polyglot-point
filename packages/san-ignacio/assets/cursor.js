@@ -4,7 +4,8 @@ export function lerpFactor(delta){return 1-Math.pow(1-.16,Math.min(Math.max(delt
 export function lightInkFor(color){const channels=String(color).match(/[\d.]+/g)?.map(Number);if(!channels||channels.length<3)return false;const linear=channels.slice(0,3).map(v=>{const s=v/255;return s<=.04045?s/12.92:Math.pow((s+.055)/1.055,2.4);});return .2126*linear[0]+.7152*linear[1]+.0722*linear[2]<.179;}
 export function initCursor(doc=document,win=window){
  const fine=win.matchMedia('(hover: hover) and (pointer: fine)'),reduced=win.matchMedia('(prefers-reduced-motion: reduce)');
- if(!fine.matches||reduced.matches)return {disabled:true};
+ // Page navigation can always hide the cursor, including when no layer exists.
+ if(!fine.matches||reduced.matches)return {hide(){},disabled:true};
  const layer=doc.createElement('div'),dot=doc.createElement('div'),ring=doc.createElement('div');
  layer.className='cursor-layer';layer.setAttribute('aria-hidden','true');layer.inert=true;dot.className='cursor-dot';ring.className='cursor-ring';layer.append(dot,ring);doc.body.append(layer);
  let x=0,y=0,rx=0,ry=0,last=0,raf=0,visible=false,themeTarget=null;

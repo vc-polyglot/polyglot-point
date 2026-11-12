@@ -2,7 +2,7 @@ import {setupHomeCarousel} from './home-carousel.js?v=2';
 import {setupContactForm} from './contact-form.js?v=1';
 import {setupPhotoViewer} from './photo-viewer.js?v=4';
 import {setupNavigation} from './navigation-motion.js?v=2';
-import {initCursor} from './cursor.js';
+import {initCursor} from './cursor.js?v=2';
 import {initHeroReveal} from './entrance.js?v=2';
 import {setupPeopleMotion} from './people-motion.js';
 import {setupAgendaCarousel} from './agenda-carousel.js?v=3';

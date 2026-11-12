@@ -10,4 +10,11 @@ test('El punto sigue sin esperar al RAF y el anillo interpola hasta detener el b
 test('Los campos editables conservan el cursor nativo y el movimiento no se cancela',()=>{const e=cursorEnvironment();e.move(10,10);const field=e.element();field.editable=true;e.move(20,20,field);assert.ok(!e.document.documentElement.classes.has('has-custom-cursor'));assert.equal(e.frames.size,0);const listener=e.document.listeners.get('pointermove')[0];assert.equal(listener.options.passive,true);});
 test('Táctil y movimiento reducido no crean el cursor; blur devuelve el cursor nativo',()=>{for(const config of [{coarse:true},{reduced:true}]){const e=cursorEnvironment(config);assert.equal(e.controller.disabled,true);assert.equal(e.document.body.children.length,0);}const e=cursorEnvironment();e.move(1,1);e.window.emit('blur');assert.ok(!e.document.documentElement.classes.has('has-custom-cursor'));assert.equal(e.frames.size,0);});
 test('El contraste distingue superficies claras/oscuras y el lerp se ajusta al refresco',()=>{assert.equal(lightInkFor('rgb(255,255,255)'),false);assert.equal(lightInkFor('rgb(20,30,25)'),true);assert.ok(Math.abs(lerpFactor(1000/60)-.16)<.00001);assert.ok(lerpFactor(1000/120)<lerpFactor(1000/60));const e=cursorEnvironment();const dark=e.element();dark.background='rgb(20,30,25)';e.move(1,1,dark);assert.ok(e.document.body.children[0].classes.has('is-on-dark'));});
+test('Cambiar de sección puede ocultar el cursor desactivado en táctil y con movimiento reducido',()=>{
+ for(const config of [{coarse:true},{reduced:true},{coarse:true,reduced:true}]){
+  const e=cursorEnvironment(config);
+  assert.doesNotThrow(()=>{e.controller.hide();e.controller.hide();});
+  assert.equal(e.controller.disabled,true);assert.equal(e.document.body.children.length,0);assert.equal(e.frames.size,0);
+ }
+});
 test('El reveal se reserva a la portada sin ancla, una vez por sesión y sin movimiento reducido',()=>{const normal={path:'/',hash:'',seen:false,reduced:false};assert.equal(shouldRevealHero(normal),true);for(const change of [{path:'/sacramentos'},{hash:'#contenido'},{seen:true},{reduced:true},{saveData:true},{preview:true}])assert.equal(shouldRevealHero({...normal,...change}),false);});
